@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public class Entity  {
 
@@ -26,14 +27,16 @@ public class Entity  {
 	int coins;
 
 	GameObject sprite;
+    SingleNodeBlocker blocker;
 
-	public Vector3 currentPosition;
+    public Vector3 currentPosition;
 
 	public Entity(bool isPlayer, GameObject sprite){
 		this.isPlayer = isPlayer;
 		this.sprite = sprite;
 		isDead = false;
 		inventory = new List<Item>();
+        blocker = sprite.GetComponent<SingleNodeBlocker>();
 	}
 
 	public GameObject GetSprite(){
@@ -47,4 +50,8 @@ public class Entity  {
 	public void SetSpritePosition(Vector3 newPosition){
 		sprite.transform.position = newPosition;
 	}
+
+    public void SetBlocker() {
+        blocker.BlockAtCurrentPosition();
+    }
 }

@@ -101,9 +101,10 @@ public class WorldManager : MonoBehaviour {
         gg.SetDimensions(gg.width, gg.depth, gg.nodeSize);        
         gg.collision.use2D = true;        
         gg.collision.type = ColliderType.Ray;
+        gg.collision.mask.value = 1; //Set mask to default
         gg.rotation.x = 90;
-        //set mask to default
-        //update connections to 4        
+        gg.cutCorners = false;              
+        gg.neighbours = NumNeighbours.Four;        
 
         AstarPath.active.Scan();        
 
@@ -142,6 +143,7 @@ public class WorldManager : MonoBehaviour {
                 enemy = new Entity(false, enemyPawn);
                 board[x, y].SetPresentEntity(enemy);
                 enemy.currentPosition = new Vector3(x, y, 0f);
+                enemy.SetBlocker();
                 placed = true;
             }
             y = Random.Range(0, rows);
