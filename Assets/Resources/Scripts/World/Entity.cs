@@ -27,7 +27,7 @@ public class Entity  {
 	int coins;
 
 	GameObject sprite;
-    SingleNodeBlocker blocker;
+    //SingleNodeBlocker blocker;
 
     public Vector3 currentPosition;
 
@@ -36,7 +36,7 @@ public class Entity  {
 		this.sprite = sprite;
 		isDead = false;
 		inventory = new List<Item>();
-        blocker = sprite.GetComponent<SingleNodeBlocker>();
+        //blocker = sprite.GetComponent<SingleNodeBlocker>();
 	}
 
 	public GameObject GetSprite(){
@@ -51,7 +51,9 @@ public class Entity  {
 		sprite.transform.position = newPosition;
 	}
 
+    /*
     public void SetBlocker() {
         blocker.BlockAtCurrentPosition();
     }
-}
+    */
+} 

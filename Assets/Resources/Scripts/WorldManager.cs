@@ -15,7 +15,7 @@ public class WorldManager : MonoBehaviour {
 	public GameObject playerSprite;
     public GameObject enemySprite; //for testing
     public GameObject aStar;
-    public GameObject blockManager;
+    //public GameObject blockManager;
 	public Entity player;
     public Entity enemy; //for testing 
     
@@ -23,9 +23,9 @@ public class WorldManager : MonoBehaviour {
 	//private List<Vector3> gridPositions = new List<Vector3> (); //store a gridPosition in each tile?
 	private Tile[,] board; 
 
-	public static WorldManager instance = null;
+	public static WorldManager instance = null;    
 
-	void Awake () {		
+    void Awake () {		
 		if (instance == null) {
 			instance = this;
 		}else if(instance != this){
@@ -36,7 +36,7 @@ public class WorldManager : MonoBehaviour {
 	}
 
 	void Update () {
-
+        
 	}
 
 	/*
@@ -101,13 +101,12 @@ public class WorldManager : MonoBehaviour {
         gg.SetDimensions(gg.width, gg.depth, gg.nodeSize);        
         gg.collision.use2D = true;        
         gg.collision.type = ColliderType.Ray;
-        gg.collision.mask.value = 1; //Set mask to default
+        gg.collision.mask.value = 256; //Set mask to obstacle        
         gg.rotation.x = 90;
         gg.cutCorners = false;              
-        gg.neighbours = NumNeighbours.Four;        
+        //gg.neighbours = NumNeighbours.Four;        
 
         AstarPath.active.Scan();        
-
 	}
 
 	void PlacePlayer(){			
@@ -118,7 +117,7 @@ public class WorldManager : MonoBehaviour {
 		while (!placed) {
 			if (!board [x, y].GetBlocksMovement()) {
 				GameObject playerPawn = Instantiate (playerSprite, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-                playerPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
+                //playerPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
 				player = new Entity (true, playerPawn);
 				board [x, y].SetPresentEntity (player);					
 				player.currentPosition = new  Vector3 (x, y, 0f);
@@ -139,11 +138,11 @@ public class WorldManager : MonoBehaviour {
             if (!board[x, y].GetBlocksMovement())
             {
                 GameObject enemyPawn = Instantiate(enemySprite, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-                enemyPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
+                //enemyPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
                 enemy = new Entity(false, enemyPawn);
                 board[x, y].SetPresentEntity(enemy);
                 enemy.currentPosition = new Vector3(x, y, 0f);
-                enemy.SetBlocker();
+                //enemy.SetBlocker();
                 placed = true;
             }
             y = Random.Range(0, rows);

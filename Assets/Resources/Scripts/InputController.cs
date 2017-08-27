@@ -4,15 +4,45 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour {
 
-	public static InputController instance = null;
+    private static InputController instance = null;
 
-	Entity player;
-    public bool actionTaken = false; //for basic AI pathfinding testing
+    Entity player;
+    private bool actionTaken = false; //for basic AI pathfinding testing
 
-	void Start () {
-		if (instance == null) {
-			instance = this;
-		}else if(instance != this){
+    public static InputController Instance {
+        get {
+            return instance;
+        }
+
+        set {
+            instance = value;
+        }
+    }
+
+    public Entity Player {
+        get {
+            return player;
+        }
+
+        set {
+            player = value;
+        }
+    }
+
+    public bool ActionTaken {
+        get {
+            return actionTaken;
+        }
+
+        set {
+            actionTaken = value;
+        }
+    }
+
+    void Start () {
+		if (Instance == null) {
+			Instance = this;
+		}else if(Instance != this){
 			// Destroy the current object, so there is just one 
 			Destroy(gameObject);
 		}
@@ -27,41 +57,73 @@ public class InputController : MonoBehaviour {
 
 		*/
 	}
-	
-	void Update () {
 
-		player = WorldManager.instance.player;
-		//Debug.Log ("player reference in update: " + player);
+    void Update() {
 
-		if (Input.GetKeyDown (KeyCode.UpArrow)) {
-			//Attempt move up
-			Debug.Log("up key pressed");
-			if (MoveEntity.MoveSuccessful (player, new Vector3 (player.currentPosition.x, player.currentPosition.y + 1, 0))) {
+        Player = WorldManager.instance.player;
+        //Debug.Log ("player reference in update: " + player);
+
+        if (Input.GetKeyDown(KeyCode.Keypad8)) {
+            //Attempt move up
+            Debug.Log("up key pressed");
+            if (MoveEntity.MoveSuccessful(Player, new Vector2(Player.currentPosition.x, Player.currentPosition.y + 1))) {
                 //Pass turn or consume action points, unknown presently. 
-                actionTaken = true;
+                ActionTaken = true;
                 Debug.Log("move successful");
-			}
-		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-			//Attempt move left
-			if (MoveEntity.MoveSuccessful (player, new Vector3 (player.currentPosition.x - 1, player.currentPosition.y, 0))) {
+            }
+        } else if (Input.GetKeyDown(KeyCode.Keypad7)) {
+            //Attempt move diagonal up and left
+            Debug.Log("up key pressed");
+            if (MoveEntity.MoveSuccessful(Player, new Vector2(Player.currentPosition.x - 1, Player.currentPosition.y + 1))) {
+                //Pass turn or consume action points, unknown presently. 
+                ActionTaken = true;
+                Debug.Log("move successful");
+            }
+        } else if (Input.GetKeyDown(KeyCode.Keypad4)) {
+            //Attempt move left
+            if (MoveEntity.MoveSuccessful(Player, new Vector2(Player.currentPosition.x - 1, Player.currentPosition.y))) {
                 //Pass turn or consume action points, unknown presently
-                actionTaken = true;
+                ActionTaken = true;
                 Debug.Log("move successful");
-			}
-		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			//Attempt move down
-			if (MoveEntity.MoveSuccessful (player, new Vector3 (player.currentPosition.x, player.currentPosition.y - 1, 0))) {
+            }
+        } else if (Input.GetKeyDown(KeyCode.Keypad1)) {
+            //Attempt move diagonal down and left
+            Debug.Log("up key pressed");
+            if (MoveEntity.MoveSuccessful(Player, new Vector2(Player.currentPosition.x - 1, Player.currentPosition.y - 1))) {
+                //Pass turn or consume action points, unknown presently. 
+                ActionTaken = true;
+                Debug.Log("move successful");
+            }
+        } else if (Input.GetKeyDown(KeyCode.Keypad2)) {
+            //Attempt move down
+            if (MoveEntity.MoveSuccessful(Player, new Vector2(Player.currentPosition.x, Player.currentPosition.y - 1))) {
                 //Pass turn or consume action points, unknown presently
-                actionTaken = true;
+                ActionTaken = true;
                 Debug.Log("move successful");
-			}
-		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
-			//Attempt move right
-			if (MoveEntity.MoveSuccessful (player, new Vector3 (player.currentPosition.x + 1, player.currentPosition.y, 0))) {
+            }
+        } else if (Input.GetKeyDown(KeyCode.Keypad3)) {
+            //Attempt move diagonal down and right
+            Debug.Log("up key pressed");
+            if (MoveEntity.MoveSuccessful(Player, new Vector2(Player.currentPosition.x + 1, Player.currentPosition.y - 1))) {
+                //Pass turn or consume action points, unknown presently. 
+                ActionTaken = true;
+                Debug.Log("move successful");
+            }
+        } else if (Input.GetKeyDown(KeyCode.Keypad6)) {
+            //Attempt move right
+            if (MoveEntity.MoveSuccessful(Player, new Vector2(Player.currentPosition.x + 1, Player.currentPosition.y))) {
                 //Pass turn or consume action points, unknown presently
-                actionTaken = true;
+                ActionTaken = true;
                 Debug.Log("move successful");
-			}
-		}
-	}
+            }
+        } else if (Input.GetKeyDown(KeyCode.Keypad9)) {
+            //Attempt move diagonal up and right
+            Debug.Log("up key pressed");
+            if (MoveEntity.MoveSuccessful(Player, new Vector2(Player.currentPosition.x + 1, Player.currentPosition.y + 1))) {
+                //Pass turn or consume action points, unknown presently. 
+                ActionTaken = true;
+                Debug.Log("move successful");
+            }
+        }
+    }
 }
