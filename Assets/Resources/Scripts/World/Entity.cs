@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class Entity  {
+public class Entity : MoveEntity {
 
 	bool isPlayer;
 	bool isDead;

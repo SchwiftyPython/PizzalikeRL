@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MoveEntity {
 
-	static Vector2 startTile;
-	static Vector2 endTile;    
+	Vector2 startTile;
+	Vector2 endTile;    
 
-	public static bool MoveSuccessful(Entity entity, Vector2 end){
+	public bool MoveSuccessful(Entity entity, Vector2 end){
 		startTile = entity.currentPosition;
 		endTile = end;
         //RaycastHit2D hit = new RaycastHit2D();
@@ -28,9 +28,11 @@ public class MoveEntity {
 			tileToUpdate =  WorldManager.instance.GetTileAt(endTile);
 			tileToUpdate.SetBlocksMovement (true);
 			tileToUpdate.SetPresentEntity (entity);
-			return true;
+            Debug.Log("move successful");
+            return true;
 		} else {
-			return false;
+            Debug.Log("move unsuccessful");
+            return false;
 		}
         
         

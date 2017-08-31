@@ -11,31 +11,44 @@ public class GameManager : MonoBehaviour {
 		END,
 	}
 
-	public TurnState currentState;
+    public TurnState currentState { get; set; }
 
-	// Use this for initialization
-	void Awake () {
-		currentState = TurnState.START;
+    public static GameManager instance = null;
+
+    // Use this for initialization
+    void Awake () {
+        if (instance == null) {
+            instance = this;
+        } else if (instance != this) {
+            // Destroy the current object, so there is just one 
+            Destroy(gameObject);
+        }
+
+        currentState = TurnState.START;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+        //Debug.Log(currentState);
 		switch(currentState) {
 		case TurnState.START:
-			WorldManager.instance.BoardSetup ();
-			currentState = TurnState.PLAYERTURN;
+                if (!WorldManager.instance.worldSetup) {
+                    WorldManager.instance.BoardSetup();
+                }
+                if (WorldManager.instance.worldSetup) {
+                    currentState = TurnState.PLAYERTURN;
+                }
 			break;
 		case TurnState.PLAYERTURN:
-                //while (!InputController.instance.actionTaken) { }
-                //currentState = TurnState.ENEMYTURN;
+                if (InputController.instance.actionTaken) {
+                    currentState = TurnState.ENEMYTURN;
+                }
 			break;
-		case TurnState.ENEMYTURN:
-			//make decision
-			break;
+		case TurnState.ENEMYTURN:               
+            break;
 		case TurnState.END:
 			//quit game or go to main menu
 			break;
 		}
-	}
+	}    
 }

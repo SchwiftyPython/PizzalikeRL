@@ -183,6 +183,8 @@
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelPerfectCamera.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelSnap.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\InputController.cs" />
     <Compile Include="Assets\Resources\Scripts\MoveEntity.cs" />

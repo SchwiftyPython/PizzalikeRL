@@ -15,6 +15,7 @@ public class WorldManager : MonoBehaviour {
 	public GameObject playerSprite;
     public GameObject enemySprite; //for testing
     public GameObject aStar;
+    public bool worldSetup = false;
     //public GameObject blockManager;
 	public Entity player;
     public Entity enemy; //for testing 
@@ -34,10 +35,7 @@ public class WorldManager : MonoBehaviour {
 		}        
 
 	}
-
-	void Update () {
-        
-	}
+    	
 
 	/*
 	void InitializeList(){
@@ -58,7 +56,7 @@ public class WorldManager : MonoBehaviour {
 		int wallCount = 0;        
 
 		boardHolder = new GameObject ("Board").transform;
-
+        
 		for (int x = 0; x < columns; x++) {
 			for (int y = 0; y < rows; y++) {
 				GameObject tileTypeToInstantiate;
@@ -84,8 +82,7 @@ public class WorldManager : MonoBehaviour {
 
 				board [x, y] = tile;
 			}
-		}
-
+		}        
 
         PlacePlayer(); 
         PlaceEnemy();   
@@ -102,11 +99,12 @@ public class WorldManager : MonoBehaviour {
         gg.collision.use2D = true;        
         gg.collision.type = ColliderType.Ray;
         gg.collision.mask.value = 256; //Set mask to obstacle        
-        gg.rotation.x = 90;
+        gg.rotation.x = -90;
         gg.cutCorners = false;              
         //gg.neighbours = NumNeighbours.Four;        
 
-        AstarPath.active.Scan();        
+        AstarPath.active.Scan();
+        worldSetup = true;
 	}
 
 	void PlacePlayer(){			
