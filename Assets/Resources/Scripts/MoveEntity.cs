@@ -4,39 +4,14 @@ using UnityEngine;
 
 public class MoveEntity {
 
-	Vector2 startTile;
-	Vector2 endTile;    
+	protected Vector2 startTile;
+	protected Vector2 endTile;    
 
-	public bool MoveSuccessful(Entity entity, Vector2 end){
-		startTile = entity.currentPosition;
-		endTile = end;
-        //RaycastHit2D hit = new RaycastHit2D();
+    /*
+	public virtual bool MoveSuccessful(Vector2 end){
+        return true;
 
-        Debug.Log ("entity.currentPosition: " + entity.currentPosition.x + " " + entity.currentPosition.y);
-		Debug.Log ("start: " + startTile);
-		Debug.Log ("End: " + endTile);
         
-		if (!WorldManager.instance.GetTileAt (endTile).GetBlocksMovement ()) {
-			entity.currentPosition = endTile;
-			entity.SetSpritePosition(endTile);
-
-			//update tile data for start and end tiles
-			Tile tileToUpdate = WorldManager.instance.GetTileAt(startTile);
-			tileToUpdate.SetBlocksMovement (false);
-			tileToUpdate.SetPresentEntity (null);
-
-			tileToUpdate =  WorldManager.instance.GetTileAt(endTile);
-			tileToUpdate.SetBlocksMovement (true);
-			tileToUpdate.SetPresentEntity (entity);
-            Debug.Log("move successful");
-            return true;
-		} else {
-            Debug.Log("move unsuccessful");
-            return false;
-		}
-        
-        
-        /*
         hit = Physics2D.Raycast(startTile, endTile, 0.9f);
         Debug.Log("Hit: " + hit.collider);
 
@@ -56,6 +31,21 @@ public class MoveEntity {
         } else {
 			return false;
 		}
-        */
+        
 	}
+    */
+
+    public virtual void Move(Vector2 target) {}
+
+    public virtual bool TargetTileBlocked(Vector2 target) {
+        return WorldManager.instance.GetTileAt(target).GetBlocksMovement();
+    }
+
+    public virtual bool TargetTileBlockedByEntity(Vector2 target) {
+        if(WorldManager.instance.GetTileAt(target).GetPresentEntity() == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
