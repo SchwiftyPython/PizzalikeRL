@@ -149,6 +149,19 @@ public class WorldManager : MonoBehaviour {
 
     }
 
+    public void RemoveDeadEntity(Entity corpse) {
+        if (corpse.IsPlayer()) {
+            GameManager.instance.currentState = GameManager.TurnState.END;
+        } else {
+            //remove entity and replace with some or all of inventory
+            Tile tileToUpdate = WorldManager.instance.GetTileAt(corpse.currentPosition);
+            tileToUpdate.SetBlocksMovement(false);
+            tileToUpdate.SetPresentEntity(null);
+
+            corpse.SetSprite(null);
+        }
+    }
+
 	public Tile GetTileAt(Vector3 position){
 		return board [(int)position.x, (int)position.y];
 	}

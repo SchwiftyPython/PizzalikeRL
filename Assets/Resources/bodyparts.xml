@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<BodyPartCollection>
+  <BodyParts>
+  
+    <BodyPart name = "human right arm">
+	  <MaxHP> 15 </MaxHP>
+	  <CanEquipWeapon> True </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> human torso </NeedsPart>
+	  <AttackVerb> strike </AttackVerb>
+	  <Coverage> 50 </Coverage>
+	  <CrippledPenalties>
+	    <StatPenalty name = "strength"> -2 </StatPenalty>
+		<StatPenalty name = "agility"> -2 </StatPenalty>
+	  </CrippledPenalties>
+	</BodyPart>
+	
+	<BodyPart name = "human left arm">
+	  <MaxHP> 15 </MaxHP>
+	  <CanEquipWeapon> True </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> human torso </NeedsPart>
+	  <AttackVerb> strike </AttackVerb>
+	  <Coverage> 50 </Coverage>
+	  <CrippledPenalties>
+	    <StatPenalty name = "strength"> -2 </StatPenalty>
+		<StatPenalty name = "agility"> -2 </StatPenalty>
+	  </CrippledPenalties>
+	</BodyPart>
+	
+	<BodyPart name = "human torso">
+	  <MaxHP> 50 </MaxHP>
+	  <CanEquipWeapon> False </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> </NeedsPart>
+	  <AttackVerb> </AttackVerb>
+	  <Coverage> 200 </Coverage>
+	  <CrippledPenalties>
+	    <StatPenalty name = "constitution"> -2 </StatPenalty>		
+	  </CrippledPenalties>
+	</BodyPart>
+	
+	<BodyPart name = "human head">
+	  <MaxHP> 15 </MaxHP>
+	  <CanEquipWeapon> False </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> human torso </NeedsPart>
+	  <AttackVerb> bite </AttackVerb>
+	  <Coverage> 40 </Coverage>
+	  <CrippledPenalties>
+	    <StatPenalty name = "agility"> -3 </StatPenalty>		
+	  </CrippledPenalties>
+	</BodyPart>
+	
+	<BodyPart name = "human left leg">
+	  <MaxHP> 25 </MaxHP>
+	  <CanEquipWeapon> False </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> human torso </NeedsPart>
+	  <AttackVerb> kick </AttackVerb>
+	  <Coverage> 100 </Coverage>
+	  <CrippledPenalties>
+	    <StatPenalty name = "strength"> -2 </StatPenalty>
+		<StatPenalty name = "agility"> -2 </StatPenalty>
+	  </CrippledPenalties>
+	</BodyPart>	
+	
+	<BodyPart name = "human right leg">
+	  <MaxHP> 25 </MaxHP>
+	  <CanEquipWeapon> False </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> torso </NeedsPart>
+	  <AttackVerb> kick </AttackVerb>
+	  <Coverage> 100 </Coverage>
+	  <CrippledPenalties>
+	    <StatPenalty name = "strength"> -2 </StatPenalty>
+		<StatPenalty name = "agility"> -2 </StatPenalty>
+	  </CrippledPenalties>
+	</BodyPart>	
+	
+	<BodyPart name = "human left hand">
+	  <MaxHP> 10 </MaxHP>
+	  <CanEquipWeapon> True </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> human left arm </NeedsPart>
+	  <AttackVerb> strike </AttackVerb>
+	  <Coverage> 10 </Coverage>
+	  <CrippledPenalties>	    
+		<StatPenalty name = "agility"> -2 </StatPenalty>
+	  </CrippledPenalties>
+	</BodyPart>	
+	
+	<BodyPart name = "human right hand">
+	  <MaxHP> 10 </MaxHP>
+	  <CanEquipWeapon> True </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> human right arm </NeedsPart>
+	  <AttackVerb> strike </AttackVerb>
+	  <Coverage> 10 </Coverage>
+	  <CrippledPenalties>	    
+		<StatPenalty name = "agility"> -2 </StatPenalty>
+	  </CrippledPenalties>
+	</BodyPart>	
+	
+	<BodyPart name = "human left foot">
+	  <MaxHP> 10 </MaxHP>
+	  <CanEquipWeapon> False </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> human left leg </NeedsPart>
+	  <AttackVerb> kick </AttackVerb>
+	  <Coverage> 10 </Coverage>
+	  <CrippledPenalties>	    
+		<StatPenalty name = "agility"> -2 </StatPenalty>
+	  </CrippledPenalties>
+	</BodyPart>	
+	
+	<BodyPart name = "human right foot">
+	  <MaxHP> 10 </MaxHP>
+	  <CanEquipWeapon> False </CanEquipWeapon>
+	  <CanEquipArmor> True </CanEquipArmor>
+	  <NeedsPart> human right leg </NeedsPart>
+	  <AttackVerb> kick </AttackVerb>
+	  <Coverage> 10 </Coverage>
+	  <CrippledPenalties>	    
+		<StatPenalty name = "agility"> -2 </StatPenalty>
+	  </CrippledPenalties>
+	</BodyPart>	
+  
+  </BodyParts>
+</BodyPartCollection>  

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<EntityCollection>
+  <Entities>
+    
+	<Entity type = "human">
+      <Stats>
+        <MinStrength> 2 </MinStrength>
+		<MaxStrength> 4 </MaxStrength>
+        <MinAgility> 3 </MinAgility>
+        <MaxAgility> 6 </MaxAgility>
+        <MinConstitution> 3 </MinConstitution>
+        <MaxConstitution> 6 </MaxConstitution>		
+	  </Stats>
+      <Playable> True </Playable>
+      <Nameable> True </Nameable>
+      <IsHostile> False </IsHostile>
+      <PossibleClasses>
+        <EntityClass> Warrior </EntityClass>
+        <EntityClass> Mage </EntityClass>
+        <EntityClass> Ranger </EntityClass>
+        <EntityClass> Vagabond </EntityClass>
+        <EntityClass> Hunter </EntityClass>
+        <EntityClass> Shaman </EntityClass>
+        <EntityClass> Knight </EntityClass>
+      </PossibleClasses>		
+	  <Inventory>
+	  </Inventory>
+	  <Equipped>
+	  </Equipped>
+	  <Coins> 0 </Coins>
+	  <SpritePath> </SpritePath>
+	  <AITypes> </AITypes>
+	  <BodyParts>	  
+	    <Part> Human Head </Part>
+		<Part> Human Torso </Part>
+		<Part> Human Left Arm </Part>
+		<Part> Human Right Arm </Part>
+		<Part> Human Left Hand </Part>
+		<Part> Human Right Hand </Part>
+		<Part> Human Left Leg </Part>
+		<Part> Human Right Leg </Part>
+		<Part> Human Left Foot </Part>
+		<Part> Human Right Foot </Part>
+	  </BodyParts>
+    </Entity>
+	
+  </Entities>  
+</EntityCollection>

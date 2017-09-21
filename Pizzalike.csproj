@@ -209,6 +209,8 @@
     <None Include="Assets\AstarPathfindingProject\link.xml" />
     <None Include="Assets\PixelPerfectCamera\README.txt" />
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
+    <None Include="Assets\Resources\bodyparts.xml" />
+    <None Include="Assets\Resources\entities.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

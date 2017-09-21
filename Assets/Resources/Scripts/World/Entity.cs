@@ -5,7 +5,7 @@ using Pathfinding;
 
 public class Entity : MoveEntity {
 
-	bool isPlayer;
+    bool isPlayer;
 	bool isDead;
 
     //IDictionary<string, BodyPart> body;
@@ -40,7 +40,17 @@ public class Entity : MoveEntity {
 		isDead = false;
 		inventory = new List<Item>();
         //blocker = sprite.GetComponent<SingleNodeBlocker>();
+
+        //roll stats based on xml file info
+        //hard coded stats for combat testing        
+        hp = 45;
+        speed = 35;
+        defense = 35;
 	}
+
+    public bool IsPlayer() {
+        return isPlayer;
+    }
 
 	public GameObject GetSprite(){
 		return this.sprite;
@@ -52,38 +62,7 @@ public class Entity : MoveEntity {
 
 	public void SetSpritePosition(Vector3 newPosition){
 		sprite.transform.position = newPosition;
-	}
-
-    /*
-    public override bool MoveSuccessful(Vector2 end) {
-        startTile = this.currentPosition;
-        endTile = end;
-        //RaycastHit2D hit = new RaycastHit2D();
-
-        Debug.Log("entity.currentPosition: " + this.currentPosition.x + " " + this.currentPosition.y);
-        Debug.Log("start: " + startTile);
-        Debug.Log("End: " + endTile);
-
-        if (!WorldManager.instance.GetTileAt(endTile).GetBlocksMovement()) {
-            this.currentPosition = endTile;
-            this.SetSpritePosition(endTile);
-
-            //update tile data for start and end tiles
-            Tile tileToUpdate = WorldManager.instance.GetTileAt(startTile);
-            tileToUpdate.SetBlocksMovement(false);
-            tileToUpdate.SetPresentEntity(null);
-
-            tileToUpdate = WorldManager.instance.GetTileAt(endTile);
-            tileToUpdate.SetBlocksMovement(true);
-            tileToUpdate.SetPresentEntity(this);
-            Debug.Log("move successful. Tile Blocked.");
-            return true;
-        } else {
-            Debug.Log("move unsuccessful");
-            return false;
-        }
-    }
-    */
+	}   
 
     public override void Move(Vector2 target) {
         startTile = this.currentPosition;
@@ -109,7 +88,12 @@ public class Entity : MoveEntity {
     }
 
     public void MeleeAttack(Entity target) {
+        if (MeleeRollToHit(target)) {
+            ApplyMeleeDamage(target);
+            if (target.IsDead()) {
 
+            }
+        }
     }
 
     bool MeleeRollToHit(Entity target) {
@@ -129,4 +113,48 @@ public class Entity : MoveEntity {
         }
         
     }
-} 
+
+    void ApplyMeleeDamage(Entity target) {
+        int unarmedDamage = 4;
+        target.hp -= unarmedDamage;
+    }
+
+    bool IsDead() {
+        if(this.hp <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+   public override bool MoveSuccessful(Vector2 end) {
+       startTile = this.currentPosition;
+       endTile = end;
+       //RaycastHit2D hit = new RaycastHit2D();
+
+       Debug.Log("entity.currentPosition: " + this.currentPosition.x + " " + this.currentPosition.y);
+       Debug.Log("start: " + startTile);
+       Debug.Log("End: " + endTile);
+
+       if (!WorldManager.instance.GetTileAt(endTile).GetBlocksMovement()) {
+           this.currentPosition = endTile;
+           this.SetSpritePosition(endTile);
+
+           //update tile data for start and end tiles
+           Tile tileToUpdate = WorldManager.instance.GetTileAt(startTile);
+           tileToUpdate.SetBlocksMovement(false);
+           tileToUpdate.SetPresentEntity(null);
+
+           tileToUpdate = WorldManager.instance.GetTileAt(endTile);
+           tileToUpdate.SetBlocksMovement(true);
+           tileToUpdate.SetPresentEntity(this);
+           Debug.Log("move successful. Tile Blocked.");
+           return true;
+       } else {
+           Debug.Log("move unsuccessful");
+           return false;
+       }
+   }
+   */
+}
