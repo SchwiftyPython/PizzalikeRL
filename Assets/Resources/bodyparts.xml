@@ -8,11 +8,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> human torso </NeedsPart>
 	  <AttackVerb> strike </AttackVerb>
-	  <Coverage> 50 </Coverage>
-	  <CrippledPenalties>
-	    <StatPenalty name = "strength"> -2 </StatPenalty>
-		<StatPenalty name = "agility"> -2 </StatPenalty>
-	  </CrippledPenalties>
+	  <Coverage> 50 </Coverage>	  
 	</BodyPart>
 	
 	<BodyPart name = "human left arm">
@@ -21,11 +17,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> human torso </NeedsPart>
 	  <AttackVerb> strike </AttackVerb>
-	  <Coverage> 50 </Coverage>
-	  <CrippledPenalties>
-	    <StatPenalty name = "strength"> -2 </StatPenalty>
-		<StatPenalty name = "agility"> -2 </StatPenalty>
-	  </CrippledPenalties>
+	  <Coverage> 50 </Coverage>	  
 	</BodyPart>
 	
 	<BodyPart name = "human torso">
@@ -34,10 +26,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> </NeedsPart>
 	  <AttackVerb> </AttackVerb>
-	  <Coverage> 200 </Coverage>
-	  <CrippledPenalties>
-	    <StatPenalty name = "constitution"> -2 </StatPenalty>		
-	  </CrippledPenalties>
+	  <Coverage> 200 </Coverage>	  
 	</BodyPart>
 	
 	<BodyPart name = "human head">
@@ -46,10 +35,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> human torso </NeedsPart>
 	  <AttackVerb> bite </AttackVerb>
-	  <Coverage> 40 </Coverage>
-	  <CrippledPenalties>
-	    <StatPenalty name = "agility"> -3 </StatPenalty>		
-	  </CrippledPenalties>
+	  <Coverage> 40 </Coverage>	  
 	</BodyPart>
 	
 	<BodyPart name = "human left leg">
@@ -58,11 +44,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> human torso </NeedsPart>
 	  <AttackVerb> kick </AttackVerb>
-	  <Coverage> 100 </Coverage>
-	  <CrippledPenalties>
-	    <StatPenalty name = "strength"> -2 </StatPenalty>
-		<StatPenalty name = "agility"> -2 </StatPenalty>
-	  </CrippledPenalties>
+	  <Coverage> 100 </Coverage>	  
 	</BodyPart>	
 	
 	<BodyPart name = "human right leg">
@@ -71,11 +53,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> torso </NeedsPart>
 	  <AttackVerb> kick </AttackVerb>
-	  <Coverage> 100 </Coverage>
-	  <CrippledPenalties>
-	    <StatPenalty name = "strength"> -2 </StatPenalty>
-		<StatPenalty name = "agility"> -2 </StatPenalty>
-	  </CrippledPenalties>
+	  <Coverage> 100 </Coverage>	  
 	</BodyPart>	
 	
 	<BodyPart name = "human left hand">
@@ -84,10 +62,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> human left arm </NeedsPart>
 	  <AttackVerb> strike </AttackVerb>
-	  <Coverage> 10 </Coverage>
-	  <CrippledPenalties>	    
-		<StatPenalty name = "agility"> -2 </StatPenalty>
-	  </CrippledPenalties>
+	  <Coverage> 10 </Coverage>	  
 	</BodyPart>	
 	
 	<BodyPart name = "human right hand">
@@ -96,10 +71,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> human right arm </NeedsPart>
 	  <AttackVerb> strike </AttackVerb>
-	  <Coverage> 10 </Coverage>
-	  <CrippledPenalties>	    
-		<StatPenalty name = "agility"> -2 </StatPenalty>
-	  </CrippledPenalties>
+	  <Coverage> 10 </Coverage>	  
 	</BodyPart>	
 	
 	<BodyPart name = "human left foot">
@@ -108,10 +80,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> human left leg </NeedsPart>
 	  <AttackVerb> kick </AttackVerb>
-	  <Coverage> 10 </Coverage>
-	  <CrippledPenalties>	    
-		<StatPenalty name = "agility"> -2 </StatPenalty>
-	  </CrippledPenalties>
+	  <Coverage> 10 </Coverage>	  
 	</BodyPart>	
 	
 	<BodyPart name = "human right foot">
@@ -120,10 +89,7 @@
 	  <CanEquipArmor> True </CanEquipArmor>
 	  <NeedsPart> human right leg </NeedsPart>
 	  <AttackVerb> kick </AttackVerb>
-	  <Coverage> 10 </Coverage>
-	  <CrippledPenalties>	    
-		<StatPenalty name = "agility"> -2 </StatPenalty>
-	  </CrippledPenalties>
+	  <Coverage> 10 </Coverage>	  
 	</BodyPart>	
   
   </BodyParts>

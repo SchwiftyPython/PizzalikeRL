@@ -7,6 +7,8 @@ public class Entity : MoveEntity {
 
     bool isPlayer;
 	bool isDead;
+    bool isNameable;
+    bool isHostile;
 
     //IDictionary<string, BodyPart> body;
 
@@ -26,7 +28,8 @@ public class Entity : MoveEntity {
 
 	//Inventory stuff
 	List<Item> inventory;
-	List<Item> equipped;    
+	//List<Item> equipped;
+    //List<BodyPart> bodyParts;
 	int coins;
 
 	GameObject sprite;
