@@ -42,7 +42,7 @@ public class EntityTemplateLoader : MonoBehaviour {
         int index = ec.entityTemplates.FindIndex(item => item.type.Equals(entityTemplateType.ToLower()));
         EntityTemplate et = ec.entityTemplates[index];
 
-        Debug.Log("Entity Template Type: " + et.type);
+        //Debug.Log("Entity Template Type: " + et.type);
 
         return et;
 

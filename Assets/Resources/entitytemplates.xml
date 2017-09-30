@@ -9,10 +9,10 @@
       <MaxAgility> 6 </MaxAgility>
       <MinConstitution> 3 </MinConstitution>
       <MaxConstitution> 6 </MaxConstitution>	  
-      <Playable> True </Playable>
-      <Nameable> True </Nameable>
-      <CanMutate> True </CanMutate>
-      <IsHostile> False </IsHostile>      	
+      <Playable> true </Playable>
+      <Nameable> true </Nameable>
+      <CanMutate> true </CanMutate>
+      <IsHostile> false </IsHostile>      	
 	  <PossibleInventory>
 	  </PossibleInventory>	  
 	  <Coins> 0 </Coins>
