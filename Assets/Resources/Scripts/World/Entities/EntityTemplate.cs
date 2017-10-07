@@ -41,10 +41,7 @@ public class EntityTemplate {
 
     [XmlArray("PossibleInventory")]
     [XmlArrayItem("Item")]
-    public List<Item> possibleInventory;
-
-    [XmlElement("Coins")]
-    public int coins;
+    public List<Item> possibleInventory;    
 
     [XmlElement("SpritePath")]
     public string spritePath;

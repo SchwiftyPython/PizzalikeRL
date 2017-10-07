@@ -9,6 +9,9 @@ public class Entity : MoveEntity {
 	bool isDead;
     bool isNameable;
     bool isHostile;
+    bool canMutate;
+
+    string type;
 
     //IDictionary<string, BodyPart> body;
 
@@ -28,8 +31,8 @@ public class Entity : MoveEntity {
 
 	//Inventory stuff
 	List<Item> inventory;
-	//List<Item> equipped;
-    //List<BodyPart> bodyParts;
+	List<Item> equipped;
+    List<BodyPart> bodyParts;
 	int coins;
 
 	GameObject sprite;
@@ -37,6 +40,26 @@ public class Entity : MoveEntity {
 
     public Vector3 currentPosition;
 
+    public Entity (EntityTemplate template, bool isPlayer) {
+        this.isPlayer = isPlayer;
+        strength = GenStrength(template.minStrength, template.maxStrength);
+        agility = GenAgility(template.minAgility, template.maxAgility);
+        constitution = GenConstitution(template.minConstitution, template.maxConstitution);
+        isNameable = template.nameable;
+        canMutate = template.canMutate;
+        sprite = Resources.Load(template.spritePath) as GameObject;
+        //gen level
+        //gen hp
+        //gen speed
+        //gen defense
+        //gen coins
+        //gen inventory
+        //build body
+        //equip
+        //gen name
+    }
+
+    //Testing constructor
 	public Entity(bool isPlayer, GameObject sprite){
 		this.isPlayer = isPlayer;
 		this.sprite = sprite;
@@ -50,6 +73,18 @@ public class Entity : MoveEntity {
         speed = 35;
         defense = 35;
 	}
+
+    int GenStrength(int min, int max) {
+        return Random.Range(min, max + 1);
+    }
+
+    int GenAgility(int min, int max) {
+        return Random.Range(min, max + 1);
+    }
+
+    int GenConstitution(int min, int max) {
+        return Random.Range(min, max + 1);
+    }
 
     public bool IsPlayer() {
         return isPlayer;
