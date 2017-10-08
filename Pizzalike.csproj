@@ -81,6 +81,50 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AccidentalNoiseLibrary\Cache.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\CellularCache.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\CellularGenerator.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Enums\BasisType.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Enums\CombinerType.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Enums\FractalType.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Enums\InterpolationType.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Enums\MappingMode.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitAutoCorrect.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitBasisFunction.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitBias.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitBlend.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitBrightContrast.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitCache.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitCeiling.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitCellular.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitClamp.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitCombiner.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitConstant.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitCos.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitFloor.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitFractal.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitGain.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitGradient.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitInvert.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitLog.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitModuleBase.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitPow.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitRotateDomain.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitScaleDomain.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitScaleOffset.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitSelect.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitSin.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitSphere.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitTan.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitTiers.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitTranslateDomain.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Implicit\ImplicitXmlChain.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Mapping.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\MappingRanges.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Noise.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\NoiseLookupTable.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Properties\AssemblyInfo.cs" />
+    <Compile Include="Assets\AccidentalNoiseLibrary\Utilities.cs" />
     <Compile Include="Assets\AstarPathfindingProject\changelog.cs" />
     <Compile Include="Assets\AstarPathfindingProject\Core\AI\AIBase.cs" />
     <Compile Include="Assets\AstarPathfindingProject\Core\AI\AILerp.cs" />
@@ -199,6 +243,13 @@
     <Compile Include="Assets\Resources\Scripts\World\Item.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Tile.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Cell.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\CellGroup.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Generator.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\MapData.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\MathHelper.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\River.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\TextureGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\WorldManager.cs" />
   </ItemGroup>
   <ItemGroup>
