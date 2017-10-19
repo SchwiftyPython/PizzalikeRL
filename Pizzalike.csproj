@@ -242,7 +242,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplatesContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Item.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
-    <Compile Include="Assets\Resources\Scripts\World\Tile.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Area.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Cell.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\CellGroup.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Generator.cs" />
@@ -250,6 +250,7 @@
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\MathHelper.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\River.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\TextureGenerator.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Tile.cs" />
     <Compile Include="Assets\Resources\Scripts\WorldManager.cs" />
   </ItemGroup>
   <ItemGroup>

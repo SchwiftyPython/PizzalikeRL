@@ -71,6 +71,7 @@ public class Cell {
     public Color Color = Color.black;
 
     public List<River> Rivers = new List<River>();
+    public Area[,] Areas = new Area[3 , 3];
 
     public int RiverSize { get; set; }
 

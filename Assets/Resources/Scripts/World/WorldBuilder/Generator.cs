@@ -67,7 +67,7 @@ public class Generator : MonoBehaviour {
     ImplicitCombiner HeatMap;
     ImplicitFractal MoistureMap;
 
-    // Height map data
+    // Map data
     MapData HeightData;
     MapData HeatData;
     MapData MoistureData;
@@ -108,8 +108,15 @@ public class Generator : MonoBehaviour {
         Initialize();
         Generate();
     }
+    #region Public Methods
+    public BiomeType GetBiomeType(Cell cell) {
+        return BiomeTable[(int)cell.MoistureType, (int)cell.HeatType];
+    }
+    #endregion
 
-    void Generate() {        
+
+    #region Private Methods
+    private void Generate() {
         // Build the maps
         GetData();
         // Build our final objects based on our data
@@ -132,15 +139,10 @@ public class Generator : MonoBehaviour {
         HeightMapRenderer.materials[0].mainTexture = TextureGenerator.GetHeightMapTexture(Width, Height, Cells);
         HeatMapRenderer.materials[0].mainTexture = TextureGenerator.GetHeatMapTexture(Width, Height, Cells);
         MoistureMapRenderer.materials[0].mainTexture = TextureGenerator.GetMoistureMapTexture(Width, Height, Cells);
-        BiomeMapRenderer.materials[0].mainTexture = TextureGenerator.GetBiomeMapTexture(Width, Height, Cells, ColdestValue, ColderValue, ColdValue);       
-    }    
-
-    public BiomeType GetBiomeType(Cell cell) {
-        return BiomeTable[(int)cell.MoistureType, (int)cell.HeatType];
+        BiomeMapRenderer.materials[0].mainTexture = TextureGenerator.GetBiomeMapTexture(Width, Height, Cells, ColdestValue, ColderValue, ColdValue);
     }
 
-    private void GenerateBiomeMap() {
-        Debug.Log("Generating Biomes...");
+    private void GenerateBiomeMap() {        
         for (var x = 0; x < Width; x++) {
             for (var y = 0; y < Height; y++) {
 
@@ -152,8 +154,7 @@ public class Generator : MonoBehaviour {
         }
     }
 
-    private void UpdateBiomeBitmask() {
-        Debug.Log("Updating Biome Bitmasks...");
+    private void UpdateBiomeBitmask() {        
         for (var x = 0; x < Width; x++) {
             for (var y = 0; y < Height; y++) {
                 Cells[x, y].UpdateBiomeBitmask();
@@ -704,7 +705,15 @@ public class Generator : MonoBehaviour {
         if (count4 > river.Length) {
             int extra = count4 - river.Length;
             while (extra > 0) {
-                if (count1 > 0) { count1--; count2--; count3--; count4--; extra--; } else if (count2 > 0) { count2--; count3--; count4--; extra--; } else if (count3 > 0) { count3--; count4--; extra--; } else if (count4 > 0) { count4--; extra--; }
+                if (count1 > 0) {
+                    count1--; count2--; count3--; count4--; extra--;
+                } else if (count2 > 0) {
+                    count2--; count3--; count4--; extra--;
+                } else if (count3 > 0) {
+                    count3--; count4--; extra--;
+                } else if (count4 > 0) {
+                    count4--; extra--;
+                }
             }
         }
 
@@ -840,5 +849,6 @@ public class Generator : MonoBehaviour {
             }
         }
     }
+#endregion
 
 }
