@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
 
 	public enum TurnState {
 		START,
+        WORLDMAP,
 		PLAYERTURN,
 		ENEMYTURN,
 		END,
@@ -28,8 +29,7 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        //Debug.Log(currentState);
+	void Update () {        
 		switch(currentState) {
 		case TurnState.START:
                 if (!WorldManager.instance.worldSetup) {
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour {
 		case TurnState.ENEMYTURN:               
             break;
 		case TurnState.END:
-			//quit game or go to main menu
+			//go to main menu
 			break;
 		}
 	}    
