@@ -7,7 +7,7 @@ public class EnemyController : AstarAI {
     public bool turnStarted = false;	
 	
 	void Update () {
-		if(GameManager.instance.currentState == GameManager.TurnState.ENEMYTURN) {
+		if(GameManager.Instance.CurrentState == GameManager.TurnState.ENEMYTURN) {
             if (!turnStarted) {
                 Debug.Log("Enemy turn started");
                 turnStarted = true;
@@ -17,18 +17,18 @@ public class EnemyController : AstarAI {
 	}
 
     public IEnumerator MakeDecision() {
-        Entity enemy = WorldManager.instance.enemy;
-        FindPathToPlayer(WorldManager.instance.player.GetSprite().transform.position); //move toward player test
+        Entity enemy = WorldManager.Instance.Enemy;
+        FindPathToPlayer(WorldManager.Instance.Player.GetSprite().transform.position); //move toward player test
         yield return new WaitForSeconds(0.1f);
         Debug.Log(path);
-        Debug.Log("Present Entity: " + WorldManager.instance.GetTileAt(path.vectorPath[1]).GetPresentEntity());
-        if (WorldManager.instance.GetTileAt(path.vectorPath[1]).GetPresentEntity() == null) {
+        Debug.Log("Present Entity: " + WorldManager.Instance.GetTileAt(path.vectorPath[1]).GetPresentEntity());
+        if (WorldManager.Instance.GetTileAt(path.vectorPath[1]).GetPresentEntity() == null) {
             enemy.Move(path.vectorPath[1]);
             InputController.instance.actionTaken = false;
             turnStarted = false;
-            GameManager.instance.currentState = GameManager.TurnState.PLAYERTURN;
+            GameManager.Instance.CurrentState = GameManager.TurnState.PLAYERTURN;
         }else {
-            enemy.MeleeAttack(WorldManager.instance.player);
+            enemy.MeleeAttack(WorldManager.Instance.Player);
         }
     }
 }

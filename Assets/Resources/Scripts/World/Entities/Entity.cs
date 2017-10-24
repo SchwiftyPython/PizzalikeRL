@@ -116,11 +116,11 @@ public class Entity : MoveEntity {
         this.SetSpritePosition(endTile);
 
         //update tile data for start and end tiles
-        Tile tileToUpdate = WorldManager.instance.GetTileAt(startTile);
+        Tile tileToUpdate = WorldManager.Instance.GetTileAt(startTile);
         tileToUpdate.SetBlocksMovement(false);
         tileToUpdate.SetPresentEntity(null);
 
-        tileToUpdate = WorldManager.instance.GetTileAt(endTile);
+        tileToUpdate = WorldManager.Instance.GetTileAt(endTile);
         tileToUpdate.SetBlocksMovement(true);
         tileToUpdate.SetPresentEntity(this);        
     }

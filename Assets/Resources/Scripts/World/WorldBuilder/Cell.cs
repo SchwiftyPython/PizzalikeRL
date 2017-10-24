@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public enum HeightType {
@@ -46,6 +45,8 @@ public enum BiomeType {
 }
 
 public class Cell {
+    private const int CellWidth = 3;
+    private const int CellHeight = 3;
 
     public HeightType HeightType;
     public HeatType HeatType;
@@ -71,14 +72,40 @@ public class Cell {
     public Color Color = Color.black;
 
     public List<River> Rivers = new List<River>();
-    public Area[,] Areas = new Area[3 , 3];
+    public Area[,] Areas = new Area[CellWidth, CellHeight];
 
     public int RiverSize { get; set; }
 
-    public Cell() {}
+    /*
+    public Cell() {
+        for (var i = 0; i < CellWidth; i++) {
+            for (var j = 0; j < CellHeight; j++) {
+                Areas[i,j] = new Area();
+                Debug.Log(i + " " + j);
+            }
+        }
+    }
+    */
+
+    public BiomeType biomeType {
+        get { return BiomeType; }
+        set {
+            BiomeType = value;
+            for(var i = 0; i < CellWidth; i++) {
+                for(var j = 0; j < CellHeight; j++){
+                    if (Areas[i, j] != null) {
+                        Areas[i, j].biomeType = value;
+                    }
+                    else {
+                        Areas[i, j] = new Area {biomeType = value};
+                    }
+                }
+            }
+        }
+    }
 
     public void UpdateBitmask() {
-        int count = 0;
+        var count = 0;
 
         if (Top.HeightType == HeightType)
             count += 1;
@@ -93,7 +120,7 @@ public class Cell {
     }
 
     public void UpdateBiomeBitmask() {
-        int count = 0;
+        var count = 0;
 
         if (Collidable && Top != null && Top.BiomeType == BiomeType)
             count += 1;
@@ -108,7 +135,7 @@ public class Cell {
     }
 
     public int GetRiverNeighborCount(River river) {
-        int count = 0;
+        var count = 0;
         if (Left.Rivers.Count > 0 && Left.Rivers.Contains(river))
             count++;
         if (Right.Rivers.Count > 0 && Right.Rivers.Contains(river))
@@ -153,59 +180,59 @@ public class Cell {
         SetRiverCell(river);
         RiverSize = size;
 
-        if (size == 1) {
-            Bottom.SetRiverCell(river);
-            Right.SetRiverCell(river);
-            Bottom.Right.SetRiverCell(river);
-        }
-
-        if (size == 2) {
-            Bottom.SetRiverCell(river);
-            Right.SetRiverCell(river);
-            Bottom.Right.SetRiverCell(river);
-            Top.SetRiverCell(river);
-            Top.Left.SetRiverCell(river);
-            Top.Right.SetRiverCell(river);
-            Left.SetRiverCell(river);
-            Left.Bottom.SetRiverCell(river);
-        }
-
-        if (size == 3) {
-            Bottom.SetRiverCell(river);
-            Right.SetRiverCell(river);
-            Bottom.Right.SetRiverCell(river);
-            Top.SetRiverCell(river);
-            Top.Left.SetRiverCell(river);
-            Top.Right.SetRiverCell(river);
-            Left.SetRiverCell(river);
-            Left.Bottom.SetRiverCell(river);
-            Right.Right.SetRiverCell(river);
-            Right.Right.Bottom.SetRiverCell(river);
-            Bottom.Bottom.SetRiverCell(river);
-            Bottom.Bottom.Right.SetRiverCell(river);
-        }
-
-        if (size == 4) {
-            Bottom.SetRiverCell(river);
-            Right.SetRiverCell(river);
-            Bottom.Right.SetRiverCell(river);
-            Top.SetRiverCell(river);
-            Top.Right.SetRiverCell(river);
-            Left.SetRiverCell(river);
-            Left.Bottom.SetRiverCell(river);
-            Right.Right.SetRiverCell(river);
-            Right.Right.Bottom.SetRiverCell(river);
-            Bottom.Bottom.SetRiverCell(river);
-            Bottom.Bottom.Right.SetRiverCell(river);
-            Left.Bottom.Bottom.SetRiverCell(river);
-            Left.Left.Bottom.SetRiverCell(river);
-            Left.Left.SetRiverCell(river);
-            Left.Left.Top.SetRiverCell(river);
-            Left.Top.SetRiverCell(river);
-            Left.Top.Top.SetRiverCell(river);
-            Top.Top.SetRiverCell(river);
-            Top.Top.Right.SetRiverCell(river);
-            Top.Right.Right.SetRiverCell(river);
+        switch (size)
+        {
+            case 1:
+                Bottom.SetRiverCell(river);
+                Right.SetRiverCell(river);
+                Bottom.Right.SetRiverCell(river);
+                break;
+            case 2:
+                Bottom.SetRiverCell(river);
+                Right.SetRiverCell(river);
+                Bottom.Right.SetRiverCell(river);
+                Top.SetRiverCell(river);
+                Top.Left.SetRiverCell(river);
+                Top.Right.SetRiverCell(river);
+                Left.SetRiverCell(river);
+                Left.Bottom.SetRiverCell(river);
+                break;
+            case 3:
+                Bottom.SetRiverCell(river);
+                Right.SetRiverCell(river);
+                Bottom.Right.SetRiverCell(river);
+                Top.SetRiverCell(river);
+                Top.Left.SetRiverCell(river);
+                Top.Right.SetRiverCell(river);
+                Left.SetRiverCell(river);
+                Left.Bottom.SetRiverCell(river);
+                Right.Right.SetRiverCell(river);
+                Right.Right.Bottom.SetRiverCell(river);
+                Bottom.Bottom.SetRiverCell(river);
+                Bottom.Bottom.Right.SetRiverCell(river);
+                break;
+            case 4:
+                Bottom.SetRiverCell(river);
+                Right.SetRiverCell(river);
+                Bottom.Right.SetRiverCell(river);
+                Top.SetRiverCell(river);
+                Top.Right.SetRiverCell(river);
+                Left.SetRiverCell(river);
+                Left.Bottom.SetRiverCell(river);
+                Right.Right.SetRiverCell(river);
+                Right.Right.Bottom.SetRiverCell(river);
+                Bottom.Bottom.SetRiverCell(river);
+                Bottom.Bottom.Right.SetRiverCell(river);
+                Left.Bottom.Bottom.SetRiverCell(river);
+                Left.Left.Bottom.SetRiverCell(river);
+                Left.Left.SetRiverCell(river);
+                Left.Left.Top.SetRiverCell(river);
+                Left.Top.SetRiverCell(river);
+                Left.Top.Top.SetRiverCell(river);
+                Top.Top.SetRiverCell(river);
+                Top.Top.Right.SetRiverCell(river);
+                Top.Right.Right.SetRiverCell(river);
+                break;
         }
     }
 

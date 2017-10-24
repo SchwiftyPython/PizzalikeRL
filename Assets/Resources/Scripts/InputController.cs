@@ -30,8 +30,8 @@ public class InputController : MonoBehaviour {
 	}
 
     void Update() {
-        if (GameManager.instance.currentState == GameManager.TurnState.PLAYERTURN) {
-            player = WorldManager.instance.player;
+        if (GameManager.Instance.CurrentState == GameManager.TurnState.PLAYERTURN) {
+            player = WorldManager.Instance.Player;
             //Debug.Log ("player reference in update: " + player);
 
             if (Input.GetKeyDown(KeyCode.Keypad8)) {
@@ -91,7 +91,7 @@ public class InputController : MonoBehaviour {
             player.Move(target);
             return true;
         } else if(EntityPresent(target)) {
-                player.MeleeAttack(WorldManager.instance.GetTileAt(target).GetPresentEntity());                 
+                player.MeleeAttack(WorldManager.Instance.GetTileAt(target).GetPresentEntity());                 
                 return true;
         } else {
             return false;

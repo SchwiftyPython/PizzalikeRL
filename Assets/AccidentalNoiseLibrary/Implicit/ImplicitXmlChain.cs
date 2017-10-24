@@ -317,7 +317,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
                 default: throw new InvalidOperationException("Invalid interpolation.");
             }
 
-            var fractal = new ImplicitFractal(fractalType, basisType, interpolationType);
+            var fractal = new ImplicitFractal(fractalType, basisType, interpolationType, UnityEngine.Random.Range(int.MinValue, int.MaxValue));
 
             var octavesAttribute = xElement.Attribute("octaves");
             if (octavesAttribute != null)

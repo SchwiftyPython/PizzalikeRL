@@ -17,7 +17,7 @@ public class AstarAI : MonoBehaviour {
     public void FindPathToPlayer(Vector2 target) {
         pathCalculated = false;
         Debug.Log("Target: " + target);
-        GameObject enemy = WorldManager.instance.enemy.GetSprite();        
+        GameObject enemy = WorldManager.Instance.Enemy.GetSprite();        
         seeker = GetComponent<Seeker>();
         Debug.Log("enemy:" + enemy.transform.position);
         seeker.StartPath(enemy.transform.position, target, OnPathComplete);

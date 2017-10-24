@@ -38,11 +38,11 @@ public class MoveEntity {
     public virtual void Move(Vector2 target) {}
 
     public virtual bool TargetTileBlocked(Vector2 target) {
-        return WorldManager.instance.GetTileAt(target).GetBlocksMovement();
+        return WorldManager.Instance.GetTileAt(target).GetBlocksMovement();
     }
 
     public virtual bool TargetTileBlockedByEntity(Vector2 target) {
-        if(WorldManager.instance.GetTileAt(target).GetPresentEntity() == null) {
+        if(WorldManager.Instance.GetTileAt(target).GetPresentEntity() == null) {
             return false;
         } else {
             return true;

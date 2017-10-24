@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Area {
-    int height = 64;
-    int width = 64;
+    private const int Height = 32;
+    private const int Width = 32;
 
-    Tile[,] Tiles;
+    public BiomeType biomeType { get; set; }
+
+    Tile[,] Tiles =  new Tile[Height, Width];
 
     public Area() {
-        Tiles = new Tile[height, width];
+        
     }
 }

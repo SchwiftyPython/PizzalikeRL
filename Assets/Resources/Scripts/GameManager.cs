@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
@@ -12,36 +10,36 @@ public class GameManager : MonoBehaviour {
 		END,
 	}
 
-    public TurnState currentState { get; set; }
+    public TurnState CurrentState { get; set; }
 
-    public static GameManager instance = null;
+    public static GameManager Instance;
 
     // Use this for initialization
     void Awake () {
-        if (instance == null) {
-            instance = this;
-        } else if (instance != this) {
+        if (Instance == null) {
+            Instance = this;
+        } else if (Instance != this) {
             // Destroy the current object, so there is just one 
             Destroy(gameObject);
         }
 
-        currentState = TurnState.START;
+        CurrentState = TurnState.START;
 	}
 	
 	// Update is called once per frame
 	void Update () {        
-		switch(currentState) {
+		switch(CurrentState) {
 		case TurnState.START:
-                if (!WorldManager.instance.worldSetup) {
-                    WorldManager.instance.BoardSetup();
+                if (!WorldManager.Instance.WorldSetup) {
+                    WorldManager.Instance.BoardSetup();
                 }
-                if (WorldManager.instance.worldSetup) {
-                    currentState = TurnState.PLAYERTURN;
+                if (WorldManager.Instance.WorldSetup) {
+                    CurrentState = TurnState.PLAYERTURN;
                 }
 			break;
 		case TurnState.PLAYERTURN:
                 if (InputController.instance.actionTaken) {
-                    currentState = TurnState.ENEMYTURN;
+                    CurrentState = TurnState.ENEMYTURN;
                 }
 			break;
 		case TurnState.ENEMYTURN:               

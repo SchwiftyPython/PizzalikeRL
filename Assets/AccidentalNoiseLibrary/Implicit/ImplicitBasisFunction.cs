@@ -37,6 +37,16 @@ namespace TinkerWorX.AccidentalNoiseLibrary
             this.Seed = (Int32)DateTime.Now.Ticks;
         }
 
+        public ImplicitBasisFunction(BasisType basisType = BasisType.Gradient, InterpolationType interpolationType = InterpolationType.Quintic, Int32 seed = 0) {
+            this.BasisType = basisType;
+            this.InterpolationType = interpolationType;
+            if (seed == 0) {
+                this.Seed = (Int32)DateTime.Now.Ticks;
+            } else {
+                this.Seed = seed;
+            }
+        }
+
         public override Int32 Seed
         {
             get { return this.seed; }

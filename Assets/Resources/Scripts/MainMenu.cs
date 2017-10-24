@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
-
-    private string WorldGenerationScene = "WorldGeneration";
+    private const string WorldGenerationSetupScene = "WorldGenerationSetup";
 
     public static MainMenu instance = null;
 
@@ -20,7 +19,7 @@ public class MainMenu : MonoBehaviour {
     }
     
     public void LoadWorldGenerationScene() {
-        SceneManager.LoadScene(WorldGenerationScene);
+        SceneManager.LoadScene(WorldGenerationSetupScene);
     }
 
     public void QuitToDesktop() {

@@ -18,14 +18,15 @@ namespace TinkerWorX.AccidentalNoiseLibrary
 
         private Int32 octaves;
 
-        public ImplicitFractal(FractalType fractalType, BasisType basisType, InterpolationType interpolationType)
+        public ImplicitFractal(FractalType fractalType, BasisType basisType, InterpolationType interpolationType, Int32 seed)
         {
             this.Octaves = 8;
             this.Frequency = 1.00;
             this.Lacunarity = 2.00;
             this.Type = fractalType;
+            this.seed = seed;
             this.SetAllSourceTypes(basisType, interpolationType);
-            this.ResetAllSources();
+            this.ResetAllSources();            
         }
 
         public override Int32 Seed
@@ -112,7 +113,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
         {
             for (var i = 0; i < Noise.MAX_SOURCES; ++i)
             {
-                this.basisFunctions[i] = new ImplicitBasisFunction(newBasisType, newInterpolationType);
+                this.basisFunctions[i] = new ImplicitBasisFunction(newBasisType, newInterpolationType, seed);
             }
         }
 
