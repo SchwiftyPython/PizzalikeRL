@@ -231,6 +231,7 @@
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\InputController.cs" />
+    <Compile Include="Assets\Resources\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\MoveEntity.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
@@ -251,6 +252,9 @@
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\River.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\TextureGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Tile.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\WorldData.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\WorldGenData.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\WorldGenerationSetupMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\WorldManager.cs" />
   </ItemGroup>
   <ItemGroup>
