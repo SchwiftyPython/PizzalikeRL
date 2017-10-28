@@ -6,9 +6,9 @@ public class Area {
     private const int Height = 32;
     private const int Width = 32;
 
-    public BiomeType biomeType { get; set; }
+    public BiomeType BiomeType { get; set; }
 
-    Tile[,] Tiles =  new Tile[Height, Width];
+    private Tile[,] _areaTiles =  new Tile[Height, Width];
 
     public Area() {
         

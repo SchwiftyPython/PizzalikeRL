@@ -89,18 +89,18 @@ public class Generator : MonoBehaviour {
     MeshRenderer _moistureMapRenderer;
     MeshRenderer _biomeMapRenderer;
 
-    BiomeType[,] _biomeTable = new BiomeType[6, 6] {   
-		//COLDEST        //COLDER          //COLD                  //HOT                          //HOTTER                       //HOTTEST
-		{ BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
-		{ BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
-		{ BiomeType.Ice, BiomeType.Tundra, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.Savanna,             BiomeType.Savanna },             //DRY
-		{ BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.Woodland,            BiomeType.Savanna,             BiomeType.Savanna },             //WET
-		{ BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
-		{ BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.TemperateRainforest, BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
+    private readonly BiomeType[,] _biomeTable = {   
+		//COLDEST        //COLDER             //COLD                  //HOT                          //HOTTER                       //HOTTEST
+		{ BiomeType.Ice, BiomeType.WasteLand, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
+		{ BiomeType.Ice, BiomeType.WasteLand, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
+		{ BiomeType.Ice, BiomeType.WasteLand, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.WasteLand,           BiomeType.WasteLand },             //DRY
+		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.WasteLand,    BiomeType.Woodland,            BiomeType.WasteLand,           BiomeType.WasteLand },             //WET
+		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
+		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
     };    
 
     void Start() {
-        Seed = WorldGenData.instance.Seed;
+        Seed = WorldData.Instance.Seed;
 
         // Get the mesh we are rendering our output to        
         _heightMapRenderer = GameObject.Find("HeightTexture").GetComponentInChildren<MeshRenderer>();
@@ -112,10 +112,13 @@ public class Generator : MonoBehaviour {
         Initialize();
         Debug.Log("Initialize complete");
         Generate();
+
+        WorldData.Instance.Cells = _cells;
     }
     #region Public Methods
     public BiomeType GetBiomeType(Cell cell) {
-        return _biomeTable[(int)cell.MoistureType, (int)cell.HeatType];
+        return cell.HeightType == HeightType.Rock ? BiomeType.Mountain 
+            : _biomeTable[(int)cell.MoistureType, (int)cell.HeatType];
     }
     #endregion
 
@@ -175,7 +178,7 @@ public class Generator : MonoBehaviour {
                                         InterpolationType.Quintic,
                                         Seed.GetHashCode());        
         
-        var gradient = new ImplicitGradient(1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+        var gradient = new ImplicitGradient(1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1);
         var heatFractal = new ImplicitFractal(FractalType.Multi,
                                                           BasisType.Simplex,
                                                           InterpolationType.Quintic,
@@ -189,7 +192,7 @@ public class Generator : MonoBehaviour {
         _moistureMap = new ImplicitFractal(FractalType.Multi,
                                           BasisType.Simplex,
                                           InterpolationType.Quintic,
-                                          Seed.GetHashCode() / 6);
+                                          Seed.GetHashCode() * 6);
 
     }
 
@@ -248,9 +251,10 @@ public class Generator : MonoBehaviour {
 
         for (var x = 0; x < _width; x++) {
             for (var y = 0; y < _height; y++) {
-                var c = new Cell();
-                c.X = x;
-                c.Y = y;
+                var c = new Cell {
+                    X = x,
+                    Y = y
+                };
 
                 var heightValue = _heightData.Data[x, y];                
                 heightValue = (heightValue - _heightData.Min) / (_heightData.Max - _heightData.Min);
@@ -281,14 +285,19 @@ public class Generator : MonoBehaviour {
                 }
 
                 // Adjust Heat Map based on Height - Higher == colder
-                if (c.HeightType == HeightType.Forest) {
-                    _heatData.Data[c.X, c.Y] -= 0.1f * c.HeightValue;
-                } else if (c.HeightType == HeightType.Rock) {
-                    _heatData.Data[c.X, c.Y] -= 0.25f * c.HeightValue;
-                } else if (c.HeightType == HeightType.Snow) {
-                    _heatData.Data[c.X, c.Y] -= 0.4f * c.HeightValue;
-                } else {
-                    _heatData.Data[c.X, c.Y] += 0.01f * c.HeightValue;
+                switch (c.HeightType) {
+                    case HeightType.Forest:
+                        _heatData.Data[c.X, c.Y] -= 0.1f * c.HeightValue;
+                        break;
+                    case HeightType.Rock:
+                        _heatData.Data[c.X, c.Y] -= 0.25f * c.HeightValue;
+                        break;
+                    case HeightType.Snow:
+                        _heatData.Data[c.X, c.Y] -= 0.4f * c.HeightValue;
+                        break;
+                    default:
+                        _heatData.Data[c.X, c.Y] += 0.01f * c.HeightValue;
+                        break;
                 }
 
                 // Set heat value
@@ -310,14 +319,19 @@ public class Generator : MonoBehaviour {
                 else
                     c.HeatType = HeatType.Warmest;
 
-                if (c.HeightType == HeightType.DeepWater) {
-                    _moistureData.Data[c.X, c.Y] += 8f * c.HeightValue;
-                } else if (c.HeightType == HeightType.ShallowWater) {
-                    _moistureData.Data[c.X, c.Y] += 3f * c.HeightValue;
-                } else if (c.HeightType == HeightType.Shore) {
-                    _moistureData.Data[c.X, c.Y] += 1f * c.HeightValue;
-                } else if (c.HeightType == HeightType.Sand) {
-                    _moistureData.Data[c.X, c.Y] += 0.2f * c.HeightValue;
+                switch (c.HeightType) {
+                    case HeightType.DeepWater:
+                        _moistureData.Data[c.X, c.Y] += 8f * c.HeightValue;
+                        break;
+                    case HeightType.ShallowWater:
+                        _moistureData.Data[c.X, c.Y] += 3f * c.HeightValue;
+                        break;
+                    case HeightType.Shore:
+                        _moistureData.Data[c.X, c.Y] += 1f * c.HeightValue;
+                        break;
+                    case HeightType.Sand:
+                        _moistureData.Data[c.X, c.Y] += 0.2f * c.HeightValue;
+                        break;
                 }
 
                 //Moisture Map Analyze  

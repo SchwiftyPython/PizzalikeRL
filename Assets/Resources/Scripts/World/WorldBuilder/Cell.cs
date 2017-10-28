@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum HeightType {
@@ -33,14 +34,13 @@ public enum MoistureType {
 
 public enum BiomeType {
     Desert,
-    Savanna,
     TropicalRainforest,
     Grassland,
     Woodland,
+    Swamp,
+    Mountain,
     SeasonalForest,
-    TemperateRainforest,
-    BorealForest,
-    Tundra,
+    WasteLand,
     Ice
 }
 
@@ -76,28 +76,20 @@ public class Cell {
 
     public int RiverSize { get; set; }
 
-    /*
-    public Cell() {
-        for (var i = 0; i < CellWidth; i++) {
-            for (var j = 0; j < CellHeight; j++) {
-                Areas[i,j] = new Area();
-                Debug.Log(i + " " + j);
-            }
-        }
-    }
-    */
+    public GameObject WorldMapSprite { get; set; }
 
     public BiomeType biomeType {
         get { return BiomeType; }
         set {
             BiomeType = value;
-            for(var i = 0; i < CellWidth; i++) {
+            SetCellSprite(value);
+            for (var i = 0; i < CellWidth; i++) {
                 for(var j = 0; j < CellHeight; j++){
                     if (Areas[i, j] != null) {
-                        Areas[i, j].biomeType = value;
+                        Areas[i, j].BiomeType = value;
                     }
                     else {
-                        Areas[i, j] = new Area {biomeType = value};
+                        Areas[i, j] = new Area {BiomeType = value};
                     }
                 }
             }
@@ -233,6 +225,36 @@ public class Cell {
                 Top.Top.Right.SetRiverCell(river);
                 Top.Right.Right.SetRiverCell(river);
                 break;
+        }
+    }
+
+    private void SetCellSprite(BiomeType biome) {
+        switch (biome) {
+            case BiomeType.Mountain:
+                WorldMapSprite = WorldData.Instance.worldMountainTile;
+                break;
+            case BiomeType.Desert:
+                WorldMapSprite = WorldData.Instance.worldDesertTile;
+                break;
+            case BiomeType.Grassland:
+                WorldMapSprite = WorldData.Instance.worldGrassLandTile;
+                break;
+            case BiomeType.Ice:
+                WorldMapSprite = WorldData.Instance.worldIceTile;
+                break;
+            case BiomeType.Swamp:
+                WorldMapSprite = WorldData.Instance.worldSwampTile;
+                break;
+            case BiomeType.WasteLand:
+                WorldMapSprite = WorldData.Instance.worldWasteLandTile;
+                break;
+            case BiomeType.SeasonalForest:
+            case BiomeType.TropicalRainforest:
+            case BiomeType.Woodland:
+                WorldMapSprite = WorldData.Instance.worldForestTile;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("biome", biome, null);
         }
     }
 

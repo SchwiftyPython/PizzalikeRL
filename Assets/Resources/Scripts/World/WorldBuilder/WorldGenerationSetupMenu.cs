@@ -26,7 +26,7 @@ public class WorldGenerationSetupMenu : MonoBehaviour {
 
     public void LoadWorldGeneration() {
         if(SeedInputField.text.Equals("") || SeedInputField.text == null) {
-            WorldGenData.instance.Seed = (UnityEngine.Random.Range(int.MinValue, int.MaxValue) + 
+            WorldData.Instance.Seed = (UnityEngine.Random.Range(int.MinValue, int.MaxValue) + 
                                          (int)DateTime.Now.Ticks).ToString();
         }
 

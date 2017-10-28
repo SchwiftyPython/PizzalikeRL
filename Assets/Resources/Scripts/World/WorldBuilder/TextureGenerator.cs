@@ -36,13 +36,12 @@ public class TextureGenerator {
     //biome map
     private static Color Ice = Color.white;
     private static Color Desert = new Color(238 / 255f, 218 / 255f, 130 / 255f, 1);
-    private static Color Savanna = new Color(177 / 255f, 209 / 255f, 110 / 255f, 1);
     private static Color TropicalRainforest = new Color(66 / 255f, 123 / 255f, 25 / 255f, 1);
-    private static Color Tundra = new Color(96 / 255f, 131 / 255f, 112 / 255f, 1);
+    private static Color Swamp = new Color(96 / 255f, 131 / 255f, 112 / 255f, 1);
     private static Color TemperateRainforest = new Color(29 / 255f, 73 / 255f, 40 / 255f, 1);
     private static Color Grassland = new Color(164 / 255f, 225 / 255f, 99 / 255f, 1);
     private static Color SeasonalForest = new Color(73 / 255f, 100 / 255f, 35 / 255f, 1);
-    private static Color BorealForest = new Color(95 / 255f, 115 / 255f, 62 / 255f, 1);
+    private static Color Wasteland = new Color(95 / 255f, 115 / 255f, 62 / 255f, 1);
     private static Color Woodland = new Color(139 / 255f, 175 / 255f, 90 / 255f, 1);
 
     public static Texture2D GetHeightMapTexture(int width, int height, Cell[,] cells) {
@@ -168,8 +167,8 @@ public class TextureGenerator {
                     case BiomeType.Ice:
                         pixels[x + y * width] = Ice;
                         break;
-                    case BiomeType.BorealForest:
-                        pixels[x + y * width] = BorealForest;
+                    case BiomeType.WasteLand:
+                        pixels[x + y * width] = Wasteland;
                         break;
                     case BiomeType.Desert:
                         pixels[x + y * width] = Desert;
@@ -180,14 +179,8 @@ public class TextureGenerator {
                     case BiomeType.SeasonalForest:
                         pixels[x + y * width] = SeasonalForest;
                         break;
-                    case BiomeType.Tundra:
-                        pixels[x + y * width] = Tundra;
-                        break;
-                    case BiomeType.Savanna:
-                        pixels[x + y * width] = Savanna;
-                        break;
-                    case BiomeType.TemperateRainforest:
-                        pixels[x + y * width] = TemperateRainforest;
+                    case BiomeType.Swamp:
+                        pixels[x + y * width] = Swamp;
                         break;
                     case BiomeType.TropicalRainforest:
                         pixels[x + y * width] = TropicalRainforest;
