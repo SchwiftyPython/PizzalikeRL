@@ -41,7 +41,8 @@ public enum BiomeType {
     Mountain,
     SeasonalForest,
     WasteLand,
-    Ice
+    Ice,
+    Water
 }
 
 public class Cell {
@@ -231,27 +232,30 @@ public class Cell {
     private void SetCellSprite(BiomeType biome) {
         switch (biome) {
             case BiomeType.Mountain:
-                WorldMapSprite = WorldData.Instance.worldMountainTile;
+                WorldMapSprite = WorldData.Instance.WorldMountainTile;
                 break;
             case BiomeType.Desert:
-                WorldMapSprite = WorldData.Instance.worldDesertTile;
+                WorldMapSprite = WorldData.Instance.WorldDesertTile;
                 break;
             case BiomeType.Grassland:
-                WorldMapSprite = WorldData.Instance.worldGrassLandTile;
+                WorldMapSprite = WorldData.Instance.WorldGrassLandTile;
                 break;
             case BiomeType.Ice:
-                WorldMapSprite = WorldData.Instance.worldIceTile;
+                WorldMapSprite = WorldData.Instance.WorldIceTile;
                 break;
             case BiomeType.Swamp:
-                WorldMapSprite = WorldData.Instance.worldSwampTile;
+                WorldMapSprite = WorldData.Instance.WorldSwampTile;
                 break;
             case BiomeType.WasteLand:
-                WorldMapSprite = WorldData.Instance.worldWasteLandTile;
+                WorldMapSprite = WorldData.Instance.WorldWasteLandTile;
+                break;
+            case BiomeType.Water:
+                WorldMapSprite = WorldData.Instance.WorldWaterTile;
                 break;
             case BiomeType.SeasonalForest:
             case BiomeType.TropicalRainforest:
             case BiomeType.Woodland:
-                WorldMapSprite = WorldData.Instance.worldForestTile;
+                WorldMapSprite = WorldData.Instance.WorldForestTile;
                 break;
             default:
                 throw new ArgumentOutOfRangeException("biome", biome, null);

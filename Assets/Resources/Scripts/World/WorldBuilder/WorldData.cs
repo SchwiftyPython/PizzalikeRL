@@ -1,18 +1,50 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WorldData : MonoBehaviour {
+    private int _height;
+    private int _width;
+    private Cell[,] _map;
 
     public string Seed { get; set; }
 
-    public Cell[,] Cells { get; set; }
+    public Cell[,] Map {
+        get { return _map; }
+        set {
+            _map = value;
+            Height = value.GetLength(0);
+            Width = value.GetLength(1);
+        }
+    }
 
-    public GameObject worldGrassLandTile;
-    public GameObject worldForestTile;
-    public GameObject worldDesertTile;
-    public GameObject worldMountainTile;
-    public GameObject worldWasteLandTile;
-    public GameObject worldSwampTile;
-    public GameObject worldIceTile;
+    public int Height {
+        get {
+            return _height;
+        }
+
+        set {
+            _height = value;
+        }
+    }
+
+    public int Width {
+        get {
+            return _width;
+        }
+
+        set {
+            _width = value;
+        }
+    }
+
+    public GameObject WorldGrassLandTile;
+    public GameObject WorldForestTile;
+    public GameObject WorldDesertTile;
+    public GameObject WorldMountainTile;
+    public GameObject WorldWasteLandTile;
+    public GameObject WorldSwampTile;
+    public GameObject WorldIceTile;
+    public GameObject WorldWaterTile;
 
     public static WorldData Instance;
 
@@ -21,9 +53,7 @@ public class WorldData : MonoBehaviour {
             Instance = this;
             DontDestroyOnLoad(gameObject);
         } else if (Instance != this) {
-            // Destroy the current object, so there is just one 
             Destroy(gameObject);
         }
-
     }
 }

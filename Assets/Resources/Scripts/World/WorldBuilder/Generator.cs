@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using TinkerWorX.AccidentalNoiseLibrary;
 
@@ -7,16 +6,14 @@ public class Generator : MonoBehaviour {
     public string Seed { set; get; }
 
     // Adjustable variables for Unity Inspector
-    [SerializeField]
-    int _width = 128;
-    [SerializeField]
-    int _height = 128;     
+    [SerializeField] private int _width = 128;
+    [SerializeField] private int _height = 128;     
 
     [Header("Height Map")]    
     [SerializeField]
-    float _deepWater = 0.2f;
+    float _deepWater = 0.1f;
     [SerializeField]
-    float _shallowWater = 0.4f;
+    float _shallowWater = 0.2f;
     [SerializeField]
     float _sand = 0.5f;
     [SerializeField]
@@ -76,6 +73,7 @@ public class Generator : MonoBehaviour {
 
     // Final Objects
     Cell[,] _cells;
+    private Transform _mapHolder;
 
     List<CellGroup> _waters = new List<CellGroup>();
     List<CellGroup> _lands = new List<CellGroup>();
@@ -97,28 +95,36 @@ public class Generator : MonoBehaviour {
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.WasteLand,    BiomeType.Woodland,            BiomeType.WasteLand,           BiomeType.WasteLand },             //WET
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
-    };    
+    };
 
-    void Start() {
+    private void Start() {
         Seed = WorldData.Instance.Seed;
 
         // Get the mesh we are rendering our output to        
-        _heightMapRenderer = GameObject.Find("HeightTexture").GetComponentInChildren<MeshRenderer>();
-        _heatMapRenderer = GameObject.Find("HeatTexture").GetComponentInChildren<MeshRenderer>();
-        _moistureMapRenderer = GameObject.Find("MoistureTexture").GetComponentInChildren<MeshRenderer>();
-        _biomeMapRenderer = GameObject.Find("BiomeTexture").GetComponentInChildren<MeshRenderer>();
+        //_heightMapRenderer = GameObject.Find("HeightTexture").GetComponentInChildren<MeshRenderer>();
+        //_heatMapRenderer = GameObject.Find("HeatTexture").GetComponentInChildren<MeshRenderer>();
+        //_moistureMapRenderer = GameObject.Find("MoistureTexture").GetComponentInChildren<MeshRenderer>();
+        //_biomeMapRenderer = GameObject.Find("BiomeTexture").GetComponentInChildren<MeshRenderer>();
 
         // Initialize the generator
         Initialize();
         Debug.Log("Initialize complete");
         Generate();
+        DrawMap();
 
-        WorldData.Instance.Cells = _cells;
+        WorldData.Instance.Map = _cells;
     }
     #region Public Methods
     public BiomeType GetBiomeType(Cell cell) {
-        return cell.HeightType == HeightType.Rock ? BiomeType.Mountain 
-            : _biomeTable[(int)cell.MoistureType, (int)cell.HeatType];
+        switch (cell.HeightType) {
+            case HeightType.DeepWater:
+            case HeightType.ShallowWater:
+                return BiomeType.Water;
+            case HeightType.Rock:
+                return BiomeType.Mountain;
+            default:
+                return _biomeTable[(int)cell.MoistureType, (int)cell.HeatType];
+        }
     }
     #endregion
 
@@ -145,20 +151,32 @@ public class Generator : MonoBehaviour {
         UpdateBiomeBitmask();
 
         // Render a texture representation of our map
+        /*
         _heightMapRenderer.materials[0].mainTexture = TextureGenerator.GetHeightMapTexture(_width, _height, _cells);
         _heatMapRenderer.materials[0].mainTexture = TextureGenerator.GetHeatMapTexture(_width, _height, _cells);
         _moistureMapRenderer.materials[0].mainTexture = TextureGenerator.GetMoistureMapTexture(_width, _height, _cells);
         _biomeMapRenderer.materials[0].mainTexture = TextureGenerator.GetBiomeMapTexture(_width, _height, _cells, _coldestValue, _colderValue, _coldValue);
+        */
+    }
+
+    private void DrawMap()
+    {
+        _mapHolder = transform;
+
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
+                var instance = Instantiate(_cells[x, y].WorldMapSprite, new Vector2(x, y), Quaternion.identity);
+                instance.transform.SetParent(_mapHolder);
+            }
+        }
     }
 
     private void GenerateBiomeMap() {        
         for (var x = 0; x < _width; x++) {
             for (var y = 0; y < _height; y++) {
-
-                if (!_cells[x, y].Collidable) continue;
-
-                var c = _cells[x, y];
-                c.biomeType = GetBiomeType(c);
+                _cells[x, y].biomeType = GetBiomeType(_cells[x, y]);
             }
         }
     }
@@ -465,8 +483,8 @@ public class Generator : MonoBehaviour {
         while (rivercount > 0 && attempts < _maxRiverAttempts) {
 
             // Get a random tile
-            var x = UnityEngine.Random.Range(0, _width);
-            var y = UnityEngine.Random.Range(0, _height);
+            var x = Random.Range(0, _width);
+            var y = Random.Range(0, _height);
             var cell = _cells[x, y];
 
             // validate the tile
@@ -475,10 +493,9 @@ public class Generator : MonoBehaviour {
 
             if (cell.HeightValue > _minRiverHeight) {
                 // Tile is good to start river from
-                var river = new River(rivercount);
+                var river = new River(rivercount) {CurrentDirection = cell.GetLowestNeighbor()};
 
                 // Figure out the direction this river will try to flow
-                river.CurrentDirection = cell.GetLowestNeighbor();
 
                 // Recursively find a path to water
                 FindPathToWater(cell, river.CurrentDirection, ref river);

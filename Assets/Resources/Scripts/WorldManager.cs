@@ -3,8 +3,6 @@ using Pathfinding;
 
 public class WorldManager : MonoBehaviour {
 
-	Random _r = new Random();
-
 	public int Columns = 50;
 	public int Rows = 50;
     public float GraphOffset = -0.5f;

@@ -4,61 +4,61 @@ using UnityEngine;
 
 public class Tile {
 
-	Entity presentEntity;
-	Prop presentProp;
-	Item presentItem;
-	GameObject texture;
-	Vector3 gridPosition;
+	Entity _presentEntity;
+	Prop _presentProp;
+	Item _presentItem;
+	GameObject _texture;
+	Vector3 _gridPosition;
 
-	bool blocksMovement;
-	bool blocksLight;
+	bool _blocksMovement;
+	bool _blocksLight;
 
 	public Tile(){}
 
 	public Tile(GameObject texture, Vector3 position, bool blocksMovement, bool blocksLight){
-		this.texture = texture;
-		gridPosition = position;
-		this.blocksMovement = blocksMovement;
-		this.blocksLight = blocksLight;
+		_texture = texture;
+		_gridPosition = position;
+		_blocksMovement = blocksMovement;
+		_blocksLight = blocksLight;
 	}
 
 	public void SetPresentEntity(Entity entity){
-		presentEntity = entity;
+		_presentEntity = entity;
 	}
 
 	public Entity GetPresentEntity(){
-		return this.presentEntity;
+		return _presentEntity;
 	}
 
 	public void SetGridPosition(Vector3 position){
-		gridPosition = position;
+		_gridPosition = position;
 	}
 
 	public Vector3 GetGridPosition(){
-		return gridPosition;
+		return _gridPosition;
 	}
 
 	public void SetTileTexture(GameObject texture){
-		this.texture = texture;
+		_texture = texture;
 	}
 
 	public GameObject GetTileTexture(){
-		return this.texture;
+		return _texture;
 	}
 
 	public void SetBlocksMovement(bool blocksMovement){
-		this.blocksMovement = blocksMovement;
+		_blocksMovement = blocksMovement;
 	}
 
 	public bool GetBlocksMovement(){
-		return this.blocksMovement;
+		return _blocksMovement;
 	}
 
 	public void SetBlocksLight(bool blocksLight){
-		this.blocksLight = blocksLight;
+		_blocksLight = blocksLight;
 	}
 
 	public bool GetBlocksLight(){
-		return this.blocksLight;
+		return _blocksLight;
 	}
 }
