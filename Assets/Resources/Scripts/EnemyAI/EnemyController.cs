@@ -7,7 +7,7 @@ public class EnemyController : AstarAI {
     public bool turnStarted = false;	
 	
 	void Update () {
-		if(GameManager.Instance.CurrentState == GameManager.TurnState.ENEMYTURN) {
+		if(GameManager.Instance.CurrentState == GameManager.TurnState.Enemyturn) {
             if (!turnStarted) {
                 Debug.Log("Enemy turn started");
                 turnStarted = true;
@@ -26,7 +26,7 @@ public class EnemyController : AstarAI {
             enemy.Move(path.vectorPath[1]);
             InputController.instance.actionTaken = false;
             turnStarted = false;
-            GameManager.Instance.CurrentState = GameManager.TurnState.PLAYERTURN;
+            GameManager.Instance.CurrentState = GameManager.TurnState.Playerturn;
         }else {
             enemy.MeleeAttack(WorldManager.Instance.Player);
         }

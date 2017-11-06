@@ -6,8 +6,8 @@ public class Generator : MonoBehaviour {
     public string Seed { set; get; }
 
     // Adjustable variables for Unity Inspector
-    [SerializeField] private int _width = 128;
-    [SerializeField] private int _height = 128;     
+    [SerializeField] private int _width = 270;
+    [SerializeField] private int _height = 75;     
 
     [Header("Height Map")]    
     [SerializeField]
@@ -139,9 +139,9 @@ public class Generator : MonoBehaviour {
         Debug.Log("LoadCells complete");
         UpdateNeighbors();
 
-        GenerateRivers();
-        BuildRiverGroups();
-        DigRiverGroups();
+        //GenerateRivers();
+        //BuildRiverGroups();
+        //DigRiverGroups();
         AdjustMoistureMap();
 
         UpdateBitmasks();

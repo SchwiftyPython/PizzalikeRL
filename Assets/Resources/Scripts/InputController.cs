@@ -30,7 +30,7 @@ public class InputController : MonoBehaviour {
 	}
 
     void Update() {
-        if (GameManager.Instance.CurrentState == GameManager.TurnState.PLAYERTURN) {
+        if (GameManager.Instance.CurrentState == GameManager.TurnState.Playerturn) {
             player = WorldManager.Instance.Player;
             //Debug.Log ("player reference in update: " + player);
 

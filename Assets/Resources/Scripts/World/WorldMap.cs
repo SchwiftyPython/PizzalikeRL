@@ -2,7 +2,7 @@
 
 public class WorldMap : MonoBehaviour {
 
-    private Transform _mapHolder;
+    private Transform _worldMapHolder;
     private Cell[,] _map;
     private int _mapHeight;
     private int _mapWidth;
@@ -20,7 +20,7 @@ public class WorldMap : MonoBehaviour {
     }
 
     private void DrawMap() {
-        _mapHolder = transform;
+        _worldMapHolder = transform;
         _map = WorldData.Instance.Map;
         _mapHeight = WorldData.Instance.Height;
         _mapWidth = WorldData.Instance.Width;
@@ -28,7 +28,7 @@ public class WorldMap : MonoBehaviour {
         for (var x = 0; x < _mapWidth; x++) {
             for (var y = 0; y < _mapHeight; y++) {
                 var instance = Instantiate(_map[x,y].WorldMapSprite, new Vector2(x,y), Quaternion.identity);
-                instance.transform.SetParent(_mapHolder);
+                instance.transform.SetParent(_worldMapHolder);
             }
         }
     }

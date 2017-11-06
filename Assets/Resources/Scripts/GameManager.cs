@@ -2,12 +2,17 @@
 
 public class GameManager : MonoBehaviour {
 
+    public Cell CurrentCellPosition;
+    public Area CurrentAreaPosition;
+    public Tile CurrentTilePosition;
+
 	public enum TurnState {
-		START,
-        WORLDMAP,
-		PLAYERTURN,
-		ENEMYTURN,
-		END,
+		Start,
+        Worldmap,
+        Areamap,
+		Playerturn,
+		Enemyturn,
+		End,
 	}
 
     public TurnState CurrentState { get; set; }
@@ -23,28 +28,22 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
         }
 
-        CurrentState = TurnState.START;
+        CurrentState = TurnState.Start;
 	}
 	
 	// Update is called once per frame
-	void Update () {        
+    private void Update () {        
 		switch(CurrentState) {
-		case TurnState.START:
-                if (!WorldManager.Instance.WorldSetup) {
-                    WorldManager.Instance.BoardSetup();
-                }
-                if (WorldManager.Instance.WorldSetup) {
-                    CurrentState = TurnState.PLAYERTURN;
-                }
+		case TurnState.Start:
 			break;
-		case TurnState.PLAYERTURN:
+		case TurnState.Playerturn:
                 if (InputController.instance.actionTaken) {
-                    CurrentState = TurnState.ENEMYTURN;
+                    CurrentState = TurnState.Enemyturn;
                 }
 			break;
-		case TurnState.ENEMYTURN:               
+		case TurnState.Enemyturn:               
             break;
-		case TurnState.END:
+		case TurnState.End:
 			//go to main menu
 			break;
 		}

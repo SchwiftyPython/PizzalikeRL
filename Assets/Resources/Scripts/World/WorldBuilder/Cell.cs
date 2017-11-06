@@ -49,6 +49,8 @@ public class Cell {
     private const int CellWidth = 3;
     private const int CellHeight = 3;
 
+    private Area _currentArea;
+
     public HeightType HeightType;
     public HeatType HeatType;
     public MoistureType MoistureType;
@@ -94,6 +96,16 @@ public class Cell {
                     }
                 }
             }
+        }
+    }
+
+    public Area CurrentArea {
+        get {
+            return _currentArea;
+        }
+
+        set {
+            _currentArea = value;
         }
     }
 

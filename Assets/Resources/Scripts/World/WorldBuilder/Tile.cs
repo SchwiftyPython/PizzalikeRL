@@ -8,14 +8,14 @@ public class Tile {
 	Prop _presentProp;
 	Item _presentItem;
 	GameObject _texture;
-	Vector3 _gridPosition;
+	Vector2 _gridPosition;
 
 	bool _blocksMovement;
 	bool _blocksLight;
 
 	public Tile(){}
 
-	public Tile(GameObject texture, Vector3 position, bool blocksMovement, bool blocksLight){
+	public Tile(GameObject texture, Vector2 position, bool blocksMovement, bool blocksLight){
 		_texture = texture;
 		_gridPosition = position;
 		_blocksMovement = blocksMovement;
@@ -30,11 +30,11 @@ public class Tile {
 		return _presentEntity;
 	}
 
-	public void SetGridPosition(Vector3 position){
+	public void SetGridPosition(Vector2 position){
 		_gridPosition = position;
 	}
 
-	public Vector3 GetGridPosition(){
+	public Vector2 GetGridPosition(){
 		return _gridPosition;
 	}
 

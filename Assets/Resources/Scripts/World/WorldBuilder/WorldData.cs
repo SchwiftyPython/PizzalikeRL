@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class WorldData : MonoBehaviour {
@@ -46,6 +47,12 @@ public class WorldData : MonoBehaviour {
     public GameObject WorldIceTile;
     public GameObject WorldWaterTile;
 
+    public GameObject[] AreaGrassLandTiles = new GameObject[11];
+    public GameObject[] AreaDesertTiles = new GameObject[2];
+    public GameObject[] AreaWasteLandTiles = new GameObject[4];
+    public GameObject[] AreaSwampTiles = new GameObject[9];
+    public GameObject[] AreaIceTiles = new GameObject[1];
+
     public static WorldData Instance;
 
     private void Awake() {
@@ -54,6 +61,26 @@ public class WorldData : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
         } else if (Instance != this) {
             Destroy(gameObject);
+        }
+    }
+
+    public GameObject[] GetBiomeTiles(BiomeType biomeType){
+        switch (biomeType) {
+            case BiomeType.Desert:
+                return AreaDesertTiles;
+            case BiomeType.Grassland:
+            case BiomeType.SeasonalForest:
+            case BiomeType.TropicalRainforest:
+            case BiomeType.Woodland:
+                return AreaGrassLandTiles;
+            case BiomeType.Ice:
+                return AreaIceTiles;
+            case BiomeType.Swamp:
+                return AreaSwampTiles;
+            case BiomeType.WasteLand:
+                return AreaWasteLandTiles;
+            default:
+                throw new ArgumentOutOfRangeException("biomeType", biomeType, null);
         }
     }
 }
