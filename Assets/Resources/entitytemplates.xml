@@ -1,56 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <EntityTemplatesCollection>
-	<EntityTemplates>
-
-		<EntityTemplate type = "human">      
-			<MinStrength> 2 </MinStrength>
-			<MaxStrength> 4 </MaxStrength>
-			<MinAgility> 3 </MinAgility>
-			<MaxAgility> 6 </MaxAgility>
-			<MinConstitution> 3 </MinConstitution>
-			<MaxConstitution> 6 </MaxConstitution>	  
-			<Playable> true </Playable>
-			<Nameable> true </Nameable>
-			<CanMutate> true </CanMutate>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
-			<SpritePath> Prefabs/player </SpritePath>
-			<!-- <AITypes> </AITypes> -->
-			<BodyParts>
-                <Part> Human Torso </Part>			
-				<Part> Human Head </Part>				
-				<Part> Human Left Arm </Part>
-				<Part> Human Right Arm </Part>
-				<Part> Human Left Hand </Part>
-				<Part> Human Right Hand </Part>
-				<Part> Human Left Leg </Part>
-				<Part> Human Right Leg </Part>
-				<Part> Human Left Foot </Part>
-				<Part> Human Right Foot </Part>
-			</BodyParts>
-		</EntityTemplate>
-		
-		<EntityTemplate type = "pepperoni worm">      
-			<MinStrength> 1 </MinStrength>
-			<MaxStrength> 2 </MaxStrength>
-			<MinAgility> 2 </MinAgility>
-			<MaxAgility> 3 </MaxAgility>
-			<MinConstitution> 2 </MinConstitution>
-			<MaxConstitution> 3 </MaxConstitution>	  
-			<Playable> false </Playable>
-			<Nameable> false </Nameable>
-			<CanMutate> false </CanMutate>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
-			<SpritePath> Prefabs/pep_worm </SpritePath>
-			<!-- <AITypes> </AITypes> -->
-			<BodyParts>				
-				<Part> worm body </Part>				
-				<Part> worm head </Part>
-			</BodyParts>
-		</EntityTemplate>
-
-	</EntityTemplates>  
+  <EntityTemplates>
+    
+	<EntityTemplate type = "human">      
+      <MinStrength> 2 </MinStrength>
+		  <MaxStrength> 4 </MaxStrength>
+      <MinAgility> 3 </MinAgility>
+      <MaxAgility> 6 </MaxAgility>
+      <MinConstitution> 3 </MinConstitution>
+      <MaxConstitution> 6 </MaxConstitution>	  
+      <Playable> true </Playable>
+      <Nameable> true </Nameable>
+      <CanMutate> true </CanMutate>
+      <IsHostile> false </IsHostile>      	
+	  <PossibleInventory>
+	  </PossibleInventory>  
+	  <SpritePath> Prefabs/player </SpritePath>
+    <!-- <AITypes> </AITypes> -->
+	  <BodyParts>	  
+	  <Part> Human Head </Part>
+		<Part> Human Torso </Part>
+		<Part> Human Left Arm </Part>
+		<Part> Human Right Arm </Part>
+		<Part> Human Left Hand </Part>
+		<Part> Human Right Hand </Part>
+		<Part> Human Left Leg </Part>
+		<Part> Human Right Leg </Part>
+		<Part> Human Left Foot </Part>
+		<Part> Human Right Foot </Part>
+	  </BodyParts>
+    </EntityTemplate>
+	
+  </EntityTemplates>  
 </EntityTemplatesCollection>

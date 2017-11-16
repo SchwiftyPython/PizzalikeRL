@@ -1,51 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public class Entity : MoveEntity {
 
-    bool _isPlayer;
-	bool _isDead;
-    bool _isNameable;
-    bool _isHostile;
-    bool _canMutate;
+    bool isPlayer;
+	bool isDead;
+    bool isNameable;
+    bool isHostile;
+    bool canMutate;
 
-    string _type;
+    string type;
 
     //IDictionary<string, BodyPart> body;
 
 	//Base stats
-	int _level;
-	int _strength;
-	int _agility;
-	int _constitution;
+	int level;
+	int strength;
+	int agility;
+	int constitution;
 	//int intellect;
 	//int willpower;
 	//int charisma;
 
 	//Stats dependent on base stat values
-	int _hp;
-	int _speed;
-    int _defense; //for testing combat
+	int hp;
+	int speed;
+    int defense; //for testing combat
 
 	//Inventory stuff
-	List<Item> _inventory;
-	List<Item> _equipped;
-    List<BodyPart> _bodyParts;
-	int _coins;
+	List<Item> inventory;
+	List<Item> equipped;
+    List<BodyPart> bodyParts;
+	int coins;
 
-	GameObject _sprite;
+	GameObject sprite;
     //SingleNodeBlocker blocker;
 
-    public Vector3 CurrentPosition;
+    public Vector3 currentPosition;
 
     public Entity (EntityTemplate template, bool isPlayer) {
-        _isPlayer = isPlayer;
-        _strength = GenStrength(template.minStrength, template.maxStrength);
-        _agility = GenAgility(template.minAgility, template.maxAgility);
-        _constitution = GenConstitution(template.minConstitution, template.maxConstitution);
-        _isNameable = template.nameable;
-        _canMutate = template.canMutate;
-        _sprite = Resources.Load(template.spritePath) as GameObject;
+        this.isPlayer = isPlayer;
+        strength = GenStrength(template.minStrength, template.maxStrength);
+        agility = GenAgility(template.minAgility, template.maxAgility);
+        constitution = GenConstitution(template.minConstitution, template.maxConstitution);
+        isNameable = template.nameable;
+        canMutate = template.canMutate;
+        sprite = Resources.Load(template.spritePath) as GameObject;
         //gen level
         //gen hp
         //gen speed
@@ -59,17 +61,17 @@ public class Entity : MoveEntity {
 
     //Testing constructor
 	public Entity(bool isPlayer, GameObject sprite){
-		_isPlayer = isPlayer;
-		_sprite = sprite;
-		_isDead = false;
-		_inventory = new List<Item>();
+		this.isPlayer = isPlayer;
+		this.sprite = sprite;
+		isDead = false;
+		inventory = new List<Item>();
         //blocker = sprite.GetComponent<SingleNodeBlocker>();
 
         //roll stats based on xml file info
         //hard coded stats for combat testing        
-        _hp = 45;
-        _speed = 35;
-        _defense = 35;
+        hp = 45;
+        speed = 35;
+        defense = 35;
 	}
 
     int GenStrength(int min, int max) {
@@ -85,46 +87,42 @@ public class Entity : MoveEntity {
     }
 
     public bool IsPlayer() {
-        return _isPlayer;
+        return isPlayer;
     }
 
 	public GameObject GetSprite(){
-		return _sprite;
+		return this.sprite;
 	}
 
 	public void SetSprite(GameObject sprite){
-		_sprite = sprite;
+		this.sprite = sprite;
 	}
 
 	public void SetSpritePosition(Vector3 newPosition){
-		_sprite.transform.position = newPosition;
+		sprite.transform.position = newPosition;
 	}   
 
     public override void Move(Vector2 target) {
-        startTile = CurrentPosition;
+        startTile = this.currentPosition;
         endTile = target;
         //RaycastHit2D hit = new RaycastHit2D();
 
-        Debug.Log("entity.currentPosition before move: " + CurrentPosition.x + " " + CurrentPosition.y);
-        Debug.Log("sprite.currentPosition before move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
+        Debug.Log("entity.currentPosition: " + this.currentPosition.x + " " + this.currentPosition.y);
         Debug.Log("start: " + startTile);
         Debug.Log("End: " + endTile);
 
         
-        CurrentPosition = endTile;
-        SetSpritePosition(endTile);
+        this.currentPosition = endTile;
+        this.SetSpritePosition(endTile);
 
         //update tile data for start and end tiles
-        var tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)startTile.x, (int)startTile.y];
+        Tile tileToUpdate = WorldManager.Instance.GetTileAt(startTile);
         tileToUpdate.SetBlocksMovement(false);
         tileToUpdate.SetPresentEntity(null);
 
-        tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)endTile.x, (int)endTile.y];
+        tileToUpdate = WorldManager.Instance.GetTileAt(endTile);
         tileToUpdate.SetBlocksMovement(true);
-        tileToUpdate.SetPresentEntity(this);
-
-        Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
-        Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
+        tileToUpdate.SetPresentEntity(this);        
     }
 
     public void MeleeAttack(Entity target) {
@@ -143,25 +141,28 @@ public class Entity : MoveEntity {
         int unarmedBaseToHit = 3;
         roll += unarmedBaseToHit;
 
-        if(roll >= target._defense) {
+        if(roll >= target.defense) {
             //target attempt block
             //if blocked, return false
             //else
             return true;
+        } else {
+            return false;
         }
-        return false;
+        
     }
 
     void ApplyMeleeDamage(Entity target) {
         int unarmedDamage = 4;
-        target._hp -= unarmedDamage;
+        target.hp -= unarmedDamage;
     }
 
     bool IsDead() {
-        if(_hp <= 0) {
+        if(this.hp <= 0) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     /*

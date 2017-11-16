@@ -38,10 +38,14 @@ public class MoveEntity {
     public virtual void Move(Vector2 target) {}
 
     public virtual bool TargetTileBlocked(Vector2 target) {
-        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetBlocksMovement();
+        return WorldManager.Instance.GetTileAt(target).GetBlocksMovement();
     }
 
     public virtual bool TargetTileBlockedByEntity(Vector2 target) {
-        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetPresentEntity() != null;
+        if(WorldManager.Instance.GetTileAt(target).GetPresentEntity() == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

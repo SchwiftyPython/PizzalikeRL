@@ -1,17 +1,12 @@
 ﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    public bool WorldMapGenComplete;
-    public bool PlayerInStartingArea;
 
     public Cell CurrentCellPosition;
     public Area CurrentAreaPosition;
     public Tile CurrentTilePosition;
 
-    public Entity Player;
-    public GameObject PlayerSprite;
-
-	public enum GameState {
+	public enum TurnState {
 		Start,
         Worldmap,
         Areamap,
@@ -20,39 +15,35 @@ public class GameManager : MonoBehaviour {
 		End,
 	}
 
-    public GameState CurrentState { get; set; }
+    public TurnState CurrentState { get; set; }
 
     public static GameManager Instance;
-    
-    private void Awake () {
+
+    // Use this for initialization
+    void Awake () {
         if (Instance == null) {
             Instance = this;
         } else if (Instance != this) {
+            // Destroy the current object, so there is just one 
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
-        CurrentState = GameState.Start;
-        PlayerInStartingArea = true;
-    }
+
+        CurrentState = TurnState.Start;
+	}
 	
-    private void Update () {
-        Debug.Log(CurrentState);
+	// Update is called once per frame
+    private void Update () {        
 		switch(CurrentState) {
-		case GameState.Start:
-		        if (WorldMapGenComplete){
-                    CurrentState = GameState.Playerturn;
+		case TurnState.Start:
+			break;
+		case TurnState.Playerturn:
+                if (InputController.instance.actionTaken) {
+                    CurrentState = TurnState.Enemyturn;
                 }
-                break;
-		case GameState.Playerturn:
-                /*
-		    if (InputController.instance.ActionTaken) {
-		        CurrentState = GameState.Enemyturn;
-		    }
-            */
-		    break;
-		case GameState.Enemyturn:               
+			break;
+		case TurnState.Enemyturn:               
             break;
-		case GameState.End:
+		case TurnState.End:
 			//go to main menu
 			break;
 		}

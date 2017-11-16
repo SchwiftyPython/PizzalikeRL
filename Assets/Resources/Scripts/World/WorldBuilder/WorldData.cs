@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -53,17 +52,6 @@ public class WorldData : MonoBehaviour {
     public GameObject[] AreaWasteLandTiles = new GameObject[4];
     public GameObject[] AreaSwampTiles = new GameObject[9];
     public GameObject[] AreaIceTiles = new GameObject[1];
-
-    public Dictionary<BiomeType, string[]> BiomePossibleEntities = new Dictionary<BiomeType, string[]>() {
-        {BiomeType.Desert, new[]{"pepperoni worm"} },
-        {BiomeType.Grassland, new[]{"pepperoni worm"} },
-        {BiomeType.SeasonalForest, new[]{"pepperoni worm"} },
-        {BiomeType.TropicalRainforest, new[]{"pepperoni worm"} },
-        {BiomeType.Woodland, new[]{"pepperoni worm"} },
-        {BiomeType.Ice, new[]{"pepperoni worm"} },
-        {BiomeType.Swamp, new[]{"pepperoni worm"} },
-        {BiomeType.WasteLand, new[]{"pepperoni worm"} }
-    };
 
     public static WorldData Instance;
 

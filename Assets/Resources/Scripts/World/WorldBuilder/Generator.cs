@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TinkerWorX.AccidentalNoiseLibrary;
-using UnityEngine.SceneManagement;
 
 public class Generator : MonoBehaviour {
     public string Seed { set; get; }
@@ -109,14 +108,11 @@ public class Generator : MonoBehaviour {
 
         // Initialize the generator
         Initialize();
+        Debug.Log("Initialize complete");
         Generate();
-        //DrawMap();
+        DrawMap();
 
         WorldData.Instance.Map = _cells;
-        GameManager.Instance.CurrentCellPosition = _cells[25, 17];
-        GameManager.Instance.CurrentAreaPosition = GameManager.Instance.CurrentCellPosition.Areas[1, 1];
-        GameManager.Instance.WorldMapGenComplete = true;
-        SceneManager.LoadScene("Area");
     }
     #region Public Methods
     public BiomeType GetBiomeType(Cell cell) {
@@ -137,8 +133,10 @@ public class Generator : MonoBehaviour {
     private void Generate() {
         // Build the maps
         GetData();
+        Debug.Log("GetData complete");
         // Build our final objects based on our data
         LoadCells();
+        Debug.Log("LoadCells complete");
         UpdateNeighbors();
 
         //GenerateRivers();
