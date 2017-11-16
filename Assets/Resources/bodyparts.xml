@@ -1,96 +1,114 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <BodyPartCollection>
-  <BodyParts>
-  
-    <BodyPart name = "human right arm">
-	  <MaxHP> 15 </MaxHP>
-	  <CanEquipWeapon> true </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> human torso </NeedsPart>
-	  <AttackVerb> strike </AttackVerb>
-	  <Coverage> 50 </Coverage>	  
-	</BodyPart>
-	
-	<BodyPart name = "human left arm">
-	  <MaxHP> 15 </MaxHP>
-	  <CanEquipWeapon> true </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> human torso </NeedsPart>
-	  <AttackVerb> strike </AttackVerb>
-	  <Coverage> 50 </Coverage>	  
-	</BodyPart>
-	
-	<BodyPart name = "human torso">
-	  <MaxHP> 50 </MaxHP>
-	  <CanEquipWeapon> false </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> </NeedsPart>
-	  <AttackVerb> </AttackVerb>
-	  <Coverage> 200 </Coverage>	  
-	</BodyPart>
-	
-	<BodyPart name = "human head">
-	  <MaxHP> 15 </MaxHP>
-	  <CanEquipWeapon> false </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> human torso </NeedsPart>
-	  <AttackVerb> bite </AttackVerb>
-	  <Coverage> 40 </Coverage>	  
-	</BodyPart>
-	
-	<BodyPart name = "human left leg">
-	  <MaxHP> 25 </MaxHP>
-	  <CanEquipWeapon> false </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> human torso </NeedsPart>
-	  <AttackVerb> kick </AttackVerb>
-	  <Coverage> 100 </Coverage>	  
-	</BodyPart>	
-	
-	<BodyPart name = "human right leg">
-	  <MaxHP> 25 </MaxHP>
-	  <CanEquipWeapon> false </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> torso </NeedsPart>
-	  <AttackVerb> kick </AttackVerb>
-	  <Coverage> 100 </Coverage>	  
-	</BodyPart>	
-	
-	<BodyPart name = "human left hand">
-	  <MaxHP> 10 </MaxHP>
-	  <CanEquipWeapon> true </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> human left arm </NeedsPart>
-	  <AttackVerb> strike </AttackVerb>
-	  <Coverage> 10 </Coverage>	  
-	</BodyPart>	
-	
-	<BodyPart name = "human right hand">
-	  <MaxHP> 10 </MaxHP>
-	  <CanEquipWeapon> true </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> human right arm </NeedsPart>
-	  <AttackVerb> strike </AttackVerb>
-	  <Coverage> 10 </Coverage>	  
-	</BodyPart>	
-	
-	<BodyPart name = "human left foot">
-	  <MaxHP> 10 </MaxHP>
-	  <CanEquipWeapon> false </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> human left leg </NeedsPart>
-	  <AttackVerb> kick </AttackVerb>
-	  <Coverage> 10 </Coverage>	  
-	</BodyPart>	
-	
-	<BodyPart name = "human right foot">
-	  <MaxHP> 10 </MaxHP>
-	  <CanEquipWeapon> false </CanEquipWeapon>
-	  <CanEquipArmor> true </CanEquipArmor>
-	  <NeedsPart> human right leg </NeedsPart>
-	  <AttackVerb> kick </AttackVerb>
-	  <Coverage> 10 </Coverage>	  
-	</BodyPart>	
-  
-  </BodyParts>
+	<BodyParts>
+
+		<BodyPart name = "human right arm">
+			<MaxHP> 15 </MaxHP>
+			<CanEquipWeapon> true </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> human torso </NeedsPart>
+			<AttackVerb> strike </AttackVerb>
+			<Coverage> 50 </Coverage>	  
+		</BodyPart>
+
+		<BodyPart name = "human left arm">
+			<MaxHP> 15 </MaxHP>
+			<CanEquipWeapon> true </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> human torso </NeedsPart>
+			<AttackVerb> strike </AttackVerb>
+			<Coverage> 50 </Coverage>	  
+		</BodyPart>
+
+		<BodyPart name = "human torso">
+			<MaxHP> 50 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> </NeedsPart>
+			<AttackVerb> </AttackVerb>
+			<Coverage> 200 </Coverage>	  
+		</BodyPart>
+
+		<BodyPart name = "human head">
+			<MaxHP> 15 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> human torso </NeedsPart>
+			<AttackVerb> bite </AttackVerb>
+			<Coverage> 40 </Coverage>	  
+		</BodyPart>
+
+		<BodyPart name = "human left leg">
+			<MaxHP> 25 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> human torso </NeedsPart>
+			<AttackVerb> kick </AttackVerb>
+			<Coverage> 100 </Coverage>	  
+		</BodyPart>	
+
+		<BodyPart name = "human right leg">
+			<MaxHP> 25 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> torso </NeedsPart>
+			<AttackVerb> kick </AttackVerb>
+			<Coverage> 100 </Coverage>	  
+		</BodyPart>	
+
+		<BodyPart name = "human left hand">
+			<MaxHP> 10 </MaxHP>
+			<CanEquipWeapon> true </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> human left arm </NeedsPart>
+			<AttackVerb> strike </AttackVerb>
+			<Coverage> 10 </Coverage>	  
+		</BodyPart>	
+
+		<BodyPart name = "human right hand">
+			<MaxHP> 10 </MaxHP>
+			<CanEquipWeapon> true </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> human right arm </NeedsPart>
+			<AttackVerb> strike </AttackVerb>
+			<Coverage> 10 </Coverage>	  
+		</BodyPart>	
+
+		<BodyPart name = "human left foot">
+			<MaxHP> 10 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> human left leg </NeedsPart>
+			<AttackVerb> kick </AttackVerb>
+			<Coverage> 10 </Coverage>	  
+		</BodyPart>	
+
+		<BodyPart name = "human right foot">
+			<MaxHP> 10 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart> human right leg </NeedsPart>
+			<AttackVerb> kick </AttackVerb>
+			<Coverage> 10 </Coverage>	  
+		</BodyPart>
+
+        <BodyPart name = "worm head">
+			<MaxHP> 10 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> false </CanEquipArmor>
+			<NeedsPart> worm body </NeedsPart>
+			<AttackVerb> bite </AttackVerb>
+			<Coverage> 15 </Coverage>	  
+		</BodyPart>
+
+        <BodyPart name = "worm body">
+			<MaxHP> 20 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> false </CanEquipArmor>
+			<NeedsPart></NeedsPart>
+			<AttackVerb></AttackVerb>
+			<Coverage> 30 </Coverage>	  
+		</BodyPart>			
+
+	</BodyParts>
 </BodyPartCollection>  

@@ -6,8 +6,8 @@ public class InputController : MonoBehaviour {
 
     public static InputController instance = null;
 
-    Entity player;
-    public bool actionTaken = false; //for basic AI pathfinding testing
+    Entity _player;
+    public bool ActionTaken = false; //for basic AI pathfinding testing
     //Vector2 target;
 
     void Start () {
@@ -30,87 +30,79 @@ public class InputController : MonoBehaviour {
 	}
 
     void Update() {
-        if (GameManager.Instance.CurrentState == GameManager.TurnState.Playerturn) {
-            player = WorldManager.Instance.Player;
-            //Debug.Log ("player reference in update: " + player);
+        if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn) {
+            _player = GameManager.Instance.Player;
+            //Debug.Log ("player reference in update: " + _player);
 
             if (Input.GetKeyDown(KeyCode.Keypad8)) {
                 //Attempt move up                
-                Vector2 target = new Vector2(player.currentPosition.x, player.currentPosition.y + 1);
+                var target = new Vector2(_player.CurrentPosition.x, _player.CurrentPosition.y + 1);
                 if (PlayerMoveOrAttack(target)) {
-                    actionTaken = true;
+                    ActionTaken = true;
                 }
             } else if (Input.GetKeyDown(KeyCode.Keypad7)) {
                 //Attempt move diagonal up and left                
-                Vector2 target = new Vector2(player.currentPosition.x - 1, player.currentPosition.y + 1);
+                var target = new Vector2(_player.CurrentPosition.x - 1, _player.CurrentPosition.y + 1);
                 if (PlayerMoveOrAttack(target)) {
-                    actionTaken = true;
+                    ActionTaken = true;
                 }
             } else if (Input.GetKeyDown(KeyCode.Keypad4)) {
                 //Attempt move left
-                Vector2 target = new Vector2(player.currentPosition.x - 1, player.currentPosition.y);
+                var target = new Vector2(_player.CurrentPosition.x - 1, _player.CurrentPosition.y);
                 if (PlayerMoveOrAttack(target)) {
-                    actionTaken = true;
+                    ActionTaken = true;
                 }
             } else if (Input.GetKeyDown(KeyCode.Keypad1)) {
                 //Attempt move diagonal down and left                
-                Vector2 target = new Vector2(player.currentPosition.x - 1, player.currentPosition.y - 1);
+                var target = new Vector2(_player.CurrentPosition.x - 1, _player.CurrentPosition.y - 1);
                 if (PlayerMoveOrAttack(target)) {
-                    actionTaken = true;
+                    ActionTaken = true;
                 }
             } else if (Input.GetKeyDown(KeyCode.Keypad2)) {
                 //Attempt move down
-                Vector2 target = new Vector2(player.currentPosition.x, player.currentPosition.y - 1);
+                var target = new Vector2(_player.CurrentPosition.x, _player.CurrentPosition.y - 1);
                 if (PlayerMoveOrAttack(target)) {
-                    actionTaken = true;
+                    ActionTaken = true;
                 }
             } else if (Input.GetKeyDown(KeyCode.Keypad3)) {
                 //Attempt move diagonal down and right
-                Vector2 target = new Vector2(player.currentPosition.x + 1, player.currentPosition.y - 1);
+                var target = new Vector2(_player.CurrentPosition.x + 1, _player.CurrentPosition.y - 1);
                 if (PlayerMoveOrAttack(target)) {
-                    actionTaken = true;
+                    ActionTaken = true;
                 }
             } else if (Input.GetKeyDown(KeyCode.Keypad6)) {
                 //Attempt move right
-                Vector2 target = new Vector2(player.currentPosition.x + 1, player.currentPosition.y);
+                var target = new Vector2(_player.CurrentPosition.x + 1, _player.CurrentPosition.y);
                 if (PlayerMoveOrAttack(target)) {
-                    actionTaken = true;
+                    ActionTaken = true;
                 }
             } else if (Input.GetKeyDown(KeyCode.Keypad9)) {
                 //Attempt move diagonal up and right
-                Vector2 target = new Vector2(player.currentPosition.x + 1, player.currentPosition.y + 1);
+                var target = new Vector2(_player.CurrentPosition.x + 1, _player.CurrentPosition.y + 1);
                 if (PlayerMoveOrAttack(target)) {
-                    actionTaken = true;
+                    ActionTaken = true;
                 }
             }
         }
     }
-    
-    bool PlayerMoveOrAttack(Vector2 target) {
+
+    private bool PlayerMoveOrAttack(Vector2 target) {
         if (CanMove(target)) {
-            player.Move(target);
-            return true;
-        } else if(EntityPresent(target)) {
-                player.MeleeAttack(WorldManager.Instance.GetTileAt(target).GetPresentEntity());                 
-                return true;
-        } else {
-            return false;
-        }
-    }        
-        
-    bool CanMove(Vector2 target) {
-        if (player.TargetTileBlocked(target)) {
-            return false;
-        } else {
+            _player.Move(target);
             return true;
         }
+        if(EntityPresent(target)) {
+            _player.MeleeAttack(WorldManager.Instance.GetTileAt(target).GetPresentEntity());                 
+            return true;
+        }
+        return false;
     }
 
-    bool EntityPresent(Vector2 target) {
-        if (player.TargetTileBlockedByEntity(target)) {
-            return true;
-        } else {
-            return false;
-        }
+    private bool CanMove(Vector2 target) {
+        return !_player.TargetTileBlocked(target);
+    }
+
+    private bool EntityPresent(Vector2 target) {
+        return _player.TargetTileBlockedByEntity(target);
     }
 }

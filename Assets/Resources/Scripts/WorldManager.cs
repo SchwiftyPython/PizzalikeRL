@@ -103,7 +103,7 @@ public class WorldManager : MonoBehaviour {
                 //playerPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
 				Player = new Entity (true, playerPawn);
 				_board [x, y].SetPresentEntity (Player);					
-				Player.currentPosition = new  Vector3 (x, y, 0f);
+				Player.CurrentPosition = new  Vector3 (x, y, 0f);
 				placed = true;
 			}
 			y++;
@@ -124,7 +124,7 @@ public class WorldManager : MonoBehaviour {
                 //enemyPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
                 Enemy = new Entity(false, enemyPawn);
                 _board[x, y].SetPresentEntity(Enemy);
-                Enemy.currentPosition = new Vector3(x, y, 0f);
+                Enemy.CurrentPosition = new Vector3(x, y, 0f);
                 //enemy.SetBlocker();
                 placed = true;
             }
@@ -136,10 +136,10 @@ public class WorldManager : MonoBehaviour {
 
     public void RemoveDeadEntity(Entity corpse) {
         if (corpse.IsPlayer()) {
-            GameManager.Instance.CurrentState = GameManager.TurnState.End;
+            GameManager.Instance.CurrentState = GameManager.GameState.End;
         } else {
             //remove entity and replace with some or all of inventory
-            var tileToUpdate = Instance.GetTileAt(corpse.currentPosition);
+            var tileToUpdate = Instance.GetTileAt(corpse.CurrentPosition);
             tileToUpdate.SetBlocksMovement(false);
             tileToUpdate.SetPresentEntity(null);
 
