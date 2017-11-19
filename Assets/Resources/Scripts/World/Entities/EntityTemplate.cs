@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Xml;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 public class EntityTemplate {
@@ -53,5 +50,5 @@ public class EntityTemplate {
 
     [XmlArray("BodyParts")]
     [XmlArrayItem("Part")]
-    public List<BodyPart> parts;
+    public List<string> parts;
 }

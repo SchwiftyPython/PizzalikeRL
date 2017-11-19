@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum HeightType {
@@ -51,6 +52,8 @@ public class Cell {
 
     private Area _currentArea;
 
+    public bool HasNPCs;
+
     public HeightType HeightType;
     public HeatType HeatType;
     public MoistureType MoistureType;
@@ -75,7 +78,7 @@ public class Cell {
     public Color Color = Color.black;
 
     public List<River> Rivers = new List<River>();
-    public Area[,] Areas = new Area[CellWidth, CellHeight];
+    public Area[,] Areas = new Area[CellHeight, CellWidth];
 
     public int RiverSize { get; set; }
 
@@ -86,8 +89,8 @@ public class Cell {
         set {
             BiomeType = value;
             SetCellSprite(value);
-            for (var i = 0; i < CellWidth; i++) {
-                for(var j = 0; j < CellHeight; j++){
+            for (var i = 0; i < CellHeight; i++) {
+                for(var j = 0; j < CellWidth; j++){
                     if (Areas[i, j] != null) {
                         Areas[i, j].BiomeType = value;
                     }

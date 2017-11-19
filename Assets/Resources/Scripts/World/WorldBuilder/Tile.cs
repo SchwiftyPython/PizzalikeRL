@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile {
+    private Entity _presentEntity;
+    private Prop _presentProp;
+    private Item _presentItem;
+    private GameObject _texture;
+    private Vector2 _gridPosition;
 
-	Entity _presentEntity;
-	Prop _presentProp;
-	Item _presentItem;
-	GameObject _texture;
-	Vector2 _gridPosition;
-
-	bool _blocksMovement;
-	bool _blocksLight;
+    private bool _blocksMovement;
+    private bool _blocksLight;
 
 	public Tile(){}
 

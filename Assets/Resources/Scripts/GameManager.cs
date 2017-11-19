@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour {
+    public bool WorldMapGenComplete;
+    public bool PlayerInStartingArea;
 
     public Cell CurrentCellPosition;
     public Area CurrentAreaPosition;
     public Tile CurrentTilePosition;
 
-	public enum TurnState {
+    public Entity Player;
+    public GameObject PlayerSprite;
+
+	public enum GameState {
 		Start,
         Worldmap,
         Areamap,
@@ -15,37 +20,43 @@ public class GameManager : MonoBehaviour {
 		End,
 	}
 
-    public TurnState CurrentState { get; set; }
+    public GameState CurrentState { get; set; }
 
     public static GameManager Instance;
-
-    // Use this for initialization
-    void Awake () {
+    
+    private void Awake () {
         if (Instance == null) {
             Instance = this;
         } else if (Instance != this) {
-            // Destroy the current object, so there is just one 
             Destroy(gameObject);
         }
-
-        CurrentState = TurnState.Start;
-	}
+        DontDestroyOnLoad(gameObject);
+        CurrentState = GameState.Start;
+        PlayerInStartingArea = true;
+    }
 	
-	// Update is called once per frame
-    private void Update () {        
+    private void Update () {
+        Debug.Log(CurrentState);
 		switch(CurrentState) {
-		case TurnState.Start:
-			break;
-		case TurnState.Playerturn:
-                if (InputController.instance.actionTaken) {
-                    CurrentState = TurnState.Enemyturn;
+		case GameState.Start:
+		        if (WorldMapGenComplete){
+                    CurrentState = GameState.Playerturn;
                 }
-			break;
-		case TurnState.Enemyturn:               
+                break;
+		case GameState.Playerturn:
+                /*
+		    if (InputController.instance.ActionTaken) {
+		        CurrentState = GameState.Enemyturn;
+		    }
+            */
+		    break;
+		case GameState.Enemyturn:               
             break;
-		case TurnState.End:
+		case GameState.End:
 			//go to main menu
 			break;
 		}
 	}    
 }
+
+

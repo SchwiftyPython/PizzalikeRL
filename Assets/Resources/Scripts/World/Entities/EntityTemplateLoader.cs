@@ -1,25 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EntityTemplateLoader : MonoBehaviour {
 
-    public const string path = "entitytemplates";
-    private static string[] entityTemplateTypes;
-    private static EntityTemplatesContainer ec;
+    public const string Path = "entitytemplates";
+    private static string[] _entityTemplateTypes;
+    private static EntityTemplatesContainer _ec;
 
-    void Start() {
+    private void Start() {
+        BodyPartLoader.LoadBodyParts();
 
-        ec = EntityTemplatesContainer.Load(path);
+        _ec = EntityTemplatesContainer.Load(Path);
 
-        entityTemplateTypes = new string[ec.entityTemplates.Count];
+        _entityTemplateTypes = new string[_ec.entityTemplates.Count];
 
-        int index = 0;
+        var index = 0;
 
-        foreach (EntityTemplate ec in ec.entityTemplates) {
-            entityTemplateTypes[index] = ec.type;
+        foreach (var e in _ec.entityTemplates) {
+            _entityTemplateTypes[index] = e.type;
 
-            //GetEntityTemplate(ec.type); //testing
+            //GetEntityTemplate(e.type); //testing
 
             index++;
         }
@@ -27,23 +26,28 @@ public class EntityTemplateLoader : MonoBehaviour {
     }
 
     public static string[] GetEntityTemplateTypes() {
-        return entityTemplateTypes;
+        return _entityTemplateTypes;
     }
 
     public static string GetEntityTemplateTypeAt(int index) {
-        return entityTemplateTypes[index];
+        return _entityTemplateTypes[index];
     }
 
-    public static int GetECLength() {
-        return entityTemplateTypes.Length;
+    public static int GetEcLength() {
+        return _entityTemplateTypes.Length;
     }
 
     public static EntityTemplate GetEntityTemplate(string entityTemplateType) {
-        int index = ec.entityTemplates.FindIndex(item => item.type.Equals(entityTemplateType.ToLower()));
-        EntityTemplate et = ec.entityTemplates[index];
+        var index = _ec.entityTemplates.FindIndex(item => item.type.Equals(entityTemplateType.ToLower()));
+        var et = _ec.entityTemplates[index];
 
-        //Debug.Log("Entity Template Type: " + et.type);
-
+        /*
+        Debug.Log("Entity Template Type: " + et.type);
+        foreach (var p in et.parts) {
+            Debug.Log("Part: " + p);
+        }
+        */
+        
         return et;
 
     }

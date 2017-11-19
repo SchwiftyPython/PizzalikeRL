@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TinkerWorX.AccidentalNoiseLibrary;
+using UnityEngine.SceneManagement;
 
-public class Generator : MonoBehaviour {
+public class Generator : MonoBehaviour
+{
     public string Seed { set; get; }
 
     // Adjustable variables for Unity Inspector
     [SerializeField] private int _width = 270;
-    [SerializeField] private int _height = 75;     
+    [SerializeField] private int _height = 75;
 
-    [Header("Height Map")]    
+    [Header("Height Map")]
     [SerializeField]
     float _deepWater = 0.1f;
     [SerializeField]
@@ -23,7 +25,7 @@ public class Generator : MonoBehaviour {
     [SerializeField]
     float _rock = 0.9f;
 
-    [Header("Heat Map")]   
+    [Header("Heat Map")]
     [SerializeField]
     float _coldestValue = 0.05f;
     [SerializeField]
@@ -35,7 +37,7 @@ public class Generator : MonoBehaviour {
     [SerializeField]
     float _warmerValue = 0.8f;
 
-    [Header("Moisture Map")]    
+    [Header("Moisture Map")]
     [SerializeField]
     float _dryerValue = 0.27f;
     [SerializeField]
@@ -97,7 +99,8 @@ public class Generator : MonoBehaviour {
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
     };
 
-    private void Start() {
+    private void Start()
+    {
         Seed = WorldData.Instance.Seed;
 
         // Get the mesh we are rendering our output to        
@@ -108,15 +111,21 @@ public class Generator : MonoBehaviour {
 
         // Initialize the generator
         Initialize();
-        Debug.Log("Initialize complete");
         Generate();
-        DrawMap();
+        //DrawMap();
 
         WorldData.Instance.Map = _cells;
+        GameManager.Instance.CurrentCellPosition = _cells[25, 17];
+        GameManager.Instance.CurrentCellPosition.HasNPCs = true;
+        GameManager.Instance.CurrentAreaPosition = GameManager.Instance.CurrentCellPosition.Areas[1, 1];
+        GameManager.Instance.WorldMapGenComplete = true;
+        SceneManager.LoadScene("Area");
     }
     #region Public Methods
-    public BiomeType GetBiomeType(Cell cell) {
-        switch (cell.HeightType) {
+    public BiomeType GetBiomeType(Cell cell)
+    {
+        switch (cell.HeightType)
+        {
             case HeightType.DeepWater:
             case HeightType.ShallowWater:
                 return BiomeType.Water;
@@ -130,13 +139,12 @@ public class Generator : MonoBehaviour {
 
 
     #region Private Methods
-    private void Generate() {
+    private void Generate()
+    {
         // Build the maps
         GetData();
-        Debug.Log("GetData complete");
         // Build our final objects based on our data
         LoadCells();
-        Debug.Log("LoadCells complete");
         UpdateNeighbors();
 
         //GenerateRivers();
@@ -173,29 +181,36 @@ public class Generator : MonoBehaviour {
         }
     }
 
-    private void GenerateBiomeMap() {        
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
+    private void GenerateBiomeMap()
+    {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
                 _cells[x, y].biomeType = GetBiomeType(_cells[x, y]);
             }
         }
     }
 
-    private void UpdateBiomeBitmask() {        
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
+    private void UpdateBiomeBitmask()
+    {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
                 _cells[x, y].UpdateBiomeBitmask();
             }
         }
     }
 
-    private void Initialize() {
+    private void Initialize()
+    {
         // Initialize the HeightMap Generator        
         _heightMap = new ImplicitFractal(FractalType.Multi,
                                         BasisType.Simplex,
                                         InterpolationType.Quintic,
-                                        Seed.GetHashCode());        
-        
+                                        Seed.GetHashCode());
+
         var gradient = new ImplicitGradient(1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1);
         var heatFractal = new ImplicitFractal(FractalType.Multi,
                                                           BasisType.Simplex,
@@ -215,14 +230,17 @@ public class Generator : MonoBehaviour {
     }
 
     // Extract data from a noise module
-    private void GetData() {
+    private void GetData()
+    {
         _heightData = new MapData(_width, _height);
         _heatData = new MapData(_width, _height);
         _moistureData = new MapData(_width, _height);
 
         // loop through each x,y point - get height value
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
 
                 // WRAP ON BOTH AXIS
                 // Noise range
@@ -264,46 +282,64 @@ public class Generator : MonoBehaviour {
     }
 
     // Build a Cell array from our data
-    private void LoadCells() {
+    private void LoadCells()
+    {
         _cells = new Cell[_width, _height];
 
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
-                var c = new Cell {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
+                var c = new Cell
+                {
                     X = x,
                     Y = y
                 };
 
-                var heightValue = _heightData.Data[x, y];                
+                var heightValue = _heightData.Data[x, y];
                 heightValue = (heightValue - _heightData.Min) / (_heightData.Max - _heightData.Min);
                 c.HeightValue = heightValue;
 
                 //HeightMap Analyze
-                if (heightValue < _deepWater) {
+                if (heightValue < _deepWater)
+                {
                     c.HeightType = HeightType.DeepWater;
                     c.Collidable = false;
-                } else if (heightValue < _shallowWater) {
+                }
+                else if (heightValue < _shallowWater)
+                {
                     c.HeightType = HeightType.ShallowWater;
                     c.Collidable = false;
-                } else if (heightValue < _sand) {
+                }
+                else if (heightValue < _sand)
+                {
                     c.HeightType = HeightType.Sand;
                     c.Collidable = true;
-                } else if (heightValue < _grass) {
+                }
+                else if (heightValue < _grass)
+                {
                     c.HeightType = HeightType.Grass;
                     c.Collidable = true;
-                } else if (heightValue < _forest) {
+                }
+                else if (heightValue < _forest)
+                {
                     c.HeightType = HeightType.Forest;
                     c.Collidable = true;
-                } else if (heightValue < _rock) {
+                }
+                else if (heightValue < _rock)
+                {
                     c.HeightType = HeightType.Rock;
                     c.Collidable = true;
-                } else {
+                }
+                else
+                {
                     c.HeightType = HeightType.Snow;
                     c.Collidable = true;
                 }
 
                 // Adjust Heat Map based on Height - Higher == colder
-                switch (c.HeightType) {
+                switch (c.HeightType)
+                {
                     case HeightType.Forest:
                         _heatData.Data[c.X, c.Y] -= 0.1f * c.HeightValue;
                         break;
@@ -337,7 +373,8 @@ public class Generator : MonoBehaviour {
                 else
                     c.HeatType = HeatType.Warmest;
 
-                switch (c.HeightType) {
+                switch (c.HeightType)
+                {
                     case HeightType.DeepWater:
                         _moistureData.Data[c.X, c.Y] += 8f * c.HeightValue;
                         break;
@@ -370,22 +407,29 @@ public class Generator : MonoBehaviour {
         }
     }
 
-    private Cell GetTop(Cell t) {
+    private Cell GetTop(Cell t)
+    {
         return _cells[t.X, MathHelper.Mod(t.Y - 1, _height)];
     }
-    private Cell GetBottom(Cell t) {
+    private Cell GetBottom(Cell t)
+    {
         return _cells[t.X, MathHelper.Mod(t.Y + 1, _height)];
     }
-    private Cell GetLeft(Cell t) {
+    private Cell GetLeft(Cell t)
+    {
         return _cells[MathHelper.Mod(t.X - 1, _width), t.Y];
     }
-    private Cell GetRight(Cell t) {
+    private Cell GetRight(Cell t)
+    {
         return _cells[MathHelper.Mod(t.X + 1, _width), t.Y];
     }
 
-    private void UpdateNeighbors() {
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
+    private void UpdateNeighbors()
+    {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
                 var c = _cells[x, y];
 
                 c.Top = GetTop(c);
@@ -396,20 +440,26 @@ public class Generator : MonoBehaviour {
         }
     }
 
-    private void UpdateBitmasks() {
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
+    private void UpdateBitmasks()
+    {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
                 _cells[x, y].UpdateBitmask();
             }
         }
     }
 
-    private void FloodFill() {
+    private void FloodFill()
+    {
         // Use a stack instead of recursion
         var stack = new Stack<Cell>();
 
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
 
                 var c = _cells[x, y];
 
@@ -417,12 +467,14 @@ public class Generator : MonoBehaviour {
                 if (c.FloodFilled) continue;
 
                 // Land
-                if (c.Collidable) {
+                if (c.Collidable)
+                {
                     var group = new CellGroup();
                     group.Type = CellGroupType.Land;
                     stack.Push(c);
 
-                    while (stack.Count > 0) {
+                    while (stack.Count > 0)
+                    {
                         FloodFill(stack.Pop(), ref group, ref stack);
                     }
 
@@ -430,12 +482,14 @@ public class Generator : MonoBehaviour {
                         _lands.Add(group);
                 }
                 // Water
-                else {
+                else
+                {
                     var group = new CellGroup();
                     group.Type = CellGroupType.Water;
                     stack.Push(c);
 
-                    while (stack.Count > 0) {
+                    while (stack.Count > 0)
+                    {
                         FloodFill(stack.Pop(), ref group, ref stack);
                     }
 
@@ -446,7 +500,8 @@ public class Generator : MonoBehaviour {
         }
     }
 
-    private void FloodFill(Cell cell, ref CellGroup cells, ref Stack<Cell> stack) {
+    private void FloodFill(Cell cell, ref CellGroup cells, ref Stack<Cell> stack)
+    {
         // Validate
         if (cell.FloodFilled)
             return;
@@ -474,13 +529,15 @@ public class Generator : MonoBehaviour {
             stack.Push(c);
     }
 
-    private void GenerateRivers() {
+    private void GenerateRivers()
+    {
         var attempts = 0;
         var rivercount = _riverCount;
         _rivers = new List<River>();
 
         // Generate some rivers
-        while (rivercount > 0 && attempts < _maxRiverAttempts) {
+        while (rivercount > 0 && attempts < _maxRiverAttempts)
+        {
 
             // Get a random tile
             var x = Random.Range(0, _width);
@@ -491,9 +548,10 @@ public class Generator : MonoBehaviour {
             if (!cell.Collidable) continue;
             if (cell.Rivers.Count > 0) continue;
 
-            if (cell.HeightValue > _minRiverHeight) {
+            if (cell.HeightValue > _minRiverHeight)
+            {
                 // Tile is good to start river from
-                var river = new River(rivercount) {CurrentDirection = cell.GetLowestNeighbor()};
+                var river = new River(rivercount) { CurrentDirection = cell.GetLowestNeighbor() };
 
                 // Figure out the direction this river will try to flow
 
@@ -501,13 +559,17 @@ public class Generator : MonoBehaviour {
                 FindPathToWater(cell, river.CurrentDirection, ref river);
 
                 // Validate the generated river 
-                if (river.TurnCount < _minRiverTurns || river.Cells.Count < _minRiverLength || river.Intersections > _maxRiverIntersections) {
+                if (river.TurnCount < _minRiverTurns || river.Cells.Count < _minRiverLength || river.Intersections > _maxRiverIntersections)
+                {
                     //Validation failed - remove this river
-                    for (var i = 0; i < river.Cells.Count; i++) {
+                    for (var i = 0; i < river.Cells.Count; i++)
+                    {
                         var c = river.Cells[i];
                         c.Rivers.Remove(river);
                     }
-                } else if (river.Cells.Count >= _minRiverLength) {
+                }
+                else if (river.Cells.Count >= _minRiverLength)
+                {
                     //Validation passed - Add river to list
                     _rivers.Add(river);
                     cell.Rivers.Add(river);
@@ -518,7 +580,8 @@ public class Generator : MonoBehaviour {
         }
     }
 
-    private void FindPathToWater(Cell cell, Direction direction, ref River river) {
+    private void FindPathToWater(Cell cell, Direction direction, ref River river)
+    {
         if (cell.Rivers.Contains(river))
             return;
 
@@ -581,33 +644,48 @@ public class Generator : MonoBehaviour {
             return;
 
         //Move to next neighbor
-        if (min == leftValue) {
-            if (left.Collidable) {
-                if (river.CurrentDirection != Direction.Left) {
+        if (min == leftValue)
+        {
+            if (left.Collidable)
+            {
+                if (river.CurrentDirection != Direction.Left)
+                {
                     river.TurnCount++;
                     river.CurrentDirection = Direction.Left;
                 }
                 FindPathToWater(left, direction, ref river);
             }
-        } else if (min == rightValue) {
-            if (right.Collidable) {
-                if (river.CurrentDirection != Direction.Right) {
+        }
+        else if (min == rightValue)
+        {
+            if (right.Collidable)
+            {
+                if (river.CurrentDirection != Direction.Right)
+                {
                     river.TurnCount++;
                     river.CurrentDirection = Direction.Right;
                 }
                 FindPathToWater(right, direction, ref river);
             }
-        } else if (min == bottomValue) {
-            if (bottom.Collidable) {
-                if (river.CurrentDirection != Direction.Bottom) {
+        }
+        else if (min == bottomValue)
+        {
+            if (bottom.Collidable)
+            {
+                if (river.CurrentDirection != Direction.Bottom)
+                {
                     river.TurnCount++;
                     river.CurrentDirection = Direction.Bottom;
                 }
                 FindPathToWater(bottom, direction, ref river);
             }
-        } else if (min == topValue) {
-            if (top.Collidable) {
-                if (river.CurrentDirection != Direction.Top) {
+        }
+        else if (min == topValue)
+        {
+            if (top.Collidable)
+            {
+                if (river.CurrentDirection != Direction.Top)
+                {
                     river.TurnCount++;
                     river.CurrentDirection = Direction.Top;
                 }
@@ -616,23 +694,31 @@ public class Generator : MonoBehaviour {
         }
     }
 
-    private void BuildRiverGroups() {
+    private void BuildRiverGroups()
+    {
         //loop each tile, checking if it belongs to multiple rivers
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
                 var c = _cells[x, y];
 
-                if (c.Rivers.Count > 1) {
+                if (c.Rivers.Count > 1)
+                {
                     // multiple rivers == intersection
                     RiverGroup group = null;
 
                     // Does a rivergroup already exist for this group?
-                    for (var n = 0; n < c.Rivers.Count; n++) {
+                    for (var n = 0; n < c.Rivers.Count; n++)
+                    {
                         var tileriver = c.Rivers[n];
-                        for (var i = 0; i < _riverGroups.Count; i++) {
-                            for (var j = 0; j < _riverGroups[i].Rivers.Count; j++) {
+                        for (var i = 0; i < _riverGroups.Count; i++)
+                        {
+                            for (var j = 0; j < _riverGroups[i].Rivers.Count; j++)
+                            {
                                 var river = _riverGroups[i].Rivers[j];
-                                if (river.ID == tileriver.ID) {
+                                if (river.ID == tileriver.ID)
+                                {
                                     group = _riverGroups[i];
                                 }
                                 if (group != null) break;
@@ -643,15 +729,19 @@ public class Generator : MonoBehaviour {
                     }
 
                     // existing group found -- add to it
-                    if (group != null) {
-                        for (var n = 0; n < c.Rivers.Count; n++) {
+                    if (group != null)
+                    {
+                        for (var n = 0; n < c.Rivers.Count; n++)
+                        {
                             if (!group.Rivers.Contains(c.Rivers[n]))
                                 group.Rivers.Add(c.Rivers[n]);
                         }
-                    } else   //No existing group found - create a new one
-                      {
+                    }
+                    else   //No existing group found - create a new one
+                    {
                         group = new RiverGroup();
-                        for (var n = 0; n < c.Rivers.Count; n++) {
+                        for (var n = 0; n < c.Rivers.Count; n++)
+                        {
                             group.Rivers.Add(c.Rivers[n]);
                         }
                         _riverGroups.Add(group);
@@ -661,14 +751,17 @@ public class Generator : MonoBehaviour {
         }
     }
 
-    private void DigRiverGroups() {
-        for (var i = 0; i < _riverGroups.Count; i++) {
+    private void DigRiverGroups()
+    {
+        for (var i = 0; i < _riverGroups.Count; i++)
+        {
 
             var group = _riverGroups[i];
             River longest = null;
 
             //Find longest river in this group
-            for (var j = 0; j < group.Rivers.Count; j++) {
+            for (var j = 0; j < group.Rivers.Count; j++)
+            {
                 var river = group.Rivers[j];
                 if (longest == null)
                     longest = river;
@@ -676,13 +769,16 @@ public class Generator : MonoBehaviour {
                     longest = river;
             }
 
-            if (longest != null) {
+            if (longest != null)
+            {
                 //Dig out longest path first
                 DigRiver(longest);
 
-                for (var j = 0; j < group.Rivers.Count; j++) {
+                for (var j = 0; j < group.Rivers.Count; j++)
+                {
                     var river = group.Rivers[j];
-                    if (river != longest) {
+                    if (river != longest)
+                    {
                         DigRiver(river, longest);
                     }
                 }
@@ -691,16 +787,20 @@ public class Generator : MonoBehaviour {
     }
 
     // Dig river based on a parent river vein
-    private void DigRiver(River river, River parent) {
+    private static void DigRiver(River river, River parent)
+    {
         var intersectionId = 0;
         var intersectionSize = 0;
 
         // determine point of intersection
-        for (var i = 0; i < river.Cells.Count; i++) {
+        for (var i = 0; i < river.Cells.Count; i++)
+        {
             var t1 = river.Cells[i];
-            for (var j = 0; j < parent.Cells.Count; j++) {
+            for (var j = 0; j < parent.Cells.Count; j++)
+            {
                 var t2 = parent.Cells[j];
-                if (t1 == t2) {
+                if (t1 == t2)
+                {
                     intersectionId = i;
                     intersectionSize = t2.RiverSize;
                 }
@@ -725,16 +825,19 @@ public class Generator : MonoBehaviour {
 
         // randomize length of each size
         var count1 = UnityEngine.Random.Range(fivemin, five);
-        if (size < 4) {
+        if (size < 4)
+        {
             count1 = 0;
         }
         var count2 = count1 + UnityEngine.Random.Range(fourmin, four);
-        if (size < 3) {
+        if (size < 3)
+        {
             count2 = 0;
             count1 = 0;
         }
         var count3 = count2 + UnityEngine.Random.Range(threemin, three);
-        if (size < 2) {
+        if (size < 2)
+        {
             count3 = 0;
             count2 = 0;
             count1 = 0;
@@ -742,57 +845,82 @@ public class Generator : MonoBehaviour {
         var count4 = count3 + UnityEngine.Random.Range(twomin, two);
 
         // Make sure we are not digging past the river path
-        if (count4 > river.Length) {
+        if (count4 > river.Length)
+        {
             var extra = count4 - river.Length;
-            while (extra > 0) {
-                if (count1 > 0) {
+            while (extra > 0)
+            {
+                if (count1 > 0)
+                {
                     count1--; count2--; count3--; count4--; extra--;
-                } else if (count2 > 0) {
+                }
+                else if (count2 > 0)
+                {
                     count2--; count3--; count4--; extra--;
-                } else if (count3 > 0) {
+                }
+                else if (count3 > 0)
+                {
                     count3--; count4--; extra--;
-                } else if (count4 > 0) {
+                }
+                else if (count4 > 0)
+                {
                     count4--; extra--;
                 }
             }
         }
 
         // adjust size of river at intersection point
-        if (intersectionSize == 1) {
-            count4 = intersectionCount;
-            count1 = 0;
-            count2 = 0;
-            count3 = 0;
-        } else if (intersectionSize == 2) {
-            count3 = intersectionCount;
-            count1 = 0;
-            count2 = 0;
-        } else if (intersectionSize == 3) {
-            count2 = intersectionCount;
-            count1 = 0;
-        } else if (intersectionSize == 4) {
-            count1 = intersectionCount;
-        } else {
-            count1 = 0;
-            count2 = 0;
-            count3 = 0;
-            count4 = 0;
+        switch (intersectionSize) {
+            case 1:
+                count4 = intersectionCount;
+                count1 = 0;
+                count2 = 0;
+                count3 = 0;
+                break;
+            case 2:
+                count3 = intersectionCount;
+                count1 = 0;
+                count2 = 0;
+                break;
+            case 3:
+                count2 = intersectionCount;
+                count1 = 0;
+                break;
+            case 4:
+                count1 = intersectionCount;
+                break;
+            default:
+                count1 = 0;
+                count2 = 0;
+                count3 = 0;
+                count4 = 0;
+                break;
         }
 
         // dig out the river
-        for (var i = river.Cells.Count - 1; i >= 0; i--) {
+        for (var i = river.Cells.Count - 1; i >= 0; i--)
+        {
 
             var c = river.Cells[i];
 
-            if (counter < count1) {
+            if (counter < count1)
+            {
                 c.DigRiver(river, 4);
-            } else if (counter < count2) {
+            }
+            else if (counter < count2)
+            {
                 c.DigRiver(river, 3);
-            } else if (counter < count3) {
+            }
+            else if (counter < count3)
+            {
                 c.DigRiver(river, 2);
-            } else if (counter < count4) {
+            }
+            else if (counter < count4)
+            {
                 c.DigRiver(river, 1);
-            } else {
+            }
+            else
+            {
                 c.DigRiver(river, 0);
             }
             counter++;
@@ -800,7 +928,8 @@ public class Generator : MonoBehaviour {
     }
 
     // Dig river
-    private void DigRiver(River river) {
+    private void DigRiver(River river)
+    {
         var counter = 0;
 
         // How wide are we digging this river?
@@ -820,16 +949,19 @@ public class Generator : MonoBehaviour {
 
         // randomize lenght of each size
         var count1 = UnityEngine.Random.Range(fivemin, five);
-        if (size < 4) {
+        if (size < 4)
+        {
             count1 = 0;
         }
         var count2 = count1 + UnityEngine.Random.Range(fourmin, four);
-        if (size < 3) {
+        if (size < 3)
+        {
             count2 = 0;
             count1 = 0;
         }
         var count3 = count2 + UnityEngine.Random.Range(threemin, three);
-        if (size < 2) {
+        if (size < 2)
+        {
             count3 = 0;
             count2 = 0;
             count1 = 0;
@@ -837,33 +969,46 @@ public class Generator : MonoBehaviour {
         var count4 = count3 + UnityEngine.Random.Range(twomin, two);
 
         // Make sure we are not digging past the river path
-        if (count4 > river.Length) {
+        if (count4 > river.Length)
+        {
             var extra = count4 - river.Length;
-            while (extra > 0) {
+            while (extra > 0)
+            {
                 if (count1 > 0) { count1--; count2--; count3--; count4--; extra--; } else if (count2 > 0) { count2--; count3--; count4--; extra--; } else if (count3 > 0) { count3--; count4--; extra--; } else if (count4 > 0) { count4--; extra--; }
             }
         }
 
         // Dig it out
-        for (var i = river.Cells.Count - 1; i >= 0; i--) {
+        for (var i = river.Cells.Count - 1; i >= 0; i--)
+        {
             var c = river.Cells[i];
 
-            if (counter < count1) {
+            if (counter < count1)
+            {
                 c.DigRiver(river, 4);
-            } else if (counter < count2) {
+            }
+            else if (counter < count2)
+            {
                 c.DigRiver(river, 3);
-            } else if (counter < count3) {
+            }
+            else if (counter < count3)
+            {
                 c.DigRiver(river, 2);
-            } else if (counter < count4) {
+            }
+            else if (counter < count4)
+            {
                 c.DigRiver(river, 1);
-            } else {
+            }
+            else
+            {
                 c.DigRiver(river, 0);
             }
             counter++;
         }
     }
 
-    private void AddMoisture(Cell c, float amount) {
+    private void AddMoisture(Cell c, float amount)
+    {
         _moistureData.Data[c.X, c.Y] += amount;
         c.MoistureValue += amount;
         if (c.MoistureValue > 1)
@@ -878,17 +1023,21 @@ public class Generator : MonoBehaviour {
         else c.MoistureType = MoistureType.Wettest;
     }
 
-    private void AdjustMoistureMap() {
-        for (var x = 0; x < _width; x++) {
-            for (var y = 0; y < _height; y++) {
+    private void AdjustMoistureMap()
+    {
+        for (var x = 0; x < _width; x++)
+        {
+            for (var y = 0; y < _height; y++)
+            {
 
                 var c = _cells[x, y];
-                if (c.HeightType == HeightType.River) {
+                if (c.HeightType == HeightType.River)
+                {
                     AddMoisture(c, (int)60);
                 }
             }
         }
     }
-#endregion
+    #endregion
 
 }

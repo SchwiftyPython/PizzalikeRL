@@ -1,40 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Area : MonoBehaviour {
-    private const int Width = 80;
-    private const int Height = 25;
-
-    private Transform _areaMapHolder;
-    private Tile[,] _areaTiles;
+public class Area {
     private GameObject[] _biomeTypeTiles;
 
+    public List<Entity> PresentEntities { get; set; }
+
+    public int Width = 80;
+    public int Height = 25;
+
+    //TODO: Could probably just reference parent cell for BiomeType
     public BiomeType BiomeType { get; set; }
 
-    public Tile[,] AreaTiles {
-        get {
-            return _areaTiles;
-        }
+    public Tile[,] AreaTiles { get; set; }
 
-        set {
-            _areaTiles = value;
-        }
-    }
-
-    private void BuildArea() {
-        if (_areaTiles != null) return;
-        _areaMapHolder = GameObject.Find("AreaMapHolder").transform;
-        _areaTiles = new Tile[Height, Width];
+    public void BuildArea()
+    {
+        PresentEntities = new List<Entity>();
+        if (AreaTiles != null) return;
+        AreaTiles = new Tile[Width, Height];
         _biomeTypeTiles = WorldData.Instance.GetBiomeTiles(BiomeType);
-        for (var i = 0; i < Height; i++) {
-            for (var j = 0; j < Width; j++) {
+        for (var i = 0; i < Width; i++)
+        {
+            for (var j = 0; j < Height; j++)
+            {
                 var texture = _biomeTypeTiles[Random.Range(0, _biomeTypeTiles.Length)];
-                _areaTiles[i,j] = new Tile(texture, new Vector2(i,j), false, false);
-                var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
-                instance.transform.SetParent(_areaMapHolder);
+                if (texture.name.Equals("pizza_wall"))
+                {
+                    AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), true, true);
+                }
+                else
+                {
+                    AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), false, false);
+                    //for testing
+                    if (Random.Range(0, 100) < 10) {
+                        var npcTypes = WorldData.Instance.BiomePossibleEntities[BiomeType];
+                        var npc = EntityTemplateLoader.GetEntityTemplate(npcTypes[0]);
+                        PresentEntities.Add(new Entity(npc, false));
+                    }
+                }
             }
         }
+        
     }
-    
+
+    public bool EntitiesPresent()
+    {
+        return PresentEntities.Count > 0;
+    }
 }

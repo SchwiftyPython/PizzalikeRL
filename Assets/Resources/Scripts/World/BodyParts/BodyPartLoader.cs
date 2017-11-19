@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class BodyPartLoader : MonoBehaviour {
 
-    public const string path = "bodyparts";
-    private static string[] bodyPartNames;
-    private static BodyPartContainer bc;
+    public const string Path = "bodyparts";
+    public static string[] _bodyPartNames;
+    private static BodyPartContainer _bc;
 
-    void Start() {
-        bc = BodyPartContainer.Load(path);
+    public static void LoadBodyParts() {
+        _bc = BodyPartContainer.Load(Path);
 
-        bodyPartNames = new string[bc.bodyParts.Count];
+        _bodyPartNames = new string[_bc.bodyParts.Count];
 
-        int index = 0;
+        var index = 0;
 
-        foreach (BodyPart bp in bc.bodyParts) {
-            bodyPartNames[index] = bp.name;
+        foreach (var bp in _bc.bodyParts) {
+            _bodyPartNames[index] = bp.name;
             
             //GetBodyPart(bp.name); //testing
 
@@ -25,20 +25,20 @@ public class BodyPartLoader : MonoBehaviour {
     }
 
     public static string[] GetBodyPartNames() {
-        return bodyPartNames;
+        return _bodyPartNames;
     }
 
     public static string  GetBodyPartNameAt(int index) {
-        return bodyPartNames[index];
+        return _bodyPartNames[index];
     }
 
-    public static int GetBCLength() {
-        return bodyPartNames.Length;
+    public static int GetBcLength() {
+        return _bodyPartNames.Length;
     }
 
     public static BodyPart GetBodyPart(string bodyPartName) {
-        int index = bc.bodyParts.FindIndex(item => item.name.Equals(bodyPartName.ToLower()));
-        BodyPart bp = bc.bodyParts[index];
+        var index = _bc.bodyParts.FindIndex(item => item.name.Equals(bodyPartName.ToLower()));
+        var bp = _bc.bodyParts[index];
 
         /*
         Debug.Log("Body Part Name: " + bp.name);
