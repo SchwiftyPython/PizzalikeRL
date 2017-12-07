@@ -139,25 +139,24 @@ public class Entity : MoveEntity {
 	}   
 
     public override void Move(Vector2 target) {
-        startTile = CurrentPosition;
-        endTile = target;
-        //RaycastHit2D hit = new RaycastHit2D();
+        StartTile = CurrentPosition;
+        EndTile = target;
 
         Debug.Log("entity.currentPosition before move: " + CurrentPosition.x + " " + CurrentPosition.y);
         Debug.Log("sprite.currentPosition before move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
-        Debug.Log("start: " + startTile);
-        Debug.Log("End: " + endTile);
+        Debug.Log("start: " + StartTile);
+        Debug.Log("End: " + EndTile);
 
         
-        CurrentPosition = endTile;
-        SetSpritePosition(endTile);
+        CurrentPosition = EndTile;
+        SetSpritePosition(EndTile);
 
         //update tile data for start and end tiles
-        var tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)startTile.x, (int)startTile.y];
+        var tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)StartTile.x, (int)StartTile.y];
         tileToUpdate.SetBlocksMovement(false);
         tileToUpdate.SetPresentEntity(null);
 
-        tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)endTile.x, (int)endTile.y];
+        tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)EndTile.x, (int)EndTile.y];
         tileToUpdate.SetBlocksMovement(true);
         tileToUpdate.SetPresentEntity(this);
 
@@ -165,13 +164,139 @@ public class Entity : MoveEntity {
         Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
     }
 
+    public override bool TileOutOfBounds(Vector2 target) {
+        var currentArea = GameManager.Instance.CurrentAreaPosition;
+        return target.x >= currentArea.Width || target.x < 0 || target.y >= currentArea.Height || target.y < 0;
+    }
+
+    public bool AreaOutOfBounds(Vector2 target) {
+        var currentCell = GameManager.Instance.CurrentCellPosition;
+        return target.x >= currentCell.GetCellWidth() || target.x < 0 || target.y >= currentCell.GetCellHeight() || target.y < 0;
+    }
+
+    public bool CellOutOfBounds(Vector2 target) {
+        return target.x >= WorldData.Instance.Width || target.x < 0 || target.y >= WorldData.Instance.Height || target.y < 0;
+    }
+
+    public Vector2 CalculateAreaEntryTile(Vector2 target) {
+        var xOffset = 0;
+        var yOffset = 0;
+        if (target.x > GameManager.Instance.CurrentAreaPosition.Width) {
+            xOffset = -GameManager.Instance.CurrentAreaPosition.Width;
+        }else if (target.x < GameManager.Instance.CurrentAreaPosition.Width) {
+            xOffset = GameManager.Instance.CurrentAreaPosition.Width;
+        }
+        if (target.y > GameManager.Instance.CurrentAreaPosition.Height)
+        {
+            yOffset = -GameManager.Instance.CurrentAreaPosition.Height;
+        }
+        else if (target.y < GameManager.Instance.CurrentAreaPosition.Height)
+        {
+            yOffset = GameManager.Instance.CurrentAreaPosition.Height;
+        }
+        return new Vector2(target.x + xOffset, target.y + yOffset);
+    }
+
+    public Direction AreaOutOfBoundsDirection(Vector2 target, Area area) {
+        if (target.x >= area.Width) {
+            if (target.y >= area.Height) {
+                return Direction.NorthEast;
+            }
+            return target.y < 0 ? Direction.SouthEast : Direction.East;
+        }
+        if (!(target.x < 0)){
+            return target.y < 0 ? Direction.South : Direction.North;
+        }
+        if (target.y >= area.Height)
+        {
+            return Direction.NorthWest;
+        }
+        return target.y < 0 ? Direction.SouthWest : Direction.West;
+    }
+
+    public Direction CellOutOfBoundsDirection(Vector2 target, Cell cell){
+        if (target.x >= cell.GetCellWidth())
+        {
+            if (target.y >= cell.GetCellHeight())
+            {
+                return Direction.NorthEast;
+            }
+            return target.y < 0 ? Direction.SouthEast : Direction.East;
+        }
+        if (!(target.x < 0))
+        {
+            return target.y < 0 ? Direction.South : Direction.North;
+        }
+        if (target.y >= cell.GetCellHeight())
+        {
+            return Direction.NorthWest;
+        }
+        return target.y < 0 ? Direction.SouthWest : Direction.West;
+    }
+
     public void MeleeAttack(Entity target) {
         if (MeleeRollHit(target)) {
             ApplyMeleeDamage(target);
             if (target.IsDead()) {
-                //remove target
+                //TODO: remove target
             }
         }
+    }
+
+    public bool MoveOrAttackSuccessful(Vector2 target)
+    {
+        if (CanMove(target))
+        {
+            Move(target);
+            return true;
+        }
+        if (EntityPresent(target))
+        {
+            MeleeAttack(GameManager.Instance.CurrentAreaPosition.GetTileAt(target).GetPresentEntity());
+            return true;
+        }
+        return false;
+    }
+
+    public bool CanMove(Vector2 target){
+        var currentArea = GameManager.Instance.CurrentAreaPosition;
+        var currentCell = GameManager.Instance.CurrentCellPosition;
+        if (!TileOutOfBounds(target) && !TargetTileBlocked(target)){
+            return true;
+        }
+        var areaDirectionToCheck = Directions[AreaOutOfBoundsDirection(target, currentArea)];
+        var nextArea = new Vector2(currentArea.X + areaDirectionToCheck.x, 
+                                   currentArea.Y + areaDirectionToCheck.y);
+        if (!AreaOutOfBounds(nextArea)){
+            return true;
+        }
+        var cellDirectionToCheck = Directions[CellOutOfBoundsDirection(nextArea, currentCell)];
+        var nextCell = new Vector2(currentCell.X + cellDirectionToCheck.x,
+                                   currentCell.Y + cellDirectionToCheck.y);
+        return !CellOutOfBounds(nextCell);
+    }
+
+    public void MoveToNextArea(Vector2 target) {
+        var currentArea = GameManager.Instance.CurrentAreaPosition;
+        var currentCell = GameManager.Instance.CurrentCellPosition;
+        var areaDirection = Directions[AreaOutOfBoundsDirection(target, currentArea)];
+        var nextArea = new Vector2(currentArea.X + areaDirection.x,
+                                   currentArea.Y + areaDirection.y);
+        GameManager.Instance.CurrentAreaPosition = currentCell.Areas[(int)nextArea.x, (int)nextArea.y];
+    }
+
+    public void MoveToNextCell(Vector2 target){
+       
+        var currentCell = GameManager.Instance.CurrentCellPosition;
+        var cellDirection = Directions[CellOutOfBoundsDirection(target, currentCell)];
+        var nextArea = new Vector2(currentCell.X + cellDirection.x,
+                                   currentCell.Y + cellDirection.y);
+        GameManager.Instance.CurrentAreaPosition = currentCell.Areas[(int)nextArea.x, (int)nextArea.y];
+    }
+
+    public bool EntityPresent(Vector2 target)
+    {
+        return TargetTileBlockedByEntity(target);
     }
 
     private bool MeleeRollHit(Entity target) {
@@ -192,35 +317,5 @@ public class Entity : MoveEntity {
     private bool IsDead() {
         return _currentHP <= 0;
     }
-
-    /*
-   public override bool MoveSuccessful(Vector2 end) {
-       startTile = this.currentPosition;
-       endTile = end;
-       //RaycastHit2D hit = new RaycastHit2D();
-
-       Debug.Log("entity.currentPosition: " + this.currentPosition.x + " " + this.currentPosition.y);
-       Debug.Log("start: " + startTile);
-       Debug.Log("End: " + endTile);
-
-       if (!WorldManager.instance.GetTileAt(endTile).GetBlocksMovement()) {
-           this.currentPosition = endTile;
-           this.SetSpritePosition(endTile);
-
-           //update tile data for start and end tiles
-           Tile tileToUpdate = WorldManager.instance.GetTileAt(startTile);
-           tileToUpdate.SetBlocksMovement(false);
-           tileToUpdate.SetPresentEntity(null);
-
-           tileToUpdate = WorldManager.instance.GetTileAt(endTile);
-           tileToUpdate.SetBlocksMovement(true);
-           tileToUpdate.SetPresentEntity(this);
-           Debug.Log("move successful. Tile Blocked.");
-           return true;
-       } else {
-           Debug.Log("move unsuccessful");
-           return false;
-       }
-   }
-   */
+    
 }

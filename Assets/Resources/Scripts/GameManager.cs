@@ -44,19 +44,33 @@ public class GameManager : MonoBehaviour {
                 }
                 break;
 		case GameState.Playerturn:
-                /*
-		    if (InputController.instance.ActionTaken) {
-		        CurrentState = GameState.Enemyturn;
+		    if (InputController.Instance.ActionTaken) {
+		        CurrentState = WhoseTurn();
 		    }
-            */
 		    break;
-		case GameState.Enemyturn:               
+		case GameState.Enemyturn:
+		    if (EnemyController.ActionTaken){
+		        CurrentState = WhoseTurn();
+		    }
             break;
 		case GameState.End:
 			//go to main menu
 			break;
 		}
-	}    
-}
+	}
 
-
+    private GameState WhoseTurn() {
+        if (!CurrentAreaPosition.EntitiesPresent()) {
+            InputController.Instance.ActionTaken = false;
+            return GameState.Playerturn;
+        }
+        var lastTurn = CurrentAreaPosition.TurnOrder.Dequeue();
+        CurrentAreaPosition.TurnOrder.Enqueue(lastTurn);
+        if (CurrentAreaPosition.TurnOrder.Peek().IsPlayer()) {
+            InputController.Instance.ActionTaken = false;
+            return GameState.Playerturn;
+        }
+        EnemyController.ActionTaken = false;
+        return GameState.Enemyturn;
+    }
+};

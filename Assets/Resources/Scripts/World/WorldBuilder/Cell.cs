@@ -95,7 +95,11 @@ public class Cell {
                         Areas[i, j].BiomeType = value;
                     }
                     else {
-                        Areas[i, j] = new Area {BiomeType = value};
+                        Areas[i, j] = new Area {
+                            BiomeType = value,
+                            X = i,
+                            Y = j
+                        };
                     }
                 }
             }
@@ -110,6 +114,15 @@ public class Cell {
         set {
             _currentArea = value;
         }
+    }
+
+    public int GetCellWidth() {
+        return CellWidth;
+    }
+
+    public int GetCellHeight()
+    {
+        return CellHeight;
     }
 
     public void UpdateBitmask() {

@@ -1,41 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveEntity {
+    public enum Direction {
+        North,
+        NorthEast,
+        East,
+        SouthEast,
+        South,
+        SouthWest,
+        West,
+        NorthWest
+    }
 
-	protected Vector2 startTile;
-	protected Vector2 endTile;    
-
-    /*
-	public virtual bool MoveSuccessful(Vector2 end){
-        return true;
-
-        
-        hit = Physics2D.Raycast(startTile, endTile, 0.9f);
-        Debug.Log("Hit: " + hit.collider);
-
-        if (hit.collider == null) {
-            entity.currentPosition = endTile;
-            entity.SetSpritePosition(endTile);
-
-            //update tile data for start and end tiles
-            Tile tileToUpdate = WorldManager.instance.GetTileAt(startTile);
-            tileToUpdate.SetBlocksMovement(false);
-            tileToUpdate.SetPresentEntity(null);
-
-            tileToUpdate = WorldManager.instance.GetTileAt(endTile);
-            tileToUpdate.SetBlocksMovement(true);
-            tileToUpdate.SetPresentEntity(entity);
-            return true;
-        } else {
-			return false;
-		}
-        
-	}
-    */
+    protected IDictionary<Direction, Vector2> Directions = new Dictionary<Direction, Vector2> {
+        {Direction.North, Vector2.up },
+        {Direction.NorthEast, Vector2.one },
+        {Direction.East, Vector2.right },
+        {Direction.SouthEast, new Vector2(1, -1) },
+        {Direction.South, Vector2.down },
+        {Direction.SouthWest, new Vector2(-1, -1) },
+        {Direction.West, Vector2.left },
+        {Direction.NorthWest, new Vector2(-1, 1) }
+    };
+    
+	protected Vector2 StartTile;
+	protected Vector2 EndTile; 
 
     public virtual void Move(Vector2 target) {}
+
+    public virtual bool TileOutOfBounds(Vector2 target) {
+        return true;
+    }
 
     public virtual bool TargetTileBlocked(Vector2 target) {
         return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetBlocksMovement();

@@ -3,33 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class AstarAI : MonoBehaviour {
-    public Vector2 targetPosition;         
-    public Path path;
-    public bool pathCalculated;
+public class AstarAi : MonoBehaviour {
+    public Vector2 TargetPosition;         
+    public Path Path;
+    public bool PathCalculated;
 
-    Seeker seeker;
+    Seeker _seeker;
 
-    void Start () {
-        seeker = GetComponent<Seeker>();        
-	}
+    private void Start () {
+        _seeker = GetComponent<Seeker>();
+        Debug.Log("seeker: " + _seeker);
+    }
 
-    public void FindPathToPlayer(Vector2 target) {
-        pathCalculated = false;
+    public void FindPathToPlayer(GameObject currentEntity, Vector2 target) {
+        PathCalculated = false;
         Debug.Log("Target: " + target);
-        GameObject enemy = WorldManager.Instance.Enemy.GetSprite();        
-        seeker = GetComponent<Seeker>();
-        Debug.Log("enemy:" + enemy.transform.position);
-        seeker.StartPath(enemy.transform.position, target, OnPathComplete);
+        Debug.Log("seeker: " + _seeker);
+        //_seeker = GetComponent<Seeker>();
+        Debug.Log("enemy:" + currentEntity.transform.position);
+        _seeker.StartPath(currentEntity.transform.position, target, OnPathComplete);
         
     }
 	
     public void OnPathComplete(Path p) {
         Debug.Log("Path returned. Error? " + p.error);
         if (!p.error) {
-            path = p;
-            pathCalculated = true;
-            Debug.Log("Vector Path: " + path.vectorPath[1]);
+            Path = p;
+            PathCalculated = true;
+            Debug.Log("Vector Path: " + Path.vectorPath[1]);
         }
     }
 }

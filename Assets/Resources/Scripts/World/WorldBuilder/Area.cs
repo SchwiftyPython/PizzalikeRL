@@ -13,6 +13,29 @@ public class Area {
     public BiomeType BiomeType { get; set; }
 
     public Tile[,] AreaTiles { get; set; }
+    public Queue<Entity> TurnOrder { get; set; }
+
+    private int _x;
+    public int X {
+        get {
+            return _x;
+        }
+
+        set {
+            _x = value;
+        }
+    }
+
+    private int _y;
+    public int Y {
+        get {
+            return _y;
+        }
+
+        set {
+            _y = value;
+        }
+    }
 
     public void BuildArea()
     {
@@ -33,7 +56,7 @@ public class Area {
                 {
                     AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), false, false);
                     //for testing
-                    if (Random.Range(0, 100) < 10) {
+                    if (Random.Range(0, 100) < 1) {
                         var npcTypes = WorldData.Instance.BiomePossibleEntities[BiomeType];
                         var npc = EntityTemplateLoader.GetEntityTemplate(npcTypes[0]);
                         PresentEntities.Add(new Entity(npc, false));
@@ -47,5 +70,10 @@ public class Area {
     public bool EntitiesPresent()
     {
         return PresentEntities.Count > 0;
+    }
+
+    public Tile GetTileAt(Vector3 position)
+    {
+        return AreaTiles[(int)position.x, (int)position.y];
     }
 }

@@ -1,4 +1,5 @@
-﻿using Pathfinding;
+﻿using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 
 public class AreaMap : MonoBehaviour {
@@ -17,8 +18,10 @@ public class AreaMap : MonoBehaviour {
         //temp til movement and pathfinding is okay
         _player = new Entity(true, _playerSprite);
         GameManager.Instance.Player = _player;
-
+        
         _currentArea = GameManager.Instance.CurrentAreaPosition;
+        _currentArea.TurnOrder = new Queue<Entity>();
+        _currentArea.TurnOrder.Enqueue(_player);
         _currentArea.BuildArea();
         DrawArea();
         PlacePlayer();
@@ -46,7 +49,7 @@ public class AreaMap : MonoBehaviour {
             if (_currentArea != null) {
                 _playerSprite.transform.position = new Vector3(_currentArea.Width / 2, _currentArea.Height / 2);
                 _player.CurrentPosition = new Vector3(_currentArea.Width / 2, _currentArea.Height / 2);
-                Debug.Log(("current area: " + _currentArea.AreaTiles[_currentArea.Width / 2, _currentArea.Height / 2]));
+                //Debug.Log(("current area: " + _currentArea.AreaTiles[_currentArea.Width / 2, _currentArea.Height / 2]));
                 _currentArea.AreaTiles[_currentArea.Width / 2, _currentArea.Height / 2].SetPresentEntity(_player);
             }
         }
@@ -64,8 +67,11 @@ public class AreaMap : MonoBehaviour {
             while (!placed) {
                 if (!_currentArea.AreaTiles[x, y].GetBlocksMovement()) {
                     var npcSprite = Instantiate(e.GetSprite(), new Vector3(x, y, 0f), Quaternion.identity);
+                    e.SetSprite(npcSprite);
+                    e.SetSpritePosition(new Vector3(x, y, 0f));
                     _currentArea.AreaTiles[x, y].SetPresentEntity(e);
                     e.CurrentPosition = new Vector3(x, y, 0f);
+                    _currentArea.TurnOrder.Enqueue(e);
                     placed = true;
                 }
                 y = Random.Range(0, _currentArea.Height);
@@ -83,7 +89,7 @@ public class AreaMap : MonoBehaviour {
             gg.width = _currentArea.Width;
             gg.depth = _currentArea.Height;
             gg.nodeSize = 1;
-            gg.center = new Vector3(gg.width / 2 + GraphOffset, gg.depth / 2 + GraphOffset, -0.1f);
+            gg.center = new Vector3(gg.width / 2 + GraphOffset, gg.depth / 2, -0.1f);
             gg.SetDimensions(gg.width, gg.depth, gg.nodeSize);
             gg.collision.use2D = true;
             gg.collision.type = ColliderType.Ray;
