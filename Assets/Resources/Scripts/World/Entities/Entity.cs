@@ -139,6 +139,7 @@ public class Entity : MoveEntity {
 	}   
 
     public override void Move(Vector2 target) {
+        //todo: clean up this code
         StartTile = CurrentPosition;
         EndTile = target;
 
@@ -147,18 +148,55 @@ public class Entity : MoveEntity {
         Debug.Log("start: " + StartTile);
         Debug.Log("End: " + EndTile);
 
-        
-        CurrentPosition = EndTile;
-        SetSpritePosition(EndTile);
+        if (TileOutOfBounds(target)) {
+            var direction = AreaOutOfBoundsDirection(target, GameManager.Instance.CurrentAreaPosition);
+            var nextArea = new Vector2(GameManager.Instance.CurrentAreaPosition.X + Directions[direction].x,
+                GameManager.Instance.CurrentAreaPosition.Y + Directions[direction].y);
+            if (AreaOutOfBounds(nextArea)) {
+                direction = CellOutOfBoundsDirection(nextArea, GameManager.Instance.CurrentCellPosition);
+                var nextCell = new Vector2(GameManager.Instance.CurrentCellPosition.X + Directions[direction].x,
+                    GameManager.Instance.CurrentCellPosition.Y + Directions[direction].y);
+                if (CellOutOfBounds(nextCell)) {
+                    Debug.Log("Cannot move. Edge of map.");
+                    return;
+                }
+                else {
+                    GameManager.Instance.CurrentCellPosition = WorldData.Instance.Map[GameManager.Instance.CurrentCellPosition.X + (int)Directions[direction].x,
+                                                                                      GameManager.Instance.CurrentCellPosition.Y + (int)Directions[direction].y];
+                }
 
-        //update tile data for start and end tiles
-        var tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)StartTile.x, (int)StartTile.y];
-        tileToUpdate.SetBlocksMovement(false);
-        tileToUpdate.SetPresentEntity(null);
+            }
+            else {
+                //move to next area but not next cell
+                GameManager.Instance.CurrentAreaPosition = GameManager.Instance.CurrentCellPosition.Areas[
+                                                           GameManager.Instance.CurrentAreaPosition.X + (int) Directions[direction].x,
+                                                           GameManager.Instance.CurrentAreaPosition.Y + (int) Directions[direction].y];
+                //calc area entry tile
+                GameManager.Instance.CurrentTilePosition = CalculateAreaEntryTile(target);
 
-        tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)EndTile.x, (int)EndTile.y];
-        tileToUpdate.SetBlocksMovement(true);
-        tileToUpdate.SetPresentEntity(this);
+                //update tile data for start and end tiles
+                var tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)StartTile.x, (int)StartTile.y];
+                tileToUpdate.SetBlocksMovement(false);
+                tileToUpdate.SetPresentEntity(null);
+
+                tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)EndTile.x, (int)EndTile.y];
+                tileToUpdate.SetBlocksMovement(true);
+                tileToUpdate.SetPresentEntity(this);
+            }
+        }
+        else {
+            CurrentPosition = EndTile;
+            SetSpritePosition(EndTile);
+
+            //update tile data for start and end tiles
+            var tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)StartTile.x, (int)StartTile.y];
+            tileToUpdate.SetBlocksMovement(false);
+            tileToUpdate.SetPresentEntity(null);
+
+            tileToUpdate = GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)EndTile.x, (int)EndTile.y];
+            tileToUpdate.SetBlocksMovement(true);
+            tileToUpdate.SetPresentEntity(this);
+        }
 
         Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
         Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
@@ -178,23 +216,42 @@ public class Entity : MoveEntity {
         return target.x >= WorldData.Instance.Width || target.x < 0 || target.y >= WorldData.Instance.Height || target.y < 0;
     }
 
-    public Vector2 CalculateAreaEntryTile(Vector2 target) {
+    public Tile CalculateAreaEntryTile(Vector2 target) {
         var xOffset = 0;
         var yOffset = 0;
         if (target.x > GameManager.Instance.CurrentAreaPosition.Width) {
             xOffset = -GameManager.Instance.CurrentAreaPosition.Width;
-        }else if (target.x < GameManager.Instance.CurrentAreaPosition.Width) {
+        }else if (target.x < GameManager.Instance.CurrentAreaPosition.Width - 1) {
             xOffset = GameManager.Instance.CurrentAreaPosition.Width;
         }
         if (target.y > GameManager.Instance.CurrentAreaPosition.Height)
         {
             yOffset = -GameManager.Instance.CurrentAreaPosition.Height;
         }
-        else if (target.y < GameManager.Instance.CurrentAreaPosition.Height)
+        else if (target.y < GameManager.Instance.CurrentAreaPosition.Height - 1)
         {
             yOffset = GameManager.Instance.CurrentAreaPosition.Height;
         }
-        return new Vector2(target.x + xOffset, target.y + yOffset);
+        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x + xOffset, (int)target.y + yOffset];
+    }
+
+    public Area CalculateCellEntryArea(Vector2 target) {
+        var xOffset = 0;
+        var yOffset = 0;
+        if (target.x > GameManager.Instance.CurrentCellPosition.GetCellWidth()) {
+            xOffset = -GameManager.Instance.CurrentCellPosition.GetCellWidth();
+        }else if (target.x < GameManager.Instance.CurrentCellPosition.GetCellWidth() - 1) {
+            xOffset = GameManager.Instance.CurrentCellPosition.GetCellWidth();
+        }
+        if (target.y > GameManager.Instance.CurrentCellPosition.GetCellHeight())
+        {
+            yOffset = -GameManager.Instance.CurrentCellPosition.GetCellHeight();
+        }
+        else if (target.y < GameManager.Instance.CurrentCellPosition.GetCellHeight() - 1)
+        {
+            yOffset = GameManager.Instance.CurrentCellPosition.GetCellHeight();
+        }
+        return GameManager.Instance.CurrentCellPosition.Areas[(int)target.x + xOffset, (int)target.y + yOffset];
     }
 
     public Direction AreaOutOfBoundsDirection(Vector2 target, Area area) {
