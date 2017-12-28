@@ -14,10 +14,10 @@ public class GameManager : MonoBehaviour {
 	public enum GameState {
 		Start,
         Worldmap,
-        Areamap,
+        EnterArea,
 		Playerturn,
 		Enemyturn,
-		End,
+		End
 	}
 
     public GameState CurrentState { get; set; }
@@ -40,6 +40,13 @@ public class GameManager : MonoBehaviour {
 		switch(CurrentState) {
 		case GameState.Start:
 		        if (WorldMapGenComplete){
+                    CurrentState = GameState.EnterArea;
+                }
+                break;
+            case GameState.EnterArea:
+                AreaMap.Instance.EnterArea();
+                if (AreaMap.Instance.AreaReady)
+                {
                     CurrentState = GameState.Playerturn;
                 }
                 break;

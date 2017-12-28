@@ -56,7 +56,7 @@ public class Area {
                 {
                     AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), false, false);
                     //for testing
-                    if (Random.Range(0, 100) < 1) {
+                    if (Random.Range(0, 1000) < 1) {
                         var npcTypes = WorldData.Instance.BiomePossibleEntities[BiomeType];
                         var npc = EntityTemplateLoader.GetEntityTemplate(npcTypes[0]);
                         PresentEntities.Add(new Entity(npc, false));
@@ -70,6 +70,11 @@ public class Area {
     public bool EntitiesPresent()
     {
         return PresentEntities.Count > 0;
+    }
+
+    public bool AreaBuilt()
+    {
+        return AreaTiles != null;
     }
 
     public Tile GetTileAt(Vector3 position)

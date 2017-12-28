@@ -1,35 +1,73 @@
 ﻿using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AreaMap : MonoBehaviour {
-    private Transform _areaMapHolder;
+    private Transform _areaMapHolderTransform;
     private Area _currentArea;
     private GameObject _playerSprite;
     private Entity _player;
 
     public GameObject AStar;
+    public GameObject AreaMapHolder;
     public float GraphOffset = -0.5f;
+    public bool AreaReady;
 
-    private void Start() {
-        _areaMapHolder = transform;
-        _playerSprite =  Instantiate(GameManager.Instance.PlayerSprite, new Vector2(0, 0), Quaternion.identity);
+    public static AreaMap Instance;
+
+    public void Start()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+
+        _playerSprite = Instantiate(GameManager.Instance.PlayerSprite, new Vector2(0, 0), Quaternion.identity);
+    }
+
+    private void Init()
+    {
+        AreaReady = false;
+        AreaMapHolder = new GameObject("AreaMapHolder");
 
         //temp til movement and pathfinding is okay
-        _player = new Entity(true, _playerSprite);
-        GameManager.Instance.Player = _player;
-        
+        if (GameManager.Instance.Player == null)
+        {
+            _player = new Entity(true, _playerSprite);
+            GameManager.Instance.Player = _player;
+        }
+        else
+        {
+            _player = GameManager.Instance.Player;
+        }
+
+        _areaMapHolderTransform = AreaMapHolder.transform;
+
         _currentArea = GameManager.Instance.CurrentAreaPosition;
         _currentArea.TurnOrder = new Queue<Entity>();
         _currentArea.TurnOrder.Enqueue(_player);
         _currentArea.BuildArea();
         DrawArea();
         PlacePlayer();
-        if (_currentArea.EntitiesPresent()) {
+        if (_currentArea.EntitiesPresent())
+        {
             PlaceNPCs();
         }
         CreateAStarGraph();
         AstarPath.active.Scan();
+    }
+
+    public void EnterArea()
+    {
+        Destroy(AreaMapHolder);
+        Init();
+        AreaReady = true;
     }
 
     public void DrawArea() {
@@ -38,7 +76,7 @@ public class AreaMap : MonoBehaviour {
             for (var j = 0; j < _currentArea.Height; j++) {
                 var texture = _currentArea.AreaTiles[i, j].GetTileTexture();
                 var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
-                instance.transform.SetParent(_areaMapHolder);
+                instance.transform.SetParent(_areaMapHolderTransform);
             }
         }
     }
@@ -55,7 +93,7 @@ public class AreaMap : MonoBehaviour {
         }
         else {
             //TODO place player based on where they entered map
-            _playerSprite.transform.position = new Vector3(0, 0);
+            _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
         }
     }
 
@@ -84,18 +122,19 @@ public class AreaMap : MonoBehaviour {
         var data = AStar.GetComponent<AstarPath>().data;
         var gg = data.AddGraph(typeof(GridGraph)) as GridGraph;
 
-        if (gg != null)
+        if (gg == null)
         {
-            gg.width = _currentArea.Width;
-            gg.depth = _currentArea.Height;
-            gg.nodeSize = 1;
-            gg.center = new Vector3(gg.width / 2 + GraphOffset, gg.depth / 2, -0.1f);
-            gg.SetDimensions(gg.width, gg.depth, gg.nodeSize);
-            gg.collision.use2D = true;
-            gg.collision.type = ColliderType.Ray;
-            gg.collision.mask.value = 256; //Set mask to obstacle        
-            gg.rotation.x = -90;
-            gg.cutCorners = false;
+            return;
         }
+        gg.width = _currentArea.Width;
+        gg.depth = _currentArea.Height;
+        gg.nodeSize = 1;
+        gg.center = new Vector3(gg.width / 2 + GraphOffset, gg.depth / 2, -0.1f);
+        gg.SetDimensions(gg.width, gg.depth, gg.nodeSize);
+        gg.collision.use2D = true;
+        gg.collision.type = ColliderType.Ray;
+        gg.collision.mask.value = 256; //Set mask to obstacle        
+        gg.rotation.x = -90;
+        gg.cutCorners = false;
     }
 }
