@@ -2,7 +2,33 @@
 using System.Linq;
 using UnityEngine;
 
-public class Entity : MoveEntity {
+public class Entity {
+    public enum Direction
+    {
+        North,
+        NorthEast,
+        East,
+        SouthEast,
+        South,
+        SouthWest,
+        West,
+        NorthWest
+    }
+
+    private readonly IDictionary<Direction, Vector2> _directions = new Dictionary<Direction, Vector2> {
+        {Direction.North, Vector2.up },
+        {Direction.NorthEast, Vector2.one },
+        {Direction.East, Vector2.right },
+        {Direction.SouthEast, new Vector2(1, -1) },
+        {Direction.South, Vector2.down },
+        {Direction.SouthWest, new Vector2(-1, -1) },
+        {Direction.West, Vector2.left },
+        {Direction.NorthWest, new Vector2(-1, 1) }
+    };
+
+    private Vector2 StartTile;
+    private Vector2 EndTile;
+
     private bool _isPlayer;
     private bool _isDead;
     private bool _isNameable;
@@ -138,7 +164,7 @@ public class Entity : MoveEntity {
 		_sprite.transform.position = newPosition;
 	}   
 
-    public override void Move(Vector2 target) {
+    public void Move(Vector2 target) {
         //todo: clean up this code
         StartTile = CurrentPosition;
         EndTile = target;
@@ -152,18 +178,18 @@ public class Entity : MoveEntity {
 
         if (TileOutOfBounds(target)) {
             var direction = AreaOutOfBoundsDirection(target, currentArea);
-            var nextArea = new Vector2(currentArea.X + Directions[direction].x,
-                                       currentArea.Y + Directions[direction].y);
+            var nextArea = new Vector2(currentArea.X + _directions[direction].x,
+                                       currentArea.Y + _directions[direction].y);
             if (AreaOutOfBounds(nextArea)) {
                 direction = CellOutOfBoundsDirection(nextArea, currentCell);
-                var nextCell = new Vector2(currentCell.X + Directions[direction].x,
-                                           currentCell.Y + Directions[direction].y);
+                var nextCell = new Vector2(currentCell.X + _directions[direction].x,
+                                           currentCell.Y + _directions[direction].y);
                 if (CellOutOfBounds(nextCell)) {
                     Debug.Log("Cannot move. Edge of map.");
                     return;
                 } else {
-                    currentCell = WorldData.Instance.Map[currentCell.X + (int)Directions[direction].x,
-                                                         currentCell.Y + (int)Directions[direction].y];
+                    currentCell = WorldData.Instance.Map[currentCell.X + (int)_directions[direction].x,
+                                                         currentCell.Y + (int)_directions[direction].y];
 
                     currentArea = CalculateCellEntryArea(nextArea);
 
@@ -188,8 +214,8 @@ public class Entity : MoveEntity {
 
             } else {
                 //move to next area but not next cell
-                currentArea = currentCell.Areas[currentArea.X + (int) Directions[direction].x,
-                                                currentArea.Y + (int) Directions[direction].y];
+                currentArea = currentCell.Areas[currentArea.X + (int) _directions[direction].x,
+                                                currentArea.Y + (int) _directions[direction].y];
 
                 if (!currentArea.AreaBuilt())
                 {
@@ -231,7 +257,7 @@ public class Entity : MoveEntity {
         endTile.SetPresentEntity(this);
     }
 
-    public override bool TileOutOfBounds(Vector2 target) {
+    public bool TileOutOfBounds(Vector2 target) {
         var currentArea = GameManager.Instance.CurrentAreaPosition;
         return target.x >= currentArea.Width || target.x < 0 || target.y >= currentArea.Height || target.y < 0;
     }
@@ -280,6 +306,8 @@ public class Entity : MoveEntity {
         {
             yOffset = GameManager.Instance.CurrentCellPosition.GetCellHeight();
         }
+        Debug.Log("Original target area:" + target);
+        Debug.Log("Calculated target area:" + (int)target.x + xOffset + ", " + (int)target.y + yOffset);
         return GameManager.Instance.CurrentCellPosition.Areas[(int)target.x + xOffset, (int)target.y + yOffset];
     }
 
@@ -347,25 +375,42 @@ public class Entity : MoveEntity {
     public bool CanMove(Vector2 target){
         var currentArea = GameManager.Instance.CurrentAreaPosition;
         var currentCell = GameManager.Instance.CurrentCellPosition;
-        if (!TileOutOfBounds(target) && !TargetTileBlocked(target)){
+        if (!TileOutOfBounds(target))
+        {
+            return !TargetTileBlocked(target);
+        }
+        var direction = AreaOutOfBoundsDirection(target, currentArea);
+        var nextArea = new Vector2(currentArea.X + _directions[direction].x,
+            currentArea.Y + _directions[direction].y);
+        if (!AreaOutOfBounds(nextArea))
+        {
             return true;
         }
-        var areaDirectionToCheck = Directions[AreaOutOfBoundsDirection(target, currentArea)];
-        var nextArea = new Vector2(currentArea.X + areaDirectionToCheck.x, 
-                                   currentArea.Y + areaDirectionToCheck.y);
-        if (!AreaOutOfBounds(nextArea)){
+        direction = CellOutOfBoundsDirection(nextArea, currentCell);
+        var nextCell = new Vector2(currentCell.X + _directions[direction].x,
+            currentCell.Y + _directions[direction].y);
+        if (!CellOutOfBounds(nextCell))
+        {
             return true;
         }
-        var cellDirectionToCheck = Directions[CellOutOfBoundsDirection(nextArea, currentCell)];
-        var nextCell = new Vector2(currentCell.X + cellDirectionToCheck.x,
-                                   currentCell.Y + cellDirectionToCheck.y);
-        return !CellOutOfBounds(nextCell);
+        Debug.Log("Cannot move. Edge of map.");
+        return false;
+    }
+
+    public bool TargetTileBlocked(Vector2 target)
+    {
+        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetBlocksMovement();
+    }
+
+    public bool TargetTileBlockedByEntity(Vector2 target)
+    {
+        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetPresentEntity() != null;
     }
 
     public void MoveToNextArea(Vector2 target) {
         var currentArea = GameManager.Instance.CurrentAreaPosition;
         var currentCell = GameManager.Instance.CurrentCellPosition;
-        var areaDirection = Directions[AreaOutOfBoundsDirection(target, currentArea)];
+        var areaDirection = _directions[AreaOutOfBoundsDirection(target, currentArea)];
         var nextArea = new Vector2(currentArea.X + areaDirection.x,
                                    currentArea.Y + areaDirection.y);
         GameManager.Instance.CurrentAreaPosition = currentCell.Areas[(int)nextArea.x, (int)nextArea.y];
@@ -374,7 +419,7 @@ public class Entity : MoveEntity {
     public void MoveToNextCell(Vector2 target){
        
         var currentCell = GameManager.Instance.CurrentCellPosition;
-        var cellDirection = Directions[CellOutOfBoundsDirection(target, currentCell)];
+        var cellDirection = _directions[CellOutOfBoundsDirection(target, currentCell)];
         var nextArea = new Vector2(currentCell.X + cellDirection.x,
                                    currentCell.Y + cellDirection.y);
         GameManager.Instance.CurrentAreaPosition = currentCell.Areas[(int)nextArea.x, (int)nextArea.y];
