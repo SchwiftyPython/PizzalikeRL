@@ -61,10 +61,22 @@ public class Entity {
     private IDictionary<string, BodyPart> _body = new Dictionary<string, BodyPart>();
     private int _coins;
 
+    private GameObject prefab;
     private GameObject _sprite;
     //SingleNodeBlocker blocker;
 
-    public Vector3 CurrentPosition;
+    private Vector3 _currentPosition;
+
+    public Vector3 CurrentPosition {
+        get {
+            return _currentPosition;
+        }
+
+        set {
+            _currentPosition = value;
+            SetSpritePosition(value);
+        }
+    }
 
     public Entity (EntityTemplate template, bool isPlayer) {
         _isPlayer = isPlayer;
@@ -74,7 +86,7 @@ public class Entity {
         _constitution = GenConstitution(template.minConstitution, template.maxConstitution);
         _isNameable = template.nameable;
         _canMutate = template.canMutate;
-        _sprite = Resources.Load(template.spritePath) as GameObject;
+        prefab = Resources.Load(template.spritePath) as GameObject;
         //TODO: gen level
         _level = 1;
         _currentHP =_maxHP = GenMaxHp();
@@ -88,7 +100,7 @@ public class Entity {
     }
 
     //Testing constructor
-	public Entity(bool isPlayer, GameObject sprite){
+	/*public Entity(bool isPlayer, GameObject sprite){
 		_isPlayer = isPlayer;
 		_sprite = sprite;
 		_isDead = false;
@@ -100,7 +112,7 @@ public class Entity {
         _maxHP = 45;
         _speed = 35;
         _defense = 35;
-	}
+	}*/
 
     private int GenStrength(int min, int max) {
         return Random.Range(min, max + 1);
@@ -153,7 +165,7 @@ public class Entity {
     }
 
 	public GameObject GetSprite(){
-		return _sprite;
+		return prefab;
 	}
 
 	public void SetSprite(GameObject sprite){
@@ -209,7 +221,7 @@ public class Entity {
                     if (_isPlayer) { GameManager.Instance.Player.CurrentPosition = CurrentPosition; }
                     GameManager.Instance.CurrentAreaPosition = currentArea;
                     GameManager.Instance.CurrentCellPosition = currentCell;
-                    AreaMap.Instance.EnterArea();
+                    GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                 }
 
             } else {
@@ -232,20 +244,20 @@ public class Entity {
                                                      (int)GameManager.Instance.CurrentTilePosition.GetGridPosition().y]);
                 if (_isPlayer) { GameManager.Instance.Player.CurrentPosition = CurrentPosition; }
                 GameManager.Instance.CurrentAreaPosition = currentArea;
-                AreaMap.Instance.EnterArea();
+                GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
             }
         } else {
             CurrentPosition = EndTile;
             if (_isPlayer) { GameManager.Instance.Player.CurrentPosition = CurrentPosition; }
-            SetSpritePosition(EndTile);
+            //SetSpritePosition(EndTile);
 
             //update tile data for start and end tiles
             UpdateTileData(currentArea.AreaTiles[(int)StartTile.x, (int)StartTile.y], 
                            currentArea.AreaTiles[(int)EndTile.x, (int)EndTile.y]);
         }
 
-        Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
-        Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
+        //Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
+        //Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
     }
 
     public void UpdateTileData(Tile startTile, Tile endTile)

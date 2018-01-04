@@ -37,10 +37,12 @@ public class Area {
         }
     }
 
-    public void BuildArea()
-    {
+    public void BuildArea() {
+        if (AreaTiles != null)
+        {
+            return;
+        }
         PresentEntities = new List<Entity>();
-        if (AreaTiles != null) return;
         AreaTiles = new Tile[Width, Height];
         _biomeTypeTiles = WorldData.Instance.GetBiomeTiles(BiomeType);
         for (var i = 0; i < Width; i++)
@@ -56,7 +58,8 @@ public class Area {
                 {
                     AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), false, false);
                     //for testing
-                    if (Random.Range(0, 1000) < 1) {
+                    const int maxNPCS = 5;
+                    if (Random.Range(0, 100) < 1 && PresentEntities.Count < maxNPCS) {
                         var npcTypes = WorldData.Instance.BiomePossibleEntities[BiomeType];
                         var npc = EntityTemplateLoader.GetEntityTemplate(npcTypes[0]);
                         PresentEntities.Add(new Entity(npc, false));

@@ -17,9 +17,9 @@
 			</PossibleInventory>  
 			<SpritePath>Prefabs/player_1</SpritePath>
 			<!-- <AITypes> </AITypes> -->
-			<BodyParts>	  
+			<BodyParts>
+			  <Part>human torso</Part>
 				<Part>human head</Part>
-				<Part>human torso</Part>
 				<Part>human left arm</Part>
 				<Part>human right arm</Part>
 				<Part>human left hand</Part>
