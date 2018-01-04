@@ -11,6 +11,7 @@ public class AreaMap : MonoBehaviour {
 
     public GameObject AStar;
     public GameObject AreaMapHolder;
+    public GameObject NPCSpriteHolder;
     public float GraphOffset = -0.5f;
     public bool AreaReady;
 
@@ -28,7 +29,7 @@ public class AreaMap : MonoBehaviour {
         }
         DontDestroyOnLoad(gameObject);
 
-        _playerSprite = Instantiate(GameManager.Instance.PlayerSprite, new Vector2(0, 0), Quaternion.identity);
+        //_playerSprite = Instantiate(GameManager.Instance.PlayerSprite, new Vector2(0, 0), Quaternion.identity);
     }
 
     private void Init()
@@ -36,10 +37,12 @@ public class AreaMap : MonoBehaviour {
         AreaReady = false;
         AreaMapHolder = new GameObject("AreaMapHolder");
 
-        //temp til movement and pathfinding is okay
+        //temp til player creation
         if (GameManager.Instance.Player == null)
         {
-            _player = new Entity(true, _playerSprite);
+            _player = new Entity(EntityTemplateLoader.GetEntityTemplate("human"), true);
+            _playerSprite = Instantiate(_player.GetSprite(), new Vector2(0, 0), Quaternion.identity);
+            _player.SetSprite(_playerSprite);
             GameManager.Instance.Player = _player;
         }
         else
@@ -61,13 +64,15 @@ public class AreaMap : MonoBehaviour {
         }
         CreateAStarGraph();
         AstarPath.active.Scan();
+        AreaReady = true;
     }
-
+   
     public void EnterArea()
     {
-        Destroy(AreaMapHolder);
+        if (AreaMapHolder != null || NPCSpriteHolder != null) {
+            Deconstruct();
+        }
         Init();
-        AreaReady = true;
     }
 
     public void DrawArea() {
@@ -81,6 +86,11 @@ public class AreaMap : MonoBehaviour {
         }
     }
 
+    private void Deconstruct() {
+        RemoveNPCS();
+        Destroy(AreaMapHolder);
+    }
+
     private void PlacePlayer() {
         if (GameManager.Instance.PlayerInStartingArea) {
             GameManager.Instance.PlayerInStartingArea = false;
@@ -92,12 +102,12 @@ public class AreaMap : MonoBehaviour {
             }
         }
         else {
-            //TODO place player based on where they entered map
             _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
         }
     }
 
     private void PlaceNPCs() {
+        NPCSpriteHolder = new GameObject("NPCSpriteHolder");
         foreach (var e in _currentArea.PresentEntities) {
             var placed = false;
             var y = Random.Range(0, _currentArea.Height);
@@ -105,9 +115,11 @@ public class AreaMap : MonoBehaviour {
             while (!placed) {
                 if (!_currentArea.AreaTiles[x, y].GetBlocksMovement()) {
                     var npcSprite = Instantiate(e.GetSprite(), new Vector3(x, y, 0f), Quaternion.identity);
+                    npcSprite.transform.SetParent(NPCSpriteHolder.transform);
                     e.SetSprite(npcSprite);
-                    e.SetSpritePosition(new Vector3(x, y, 0f));
+                    //e.SetSpritePosition(new Vector3(x, y, 0f));
                     _currentArea.AreaTiles[x, y].SetPresentEntity(e);
+                    _currentArea.AreaTiles[x, y].SetBlocksMovement(true);
                     e.CurrentPosition = new Vector3(x, y, 0f);
                     _currentArea.TurnOrder.Enqueue(e);
                     placed = true;
@@ -116,6 +128,14 @@ public class AreaMap : MonoBehaviour {
                 x = Random.Range(0, _currentArea.Width);
             }
         }
+    }
+
+    private void RemoveNPCS() {
+        foreach (var e in _currentArea.PresentEntities) {
+            _currentArea.AreaTiles[(int)e.CurrentPosition.x, (int)e.CurrentPosition.y].SetBlocksMovement(false);
+            _currentArea.AreaTiles[(int) e.CurrentPosition.x, (int) e.CurrentPosition.y].SetPresentEntity(null);
+        }
+        Destroy(NPCSpriteHolder);
     }
 
     private void CreateAStarGraph() {

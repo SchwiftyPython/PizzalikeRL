@@ -101,7 +101,7 @@ public class WorldManager : MonoBehaviour {
 			if (!_board [x, y].GetBlocksMovement()) {
 				var playerPawn = Instantiate (PlayerSprite, new Vector3(x, y, 0f), Quaternion.identity);
                 //playerPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
-				Player = new Entity (true, playerPawn);
+//				Player = new Entity (true, playerPawn);
 				_board [x, y].SetPresentEntity (Player);					
 				Player.CurrentPosition = new  Vector3 (x, y, 0f);
 				placed = true;
@@ -122,7 +122,7 @@ public class WorldManager : MonoBehaviour {
             {
                 var enemyPawn = Instantiate(EnemySprite, new Vector3(x, y, 0f), Quaternion.identity);
                 //enemyPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
-                Enemy = new Entity(false, enemyPawn);
+//                Enemy = new Entity(false, enemyPawn);
                 _board[x, y].SetPresentEntity(Enemy);
                 Enemy.CurrentPosition = new Vector3(x, y, 0f);
                 //enemy.SetBlocker();
