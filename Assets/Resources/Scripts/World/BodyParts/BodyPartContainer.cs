@@ -9,14 +9,14 @@ public class BodyPartContainer{
 
     [XmlArray("BodyParts")]
     [XmlArrayItem("BodyPart")]
-    public List<BodyPart> bodyParts = new List<BodyPart>();
+    public List<BodyPart> BodyParts = new List<BodyPart>();
 
     public static BodyPartContainer Load(string path){
-        var _xml = Resources.Load<TextAsset>(path);
+        var xml = Resources.Load<TextAsset>(path);
 
         var serializer = new XmlSerializer(typeof(BodyPartContainer));
 
-        var reader = new StringReader(_xml.text);
+        var reader = new StringReader(xml.text);
 
         var bodyParts = serializer.Deserialize(reader) as BodyPartContainer;
 

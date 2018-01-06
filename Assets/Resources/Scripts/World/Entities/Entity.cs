@@ -142,20 +142,20 @@ public class Entity {
     }
 
     private void BuildBody(EntityTemplate template) {
-        var bodyPartNames = BodyPartLoader._bodyPartNames;
+        var bodyPartNames = BodyPartLoader.BodyPartNames;
         foreach (var templateBodyPart in template.parts) {
             var part = BodyPartLoader.GetBodyPart(templateBodyPart);
             if (!bodyPartNames.Contains(templateBodyPart)) {
                 return;
             }
-            if (part.needsPart.Equals("")) {
-                _body.Add(part.name, part);
+            if (part.NeedsPart.Equals("")) {
+                _body.Add(part.Type, part);
             }
-            else if (_body.ContainsKey(part.needsPart)) {
-                _body.Add(part.name, part);
+            else if (_body.ContainsKey(part.NeedsPart)) {
+                _body.Add(part.Type, part);
             }
             else {
-                Debug.Log(part.name + " missing required part " + part.needsPart);
+                Debug.Log(part.Name + " missing required part " + part.NeedsPart);
             }
         }
     }
