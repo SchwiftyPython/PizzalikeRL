@@ -3,23 +3,26 @@
 public class BodyPart {
 
     [XmlAttribute("name")]
-    public string name;
+    public string Name;
+
+    [XmlElement("Type")]
+    public string Type;
 
     [XmlElement("MaxHP")]
-    public int maxHP;
+    public int MaxHp;
 
     [XmlElement("CanEquipWeapon")]
-    public bool canEquipWeapon;
+    public bool CanEquipWeapon;
 
     [XmlElement("CanEquipArmor")]
-    public bool canEquipArmor;
+    public bool CanEquipArmor;
 
     [XmlElement("NeedsPart")]
-    public string needsPart;
+    public string NeedsPart;
 
     [XmlElement("AttackVerb")]
-    public string attackVerb;
+    public string AttackVerb;
 
     [XmlElement("Coverage")]
-    public int coverage;    
+    public int Coverage;    
 }

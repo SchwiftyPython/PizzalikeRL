@@ -1,47 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BodyPartLoader : MonoBehaviour {
 
     public const string Path = "bodyparts";
-    public static string[] _bodyPartNames;
+    public static string[] BodyPartNames;
     private static BodyPartContainer _bc;
 
     public static void LoadBodyParts() {
         _bc = BodyPartContainer.Load(Path);
 
-        _bodyPartNames = new string[_bc.bodyParts.Count];
+        BodyPartNames = new string[_bc.BodyParts.Count];
 
         var index = 0;
 
-        foreach (var bp in _bc.bodyParts) {
-            _bodyPartNames[index] = bp.name;
+        foreach (var bp in _bc.BodyParts) {
+            BodyPartNames[index] = bp.Name;
             
-            //GetBodyPart(bp.name); //testing
+            //GetBodyPart(bp.Name); //testing
 
             index++;
         }
     }
 
     public static string[] GetBodyPartNames() {
-        return _bodyPartNames;
+        return BodyPartNames;
     }
 
     public static string  GetBodyPartNameAt(int index) {
-        return _bodyPartNames[index];
+        return BodyPartNames[index];
     }
 
     public static int GetBcLength() {
-        return _bodyPartNames.Length;
+        return BodyPartNames.Length;
     }
 
     public static BodyPart GetBodyPart(string bodyPartName) {
-        var index = _bc.bodyParts.FindIndex(item => item.name.Equals(bodyPartName.ToLower()));
-        var bp = _bc.bodyParts[index];
+        var index = _bc.BodyParts.FindIndex(item => item.Name.Equals(bodyPartName.ToLower()));
+        var bp = _bc.BodyParts[index];
 
         /*
         Debug.Log("Body Part Name: " + bp.name);
+        Debug.Log("Body Part Type: " + bp.Type);
         Debug.Log("Body Part Max Hp: " + bp.maxHP);
         Debug.Log("Body Part Can Equip Weapon: " + bp.canEquipWeapon);
         Debug.Log("Body Part Can Equip Armor: " + bp.canEquipArmor);
