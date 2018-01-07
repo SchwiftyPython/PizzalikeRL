@@ -233,6 +233,7 @@
     <Compile Include="Assets\Resources\Scripts\InputController.cs" />
     <Compile Include="Assets\Resources\Scripts\LoadWorldMapScene.cs" />
     <Compile Include="Assets\Resources\Scripts\MainMenu.cs" />
+    <Compile Include="Assets\Resources\Scripts\Messenger.cs" />
     <Compile Include="Assets\Resources\Scripts\MoveEntity.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Resources\Scripts\World\AreaMap.cs" />

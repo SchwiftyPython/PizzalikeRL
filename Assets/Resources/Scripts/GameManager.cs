@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public bool WorldMapGenComplete;
@@ -10,6 +11,9 @@ public class GameManager : MonoBehaviour {
 
     public Entity Player;
     public GameObject PlayerSprite;
+
+    public Queue<string> Messages;
+    private Messenger _messenger;
 
 	public enum GameState {
 		Start,
@@ -31,8 +35,12 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+
         CurrentState = GameState.Start;
+
         PlayerInStartingArea = true;
+
+        Messages = new Queue<string>();
     }
 	
     private void Update () {
@@ -79,5 +87,18 @@ public class GameManager : MonoBehaviour {
         }
         EnemyController.ActionTaken = false;
         return GameState.Enemyturn;
+    }
+
+    private void CheckMessages() {
+        if (_messenger == null) {
+            _messenger = Messenger.GetInstance();
+        }
+        if (Messages.Count <= 0)
+        {
+            return;
+        }
+        foreach (var message in Messages) {
+            _messenger.CreateMessage(message, Color.black);
+        }
     }
 };
