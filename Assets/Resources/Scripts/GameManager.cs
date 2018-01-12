@@ -5,14 +5,14 @@ public class GameManager : MonoBehaviour {
     public bool WorldMapGenComplete;
     public bool PlayerInStartingArea;
 
-    public Cell CurrentCellPosition;
-    public Area CurrentAreaPosition;
-    public Tile CurrentTilePosition;
+    public Cell CurrentCell;
+    public Area CurrentArea;
+    public Tile CurrentTile;
 
     public Entity Player;
     public GameObject PlayerSprite;
 
-    public Queue<string> Messages;
+    public List<string> Messages;
     private Messenger _messenger;
 
 	public enum GameState {
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour {
 
         PlayerInStartingArea = true;
 
-        Messages = new Queue<string>();
+        Messages = new List<string>();
     }
 	
     private void Update () {
@@ -60,28 +60,29 @@ public class GameManager : MonoBehaviour {
                 break;
 		case GameState.Playerturn:
 		    if (InputController.Instance.ActionTaken) {
-		        CurrentState = WhoseTurn();
+                CurrentState = WhoseTurn();
 		    }
 		    break;
 		case GameState.Enemyturn:
 		    if (EnemyController.ActionTaken){
-		        CurrentState = WhoseTurn();
+                CurrentState = WhoseTurn();
 		    }
             break;
 		case GameState.End:
 			//go to main menu
 			break;
 		}
-	}
+        CheckMessages();
+    }
 
     private GameState WhoseTurn() {
-        if (!CurrentAreaPosition.EntitiesPresent()) {
+        if (!CurrentArea.EntitiesPresent()) {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
-        var lastTurn = CurrentAreaPosition.TurnOrder.Dequeue();
-        CurrentAreaPosition.TurnOrder.Enqueue(lastTurn);
-        if (CurrentAreaPosition.TurnOrder.Peek().IsPlayer()) {
+        var lastTurn = CurrentArea.TurnOrder.Dequeue();
+        CurrentArea.TurnOrder.Enqueue(lastTurn);
+        if (CurrentArea.TurnOrder.Peek().IsPlayer()) {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
@@ -89,7 +90,7 @@ public class GameManager : MonoBehaviour {
         return GameState.Enemyturn;
     }
 
-    private void CheckMessages() {
+    public void CheckMessages() {
         if (_messenger == null) {
             _messenger = Messenger.GetInstance();
         }
@@ -98,7 +99,10 @@ public class GameManager : MonoBehaviour {
             return;
         }
         foreach (var message in Messages) {
-            _messenger.CreateMessage(message, Color.black);
+             _messenger.CreateMessage(message, Color.black);
+        }
+        if (Messages.Count > 0) {
+            Messages.Clear();
         }
     }
-};
+}

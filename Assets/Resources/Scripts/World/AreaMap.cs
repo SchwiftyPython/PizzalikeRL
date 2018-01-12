@@ -52,7 +52,7 @@ public class AreaMap : MonoBehaviour {
 
         _areaMapHolderTransform = AreaMapHolder.transform;
 
-        _currentArea = GameManager.Instance.CurrentAreaPosition;
+        _currentArea = GameManager.Instance.CurrentArea;
         _currentArea.TurnOrder = new Queue<Entity>();
         _currentArea.TurnOrder.Enqueue(_player);
         _currentArea.BuildArea();
