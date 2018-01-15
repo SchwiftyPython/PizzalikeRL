@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
         EnterArea,
 		Playerturn,
 		Enemyturn,
-		End
+		EndTurn
 	}
 
     public GameState CurrentState { get; set; }
@@ -60,19 +60,27 @@ public class GameManager : MonoBehaviour {
                 break;
 		case GameState.Playerturn:
 		    if (InputController.Instance.ActionTaken) {
-                CurrentState = WhoseTurn();
+                //CurrentState = WhoseTurn();
+		        CurrentState = GameState.EndTurn;
 		    }
 		    break;
 		case GameState.Enemyturn:
 		    if (EnemyController.ActionTaken){
-                CurrentState = WhoseTurn();
-		    }
+                    //CurrentState = WhoseTurn();
+		        CurrentState = GameState.EndTurn;
+                }
             break;
-		case GameState.End:
-			//go to main menu
-			break;
+		case GameState.EndTurn:
+		    CheckMessages();
+		    CheckForDeadEntities();
+		    CurrentState = WhoseTurn();
+                break;
 		}
-        CheckMessages();
+//        if (CurrentState == GameState.Playerturn || 
+//            CurrentState == GameState.Enemyturn) {
+//            CheckMessages();
+//            CheckForDeadEntities();
+//        }
     }
 
     private GameState WhoseTurn() {
@@ -82,6 +90,12 @@ public class GameManager : MonoBehaviour {
         }
         var lastTurn = CurrentArea.TurnOrder.Dequeue();
         CurrentArea.TurnOrder.Enqueue(lastTurn);
+
+        //Remove any entities that were removed from play
+        while (!CurrentArea.PresentEntities.Contains(CurrentArea.TurnOrder.Peek()))
+        {
+            CurrentArea.TurnOrder.Dequeue();
+        }
         if (CurrentArea.TurnOrder.Peek().IsPlayer()) {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
@@ -90,7 +104,7 @@ public class GameManager : MonoBehaviour {
         return GameState.Enemyturn;
     }
 
-    public void CheckMessages() {
+    private void CheckMessages() {
         if (_messenger == null) {
             _messenger = Messenger.GetInstance();
         }
@@ -101,8 +115,18 @@ public class GameManager : MonoBehaviour {
         foreach (var message in Messages) {
              _messenger.CreateMessage(message, Color.black);
         }
-        if (Messages.Count > 0) {
-            Messages.Clear();
+        Messages.Clear();
+        
+    }
+
+    private void CheckForDeadEntities() {
+        var temp = new List<Entity>();
+        foreach (var e in CurrentArea.PresentEntities) {
+            if (!e.IsDead()) {
+                temp.Add(e);
+            }
+            AreaMap.Instance.RemoveEntity(e);
         }
+        CurrentArea.PresentEntities = temp;
     }
 }
