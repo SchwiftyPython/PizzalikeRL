@@ -5,14 +5,14 @@ public class GameManager : MonoBehaviour {
     public bool WorldMapGenComplete;
     public bool PlayerInStartingArea;
 
-    public Cell CurrentCellPosition;
-    public Area CurrentAreaPosition;
-    public Tile CurrentTilePosition;
+    public Cell CurrentCell;
+    public Area CurrentArea;
+    public Tile CurrentTile;
 
     public Entity Player;
     public GameObject PlayerSprite;
 
-    public Queue<string> Messages;
+    public List<string> Messages;
     private Messenger _messenger;
 
 	public enum GameState {
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
         EnterArea,
 		Playerturn,
 		Enemyturn,
-		End
+		EndTurn
 	}
 
     public GameState CurrentState { get; set; }
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour {
 
         PlayerInStartingArea = true;
 
-        Messages = new Queue<string>();
+        Messages = new List<string>();
     }
 	
     private void Update () {
@@ -60,28 +60,43 @@ public class GameManager : MonoBehaviour {
                 break;
 		case GameState.Playerturn:
 		    if (InputController.Instance.ActionTaken) {
-		        CurrentState = WhoseTurn();
+                //CurrentState = WhoseTurn();
+		        CurrentState = GameState.EndTurn;
 		    }
 		    break;
 		case GameState.Enemyturn:
 		    if (EnemyController.ActionTaken){
-		        CurrentState = WhoseTurn();
-		    }
+                    //CurrentState = WhoseTurn();
+		        CurrentState = GameState.EndTurn;
+                }
             break;
-		case GameState.End:
-			//go to main menu
-			break;
+		case GameState.EndTurn:
+		    CheckMessages();
+		    CheckForDeadEntities();
+		    CurrentState = WhoseTurn();
+                break;
 		}
-	}
+//        if (CurrentState == GameState.Playerturn || 
+//            CurrentState == GameState.Enemyturn) {
+//            CheckMessages();
+//            CheckForDeadEntities();
+//        }
+    }
 
     private GameState WhoseTurn() {
-        if (!CurrentAreaPosition.EntitiesPresent()) {
+        if (!CurrentArea.EntitiesPresent()) {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
-        var lastTurn = CurrentAreaPosition.TurnOrder.Dequeue();
-        CurrentAreaPosition.TurnOrder.Enqueue(lastTurn);
-        if (CurrentAreaPosition.TurnOrder.Peek().IsPlayer()) {
+        var lastTurn = CurrentArea.TurnOrder.Dequeue();
+        CurrentArea.TurnOrder.Enqueue(lastTurn);
+
+        //Remove any entities that were removed from play
+        while (!CurrentArea.PresentEntities.Contains(CurrentArea.TurnOrder.Peek()))
+        {
+            CurrentArea.TurnOrder.Dequeue();
+        }
+        if (CurrentArea.TurnOrder.Peek().IsPlayer()) {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
@@ -98,7 +113,20 @@ public class GameManager : MonoBehaviour {
             return;
         }
         foreach (var message in Messages) {
-            _messenger.CreateMessage(message, Color.black);
+             _messenger.CreateMessage(message, Color.black);
         }
+        Messages.Clear();
+        
     }
-};
+
+    private void CheckForDeadEntities() {
+        var temp = new List<Entity>();
+        foreach (var e in CurrentArea.PresentEntities) {
+            if (!e.IsDead()) {
+                temp.Add(e);
+            }
+            AreaMap.Instance.RemoveEntity(e);
+        }
+        CurrentArea.PresentEntities = temp;
+    }
+}

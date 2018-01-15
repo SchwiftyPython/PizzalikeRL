@@ -26,8 +26,8 @@ public class Entity {
         {Direction.NorthWest, new Vector2(-1, 1) }
     };
 
-    private Vector2 StartTile;
-    private Vector2 EndTile;
+    private Vector2 _startTile;
+    private Vector2 _endTile;
 
     private bool _isPlayer;
     private bool _isDead;
@@ -61,7 +61,7 @@ public class Entity {
     private IDictionary<string, BodyPart> _body = new Dictionary<string, BodyPart>();
     private int _coins;
 
-    private GameObject prefab;
+    private GameObject _prefab;
     private GameObject _sprite;
     //SingleNodeBlocker blocker;
 
@@ -86,7 +86,7 @@ public class Entity {
         _constitution = GenConstitution(template.minConstitution, template.maxConstitution);
         _isNameable = template.nameable;
         _canMutate = template.canMutate;
-        prefab = Resources.Load(template.spritePath) as GameObject;
+        _prefab = Resources.Load(template.spritePath) as GameObject;
         //TODO: gen level
         _level = 1;
         _currentHP =_maxHP = GenMaxHp();
@@ -164,8 +164,12 @@ public class Entity {
         return _isPlayer;
     }
 
+    public GameObject GetSpritePrefab() {
+        return _prefab;
+    }
+
 	public GameObject GetSprite(){
-		return prefab;
+		return _sprite;
 	}
 
 	public void SetSprite(GameObject sprite){
@@ -178,10 +182,10 @@ public class Entity {
 
     public void Move(Vector2 target) {
         //todo: clean up this code
-        StartTile = CurrentPosition;
-        EndTile = target;
-        var currentArea = GameManager.Instance.CurrentAreaPosition;
-        var currentCell = GameManager.Instance.CurrentCellPosition;
+        _startTile = CurrentPosition;
+        _endTile = target;
+        var currentArea = GameManager.Instance.CurrentArea;
+        var currentCell = GameManager.Instance.CurrentCell;
 
 //        Debug.Log("entity.currentPosition before move: " + CurrentPosition.x + " " + CurrentPosition.y);
 //        Debug.Log("sprite.currentPosition before move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
@@ -190,37 +194,36 @@ public class Entity {
 
         if (TileOutOfBounds(target)) {
             var direction = AreaOutOfBoundsDirection(target, currentArea);
-            var nextArea = new Vector2(currentArea.X + _directions[direction].x,
+            var nextAreaPosition = new Vector2(currentArea.X + _directions[direction].x,
                                        currentArea.Y + _directions[direction].y);
-            if (AreaOutOfBounds(nextArea)) {
-                direction = CellOutOfBoundsDirection(nextArea, currentCell);
-                var nextCell = new Vector2(currentCell.X + _directions[direction].x,
+            if (AreaOutOfBounds(nextAreaPosition)) {
+                direction = CellOutOfBoundsDirection(nextAreaPosition, currentCell);
+                var nextCellPositon = new Vector2(currentCell.X + _directions[direction].x,
                                            currentCell.Y + _directions[direction].y);
-                if (CellOutOfBounds(nextCell)) {
+                if (CellOutOfBounds(nextCellPositon)) {
                     Debug.Log("Cannot move. Edge of map.");
-                    return;
                 } else {
                     currentCell = WorldData.Instance.Map[currentCell.X + (int)_directions[direction].x,
                                                          currentCell.Y + (int)_directions[direction].y];
 
-                    currentArea = CalculateCellEntryArea(nextArea);
+                    currentArea = CalculateCellEntryArea(nextAreaPosition);
 
                     if (!currentArea.AreaBuilt())
                     {
                         currentArea.BuildArea();
                     }
-                    GameManager.Instance.CurrentTilePosition = CalculateAreaEntryTile(target);
+                    GameManager.Instance.CurrentTile = CalculateAreaEntryTile(target);
 
                     //update tile data for start and end tiles
-                    UpdateTileData(currentArea.AreaTiles[(int)StartTile.x, (int)StartTile.y],
-                                   currentArea.AreaTiles[(int)GameManager.Instance.CurrentTilePosition.GetGridPosition().x,
-                                                         (int)GameManager.Instance.CurrentTilePosition.GetGridPosition().y]);
+                    UpdateTileData(currentArea.AreaTiles[(int)_startTile.x, (int)_startTile.y],
+                                   currentArea.AreaTiles[(int)GameManager.Instance.CurrentTile.GetGridPosition().x,
+                                                         (int)GameManager.Instance.CurrentTile.GetGridPosition().y]);
 
-                    CurrentPosition = new Vector3((int)GameManager.Instance.CurrentTilePosition.GetGridPosition().x,
-                                                  (int)GameManager.Instance.CurrentTilePosition.GetGridPosition().y);
+                    CurrentPosition = new Vector3((int)GameManager.Instance.CurrentTile.GetGridPosition().x,
+                                                  (int)GameManager.Instance.CurrentTile.GetGridPosition().y);
                     if (_isPlayer) { GameManager.Instance.Player.CurrentPosition = CurrentPosition; }
-                    GameManager.Instance.CurrentAreaPosition = currentArea;
-                    GameManager.Instance.CurrentCellPosition = currentCell;
+                    GameManager.Instance.CurrentArea = currentArea;
+                    GameManager.Instance.CurrentCell = currentCell;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                 }
 
@@ -234,26 +237,26 @@ public class Entity {
                     currentArea.BuildArea();
                 }
                 //calc area entry tile
-                GameManager.Instance.CurrentTilePosition = CalculateAreaEntryTile(target);
+                GameManager.Instance.CurrentTile = CalculateAreaEntryTile(target);
 
                 //update tile data for start and end tiles
-                CurrentPosition = new Vector3((int)GameManager.Instance.CurrentTilePosition.GetGridPosition().x,
-                                              (int)GameManager.Instance.CurrentTilePosition.GetGridPosition().y);
-                UpdateTileData(currentArea.AreaTiles[(int)StartTile.x, (int)StartTile.y],
-                               currentArea.AreaTiles[(int)GameManager.Instance.CurrentTilePosition.GetGridPosition().x,
-                                                     (int)GameManager.Instance.CurrentTilePosition.GetGridPosition().y]);
+                CurrentPosition = new Vector3((int)GameManager.Instance.CurrentTile.GetGridPosition().x,
+                                              (int)GameManager.Instance.CurrentTile.GetGridPosition().y);
+                UpdateTileData(currentArea.AreaTiles[(int)_startTile.x, (int)_startTile.y],
+                               currentArea.AreaTiles[(int)GameManager.Instance.CurrentTile.GetGridPosition().x,
+                                                     (int)GameManager.Instance.CurrentTile.GetGridPosition().y]);
                 if (_isPlayer) { GameManager.Instance.Player.CurrentPosition = CurrentPosition; }
-                GameManager.Instance.CurrentAreaPosition = currentArea;
+                GameManager.Instance.CurrentArea = currentArea;
                 GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
             }
         } else {
-            CurrentPosition = EndTile;
+            CurrentPosition = _endTile;
             if (_isPlayer) { GameManager.Instance.Player.CurrentPosition = CurrentPosition; }
             //SetSpritePosition(EndTile);
 
             //update tile data for start and end tiles
-            UpdateTileData(currentArea.AreaTiles[(int)StartTile.x, (int)StartTile.y], 
-                           currentArea.AreaTiles[(int)EndTile.x, (int)EndTile.y]);
+            UpdateTileData(currentArea.AreaTiles[(int)_startTile.x, (int)_startTile.y], 
+                           currentArea.AreaTiles[(int)_endTile.x, (int)_endTile.y]);
         }
 
         //Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
@@ -270,12 +273,12 @@ public class Entity {
     }
 
     public bool TileOutOfBounds(Vector2 target) {
-        var currentArea = GameManager.Instance.CurrentAreaPosition;
+        var currentArea = GameManager.Instance.CurrentArea;
         return target.x >= currentArea.Width || target.x < 0 || target.y >= currentArea.Height || target.y < 0;
     }
 
     public bool AreaOutOfBounds(Vector2 target) {
-        var currentCell = GameManager.Instance.CurrentCellPosition;
+        var currentCell = GameManager.Instance.CurrentCell;
         return target.x >= currentCell.GetCellWidth() || target.x < 0 || target.y >= currentCell.GetCellHeight() || target.y < 0;
     }
 
@@ -286,41 +289,41 @@ public class Entity {
     public Tile CalculateAreaEntryTile(Vector2 target) {
         var xOffset = 0;
         var yOffset = 0;
-        if (target.x >= GameManager.Instance.CurrentAreaPosition.Width) {
-            xOffset = -GameManager.Instance.CurrentAreaPosition.Width;
+        if (target.x >= GameManager.Instance.CurrentArea.Width) {
+            xOffset = -GameManager.Instance.CurrentArea.Width;
         }else if (target.x < 0) {
-            xOffset = GameManager.Instance.CurrentAreaPosition.Width;
+            xOffset = GameManager.Instance.CurrentArea.Width;
         }
-        if (target.y >= GameManager.Instance.CurrentAreaPosition.Height)
+        if (target.y >= GameManager.Instance.CurrentArea.Height)
         {
-            yOffset = -GameManager.Instance.CurrentAreaPosition.Height;
+            yOffset = -GameManager.Instance.CurrentArea.Height;
         }
         else if (target.y < 0)
         {
-            yOffset = GameManager.Instance.CurrentAreaPosition.Height;
+            yOffset = GameManager.Instance.CurrentArea.Height;
         }
-        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x + xOffset, (int)target.y + yOffset];
+        return GameManager.Instance.CurrentArea.AreaTiles[(int)target.x + xOffset, (int)target.y + yOffset];
     }
 
     public Area CalculateCellEntryArea(Vector2 target) {
         var xOffset = 0;
         var yOffset = 0;
-        if (target.x >= GameManager.Instance.CurrentCellPosition.GetCellWidth()) {
-            xOffset = -GameManager.Instance.CurrentCellPosition.GetCellWidth();
+        if (target.x >= GameManager.Instance.CurrentCell.GetCellWidth()) {
+            xOffset = -GameManager.Instance.CurrentCell.GetCellWidth();
         }else if (target.x < 0) {
-            xOffset = GameManager.Instance.CurrentCellPosition.GetCellWidth();
+            xOffset = GameManager.Instance.CurrentCell.GetCellWidth();
         }
-        if (target.y >= GameManager.Instance.CurrentCellPosition.GetCellHeight())
+        if (target.y >= GameManager.Instance.CurrentCell.GetCellHeight())
         {
-            yOffset = -GameManager.Instance.CurrentCellPosition.GetCellHeight();
+            yOffset = -GameManager.Instance.CurrentCell.GetCellHeight();
         }
         else if (target.y < 0)
         {
-            yOffset = GameManager.Instance.CurrentCellPosition.GetCellHeight();
+            yOffset = GameManager.Instance.CurrentCell.GetCellHeight();
         }
         Debug.Log("Original target area:" + target);
         Debug.Log("Calculated target area:" + (int)target.x + xOffset + ", " + (int)target.y + yOffset);
-        return GameManager.Instance.CurrentCellPosition.Areas[(int)target.x + xOffset, (int)target.y + yOffset];
+        return GameManager.Instance.CurrentCell.Areas[(int)target.x + xOffset, (int)target.y + yOffset];
     }
 
     public Direction AreaOutOfBoundsDirection(Vector2 target, Area area) {
@@ -363,9 +366,17 @@ public class Entity {
     public void MeleeAttack(Entity target) {
         if (MeleeRollHit(target)) {
             ApplyMeleeDamage(target);
-            if (target.IsDead()) {
-                //TODO: remove target
+            if (!target.IsDead())
+            {
+                return;
             }
+            var message = _type + " killed " + target._type + "!";
+            GameManager.Instance.Messages.Add(message);
+            //AreaMap.Instance.RemoveEntity(target);
+        }
+        else {
+            var message = _type + " missed " + target._type + "!";
+            GameManager.Instance.Messages.Add(message);
         }
     }
 
@@ -376,17 +387,17 @@ public class Entity {
             Move(target);
             return true;
         }
-        if (EntityPresent(target))
+        if (!EntityPresent(target))
         {
-            MeleeAttack(GameManager.Instance.CurrentAreaPosition.GetTileAt(target).GetPresentEntity());
-            return true;
+            return false;
         }
-        return false;
+        MeleeAttack(GameManager.Instance.CurrentArea.GetTileAt(target).GetPresentEntity());
+        return true;
     }
 
     public bool CanMove(Vector2 target){
-        var currentArea = GameManager.Instance.CurrentAreaPosition;
-        var currentCell = GameManager.Instance.CurrentCellPosition;
+        var currentArea = GameManager.Instance.CurrentArea;
+        var currentCell = GameManager.Instance.CurrentCell;
         if (!TileOutOfBounds(target))
         {
             return !TargetTileBlocked(target);
@@ -411,30 +422,30 @@ public class Entity {
 
     public bool TargetTileBlocked(Vector2 target)
     {
-        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetBlocksMovement();
+        return GameManager.Instance.CurrentArea.AreaTiles[(int)target.x, (int)target.y].GetBlocksMovement();
     }
 
     public bool TargetTileBlockedByEntity(Vector2 target)
     {
-        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetPresentEntity() != null;
+        return GameManager.Instance.CurrentArea.AreaTiles[(int)target.x, (int)target.y].GetPresentEntity() != null;
     }
 
     public void MoveToNextArea(Vector2 target) {
-        var currentArea = GameManager.Instance.CurrentAreaPosition;
-        var currentCell = GameManager.Instance.CurrentCellPosition;
+        var currentArea = GameManager.Instance.CurrentArea;
+        var currentCell = GameManager.Instance.CurrentCell;
         var areaDirection = _directions[AreaOutOfBoundsDirection(target, currentArea)];
         var nextArea = new Vector2(currentArea.X + areaDirection.x,
                                    currentArea.Y + areaDirection.y);
-        GameManager.Instance.CurrentAreaPosition = currentCell.Areas[(int)nextArea.x, (int)nextArea.y];
+        GameManager.Instance.CurrentArea = currentCell.Areas[(int)nextArea.x, (int)nextArea.y];
     }
 
     public void MoveToNextCell(Vector2 target){
        
-        var currentCell = GameManager.Instance.CurrentCellPosition;
+        var currentCell = GameManager.Instance.CurrentCell;
         var cellDirection = _directions[CellOutOfBoundsDirection(target, currentCell)];
         var nextArea = new Vector2(currentCell.X + cellDirection.x,
                                    currentCell.Y + cellDirection.y);
-        GameManager.Instance.CurrentAreaPosition = currentCell.Areas[(int)nextArea.x, (int)nextArea.y];
+        GameManager.Instance.CurrentArea = currentCell.Areas[(int)nextArea.x, (int)nextArea.y];
     }
 
     public bool EntityPresent(Vector2 target)
@@ -453,11 +464,14 @@ public class Entity {
     }
 
     private void ApplyMeleeDamage(Entity target) {
-        var unarmedDamage = 4;
+        const int unarmedDamage = 4;
         target._currentHP -= unarmedDamage;
+        var message = _type + " hits " + target._type + " for " + unarmedDamage + " hit points.";
+        Debug.Log("Target remaining hp: " + target._currentHP);
+        GameManager.Instance.Messages.Add(message);
     }
 
-    private bool IsDead() {
+    public bool IsDead() {
         return _currentHP <= 0;
     }
     

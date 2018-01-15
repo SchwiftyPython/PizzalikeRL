@@ -34,10 +34,10 @@ public class MoveEntity {
     }
 
     public virtual bool TargetTileBlocked(Vector2 target) {
-        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetBlocksMovement();
+        return GameManager.Instance.CurrentArea.AreaTiles[(int)target.x, (int)target.y].GetBlocksMovement();
     }
 
     public virtual bool TargetTileBlockedByEntity(Vector2 target) {
-        return GameManager.Instance.CurrentAreaPosition.AreaTiles[(int)target.x, (int)target.y].GetPresentEntity() != null;
+        return GameManager.Instance.CurrentArea.AreaTiles[(int)target.x, (int)target.y].GetPresentEntity() != null;
     }
 }

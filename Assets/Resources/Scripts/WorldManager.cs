@@ -136,7 +136,7 @@ public class WorldManager : MonoBehaviour {
 
     public void RemoveDeadEntity(Entity corpse) {
         if (corpse.IsPlayer()) {
-            GameManager.Instance.CurrentState = GameManager.GameState.End;
+            //GameManager.Instance.CurrentState = GameManager.GameState.End;
         } else {
             //remove entity and replace with some or all of inventory
             var tileToUpdate = Instance.GetTileAt(corpse.CurrentPosition);

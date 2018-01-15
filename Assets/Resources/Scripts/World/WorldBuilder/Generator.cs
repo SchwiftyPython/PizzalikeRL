@@ -115,9 +115,9 @@ public class Generator : MonoBehaviour
         //DrawMap();
 
         WorldData.Instance.Map = _cells;
-        GameManager.Instance.CurrentCellPosition = _cells[25, 17];
-        GameManager.Instance.CurrentCellPosition.HasNPCs = true;
-        GameManager.Instance.CurrentAreaPosition = GameManager.Instance.CurrentCellPosition.Areas[1, 1];
+        GameManager.Instance.CurrentCell = _cells[25, 17];
+        GameManager.Instance.CurrentCell.HasNPCs = true;
+        GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
         SceneManager.LoadScene("Area");
     }
