@@ -1,0 +1,10 @@
+{
+    "malename": [ "Arcana", "Griffon", "Sheol", "Barry", "Clyde", "Ellsworth" ]    
+,    "hair": [ "full head of extremely thick hair", "magnificent afro", "head covered with black steel wool" ]
+,    "facialhair": [ "chops that could have been stylized", "a scruffy beard", "a goatee trimmed to a point under his chin" ]
+,    "story": [ "#hero# never had much reason to doubt their son's abilities. From the time #son# was born everyone could tell he was different. 
+He had a #hair#, #facialhair#, and his eyes seemed to already be able to focus on objects in his surroundings." ]
+,    "origin": [ "#[hero:#malename#][son:#malename#]story#" ]
+
+
+}
