@@ -1,0 +1,17 @@
+{
+    "malename": [ "Arcana", "Griffon", "Sheol", "Barry", "Clyde", "Ellsworth" ]    
+,    "hair": [ "full head of extremely thick hair", "magnificent afro", "head covered with black steel wool" ]
+,    "facialhair": [ "chops that could have been stylized", "a scruffy beard", "a goatee trimmed to a point under his chin" ]
+,    "eat": [ "eat", "consume", "feed", "snack", "devour", "absorb", "gorge", "bite", "nosh"  ]
+,    "food": [ "a banana", "a muffin", "a hot dog", "some scrapple", "some yogurt", "waffles", "some ice cream", "fish", "pizza", "french fries" ]   
+,    "foodplace": [ "a convenience store", "a roach coach", "a restaurant", "a diner", "a gas station", "a homeless guy" ]
+,    "satisfying": [ "satisfying", "substantial", "filling", "satiating" ]
+,    "story": [ "#hero# never had much reason to doubt their son's abilities. From the time #son# was born everyone could tell he was different. 
+He had a #hair#, #facialhair#, and his eyes seemed to already be able to focus on objects in his surroundings.
+
+At three months old, he spoke his first word, “#eat#!”, and would not stop saying it until I pulled over 
+to find him something #satisfying#, which turned out to be #food# from #foodplace#." ]
+,    "origin": [ "#[hero:#malename#][son:#malename#]story#" ]
+
+
+}

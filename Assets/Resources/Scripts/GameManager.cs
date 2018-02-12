@@ -72,8 +72,9 @@ public class GameManager : MonoBehaviour {
             break;
 		case GameState.EndTurn:
 		    CheckMessages();
-		    CheckForDeadEntities();
-		    CurrentState = WhoseTurn();
+		    //Todo: This is causing a problem. Create a branch for it.
+                //CheckForDeadEntities();
+                CurrentState = WhoseTurn();
                 break;
 		}
 //        if (CurrentState == GameState.Playerturn || 
@@ -121,12 +122,21 @@ public class GameManager : MonoBehaviour {
 
     private void CheckForDeadEntities() {
         var temp = new List<Entity>();
-        foreach (var e in CurrentArea.PresentEntities) {
-            if (!e.IsDead()) {
-                temp.Add(e);
+        for (var i = 0; i < CurrentArea.PresentEntities.Count; i++)
+        {
+            if (!CurrentArea.PresentEntities[i].IsDead())
+            {
+                temp.Add(CurrentArea.PresentEntities[i]);
             }
-            AreaMap.Instance.RemoveEntity(e);
+            AreaMap.Instance.RemoveEntity(CurrentArea.PresentEntities[i]);
         }
+
+//        foreach (var e in CurrentArea.PresentEntities) {
+//            if (!e.IsDead()) {
+//                temp.Add(e);
+//            }
+//            AreaMap.Instance.RemoveEntity(e);
+//        }
         CurrentArea.PresentEntities = temp;
     }
 }
