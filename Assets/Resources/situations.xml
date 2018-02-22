@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<SituationCollection>
+    <Situations>
+	
+	    <Situation name = "faction_heretic_nation">
+		    <Types>
+			    <Type>Start</Type>
+				<Type>End</Type>
+			</Types>
+			<Actors>
+			    <Actor>FactionA</Actor>
+				<Actor>FactionB</Actor>
+			</Actors>
+			<ConditionCode>
+				    public bool HereticNation(List&lt;Faction> factions)
+					{
+					    var fanatics = new List&lt;Faction>();
+						var heretics = new List&lt;Faction>();
+					    foreach(var faction in factions)
+						{
+						    foreach(var religion in faction.Religions)
+							{
+							    if((float)religion.Value / (float)faction.Population >= .85)
+                                {
+								    fanatics.Add(faction);									
+								}
+								if((float)religion.Value / (float)faction.Population &lt; .15)
+								{
+								    heretics.Add(faction);
+								}
+							}
+						}
+					}
+			</ConditionCode>			
+			<Effects>
+			  <Effect type = "faction_stat_decrease"> 
+			    <Value>FactionA.Affection.FactionB</Value>
+			  </Effect> 
+			</Effects>
+		    <AllowedFactions></AllowedFactions>			
+		</Situation>
+	
+	</Situations>
+</SituationCollection>
