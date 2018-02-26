@@ -253,6 +253,8 @@
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\ConditionChecker.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Faction.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situation.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\SituationContainer.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\SituationLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Story.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\StoryGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Tracery\Grammar.cs" />

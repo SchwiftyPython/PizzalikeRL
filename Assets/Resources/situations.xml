@@ -12,6 +12,9 @@
 				<Actor>FactionB</Actor>
 			</Actors>
 			<ConditionCode>
+			        using System.Collections;
+                    using System.Collections.Generic;
+					
 				    public bool HereticNation(List&lt;Faction> factions)
 					{
 					    var fanatics = new List&lt;Faction>();
@@ -28,15 +31,17 @@
 								{
 								    heretics.Add(faction);
 								}
+								foreach(var fanatic in fanatics)
+								{
+								    foreach(var heretic in heretics)
+									{
+									    fanatic.Relationships[heretic] - 100;
+									}
+								}
 							}
 						}
 					}
 			</ConditionCode>			
-			<Effects>
-			  <Effect type = "faction_stat_decrease"> 
-			    <Value>FactionA.Affection.FactionB</Value>
-			  </Effect> 
-			</Effects>
 		    <AllowedFactions></AllowedFactions>			
 		</Situation>
 	
