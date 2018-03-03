@@ -16,12 +16,6 @@ public class GameManager : MonoBehaviour {
     public List<string> Messages;
     private Messenger _messenger;
 
-    private readonly Dictionary<string, int> _time = new Dictionary<string, int> {
-        { "day", 60 },
-        { "week", 420 },
-        {"year", 21900 }
-    };
-
 	public enum GameState {
 		Start,
         Worldmap,

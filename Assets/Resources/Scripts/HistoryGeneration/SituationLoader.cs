@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SituationLoader : MonoBehaviour
@@ -7,7 +8,7 @@ public class SituationLoader : MonoBehaviour
     private static List<List<string>> _situationTypes;
     private static SituationContainer _sc;
     
-    private void Start ()
+    public static void Initialize ()
     {
         _sc = SituationContainer.Load(Path);
 
@@ -37,12 +38,10 @@ public class SituationLoader : MonoBehaviour
         return _situationTypes.Count;
     }
 
-    public static Situation GetSituation(string entityTemplateType)
+    public static List<Situation> GetSituationsOfType(string situationType)
     {
-        var index = _sc.Situations.FindIndex(item => item.Types.Contains(entityTemplateType.ToLower()));
-        var et = _sc.Situations[index];
-
-        return et;
-
+        return (from s in _sc.Situations
+                where s.Types.Contains(situationType.ToLower())
+                select s).ToList();
     }
 }

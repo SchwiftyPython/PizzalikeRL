@@ -252,6 +252,7 @@
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\ConditionChecker.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Faction.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\HistoryGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situation.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\SituationContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\SituationLoader.cs" />

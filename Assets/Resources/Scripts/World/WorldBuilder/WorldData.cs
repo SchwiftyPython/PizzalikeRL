@@ -7,6 +7,7 @@ public class WorldData : MonoBehaviour {
     private int _height;
     private int _width;
     private Cell[,] _map;
+    private Dictionary<string, Faction> _factions;
 
     public string Seed { get; set; }
 

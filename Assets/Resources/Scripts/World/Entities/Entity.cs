@@ -65,6 +65,8 @@ public class Entity {
     private GameObject _sprite;
     //SingleNodeBlocker blocker;
 
+    private int age;
+
     private Vector3 _currentPosition;
 
     public Vector3 CurrentPosition {

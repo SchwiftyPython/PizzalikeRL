@@ -15,7 +15,12 @@
 			        using System.Collections;
                     using System.Collections.Generic;
 					
-				    public bool HereticNation(List&lt;Faction> factions)
+					public void Execute()
+					{
+					    ConditionList(//accessible faction list);
+					}
+					
+				    public bool Condition(List&lt;Faction> factions)
 					{
 					    var fanatics = new List&lt;Faction>();
 						var heretics = new List&lt;Faction>();
