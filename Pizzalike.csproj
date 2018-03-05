@@ -251,11 +251,14 @@
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\ConditionChecker.cs" />
-    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Faction.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Factions\Faction.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Factions\FactionTemplate.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Factions\FactionTemplateContainer.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Factions\FactionTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\HistoryGenerator.cs" />
-    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situation.cs" />
-    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\SituationContainer.cs" />
-    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\SituationLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\Situation.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\SituationContainer.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\SituationLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Story.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\StoryGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Tracery\Grammar.cs" />
@@ -273,6 +276,7 @@
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Entity.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Entities\EntityFluff.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplatesContainer.cs" />
@@ -313,6 +317,7 @@
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
     <None Include="Assets\Resources\bodyparts.xml" />
     <None Include="Assets\Resources\entitytemplates.xml" />
+    <None Include="Assets\Resources\factions.xml" />
     <None Include="Assets\Resources\situations.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

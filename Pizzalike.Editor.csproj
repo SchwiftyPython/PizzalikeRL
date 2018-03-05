@@ -186,6 +186,7 @@
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
     <None Include="Assets\Resources\bodyparts.xml" />
     <None Include="Assets\Resources\entitytemplates.xml" />
+    <None Include="Assets\Resources\factions.xml" />
     <None Include="Assets\Resources\situations.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

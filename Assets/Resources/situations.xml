@@ -2,7 +2,7 @@
 <SituationCollection>
     <Situations>
 	
-	    <Situation name = "faction_heretic_nation">
+	    <Situation name = "faction heretic nation">
 		    <Types>
 			    <Type>Start</Type>
 				<Type>End</Type>
