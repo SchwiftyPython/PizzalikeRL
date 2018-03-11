@@ -14,12 +14,9 @@ public class SituationLoader : MonoBehaviour
 
         _situationTypes = new List<List<string>>();
 
-        var index = 0;
-
         foreach (var s in _sc.Situations)
         {
-            _situationTypes[index] = s.Types;
-            index++;
+            _situationTypes.Add(s.Types);
         }
     }
 

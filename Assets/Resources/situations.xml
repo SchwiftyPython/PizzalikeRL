@@ -6,46 +6,47 @@
 		    <Types>
 			    <Type>Start</Type>
 				<Type>End</Type>
-			</Types>
-			<Actors>
-			    <Actor>FactionA</Actor>
-				<Actor>FactionB</Actor>
-			</Actors>
+			</Types>			
 			<ConditionCode>
-			        using System.Collections;
+			        using UnityEngine;
+                    using System.Collections;
                     using System.Collections.Generic;
+                    using System.Linq;
+                    using Random = UnityEngine.Random;
 					
 					public void Execute()
 					{
-					    ConditionList(//accessible faction list);
+					    Condition(WorldData.Instance.Factions);
 					}
 					
-				    public bool Condition(List&lt;Faction> factions)
-					{
-					    var fanatics = new List&lt;Faction>();
-						var heretics = new List&lt;Faction>();
-					    foreach(var faction in factions)
-						{
-						    foreach(var religion in faction.Religions)
-							{
-							    if((float)religion.Value / (float)faction.Population >= .85)
+					public void Condition(Dictionary&lt;string, Faction> factions)
+                    {
+                        if (factions.Count &lt; 2)
+                        {
+                            return;
+                        }
+
+                        var unselectedFactions = factions.Values.ToList();
+
+                        var index = Random.Range(0, unselectedFactions.Count);
+                        var factionA = unselectedFactions[index];
+                        unselectedFactions.Remove(unselectedFactions[index]);
+
+                        index = Random.Range(0, unselectedFactions.Count);
+                        var factionB = unselectedFactions[index];
+
+                        foreach (var religion in factionA.Religions)
+                        {
+                            if((float) religion.Value / (float)factionA.Population >= .85)
+                            {
+                                if (!factionB.Religions.ContainsKey(religion.Key) 
+                                    || (float)factionB.Religions[religion.Key] / (float)factionB.Population &lt; .15)
                                 {
-								    fanatics.Add(faction);									
-								}
-								if((float)religion.Value / (float)faction.Population &lt; .15)
-								{
-								    heretics.Add(faction);
-								}
-								foreach(var fanatic in fanatics)
-								{
-								    foreach(var heretic in heretics)
-									{
-									    fanatic.Relationships[heretic] - 100;
-									}
-								}
-							}
-						}
-					}
+                                    factionA.Relationships[factionB.Name] -= 100;
+                                }
+                            }
+                        }
+                    }				    
 			</ConditionCode>			
 		    <AllowedFactions></AllowedFactions>			
 		</Situation>

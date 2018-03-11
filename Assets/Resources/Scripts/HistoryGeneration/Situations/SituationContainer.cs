@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 
+[XmlRoot("SituationCollection")]
 public class SituationContainer  {
 
     [XmlArray("Situations")]
@@ -17,10 +18,10 @@ public class SituationContainer  {
 
         var reader = new StringReader(xml.text);
 
-        var situations = serializer.Deserialize(reader) as SituationContainer;
+        var Situations = serializer.Deserialize(reader) as SituationContainer;
 
         reader.Close();
 
-        return situations;
+        return Situations;
     }
 }

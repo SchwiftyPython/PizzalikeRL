@@ -16,12 +16,9 @@ public class FactionTemplateLoader : MonoBehaviour {
 
         _factionNames = new List<string>();
 
-        var index = 0;
-
         foreach (var s in _fc.FactionTemplates)
         {
-            _factionNames[index] = s.Name.ToLower();
-            index++;
+            _factionNames.Add(s.Name.ToLower());
         }
     }
 

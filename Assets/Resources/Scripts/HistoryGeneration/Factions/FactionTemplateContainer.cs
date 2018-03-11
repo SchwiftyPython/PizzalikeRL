@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml.Serialization;
 using UnityEngine;
 
+[XmlRoot("FactionTemplateCollection")]
 public class FactionTemplateContainer  {
 
     [XmlArray("FactionTemplates")]
@@ -17,11 +18,11 @@ public class FactionTemplateContainer  {
 
         var reader = new StringReader(xml.text);
 
-        var factionTemplates = serializer.Deserialize(reader) as FactionTemplateContainer;
+        var FactionTemplates = serializer.Deserialize(reader) as FactionTemplateContainer;
 
         reader.Close();
 
-        return factionTemplates;
+        return FactionTemplates;
     }
 
 }

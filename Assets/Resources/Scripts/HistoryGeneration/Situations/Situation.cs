@@ -10,14 +10,10 @@ public class Situation {
     [XmlArrayItem("Type")]
     public List<string> Types;
 
-    [XmlArray("Actors")]
-    [XmlArrayItem("Actor")]
-    public List<Entity> Actors;
-
     [XmlElement("ConditionCode")]
     public string ConditionCode;
 
     [XmlArray("AllowedFactions")]
-    [XmlArrayItem("Faction")]
-    public List<Faction> AllowedFactions;
+    [XmlArrayItem("AllowedFaction")]
+    public List<string> AllowedFactions;
 }

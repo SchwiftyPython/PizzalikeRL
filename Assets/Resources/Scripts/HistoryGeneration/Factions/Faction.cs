@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class Faction {
 
-    private Dictionary<string, int> _relationships; //<Faction Name, Affection Level>
-    private Dictionary<string, int> _religions;     //<Religion Name, Number of Believers>
+    public Dictionary<string, int> Relationships; //<Faction Name, Affection Level>
+    public Dictionary<string, int> Religions;     //<Religion Name, Number of Believers>
 
     public string Name;
+    public int Population;
 
     public int ScienceLevel;
     public int FaithLevel;
 
     public Entity Leader;
+
+    public Faction(FactionTemplate factionTemplate)
+    {
+        Name = factionTemplate.Name;
+    }
 }

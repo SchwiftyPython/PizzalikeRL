@@ -7,8 +7,9 @@ public class WorldData : MonoBehaviour {
     private int _height;
     private int _width;
     private Cell[,] _map;
-    private Dictionary<string, Faction> _factions;
 
+    public Dictionary<string, Faction> Factions { get; set; }
+    
     public string Seed { get; set; }
 
     public Cell[,] Map {
@@ -76,6 +77,7 @@ public class WorldData : MonoBehaviour {
         } else if (Instance != this) {
             Destroy(gameObject);
         }
+        Factions = new Dictionary<string, Faction>();
     }
 
     public GameObject[] GetBiomeTiles(BiomeType biomeType){
