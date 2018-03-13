@@ -16,7 +16,9 @@ public class HistoryGenerator : MonoBehaviour {
         End
     }
 
-    private readonly List<string> _days = new List<string>
+    //todo: make list of numerical days
+
+    private readonly List<string> _daysOfTheWeek = new List<string>
     {
         "Monday",
         "Tuesday",
@@ -63,7 +65,7 @@ public class HistoryGenerator : MonoBehaviour {
 //        _middleSituations = _situationStore.GetSituationsOfType(SituationTypes.Middle.ToString());
 //        _endSituations = _situationStore.GetSituationsOfType(SituationTypes.End.ToString());
 
-        _currentDay = _days[0];
+        _currentDay = _daysOfTheWeek[0];
         _currentMonth = _months[0];
         _currentYear = 0;
 
@@ -107,7 +109,7 @@ public class HistoryGenerator : MonoBehaviour {
                     while (turnsLeftInDay > 0)
                     {
                         var startSituation = PickStartSituation();
-                        _situationStore.RunStartSituation(startSituation);
+                        _situationStore.RunSituation(startSituation);
 
                         Debug.Log($"Ran {startSituation} on {_currentMonth} {_currentDay}, {_currentYear}");
 
@@ -134,8 +136,8 @@ public class HistoryGenerator : MonoBehaviour {
 
     private void AdvanceToNextDay()
     {
-        var curIndex = _days.IndexOf(_currentDay);
-        _currentDay = curIndex == _days.Count - 1 ? _days[0] : _days[curIndex + 1];
+        var curIndex = _daysOfTheWeek.IndexOf(_currentDay);
+        _currentDay = curIndex == _daysOfTheWeek.Count - 1 ? _daysOfTheWeek[0] : _daysOfTheWeek[curIndex + 1];
     }
 
     private void AdvanceToNextMonth()

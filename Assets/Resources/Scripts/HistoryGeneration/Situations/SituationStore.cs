@@ -1,48 +1,81 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SituationStore
 {
-
-    private Dictionary<string, Action> _startSituations = new Dictionary<string, Action>
+    private readonly Dictionary<string, Action> _allSituations = new Dictionary<string, Action>
     {
-        {"heretic nation", () => { HereticNation(WorldData.Instance.Factions); }}
+        {"heretic nation", HereticNation}
     };
-    
-    private Dictionary<string, Action> _middleSituations;
-    private Dictionary<string, Action> _endSituations;
+
+    private List<string> _startSituations;
+    private List<string> _middleSituations;
+    private List<string> _endSituations;
+
+    private const string StartSituationFile = @"start_situations.csv";
+    private const string MiddleSituationFile = @"middle_situations.csv";
+    private const string EndSituationFile = @"end_situations.csv";
+
+    public void Initialize()
+    {
+        _startSituations = GetSituationsFromFile(StartSituationFile);
+        //_middleSituations = GetSituationsFromFile(MiddleSituationFile);
+        //_endSituations = GetSituationsFromFile(EndSituationFile);
+    }
 
     public List<string> GetSituationsOfType(string situationType)
     {
         switch (situationType.ToLower())
         {
             case "start":
-                return _startSituations.Keys.ToList();
+                return _startSituations;
             case "middle":
-                return _middleSituations.Keys.ToList();
+                return _middleSituations;
             case "end":
-                return _endSituations.Keys.ToList();
+                return _endSituations;
             default:
                 return null;
         }
     }
 
-    public void RunStartSituation(string situation)
+    public void RunSituation(string situation)
     {
-        _startSituations[situation]();
+        _allSituations[situation]();
     }
 
-    private static void HereticNation(Dictionary <string, Faction> factions)
+    private static List<string> GetSituationsFromFile(string file)
     {
-        if (factions.Count < 2)
+        var situatons = new List<string>();
+        try
+        {
+            using (var reader = new StreamReader(file))
+            {
+                string line;
+                while (null != (line = reader.ReadLine()))
+                {
+                    situatons.AddRange(line.Split(',')); 
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Error processing file: " + file + " " + e.Message);
+        }
+        return situatons;
+    }
+
+    private static void HereticNation()
+    {
+        if (WorldData.Instance.Factions.Count < 2)
         {
             return;
         }
 
-        var unselectedFactions = factions.Values.ToList();
+        var unselectedFactions = WorldData.Instance.Factions.Values.ToList();
 
         var index = Random.Range(0, unselectedFactions.Count);
         var factionA = unselectedFactions[index];
