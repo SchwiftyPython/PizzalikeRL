@@ -17,6 +17,9 @@ public class Faction {
 
     public Faction(FactionTemplate factionTemplate)
     {
+        Relationships = new Dictionary<string, int>();
+        Religions = new Dictionary<string, int>();
+
         Name = factionTemplate.Name;
     }
 }

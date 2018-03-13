@@ -43,9 +43,11 @@ public class HistoryGenerator : MonoBehaviour {
         { "year", TurnsPerDay * DaysPerYear }   // 4 months
     };
 
-    private List<Situation> _startSituations;
-    private List<Situation> _middleSituations;
-    private List<Situation> _endSituations;
+    private SituationStore _situationStore;
+
+    private List<string> _startSituations;
+    private List<string> _middleSituations;
+    private List<string> _endSituations;
 
     private string _currentDay;
     private string _currentMonth;
@@ -53,12 +55,13 @@ public class HistoryGenerator : MonoBehaviour {
 
     private void Start()
     {
-        SituationLoader.Initialize();
+        _situationStore = new SituationStore();
+
         FactionTemplateLoader.Initialize();
 
-        _startSituations = SituationLoader.GetSituationsOfType(SituationTypes.Start.ToString());
-        _middleSituations = SituationLoader.GetSituationsOfType(SituationTypes.Middle.ToString());
-        _endSituations = SituationLoader.GetSituationsOfType(SituationTypes.End.ToString());
+        _startSituations = _situationStore.GetSituationsOfType(SituationTypes.Start.ToString());
+//        _middleSituations = _situationStore.GetSituationsOfType(SituationTypes.Middle.ToString());
+//        _endSituations = _situationStore.GetSituationsOfType(SituationTypes.End.ToString());
 
         _currentDay = _days[0];
         _currentMonth = _months[0];
@@ -90,6 +93,9 @@ public class HistoryGenerator : MonoBehaviour {
         WorldData.Instance.Factions["biker gang"].Religions.Add("harley", 500);
         WorldData.Instance.Factions["geriatric"].Religions.Add("harley", 10);
 
+        WorldData.Instance.Factions["biker gang"].Relationships.Add("geriatric", 0);
+        WorldData.Instance.Factions["geriatric"].Relationships.Add("biker gang", 0);
+
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         while (turnsLeftInHistoryGeneration > 0)
@@ -101,12 +107,9 @@ public class HistoryGenerator : MonoBehaviour {
                     while (turnsLeftInDay > 0)
                     {
                         var startSituation = PickStartSituation();
+                        _situationStore.RunStartSituation(startSituation);
 
-                        var conditionChecker = new ConditionChecker();
-
-                        var method = conditionChecker.CheckCondition(startSituation.ConditionCode);
-                        method.Invoke(null, null);
-                        Debug.Log($"Ran {method} on {_currentMonth} {_currentDay}, {_currentYear}");
+                        Debug.Log($"Ran {startSituation} on {_currentMonth} {_currentDay}, {_currentYear}");
 
                         turnsLeftInDay--;
                         turnsLeftInMonth--;
@@ -124,7 +127,7 @@ public class HistoryGenerator : MonoBehaviour {
         }
     }
 
-    private Situation PickStartSituation()
+    private string PickStartSituation()
     {
         return _startSituations[Random.Range(0, _startSituations.Count)];
     }

@@ -7,13 +7,7 @@
 			    <Type>Start</Type>
 				<Type>End</Type>
 			</Types>			
-			<ConditionCode>
-			        using UnityEngine;
-                    using System.Collections;
-                    using System.Collections.Generic;
-                    using System.Linq;
-                    using Random = UnityEngine.Random;
-					
+			<ConditionCode>				
 					public void Execute()
 					{
 					    Condition(WorldData.Instance.Factions);

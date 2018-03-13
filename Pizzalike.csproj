@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{026A851E-0A10-F7DA-902F-406FC79BE957}</ProjectGuid>
+    <ProjectGuid>{3CB2A493-DC9C-8104-9A26-717949AF1A98}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -214,6 +214,9 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.Networking">
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/Editor/UnityEditor.TestRunner.dll</HintPath>
     </Reference>
@@ -258,6 +261,12 @@
     </Reference>
     <Reference Include="UnityEditor.VR">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Graphs">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -454,6 +463,7 @@
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\Situation.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\SituationContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\SituationLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\SituationStore.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Story.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\StoryGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Tracery\Grammar.cs" />

@@ -38,7 +38,7 @@ public class SituationLoader : MonoBehaviour
     public static List<Situation> GetSituationsOfType(string situationType)
     {
         return (from s in _sc.Situations
-                where s.Types.Contains(situationType.ToLower())
+                where s.Types.Contains(situationType)
                 select s).ToList();
     }
 }
