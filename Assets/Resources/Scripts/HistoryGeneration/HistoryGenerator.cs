@@ -1,13 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class HistoryGenerator : MonoBehaviour {
     private const int TurnsPerDay = 6;
     private const int DaysPerWeek = 7;
     private const int DaysPerMonth = 28;
     private const int DaysPerYear = 112;
-    private const int MaxTurns = 56000;
+    private const int MaxTurns = 200000;
 
     private enum SituationTypes
     {
@@ -58,7 +62,7 @@ public class HistoryGenerator : MonoBehaviour {
     private void Start()
     {
         _situationStore = new SituationStore();
-
+        _situationStore.Initialize();
         FactionTemplateLoader.Initialize();
 
         _startSituations = _situationStore.GetSituationsOfType(SituationTypes.Start.ToString());
@@ -70,6 +74,8 @@ public class HistoryGenerator : MonoBehaviour {
         _currentYear = 0;
 
         Generate();
+
+        Debug.Log($"Done Generating on {_currentMonth} {_currentDay}, {_currentYear}");
     }
 
     private void Generate()
@@ -99,9 +105,8 @@ public class HistoryGenerator : MonoBehaviour {
         WorldData.Instance.Factions["geriatric"].Relationships.Add("biker gang", 0);
 
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        while (turnsLeftInHistoryGeneration > 0)
-        {
+       while(turnsLeftInHistoryGeneration > 0)
+        { 
             while (turnsLeftInYear > 0)
             {
                 while (turnsLeftInMonth > 0)

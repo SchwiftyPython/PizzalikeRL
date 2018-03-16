@@ -16,6 +16,7 @@ public class SituationStore
     private List<string> _middleSituations;
     private List<string> _endSituations;
 
+    private const string resourcesPath = @"C:\Users\Earl of HappyPants\Documents\PizzaLike\Assets\Resources";
     private const string StartSituationFile = @"start_situations.csv";
     private const string MiddleSituationFile = @"middle_situations.csv";
     private const string EndSituationFile = @"end_situations.csv";
@@ -44,18 +45,33 @@ public class SituationStore
 
     public void RunSituation(string situation)
     {
-        _allSituations[situation]();
+        if (!_allSituations.ContainsKey(situation))
+        {
+            return;
+        }
+
+        try
+        {
+            _allSituations[situation]();
+        }
+        catch (KeyNotFoundException e)
+        {
+            Debug.Log(
+                $"Error running situation: {situation}\n {e.Message}");
+            throw;
+        }
     }
 
     private static List<string> GetSituationsFromFile(string file)
     {
+        var fullPath = Path.Combine(resourcesPath, file);
         var situatons = new List<string>();
         try
         {
-            using (var reader = new StreamReader(file))
+            using (var reader = new StreamReader(fullPath))
             {
                 string line;
-                while (null != (line = reader.ReadLine()))
+                while (null != (line = reader.ReadLine()?.Trim()))
                 {
                     situatons.AddRange(line.Split(',')); 
                 }
@@ -63,7 +79,7 @@ public class SituationStore
         }
         catch (Exception e)
         {
-            Debug.Log("Error processing file: " + file + " " + e.Message);
+            Debug.Log("Error processing file: " + fullPath + " " + e.Message);
         }
         return situatons;
     }
