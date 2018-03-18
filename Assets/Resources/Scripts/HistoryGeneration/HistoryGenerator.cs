@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,7 +9,8 @@ public class HistoryGenerator : MonoBehaviour {
     private const int DaysPerWeek = 7;
     private const int DaysPerMonth = 28;
     private const int DaysPerYear = 112;
-    private const int MaxTurns = 200000;
+    private const int MinTurns = 20 * TurnsPerDay * DaysPerYear;
+    private const int MaxTurns = 150 * TurnsPerDay * DaysPerYear;
 
     private enum SituationTypes
     {
@@ -19,8 +18,6 @@ public class HistoryGenerator : MonoBehaviour {
         Middle,
         End
     }
-
-    //todo: make list of numerical days
 
     private readonly List<string> _daysOfTheWeek = new List<string>
     {
@@ -42,7 +39,7 @@ public class HistoryGenerator : MonoBehaviour {
     };
 
                          // unit of time, "turns"   
-    private readonly Dictionary<string, int> _turnsPerTime = new Dictionary<string, int> {
+    public static readonly Dictionary<string, int> TurnsPerTime = new Dictionary<string, int> {
         { "day", TurnsPerDay },      
         { "week", TurnsPerDay * DaysPerWeek },   // 7 days
         { "month", TurnsPerDay * DaysPerMonth }, // 4 weeks 
@@ -55,7 +52,10 @@ public class HistoryGenerator : MonoBehaviour {
     private List<string> _middleSituations;
     private List<string> _endSituations;
 
-    private string _currentDay;
+    public static Dictionary<GUID, Situation> ActiveSituations { get; set; }
+
+    private string _currentDayOfTheWeek;
+    private int _currentNumericalDay;
     private string _currentMonth;
     private int _currentYear;
 
@@ -63,27 +63,31 @@ public class HistoryGenerator : MonoBehaviour {
     {
         _situationStore = new SituationStore();
         _situationStore.Initialize();
+
         FactionTemplateLoader.Initialize();
 
-        _startSituations = _situationStore.GetSituationsOfType(SituationTypes.Start.ToString());
-//        _middleSituations = _situationStore.GetSituationsOfType(SituationTypes.Middle.ToString());
-//        _endSituations = _situationStore.GetSituationsOfType(SituationTypes.End.ToString());
+        ActiveSituations = new Dictionary<GUID, Situation>();
 
-        _currentDay = _daysOfTheWeek[0];
+        _startSituations = _situationStore.GetSituationsOfType(SituationTypes.Start.ToString());
+        _middleSituations = _situationStore.GetSituationsOfType(SituationTypes.Middle.ToString());
+        _endSituations = _situationStore.GetSituationsOfType(SituationTypes.End.ToString());
+
+        _currentDayOfTheWeek = _daysOfTheWeek[0];
+        _currentNumericalDay = 1;
         _currentMonth = _months[0];
         _currentYear = 0;
 
         Generate();
 
-        Debug.Log($"Done Generating on {_currentMonth} {_currentDay}, {_currentYear}");
+        Debug.Log($"Done Generating on {_currentMonth} {_currentDayOfTheWeek}, {_currentYear}");
     }
 
     private void Generate()
     {
-        var turnsLeftInDay = _turnsPerTime["day"];
-        var turnsLeftInMonth = _turnsPerTime["month"];
-        var turnsLeftInYear = _turnsPerTime["year"];
-        var turnsLeftInHistoryGeneration = MaxTurns;
+        var turnsLeftInDay = TurnsPerTime["day"];
+        var turnsLeftInMonth = TurnsPerTime["month"];
+        var turnsLeftInYear = TurnsPerTime["year"];
+        var turnsLeftInHistoryGeneration = Random.Range(MinTurns, MaxTurns);
 
         //Testing //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -113,10 +117,30 @@ public class HistoryGenerator : MonoBehaviour {
                 {
                     while (turnsLeftInDay > 0)
                     {
+                        if (ActiveSituations.Any())
+                        {
+                            var activeSituations = ActiveSituations.Values.ToList();
+                            foreach (var situation in activeSituations)
+                            {
+                                if (situation.GetTurnsTilNextSituation() <= 0)
+                                {
+                                    var nextSituation = PickNextSituation(situation.GetNextSituations());
+                                    _situationStore.RunSituation(nextSituation);
+
+                                    Debug.Log($"Ran {nextSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}\n " +
+                                              $"Faction: {situation.GetFactions().First().Name}: {situation.GetFactions().First().Population}");
+                                }
+                                else
+                                {
+                                    situation.DecrementTurnsTilNextSituation();
+                                }
+                            }
+                        }
+
                         var startSituation = PickStartSituation();
                         _situationStore.RunSituation(startSituation);
 
-                        Debug.Log($"Ran {startSituation} on {_currentMonth} {_currentDay}, {_currentYear}");
+                        //Debug.Log($"Ran {startSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}");
 
                         turnsLeftInDay--;
                         turnsLeftInMonth--;
@@ -124,13 +148,13 @@ public class HistoryGenerator : MonoBehaviour {
                         turnsLeftInHistoryGeneration--;
                     }
                     AdvanceToNextDay();
-                    turnsLeftInDay = _turnsPerTime["day"];
+                    turnsLeftInDay = TurnsPerTime["day"];
                 }
                 AdvanceToNextMonth();
-                turnsLeftInMonth = _turnsPerTime["month"];
+                turnsLeftInMonth = TurnsPerTime["month"];
             }
             _currentYear++;
-            turnsLeftInYear = _turnsPerTime["year"];
+            turnsLeftInYear = TurnsPerTime["year"];
         }
     }
 
@@ -139,15 +163,39 @@ public class HistoryGenerator : MonoBehaviour {
         return _startSituations[Random.Range(0, _startSituations.Count)];
     }
 
+    private static string PickNextSituation(IReadOnlyList<string> nextSituations)
+    {
+        return nextSituations[Random.Range(0, nextSituations.Count)];
+    }
+
     private void AdvanceToNextDay()
     {
-        var curIndex = _daysOfTheWeek.IndexOf(_currentDay);
-        _currentDay = curIndex == _daysOfTheWeek.Count - 1 ? _daysOfTheWeek[0] : _daysOfTheWeek[curIndex + 1];
+        var curIndex = _daysOfTheWeek.IndexOf(_currentDayOfTheWeek);
+        _currentDayOfTheWeek = curIndex == _daysOfTheWeek.Count - 1 ? _daysOfTheWeek[0] : _daysOfTheWeek[curIndex + 1];
+
+        if (_currentNumericalDay >= DaysPerMonth)
+        {
+            _currentNumericalDay = 1;
+        }
+        else
+        {
+            _currentNumericalDay++;
+        }
     }
 
     private void AdvanceToNextMonth()
     {
         var curIndex = _months.IndexOf(_currentMonth);
         _currentMonth = curIndex == _months.Count - 1 ? _months[0] : _months[curIndex + 1];
+    }
+
+    public static void AddToActiveSituations(SituationContainer sc)
+    {
+        ActiveSituations.Add(sc.SituationId, new Situation(sc));
+    }
+
+    public static void RemoveFromActiveSituations(SituationContainer sc)
+    {
+        ActiveSituations.Remove(sc.SituationId);
     }
 }

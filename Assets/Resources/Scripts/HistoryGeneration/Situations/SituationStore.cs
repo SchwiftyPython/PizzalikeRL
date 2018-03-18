@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SituationStore
 {
+    //todo throw this into a file as well 
     private readonly Dictionary<string, Action> _allSituations = new Dictionary<string, Action>
     {
-        {"heretic nation", HereticNation}
+        {"heretic nation", HereticNation},
+        {"plague outbreak", PlagueOutbreak},
+        {"plague continues", PlagueContinues},
+        {"plague ends naturally", PlagueEndsNaturally},
+        {"plague cured", PlagueCured}
     };
 
     private List<string> _startSituations;
@@ -24,8 +30,8 @@ public class SituationStore
     public void Initialize()
     {
         _startSituations = GetSituationsFromFile(StartSituationFile);
-        //_middleSituations = GetSituationsFromFile(MiddleSituationFile);
-        //_endSituations = GetSituationsFromFile(EndSituationFile);
+        _middleSituations = GetSituationsFromFile(MiddleSituationFile);
+        _endSituations = GetSituationsFromFile(EndSituationFile);
     }
 
     public List<string> GetSituationsOfType(string situationType)
@@ -84,6 +90,8 @@ public class SituationStore
         return situatons;
     }
 
+    #region Situations
+
     private static void HereticNation()
     {
         if (WorldData.Instance.Factions.Count < 2)
@@ -102,14 +110,114 @@ public class SituationStore
 
         foreach (var religion in factionA.Religions)
         {
-            if((float) religion.Value / (float) factionA.Population >= .85)
+            if (!factionA.IsFanaticOfReligion(religion.Key))
             {
-                if (!factionB.Religions.ContainsKey(religion.Key)
-                    || (float)factionB.Religions[religion.Key] / (float)factionB.Population < .15)
-                {
-                    factionA.Relationships[factionB.Name] -= 100;
-                }
+                continue;
+            }
+
+            if (factionB.IsHereticOfReligion(religion.Key))
+            {
+                factionA.ChangeRelationshipValue(factionB, -100);
             }
         }
-    }				    
+    }
+
+    private static void PlagueOutbreak()
+    {
+        if (WorldData.Instance.Factions.Count < 1)
+        {
+            return;
+        }
+
+        var unselectedFactions = WorldData.Instance.Factions.Values.ToList();
+
+        var index = Random.Range(0, unselectedFactions.Count);
+        var plagueFaction = unselectedFactions[index];
+
+        var infected = Random.Range(1, (int)(plagueFaction.Population * .05)) * -1;
+        plagueFaction.ChangePopulation(infected);
+
+        var nextSituations = new List<string>
+        {
+            "plague continues",
+            "plague ends naturally",
+            "plague cured"
+        };
+
+        var situationContainer = new SituationContainer
+        {
+            SituationId = GUID.Generate(),
+            NextSituations = nextSituations,
+            Factions = new List<Faction>{plagueFaction},
+            TurnsTilNextSituation = HistoryGenerator.TurnsPerTime["week"]
+        };
+
+        HistoryGenerator.AddToActiveSituations(situationContainer);
+    }
+
+    private static void PlagueContinues()
+    {
+        var activeSituationContainers = (from s in HistoryGenerator.ActiveSituations
+            where s.Value.GetTurnsTilNextSituation() <= 0 
+            && s.Value.GetNextSituations().Contains("plague continues")
+            select s.Value.GetSituationContainer()).ToList();
+        
+        foreach (var sc in activeSituationContainers)
+        {
+            var plagueFaction = sc.Factions.SingleOrDefault();
+            if (plagueFaction == null)
+            {
+                continue;
+            }
+
+            var infected = Random.Range(1, (int)(plagueFaction.Population * .1)) * -1;
+            plagueFaction.ChangePopulation(infected);
+
+            sc.TurnsTilNextSituation = HistoryGenerator.TurnsPerTime["week"];
+        }
+    }
+
+    private static void PlagueEndsNaturally()
+    {
+        var activeSituationContainers = (from s in HistoryGenerator.ActiveSituations
+            where s.Value.GetTurnsTilNextSituation() <= 0
+                  && s.Value.GetNextSituations().Contains("plague end naturally")
+            select s.Value.GetSituationContainer()).ToList();
+
+        foreach (var sc in activeSituationContainers)
+        {
+            var plagueFaction = sc.Factions.SingleOrDefault();
+            if (plagueFaction == null)
+            {
+                continue;
+            }
+
+            //Write fluff
+
+            HistoryGenerator.RemoveFromActiveSituations(sc);
+        }
+    }
+
+    private static void PlagueCured()
+    {
+        var activeSituationContainers = (from s in HistoryGenerator.ActiveSituations
+            where s.Value.GetTurnsTilNextSituation() <= 0
+                  && s.Value.GetNextSituations().Contains("plague cured")
+            select s.Value.GetSituationContainer()).ToList();
+
+        foreach (var sc in activeSituationContainers)
+        {
+            var plagueFaction = sc.Factions.SingleOrDefault();
+            if (plagueFaction == null)
+            {
+                continue;
+            }
+
+            //Write fluff
+
+            HistoryGenerator.RemoveFromActiveSituations(sc);
+        }
+    }
+
+#endregion Situations
 }

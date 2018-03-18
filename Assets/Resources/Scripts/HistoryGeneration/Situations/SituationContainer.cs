@@ -1,27 +1,15 @@
-﻿using System.IO;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEditor;
 
-[XmlRoot("SituationCollection")]
-public class SituationContainer  {
+public class SituationContainer
+{
+    public GUID SituationId;
 
-    [XmlArray("Situations")]
-    [XmlArrayItem("Situation")]
-    public List<Situation> Situations = new List<Situation>();
+    public List<string> NextSituations;
 
-    public static SituationContainer Load(string path)
-    {
-        var xml = Resources.Load<TextAsset>(path);
+    public List<Faction> Factions;
 
-        var serializer = new XmlSerializer(typeof(SituationContainer));
+    public List<Entity> NamedCharacters;
 
-        var reader = new StringReader(xml.text);
-
-        var Situations = serializer.Deserialize(reader) as SituationContainer;
-
-        reader.Close();
-
-        return Situations;
-    }
+    public int TurnsTilNextSituation;
 }

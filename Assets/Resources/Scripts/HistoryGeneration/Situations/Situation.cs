@@ -1,19 +1,50 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Serialization;
 
-public class Situation {
+public class Situation
+{
+    private readonly SituationContainer _situationContainer;
 
-    [XmlAttribute("name")]
-    public string Name;
+    public Situation(SituationContainer sc)
+    {
+        _situationContainer = new SituationContainer
+        {
+            SituationId = sc.SituationId,
+            NextSituations = sc.NextSituations,
+            Factions = sc.Factions,
+            NamedCharacters = sc.NamedCharacters,
+            TurnsTilNextSituation = sc.TurnsTilNextSituation
+        };
+    }
 
-    [XmlArray("Types")]
-    [XmlArrayItem("Type")]
-    public List<string> Types;
+    public SituationContainer GetSituationContainer()
+    {
+        return _situationContainer;
+    }
 
-    [XmlElement("ConditionCode")]
-    public string ConditionCode;
+    public List<string> GetNextSituations()
+    {
+        return _situationContainer.NextSituations;
+    }
 
-    [XmlArray("AllowedFactions")]
-    [XmlArrayItem("AllowedFaction")]
-    public List<string> AllowedFactions;
+    public List<Faction> GetFactions()
+    {
+        return _situationContainer.Factions;
+    }
+
+    public List<Entity> GetNamedCharacters()
+    {
+        return _situationContainer.NamedCharacters;
+    }
+
+    public int GetTurnsTilNextSituation()
+    {
+        return _situationContainer.TurnsTilNextSituation;
+    }
+
+    public void DecrementTurnsTilNextSituation()
+    {
+        _situationContainer.TurnsTilNextSituation--;
+    }
+
+
 }
