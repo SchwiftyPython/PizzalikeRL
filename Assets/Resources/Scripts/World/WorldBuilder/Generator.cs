@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using TinkerWorX.AccidentalNoiseLibrary;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class Generator : MonoBehaviour
 {
     public string Seed { set; get; }
+    private int SeedHashCode { set; get; }
 
     // Adjustable variables for Unity Inspector
     [SerializeField] private int _width = 270;
@@ -102,6 +105,7 @@ public class Generator : MonoBehaviour
     private void Start()
     {
         Seed = WorldData.Instance.Seed;
+        SeedHashCode = Seed.GetHashCode();
 
         // Get the mesh we are rendering our output to        
         //_heightMapRenderer = GameObject.Find("HeightTexture").GetComponentInChildren<MeshRenderer>();
@@ -207,15 +211,15 @@ public class Generator : MonoBehaviour
     {
         // Initialize the HeightMap Generator        
         _heightMap = new ImplicitFractal(FractalType.Multi,
-                                        BasisType.Simplex,
-                                        InterpolationType.Quintic,
-                                        Seed.GetHashCode());
+            BasisType.Simplex,
+            InterpolationType.Quintic,
+            SeedHashCode);
 
         var gradient = new ImplicitGradient(1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1);
         var heatFractal = new ImplicitFractal(FractalType.Multi,
-                                                          BasisType.Simplex,
-                                                          InterpolationType.Quintic,
-                                                          Seed.GetHashCode() * 3);
+            BasisType.Simplex,
+            InterpolationType.Quintic,
+            SeedHashCode * 3);
 
         // Combine the gradient with our heat fractal
         _heatMap = new ImplicitCombiner(CombinerType.Multiply);
@@ -223,9 +227,9 @@ public class Generator : MonoBehaviour
         _heatMap.AddSource(heatFractal);
 
         _moistureMap = new ImplicitFractal(FractalType.Multi,
-                                          BasisType.Simplex,
-                                          InterpolationType.Quintic,
-                                          Seed.GetHashCode() * 6);
+            BasisType.Simplex,
+            InterpolationType.Quintic,
+            SeedHashCode * 6);
 
     }
 

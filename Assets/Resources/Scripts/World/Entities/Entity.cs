@@ -65,6 +65,8 @@ public class Entity {
     private GameObject _sprite;
     //SingleNodeBlocker blocker;
 
+    private EntityFluff fluff;
+
     private Vector3 _currentPosition;
 
     public Vector3 CurrentPosition {
@@ -80,13 +82,13 @@ public class Entity {
 
     public Entity (EntityTemplate template, bool isPlayer) {
         _isPlayer = isPlayer;
-        _type = template.type;
-        _strength = GenStrength(template.minStrength, template.maxStrength);
-        _agility = GenAgility(template.minAgility, template.maxAgility);
-        _constitution = GenConstitution(template.minConstitution, template.maxConstitution);
-        _isNameable = template.nameable;
-        _canMutate = template.canMutate;
-        _prefab = Resources.Load(template.spritePath) as GameObject;
+        _type = template.Type;
+        _strength = GenStrength(template.MinStrength, template.MaxStrength);
+        _agility = GenAgility(template.MinAgility, template.MaxAgility);
+        _constitution = GenConstitution(template.MinConstitution, template.MaxConstitution);
+        _isNameable = template.Nameable;
+        _canMutate = template.CanMutate;
+        _prefab = Resources.Load(template.SpritePath) as GameObject;
         //TODO: gen level
         _level = 1;
         _currentHP =_maxHP = GenMaxHp();
@@ -143,7 +145,7 @@ public class Entity {
 
     private void BuildBody(EntityTemplate template) {
         var bodyPartNames = BodyPartLoader.BodyPartNames;
-        foreach (var templateBodyPart in template.parts) {
+        foreach (var templateBodyPart in template.Parts) {
             var part = BodyPartLoader.GetBodyPart(templateBodyPart);
             if (!bodyPartNames.Contains(templateBodyPart)) {
                 return;

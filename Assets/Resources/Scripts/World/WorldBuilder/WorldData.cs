@@ -2,13 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class WorldData : MonoBehaviour {
     private int _height;
     private int _width;
     private Cell[,] _map;
+    private string _seed;
 
-    public string Seed { get; set; }
+    public Dictionary<string, Faction> Factions { get; set; }
+
+    public string Seed
+    {
+        get { return _seed; }
+        set
+        {
+            _seed = value;
+            Random.InitState(_seed.GetHashCode());
+        }
+    }
 
     public Cell[,] Map {
         get { return _map; }
@@ -75,6 +87,7 @@ public class WorldData : MonoBehaviour {
         } else if (Instance != this) {
             Destroy(gameObject);
         }
+        Factions = new Dictionary<string, Faction>();
     }
 
     public GameObject[] GetBiomeTiles(BiomeType biomeType){

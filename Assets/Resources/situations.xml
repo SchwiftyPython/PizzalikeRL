@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<SituationCollection>
+    <Situations>
+	
+	    <Situation name = "faction heretic nation">
+		    <Types>
+			    <Type>Start</Type>
+				<Type>End</Type>
+			</Types>			
+			<ConditionCode>				
+					public void Execute()
+					{
+					    Condition(WorldData.Instance.Factions);
+					}
+					
+					public void Condition(Dictionary&lt;string, Faction> factions)
+                    {
+                        if (factions.Count &lt; 2)
+                        {
+                            return;
+                        }
+
+                        var unselectedFactions = factions.Values.ToList();
+
+                        var index = Random.Range(0, unselectedFactions.Count);
+                        var factionA = unselectedFactions[index];
+                        unselectedFactions.Remove(unselectedFactions[index]);
+
+                        index = Random.Range(0, unselectedFactions.Count);
+                        var factionB = unselectedFactions[index];
+
+                        foreach (var religion in factionA.Religions)
+                        {
+                            if((float) religion.Value / (float)factionA.Population >= .85)
+                            {
+                                if (!factionB.Religions.ContainsKey(religion.Key) 
+                                    || (float)factionB.Religions[religion.Key] / (float)factionB.Population &lt; .15)
+                                {
+                                    factionA.Relationships[factionB.Name] -= 100;
+                                }
+                            }
+                        }
+                    }				    
+			</ConditionCode>			
+		    <AllowedFactions></AllowedFactions>			
+		</Situation>
+	
+	</Situations>
+</SituationCollection>

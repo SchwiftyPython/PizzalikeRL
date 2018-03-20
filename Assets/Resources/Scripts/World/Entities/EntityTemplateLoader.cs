@@ -16,7 +16,7 @@ public class EntityTemplateLoader : MonoBehaviour {
         var index = 0;
 
         foreach (var e in _ec.entityTemplates) {
-            _entityTemplateTypes[index] = e.type;
+            _entityTemplateTypes[index] = e.Type;
 
             //GetEntityTemplate(e.type); //testing
 
@@ -38,7 +38,7 @@ public class EntityTemplateLoader : MonoBehaviour {
     }
 
     public static EntityTemplate GetEntityTemplate(string entityTemplateType) {
-        var index = _ec.entityTemplates.FindIndex(item => item.type.Equals(entityTemplateType.ToLower()));
+        var index = _ec.entityTemplates.FindIndex(item => item.Type.Equals(entityTemplateType.ToLower()));
         var et = _ec.entityTemplates[index];
 
         /*

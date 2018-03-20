@@ -4,44 +4,44 @@ using System.Xml.Serialization;
 public class EntityTemplate {
 
     [XmlAttribute("type")]
-    public string type;
+    public string Type;
 
     [XmlElement("MinStrength")]
-    public int minStrength;
+    public int MinStrength;
 
     [XmlElement("MaxStrength")]
-    public int maxStrength;
+    public int MaxStrength;
 
     [XmlElement("MinAgility")]
-    public int minAgility;
+    public int MinAgility;
 
     [XmlElement("MaxAgility")]
-    public int maxAgility;
+    public int MaxAgility;
 
     [XmlElement("MinConstitution")]
-    public int minConstitution;
+    public int MinConstitution;
 
     [XmlElement("MaxConstitution")]
-    public int maxConstitution;
+    public int MaxConstitution;
 
     [XmlElement("Playable")]
-    public bool playable;
+    public bool Playable;
 
     [XmlElement("Nameable")]
-    public bool nameable;
+    public bool Nameable;
 
     [XmlElement("CanMutate")]
-    public bool canMutate;
+    public bool CanMutate;
 
     [XmlElement("IsHostile")]
-    public bool isHostile;
+    public bool IsHostile;
 
     [XmlArray("PossibleInventory")]
     [XmlArrayItem("Item")]
-    public List<Item> possibleInventory;    
+    public List<Item> PossibleInventory;    
 
     [XmlElement("SpritePath")]
-    public string spritePath;
+    public string SpritePath;
 
     /*
     [XmlArray("AITypes")]
@@ -50,5 +50,5 @@ public class EntityTemplate {
 
     [XmlArray("BodyParts")]
     [XmlArrayItem("Part")]
-    public List<string> parts;
+    public List<string> Parts;
 }

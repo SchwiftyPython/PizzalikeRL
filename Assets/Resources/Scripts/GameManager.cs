@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public bool WorldMapGenComplete;
     public bool PlayerInStartingArea;
+    public bool BusyGeneratingHistory;
 
     public Cell CurrentCell;
     public Area CurrentArea;
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour {
 	public enum GameState {
 		Start,
         Worldmap,
+        HistoryGeneration,
         EnterArea,
 		Playerturn,
 		Enemyturn,
@@ -49,6 +51,11 @@ public class GameManager : MonoBehaviour {
 		case GameState.Start:
 		        if (WorldMapGenComplete){
                     CurrentState = GameState.EnterArea;
+                }
+                break;
+            case GameState.HistoryGeneration:
+                if (!BusyGeneratingHistory) {
+                    BusyGeneratingHistory = true;
                 }
                 break;
             case GameState.EnterArea:

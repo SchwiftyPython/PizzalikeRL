@@ -1,31 +1,24 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StoryGenerator : MonoBehaviour
-{
-    public GameObject StoryBoxHolder;
+public class StoryGenerator : MonoBehaviour {
+    private const string StartSymbol = "#origin#";
 
-//    private void Update()
-//    {
-//        DisplayText();
-//    }
+    public GameObject StoryBoxHolder;
     
     public void DisplayText(string output)
     {
         StoryBoxHolder.transform.GetChild(0).GetComponent<Text>().text = output;
     }
 
-    public void GenerateText()
-    {
+    public void GenerateText() {
         const string scifiFileName = "scifi.json";
         try
         {
             var grammar = new TraceryNet.Grammar(new FileInfo(scifiFileName));
-            var output = grammar.Flatten("#origin#");
+            var output = grammar.Flatten(StartSymbol);
             DisplayText(output);
         }
         catch (Exception e)
