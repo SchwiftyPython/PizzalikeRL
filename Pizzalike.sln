@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2017
+# Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaLike", "PizzaLike.csproj", "{3CB2A493-DC9C-8104-9A26-717949AF1A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaLike.Editor", "PizzaLike.Editor.csproj", "{249BC96F-2EF4-13CF-4B35-E43821F7DC0A}"

@@ -49,8 +49,8 @@ public class HistoryGenerator : MonoBehaviour {
     private SituationStore _situationStore;
 
     private List<string> _startSituations;
-    private List<string> _middleSituations;
-    private List<string> _endSituations;
+//    private List<string> _middleSituations;
+//    private List<string> _endSituations;
 
     public static Dictionary<GUID, Situation> ActiveSituations { get; set; }
 
@@ -69,8 +69,8 @@ public class HistoryGenerator : MonoBehaviour {
         ActiveSituations = new Dictionary<GUID, Situation>();
 
         _startSituations = _situationStore.GetSituationsOfType(SituationTypes.Start.ToString());
-        _middleSituations = _situationStore.GetSituationsOfType(SituationTypes.Middle.ToString());
-        _endSituations = _situationStore.GetSituationsOfType(SituationTypes.End.ToString());
+//        _middleSituations = _situationStore.GetSituationsOfType(SituationTypes.Middle.ToString());
+//        _endSituations = _situationStore.GetSituationsOfType(SituationTypes.End.ToString());
 
         _currentDayOfTheWeek = _daysOfTheWeek[0];
         _currentNumericalDay = 1;
@@ -127,8 +127,8 @@ public class HistoryGenerator : MonoBehaviour {
                                     var nextSituation = PickNextSituation(situation.GetNextSituations());
                                     _situationStore.RunSituation(nextSituation);
 
-                                    Debug.Log($"Ran {nextSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}\n " +
-                                              $"Faction: {situation.GetFactions().First().Name}: {situation.GetFactions().First().Population}");
+//                                    Debug.Log($"Ran {nextSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}\n " +
+//                                              $"Faction: {situation.GetFactions().First().Name}: {situation.GetFactions().First().Population}");
                                 }
                                 else
                                 {
