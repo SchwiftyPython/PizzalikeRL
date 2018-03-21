@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -22,16 +23,18 @@ public class SituationStore
     private List<string> _middleSituations;
     private List<string> _endSituations;
 
-    private const string resourcesPath = @"C:\Users\Earl of HappyPants\Documents\PizzaLike\Assets\Resources";
-    private const string StartSituationFile = @"start_situations.csv";
+    private const string ResourcesPath = "\\Assets\\Resources\\";
+    private const string StartSituationFile = "start_situations.csv";
     private const string MiddleSituationFile = @"middle_situations.csv";
     private const string EndSituationFile = @"end_situations.csv";
 
     public void Initialize()
     {
-        _startSituations = GetSituationsFromFile(StartSituationFile);
-        _middleSituations = GetSituationsFromFile(MiddleSituationFile);
-        _endSituations = GetSituationsFromFile(EndSituationFile);
+        var basePath = Environment.CurrentDirectory;
+
+        var fullPath = Path.Combine(basePath, ResourcesPath.TrimStart('\\', '/'), StartSituationFile);
+
+        _startSituations = GetSituationsFromFile(fullPath);
     }
 
     public List<string> GetSituationsOfType(string situationType)
@@ -68,9 +71,8 @@ public class SituationStore
         }
     }
 
-    private static List<string> GetSituationsFromFile(string file)
+    private static List<string> GetSituationsFromFile(string fullPath)
     {
-        var fullPath = Path.Combine(resourcesPath, file);
         var situatons = new List<string>();
         try
         {
