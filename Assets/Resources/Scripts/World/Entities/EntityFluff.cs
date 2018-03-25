@@ -6,8 +6,8 @@ public class EntityFluff
 {
     private readonly List<string> _sexes = new List<string>
     {
-        "Male",
-       "Female"
+        "male",
+       "female"
     };
 
     public string Name;
@@ -23,7 +23,7 @@ public class EntityFluff
         _entityType = entityType;
         Name = GenerateName();
         //TODO: Set age somehow. Likely some kind of range depending on type of notable entity.
-        //Might not need to do anything with background yet
+        //TODO: Gen story of coming into power
     }
 
     private string GenerateName()

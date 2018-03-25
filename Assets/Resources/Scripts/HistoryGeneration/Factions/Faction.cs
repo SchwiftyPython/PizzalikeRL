@@ -42,16 +42,17 @@ public class Faction
 
     public void ChangeRelationshipValue(Faction otherFaction, int relationshipChange)
     {
-        Relationships[otherFaction.Name] += relationshipChange;
+        //TODO: Change Type to Name when Faction Name Gen is done
+        Relationships[otherFaction.Type] += relationshipChange;
 
-        if (Relationships[otherFaction.Name] > MaxRelationshipLevel)
+        if (Relationships[otherFaction.Type] > MaxRelationshipLevel)
         {
-            Relationships[otherFaction.Name] = MaxRelationshipLevel;
+            Relationships[otherFaction.Type] = MaxRelationshipLevel;
             return;
         }
-        if (Relationships[otherFaction.Name] < MinRelationshipLevel)
+        if (Relationships[otherFaction.Type] < MinRelationshipLevel)
         {
-            Relationships[otherFaction.Name] = MinRelationshipLevel;
+            Relationships[otherFaction.Type] = MinRelationshipLevel;
         }
     }
 

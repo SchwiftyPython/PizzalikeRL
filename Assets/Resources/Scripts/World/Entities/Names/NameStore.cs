@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,27 +18,30 @@ public class NameStore
     private const string DwarfLastNamesFile = "dwarf_last_names.csv";
     #endregion FileInfo
 
-    private List<string> _firstNames;
-    private List<string> _lastNames;
+    private readonly List<string> _firstNames;
+    private readonly List<string> _lastNames;
 
     public NameStore(string entityType, string sex)
     {
         if (entityType.Equals("human"))
         {
-            _firstNames = LoadNamesFromFile(sex.Equals("male") ? HumanMaleFirstNamesFile : HumanFemaleFirstNamesFile);
+            _firstNames = LoadNamesFromFile(sex.ToLower().Equals("male") ? HumanMaleFirstNamesFile : HumanFemaleFirstNamesFile);
             _lastNames = LoadNamesFromFile(HumanLastNamesFile);
         }
         if (entityType.Equals("dwarf"))
         {
-            _firstNames = LoadNamesFromFile(sex.Equals("male") ? DwarfMaleFirstNamesFile : DwarfFemaleFirstNamesFile);
+            _firstNames = LoadNamesFromFile(sex.ToLower().Equals("male") ? DwarfMaleFirstNamesFile : DwarfFemaleFirstNamesFile);
             _lastNames = LoadNamesFromFile(DwarfLastNamesFile);
         }
     }
 
     public string GenerateName()
     {
-        var firstName = _firstNames[Random.Range(0, _firstNames.Count)];
-        var lastName = _lastNames[Random.Range(0, _lastNames.Count)];
+        var index = Random.Range(0, _firstNames.Count);
+        var firstName = _firstNames[index];
+
+        index = Random.Range(0, _lastNames.Count);
+        var lastName = _lastNames[index];
 
         return firstName + " " + lastName;
     }
@@ -56,7 +60,10 @@ public class NameStore
                 string line;
                 while (null != (line = reader.ReadLine()?.Trim()))
                 {
-                    names.AddRange(line.Split(','));
+                    var tempNames = line.Split(',');
+                    names.AddRange(from n in tempNames
+                                   where n != string.Empty
+                                   select n);
                 }
             }
         }
