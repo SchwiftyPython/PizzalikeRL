@@ -63,7 +63,8 @@ public class Entity {
     private GameObject _sprite;
     //SingleNodeBlocker blocker;
 
-    private EntityFluff _fluff;
+    public EntityFluff Fluff { get; set; }
+
     private string _entityType;
     private string _factionType;
 
@@ -462,7 +463,7 @@ public class Entity {
 
     public void CreateFluff()
     {
-        _fluff = new EntityFluff(_entityType, _factionType);
+        Fluff = new EntityFluff(_entityType, _factionType);
     }
 
     private static bool MeleeRollHit(Entity target) {

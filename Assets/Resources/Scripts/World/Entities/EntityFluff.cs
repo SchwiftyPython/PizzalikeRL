@@ -4,27 +4,30 @@ using UnityEngine;
 
 public class EntityFluff
 {
-    private List<string> Sex = new List<string>
+    private readonly List<string> _sexes = new List<string>
     {
         "Male",
        "Female"
     };
 
-    private string _name;
+    public string Name;
+
     private int age;
+    private readonly string _entityType;
     private string background;
-    private string _sex;
+    private readonly string _sex;
 
     public EntityFluff(string entityType, string factionType)
     {
-        _sex = Sex[Random.Range(0, Sex.Count)];
-        //TODO: Gen name
+        _sex = _sexes[Random.Range(0, _sexes.Count)];
+        _entityType = entityType;
+        Name = GenerateName();
         //TODO: Set age somehow. Likely some kind of range depending on type of notable entity.
         //Might not need to do anything with background yet
     }
 
-    private string GenerateName(string entityType, string factionType)
+    private string GenerateName()
     {
-        
+        return new NameStore(_entityType, _sex).GenerateName();
     }
 }

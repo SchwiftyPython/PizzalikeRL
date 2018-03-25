@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 public class Faction
@@ -34,6 +36,8 @@ public class Faction
         EntityType = EntityTemplateLoader.GetEntityTemplate(factionTemplate.EntityTypes[index]);
 
         CreateLeader();
+
+        Debug.Log("Leader name: " + Leader.Fluff.Name);
     }
 
     public void ChangeRelationshipValue(Faction otherFaction, int relationshipChange)
@@ -69,6 +73,6 @@ public class Faction
 
     private void CreateLeader()
     {
-        Leader = new Entity(EntityType, Name);
+        Leader = new Entity(EntityType, Name) {Fluff = new EntityFluff(EntityType.Type, Type)};
     }
 }
