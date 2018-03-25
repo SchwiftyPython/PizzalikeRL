@@ -11,11 +11,11 @@ public class EntityTemplateLoader : MonoBehaviour {
 
         _ec = EntityTemplatesContainer.Load(Path);
 
-        _entityTemplateTypes = new string[_ec.entityTemplates.Count];
+        _entityTemplateTypes = new string[_ec.EntityTemplates.Count];
 
         var index = 0;
 
-        foreach (var e in _ec.entityTemplates) {
+        foreach (var e in _ec.EntityTemplates) {
             _entityTemplateTypes[index] = e.Type;
 
             //GetEntityTemplate(e.type); //testing
@@ -38,8 +38,8 @@ public class EntityTemplateLoader : MonoBehaviour {
     }
 
     public static EntityTemplate GetEntityTemplate(string entityTemplateType) {
-        var index = _ec.entityTemplates.FindIndex(item => item.Type.Equals(entityTemplateType.ToLower()));
-        var et = _ec.entityTemplates[index];
+        var index = _ec.EntityTemplates.FindIndex(item => item.Type.Equals(entityTemplateType.ToLower()));
+        var et = _ec.EntityTemplates[index];
 
         /*
         Debug.Log("Entity Template Type: " + et.type);

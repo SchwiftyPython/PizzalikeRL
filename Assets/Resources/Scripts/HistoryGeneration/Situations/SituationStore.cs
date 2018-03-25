@@ -144,9 +144,16 @@ public class SituationStore
             "plague cured"
         };
 
+        var id = GUID.Generate();
+
+        while (HistoryGenerator.SituationIdExists(id))
+        {
+            id = GUID.Generate();
+        }
+
         var situationContainer = new SituationContainer
         {
-            SituationId = GUID.Generate(),
+            SituationId = id,
             NextSituations = nextSituations,
             Factions = new List<Faction>{plagueFaction},
             TurnsTilNextSituation = HistoryGenerator.TurnsPerTime["week"]
@@ -165,6 +172,7 @@ public class SituationStore
         foreach (var sc in activeSituationContainers)
         {
             var plagueFaction = sc.Factions.SingleOrDefault();
+
             if (plagueFaction == null)
             {
                 continue;

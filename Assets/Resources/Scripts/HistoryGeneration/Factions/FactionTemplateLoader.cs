@@ -18,7 +18,7 @@ public class FactionTemplateLoader : MonoBehaviour {
 
         foreach (var s in _fc.FactionTemplates)
         {
-            _factionNames.Add(s.Name.ToLower());
+            _factionNames.Add(s.Type.ToLower());
         }
     }
 
@@ -42,7 +42,7 @@ public class FactionTemplateLoader : MonoBehaviour {
         try
         {
             return (from f in _fc.FactionTemplates
-                where f.Name.Trim().Equals(factionName.ToLower().Trim())
+                where f.Type.Trim().Equals(factionName.ToLower().Trim())
                 select f).SingleOrDefault();
         }
         catch (Exception e)

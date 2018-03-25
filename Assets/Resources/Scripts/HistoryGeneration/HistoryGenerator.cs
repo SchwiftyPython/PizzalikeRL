@@ -198,4 +198,9 @@ public class HistoryGenerator : MonoBehaviour {
     {
         ActiveSituations.Remove(sc.SituationId);
     }
+
+    public static bool SituationIdExists(GUID id)
+    {
+        return ActiveSituations.ContainsKey(id);
+    }
 }

@@ -62,7 +62,7 @@ public class Area {
                     if (Random.Range(0, 100) < 1 && PresentEntities.Count < maxNPCS) {
                         var npcTypes = WorldData.Instance.BiomePossibleEntities[BiomeType];
                         var npc = EntityTemplateLoader.GetEntityTemplate(npcTypes[0]);
-                        PresentEntities.Add(new Entity(npc, false));
+                        PresentEntities.Add(new Entity(npc));
                     }
                 }
             }
