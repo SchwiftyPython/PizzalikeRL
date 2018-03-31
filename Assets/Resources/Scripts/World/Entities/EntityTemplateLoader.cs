@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 
 public class EntityTemplateLoader : MonoBehaviour {
 
@@ -38,6 +39,23 @@ public class EntityTemplateLoader : MonoBehaviour {
     }
 
     public static EntityTemplate GetEntityTemplate(string entityTemplateType) {
+        if (_ec == null)
+        {
+            BodyPartLoader.LoadBodyParts();
+
+            _ec = EntityTemplatesContainer.Load(Path);
+
+            _entityTemplateTypes = new string[_ec.EntityTemplates.Count];
+
+            var i = 0;
+
+            foreach (var e in _ec.EntityTemplates)
+            {
+                _entityTemplateTypes[i] = e.Type;
+
+                i++;
+            }
+        }
         var index = _ec.EntityTemplates.FindIndex(item => item.Type.Equals(entityTemplateType.ToLower()));
         var et = _ec.EntityTemplates[index];
 

@@ -37,7 +37,7 @@ public class Faction
 
         CreateLeader();
 
-        Debug.Log("Leader name: " + Leader.Fluff.Name);
+        //Debug.Log("Leader name: " + Leader.Fluff.Name);
     }
 
     public void ChangeRelationshipValue(Faction otherFaction, int relationshipChange)
@@ -72,7 +72,7 @@ public class Faction
         Population += change;
     }
 
-    private void CreateLeader()
+    public void CreateLeader()
     {
         Leader = new Entity(EntityType, Name) {Fluff = new EntityFluff(EntityType.Type, Type)};
     }

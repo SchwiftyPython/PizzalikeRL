@@ -15,7 +15,10 @@ public class SituationStore
         {"plague outbreak", PlagueOutbreak},
         {"plague continues", PlagueContinues},
         {"plague ends naturally", PlagueEndsNaturally},
-        {"plague cured", PlagueCured}
+        {"plague cured", PlagueCured},
+        {"faction leader assassination", FactionLeaderAssassination },
+        {"faction leader dies naturally", FactionLeaderDiesNaturally },
+        {"faction leader disappears", FactionLeaderDisappears}
     };
 
     private List<string> _startSituations;
@@ -92,6 +95,20 @@ public class SituationStore
         return situatons;
     }
 
+    private static Faction PickFaction()
+    {
+        if (WorldData.Instance.Factions.Count < 1)
+        {
+            return null;
+        }
+
+        var unselectedFactions = WorldData.Instance.Factions.Values.ToList();
+
+        var index = Random.Range(0, unselectedFactions.Count);
+
+        return unselectedFactions[index];
+    }
+
     #region Situations
 
     private static void HereticNation()
@@ -126,15 +143,7 @@ public class SituationStore
 
     private static void PlagueOutbreak()
     {
-        if (WorldData.Instance.Factions.Count < 1)
-        {
-            return;
-        }
-
-        var unselectedFactions = WorldData.Instance.Factions.Values.ToList();
-
-        var index = Random.Range(0, unselectedFactions.Count);
-        var plagueFaction = unselectedFactions[index];
+        var plagueFaction = PickFaction();
 
         var infected = Random.Range(1, (int)(plagueFaction.Population * .05)) * -1;
         plagueFaction.ChangePopulation(infected);
@@ -183,6 +192,14 @@ public class SituationStore
             var infected = Random.Range(1, (int)(plagueFaction.Population * .1)) * -1;
             plagueFaction.ChangePopulation(infected);
 
+            const int chanceOfLeaderDeath = 5;
+            var roll = Random.Range(0, 100);
+
+            if (roll < chanceOfLeaderDeath)
+            {
+                FactionLeaderDiesFromPlague(plagueFaction);
+            }
+
             sc.TurnsTilNextSituation = HistoryGenerator.TurnsPerTime["week"];
         }
     }
@@ -202,7 +219,7 @@ public class SituationStore
                 continue;
             }
 
-            //Write fluff
+            //TODO: Write fluff
 
             HistoryGenerator.RemoveFromActiveSituations(sc);
         }
@@ -223,11 +240,47 @@ public class SituationStore
                 continue;
             }
 
-            //Write fluff
+            //TODO: Write fluff
 
             HistoryGenerator.RemoveFromActiveSituations(sc);
         }
     }
 
-#endregion Situations
+    private static void FactionLeaderAssassination()
+    {
+        var faction = PickFaction();
+
+        faction.CreateLeader();
+
+        //TODO: Write fluff
+
+    }
+
+    private static void FactionLeaderDiesFromPlague(Faction faction)
+    {
+        faction.CreateLeader();
+
+        //TODO: Write fluff
+    }
+
+    private static void FactionLeaderDiesNaturally()
+    {
+        var faction = PickFaction();
+
+        faction.CreateLeader();
+
+        //TODO: Write fluff
+    }
+
+    private static void FactionLeaderDisappears()
+    {
+        var faction = PickFaction();
+
+        faction.CreateLeader();
+
+        //TODO: Write fluff
+    }
+
+    #endregion Situations
+
 }

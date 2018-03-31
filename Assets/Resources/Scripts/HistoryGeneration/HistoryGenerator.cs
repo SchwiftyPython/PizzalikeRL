@@ -80,6 +80,11 @@ public class HistoryGenerator : MonoBehaviour {
         Generate();
 
         Debug.Log($"Done Generating on {_currentMonth} {_currentDayOfTheWeek}, {_currentYear}");
+
+//        foreach (var faction in WorldData.Instance.Factions.Values)
+//        {
+//            Debug.Log($"Faction Leader for {faction.Type} at end: {faction.Leader.Fluff.Name}");
+//        }
     }
 
     private void Generate()
@@ -108,8 +113,13 @@ public class HistoryGenerator : MonoBehaviour {
         WorldData.Instance.Factions["biker gang"].Relationships.Add("geriatric", 0);
         WorldData.Instance.Factions["geriatric"].Relationships.Add("biker gang", 0);
 
+//        foreach (var faction in WorldData.Instance.Factions.Values)
+//        {
+//            Debug.Log($"Faction Leader for {faction.Type} at start: {faction.Leader.Fluff.Name}");
+//        }
+
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-       while(turnsLeftInHistoryGeneration > 0)
+        while (turnsLeftInHistoryGeneration > 0)
         { 
             while (turnsLeftInYear > 0)
             {
