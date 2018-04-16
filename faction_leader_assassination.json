@@ -1,7 +1,7 @@
 {
      
-     "weapon": [ "a dagger", "a sword", "a broomstick", "an expired hotdog" ]
-,    "origin": [ "#newfactionleader# took the throne by killing #oldfactionleader# with #weapon#."  ]
+     "weapon": [ "a dagger", "a sword", "a pointy stick", "an expired hotdog", "a flail", "a trident", "a javelin", "a shotgun", "assualt rifle", "a mindslasher" ]
+,    "origin": [ "newfactionleader took the throne by killing oldfactionleader with #weapon#."  ]
 
 
 }

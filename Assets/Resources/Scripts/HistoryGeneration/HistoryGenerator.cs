@@ -59,6 +59,8 @@ public class HistoryGenerator : MonoBehaviour {
     private string _currentMonth;
     private int _currentYear;
 
+    public static int CurrentTurn;
+
     private void Start()
     {
         _situationStore = new SituationStore();
@@ -76,6 +78,8 @@ public class HistoryGenerator : MonoBehaviour {
         _currentNumericalDay = 1;
         _currentMonth = _months[0];
         _currentYear = 0;
+
+        CurrentTurn = 0;
 
         Generate();
 
@@ -151,6 +155,8 @@ public class HistoryGenerator : MonoBehaviour {
                         _situationStore.RunSituation(startSituation);
 
                         //Debug.Log($"Ran {startSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}");
+
+                        CurrentTurn++;
 
                         turnsLeftInDay--;
                         turnsLeftInMonth--;

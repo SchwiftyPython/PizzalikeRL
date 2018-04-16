@@ -12,9 +12,9 @@ public class EntityFluff
 
     public string Name;
 
-    private int age;
+    private int _turnBorn;  
     private readonly string _entityType;
-    private string background;
+    private List<string> background;
     private readonly string _sex;
 
     public EntityFluff(string entityType, string factionType)
@@ -22,8 +22,7 @@ public class EntityFluff
         _sex = _sexes[Random.Range(0, _sexes.Count)];
         _entityType = entityType;
         Name = GenerateName();
-        //TODO: Set age somehow. Likely some kind of range depending on type of notable entity.
-        //TODO: Gen story of coming into power
+        _turnBorn = HistoryGenerator.CurrentTurn;
     }
 
     private string GenerateName()
