@@ -10,7 +10,7 @@ public class HistoryGenerator : MonoBehaviour {
     private const int DaysPerMonth = 28;
     private const int DaysPerYear = 112;
     private const int MinTurns = 20 * TurnsPerDay * DaysPerYear;
-    private const int MaxTurns = 150 * TurnsPerDay * DaysPerYear;
+    private const int MaxTurns = 30 * TurnsPerDay * DaysPerYear;
 
     private enum SituationTypes
     {

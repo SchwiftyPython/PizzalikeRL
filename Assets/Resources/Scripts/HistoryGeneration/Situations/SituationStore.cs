@@ -250,9 +250,17 @@ public class SituationStore
     {
         var faction = PickFaction();
 
+        var sc = new SituationContainer
+        {
+            Factions = new List<Faction> { faction},
+            NamedCharacters = new List<Entity> { faction.Leader}
+        };
+
         faction.CreateLeader();
 
-        //TODO: Write fluff
+        sc.NamedCharacters.Add(faction.Leader);
+
+        StoryGenerator.Instance.Write("faction leader assassination", sc);
 
     }
 
