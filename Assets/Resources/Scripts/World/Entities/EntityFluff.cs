@@ -12,7 +12,7 @@ public class EntityFluff
 
     public string Name;
 
-    private int _turnBorn;  
+    private readonly int _turnBorn;  
     private readonly string _entityType;
     private List<string> background;
     private readonly string _sex;
@@ -23,6 +23,17 @@ public class EntityFluff
         _entityType = entityType;
         Name = GenerateName();
         _turnBorn = HistoryGenerator.CurrentTurn;
+        background = new List<string>();
+    }
+
+    public void AddToBackground(string story)
+    {
+        background.Add(story);
+    }
+
+    public int GetAgeInTurns()
+    {
+        return (HistoryGenerator.CurrentTurn - _turnBorn) / HistoryGenerator.TurnsPerTime["year"];
     }
 
     private string GenerateName()

@@ -139,7 +139,7 @@ public class HistoryGenerator : MonoBehaviour {
                                 if (situation.GetTurnsTilNextSituation() <= 0)
                                 {
                                     var nextSituation = PickNextSituation(situation.GetNextSituations());
-                                    _situationStore.RunSituation(nextSituation);
+                                    _situationStore.RunSituation(nextSituation, situation.GetSituationContainer());
 
 //                                    Debug.Log($"Ran {nextSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}\n " +
 //                                              $"Faction: {situation.GetFactions().First().Name}: {situation.GetFactions().First().Population}");

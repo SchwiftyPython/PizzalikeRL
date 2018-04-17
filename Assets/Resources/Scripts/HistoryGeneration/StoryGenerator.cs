@@ -76,6 +76,8 @@ public class StoryGenerator : MonoBehaviour
 
         story = story.Replace(newFactionLeader, details.NamedCharacters[1].Fluff.Name);
 
+        details.NamedCharacters[1].Fluff.AddToBackground(story);
+
         DisplayText(story);
     }
 }
