@@ -10,7 +10,7 @@ public class HistoryGenerator : MonoBehaviour {
     private const int DaysPerMonth = 28;
     private const int DaysPerYear = 112;
     private const int MinTurns = 20 * TurnsPerDay * DaysPerYear;
-    private const int MaxTurns = 150 * TurnsPerDay * DaysPerYear;
+    private const int MaxTurns = 30 * TurnsPerDay * DaysPerYear;
 
     private enum SituationTypes
     {
@@ -59,6 +59,8 @@ public class HistoryGenerator : MonoBehaviour {
     private string _currentMonth;
     private int _currentYear;
 
+    public static int CurrentTurn;
+
     private void Start()
     {
         _situationStore = new SituationStore();
@@ -77,9 +79,16 @@ public class HistoryGenerator : MonoBehaviour {
         _currentMonth = _months[0];
         _currentYear = 0;
 
+        CurrentTurn = 0;
+
         Generate();
 
         Debug.Log($"Done Generating on {_currentMonth} {_currentDayOfTheWeek}, {_currentYear}");
+
+//        foreach (var faction in WorldData.Instance.Factions.Values)
+//        {
+//            Debug.Log($"Faction Leader for {faction.Type} at end: {faction.Leader.Fluff.Name}");
+//        }
     }
 
     private void Generate()
@@ -108,8 +117,13 @@ public class HistoryGenerator : MonoBehaviour {
         WorldData.Instance.Factions["biker gang"].Relationships.Add("geriatric", 0);
         WorldData.Instance.Factions["geriatric"].Relationships.Add("biker gang", 0);
 
+//        foreach (var faction in WorldData.Instance.Factions.Values)
+//        {
+//            Debug.Log($"Faction Leader for {faction.Type} at start: {faction.Leader.Fluff.Name}");
+//        }
+
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-       while(turnsLeftInHistoryGeneration > 0)
+        while (turnsLeftInHistoryGeneration > 0)
         { 
             while (turnsLeftInYear > 0)
             {
@@ -125,7 +139,7 @@ public class HistoryGenerator : MonoBehaviour {
                                 if (situation.GetTurnsTilNextSituation() <= 0)
                                 {
                                     var nextSituation = PickNextSituation(situation.GetNextSituations());
-                                    _situationStore.RunSituation(nextSituation);
+                                    _situationStore.RunSituation(nextSituation, situation.GetSituationContainer());
 
 //                                    Debug.Log($"Ran {nextSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}\n " +
 //                                              $"Faction: {situation.GetFactions().First().Name}: {situation.GetFactions().First().Population}");
@@ -141,6 +155,8 @@ public class HistoryGenerator : MonoBehaviour {
                         _situationStore.RunSituation(startSituation);
 
                         //Debug.Log($"Ran {startSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}");
+
+                        CurrentTurn++;
 
                         turnsLeftInDay--;
                         turnsLeftInMonth--;
@@ -197,5 +213,10 @@ public class HistoryGenerator : MonoBehaviour {
     public static void RemoveFromActiveSituations(SituationContainer sc)
     {
         ActiveSituations.Remove(sc.SituationId);
+    }
+
+    public static bool SituationIdExists(GUID id)
+    {
+        return ActiveSituations.ContainsKey(id);
     }
 }

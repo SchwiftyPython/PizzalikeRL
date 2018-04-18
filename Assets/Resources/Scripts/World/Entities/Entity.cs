@@ -35,8 +35,6 @@ public class Entity {
     private bool _isHostile;
     private bool _canMutate;
 
-    private string _type;
-
 	//Base stats
     private int _level;
 
@@ -65,7 +63,10 @@ public class Entity {
     private GameObject _sprite;
     //SingleNodeBlocker blocker;
 
-    private EntityFluff fluff;
+    public EntityFluff Fluff { get; set; }
+
+    private string _entityType;
+    private string _factionType;
 
     private Vector3 _currentPosition;
 
@@ -80,9 +81,10 @@ public class Entity {
         }
     }
 
-    public Entity (EntityTemplate template, bool isPlayer) {
+    public Entity (EntityTemplate template, string faction = null, bool isPlayer = false) {
         _isPlayer = isPlayer;
-        _type = template.Type;
+        _entityType = template.Type;
+        _factionType = faction;
         _strength = GenStrength(template.MinStrength, template.MaxStrength);
         _agility = GenAgility(template.MinAgility, template.MaxAgility);
         _constitution = GenConstitution(template.MinConstitution, template.MaxConstitution);
@@ -98,7 +100,6 @@ public class Entity {
         //TODO: gen inventory
         BuildBody(template);
         //equip
-        //gen name
     }
 
     //Testing constructor
@@ -372,12 +373,12 @@ public class Entity {
             {
                 return;
             }
-            var message = _type + " killed " + target._type + "!";
+            var message = _entityType + " killed " + target._entityType + "!";
             GameManager.Instance.Messages.Add(message);
             //AreaMap.Instance.RemoveEntity(target);
         }
         else {
-            var message = _type + " missed " + target._type + "!";
+            var message = _entityType + " missed " + target._entityType + "!";
             GameManager.Instance.Messages.Add(message);
         }
     }
@@ -455,7 +456,17 @@ public class Entity {
         return TargetTileBlockedByEntity(target);
     }
 
-    private bool MeleeRollHit(Entity target) {
+    public bool IsDead()
+    {
+        return _currentHP <= 0;
+    }
+
+    public void CreateFluff()
+    {
+        Fluff = new EntityFluff(_entityType, _factionType);
+    }
+
+    private static bool MeleeRollHit(Entity target) {
         var roll = Random.Range(1, 101);
 
         //unarmed for testing. Will check for equipped weapon and add appropriate bonuses
@@ -468,13 +479,8 @@ public class Entity {
     private void ApplyMeleeDamage(Entity target) {
         const int unarmedDamage = 4;
         target._currentHP -= unarmedDamage;
-        var message = _type + " hits " + target._type + " for " + unarmedDamage + " hit points.";
+        var message = _entityType + " hits " + target._entityType + " for " + unarmedDamage + " hit points.";
         Debug.Log("Target remaining hp: " + target._currentHP);
         GameManager.Instance.Messages.Add(message);
     }
-
-    public bool IsDead() {
-        return _currentHP <= 0;
-    }
-    
 }

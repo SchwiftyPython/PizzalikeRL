@@ -2,24 +2,34 @@
 <FactionTemplateCollection>
 	<FactionTemplates>
 
-	    <FactionTemplate name = "biker gang">
-		    
+	    <FactionTemplate type = "biker gang">
+		    <EntityTypes>
+			    <Type>human</Type>
+			</EntityTypes>
 		</FactionTemplate>
 		
-		<FactionTemplate name = "geriatric">
-		    
+		<FactionTemplate type = "geriatric">
+		    <EntityTypes>
+			    <Type>human</Type>
+			</EntityTypes>
 		</FactionTemplate>
 		
-		<FactionTemplate name = "wrestling">
-		    
+		<FactionTemplate type = "wrestling">
+		    <EntityTypes>
+			    <Type>human</Type>
+			</EntityTypes>
 		</FactionTemplate>
 		
-		<FactionTemplate name = "clowns">
-		    
+		<FactionTemplate type = "clowns">
+		    <EntityTypes>
+			    <Type>human</Type>
+			</EntityTypes>
 		</FactionTemplate>
 		
-		<FactionTemplate name = "scotch brewer dwarves">
-		    
+		<FactionTemplate type = "scotch brewer dwarves">
+		    <EntityTypes>
+			    <Type>dwarf</Type>
+			</EntityTypes>
 		</FactionTemplate>
 	
 	</FactionTemplates>

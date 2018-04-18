@@ -40,7 +40,7 @@ public class AreaMap : MonoBehaviour {
         //temp til player creation
         if (GameManager.Instance.Player == null)
         {
-            _player = new Entity(EntityTemplateLoader.GetEntityTemplate("human"), true);
+            _player = new Entity(EntityTemplateLoader.GetEntityTemplate("human"), null, true);
             _playerSprite = Instantiate(_player.GetSpritePrefab(), new Vector2(0, 0), Quaternion.identity);
             _player.SetSprite(_playerSprite);
             GameManager.Instance.Player = _player;

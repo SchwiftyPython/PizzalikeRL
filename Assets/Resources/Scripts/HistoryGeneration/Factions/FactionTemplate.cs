@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-public class FactionTemplate  {
+public class FactionTemplate
+{
+    [XmlAttribute("type")]
+    public string Type;
 
-    [XmlAttribute("name")]
-    public string Name;
-
+    [XmlArray("EntityTypes")]
+    [XmlArrayItem("Type")]
+    public List<string> EntityTypes;
 }

@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 public class Faction
 {
     private const int MaxRelationshipLevel = 1000;
     private const int MinRelationshipLevel = MaxRelationshipLevel * -1;
+
+    public string Type;
 
     public Dictionary<string, int> Relationships; //<Faction Name, Affection Level>
     public Dictionary<string, int> Religions;     //<Religion Name, Number of Believers>
@@ -16,26 +22,37 @@ public class Faction
 
     public Entity Leader;
 
+    public EntityTemplate EntityType;
+
     public Faction(FactionTemplate factionTemplate)
     {
         Relationships = new Dictionary<string, int>();
         Religions = new Dictionary<string, int>();
 
-        Name = factionTemplate.Name;
+        Type = factionTemplate.Type;
+
+        var index = Random.Range(0, factionTemplate.EntityTypes.Count);
+
+        EntityType = EntityTemplateLoader.GetEntityTemplate(factionTemplate.EntityTypes[index]);
+
+        CreateLeader();
+
+        //Debug.Log("Leader name: " + Leader.Fluff.Name);
     }
 
     public void ChangeRelationshipValue(Faction otherFaction, int relationshipChange)
     {
-        Relationships[otherFaction.Name] += relationshipChange;
+        //TODO: Change Type to Name when Faction Name Gen is done
+        Relationships[otherFaction.Type] += relationshipChange;
 
-        if (Relationships[otherFaction.Name] > MaxRelationshipLevel)
+        if (Relationships[otherFaction.Type] > MaxRelationshipLevel)
         {
-            Relationships[otherFaction.Name] = MaxRelationshipLevel;
+            Relationships[otherFaction.Type] = MaxRelationshipLevel;
             return;
         }
-        if (Relationships[otherFaction.Name] < MinRelationshipLevel)
+        if (Relationships[otherFaction.Type] < MinRelationshipLevel)
         {
-            Relationships[otherFaction.Name] = MinRelationshipLevel;
+            Relationships[otherFaction.Type] = MinRelationshipLevel;
         }
     }
 
@@ -53,5 +70,10 @@ public class Faction
     public void ChangePopulation(int change)
     {
         Population += change;
+    }
+
+    public void CreateLeader()
+    {
+        Leader = new Entity(EntityType, Name) {Fluff = new EntityFluff(EntityType.Type, Type)};
     }
 }

@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SituationStore
 {
-    //todo throw this into a file as well 
-    private readonly Dictionary<string, Action> _allSituations = new Dictionary<string, Action>
+    private readonly Dictionary<string, Action<SituationContainer>> _allSituations = new Dictionary<string, Action<SituationContainer>>
     {
         {"heretic nation", HereticNation},
         {"plague outbreak", PlagueOutbreak},
         {"plague continues", PlagueContinues},
         {"plague ends naturally", PlagueEndsNaturally},
-        {"plague cured", PlagueCured}
+        {"plague cured", PlagueCured},
+        {"faction leader assassination", FactionLeaderAssassination },
+        {"faction leader dies naturally", FactionLeaderDiesNaturally },
+        {"faction leader disappears", FactionLeaderDisappears}
     };
 
     private List<string> _startSituations;
@@ -52,7 +53,7 @@ public class SituationStore
         }
     }
 
-    public void RunSituation(string situation)
+    public void RunSituation(string situation, SituationContainer sc = null)
     {
         if (!_allSituations.ContainsKey(situation))
         {
@@ -61,7 +62,7 @@ public class SituationStore
 
         try
         {
-            _allSituations[situation]();
+            _allSituations[situation](sc);
         }
         catch (KeyNotFoundException e)
         {
@@ -71,8 +72,9 @@ public class SituationStore
         }
     }
 
-    private static List<string> GetSituationsFromFile(string fullPath)
+    private static List<string> GetSituationsFromFile(string file)
     {
+        var fullPath = Path.Combine(ResourcesPath, file);
         var situatons = new List<string>();
         try
         {
@@ -92,9 +94,24 @@ public class SituationStore
         return situatons;
     }
 
+    private static Faction PickFaction()
+    {
+        if (WorldData.Instance.Factions.Count < 1)
+        {
+            return null;
+        }
+
+        var unselectedFactions = WorldData.Instance.Factions.Values.ToList();
+
+        var index = Random.Range(0, unselectedFactions.Count);
+
+        return unselectedFactions[index];
+    }
+
     #region Situations
 
-    private static void HereticNation()
+    // TODO needs to be redone without prereqs
+    private static void HereticNation(SituationContainer sc = null)
     {
         if (WorldData.Instance.Factions.Count < 2)
         {
@@ -124,17 +141,9 @@ public class SituationStore
         }
     }
 
-    private static void PlagueOutbreak()
+    private static void PlagueOutbreak(SituationContainer sc = null)
     {
-        if (WorldData.Instance.Factions.Count < 1)
-        {
-            return;
-        }
-
-        var unselectedFactions = WorldData.Instance.Factions.Values.ToList();
-
-        var index = Random.Range(0, unselectedFactions.Count);
-        var plagueFaction = unselectedFactions[index];
+        var plagueFaction = PickFaction();
 
         var infected = Random.Range(1, (int)(plagueFaction.Population * .05)) * -1;
         plagueFaction.ChangePopulation(infected);
@@ -146,9 +155,16 @@ public class SituationStore
             "plague cured"
         };
 
+        var id = GUID.Generate();
+
+        while (HistoryGenerator.SituationIdExists(id))
+        {
+            id = GUID.Generate();
+        }
+
         var situationContainer = new SituationContainer
         {
-            SituationId = GUID.Generate(),
+            SituationId = id,
             NextSituations = nextSituations,
             Factions = new List<Faction>{plagueFaction},
             TurnsTilNextSituation = HistoryGenerator.TurnsPerTime["week"]
@@ -157,69 +173,98 @@ public class SituationStore
         HistoryGenerator.AddToActiveSituations(situationContainer);
     }
 
-    private static void PlagueContinues()
+    private static void PlagueContinues(SituationContainer sc)
     {
-        var activeSituationContainers = (from s in HistoryGenerator.ActiveSituations
-            where s.Value.GetTurnsTilNextSituation() <= 0 
-            && s.Value.GetNextSituations().Contains("plague continues")
-            select s.Value.GetSituationContainer()).ToList();
-        
-        foreach (var sc in activeSituationContainers)
+        var plagueFaction = sc.Factions.SingleOrDefault();
+
+        if (plagueFaction == null)
         {
-            var plagueFaction = sc.Factions.SingleOrDefault();
-            if (plagueFaction == null)
-            {
-                continue;
-            }
-
-            var infected = Random.Range(1, (int)(plagueFaction.Population * .1)) * -1;
-            plagueFaction.ChangePopulation(infected);
-
-            sc.TurnsTilNextSituation = HistoryGenerator.TurnsPerTime["week"];
+            return;
         }
+
+        var infected = Random.Range(1, (int) (plagueFaction.Population * .1)) * -1;
+        plagueFaction.ChangePopulation(infected);
+
+        const int chanceOfLeaderDeath = 5;
+        var roll = Random.Range(0, 100);
+
+        if (roll < chanceOfLeaderDeath)
+        {
+            FactionLeaderDiesFromPlague(plagueFaction);
+        }
+
+        sc.TurnsTilNextSituation = HistoryGenerator.TurnsPerTime["week"];
     }
 
-    private static void PlagueEndsNaturally()
+    private static void PlagueEndsNaturally(SituationContainer sc)
     {
-        var activeSituationContainers = (from s in HistoryGenerator.ActiveSituations
-            where s.Value.GetTurnsTilNextSituation() <= 0
-                  && s.Value.GetNextSituations().Contains("plague end naturally")
-            select s.Value.GetSituationContainer()).ToList();
-
-        foreach (var sc in activeSituationContainers)
+        var plagueFaction = sc.Factions.SingleOrDefault();
+        if (plagueFaction == null)
         {
-            var plagueFaction = sc.Factions.SingleOrDefault();
-            if (plagueFaction == null)
-            {
-                continue;
-            }
-
-            //Write fluff
-
-            HistoryGenerator.RemoveFromActiveSituations(sc);
+            return;
         }
+
+        //TODO: Write fluff
+
+        HistoryGenerator.RemoveFromActiveSituations(sc);
     }
 
-    private static void PlagueCured()
+    private static void PlagueCured(SituationContainer sc)
     {
-        var activeSituationContainers = (from s in HistoryGenerator.ActiveSituations
-            where s.Value.GetTurnsTilNextSituation() <= 0
-                  && s.Value.GetNextSituations().Contains("plague cured")
-            select s.Value.GetSituationContainer()).ToList();
-
-        foreach (var sc in activeSituationContainers)
+        var plagueFaction = sc.Factions.SingleOrDefault();
+        if (plagueFaction == null)
         {
-            var plagueFaction = sc.Factions.SingleOrDefault();
-            if (plagueFaction == null)
-            {
-                continue;
-            }
-
-            //Write fluff
-
-            HistoryGenerator.RemoveFromActiveSituations(sc);
+            return;
         }
+
+        //TODO: Write fluff
+
+        HistoryGenerator.RemoveFromActiveSituations(sc);
     }
 
-#endregion Situations
+    private static void FactionLeaderAssassination(SituationContainer sc)
+    {
+        var faction = PickFaction();
+
+        sc = new SituationContainer
+        {
+            Factions = new List<Faction> { faction},
+            NamedCharacters = new List<Entity> { faction.Leader}
+        };
+
+        faction.CreateLeader();
+
+        sc.NamedCharacters.Add(faction.Leader);
+
+        StoryGenerator.Instance.Write("faction leader assassination", sc);
+
+    }
+
+    private static void FactionLeaderDiesFromPlague(Faction faction)
+    {
+        faction.CreateLeader();
+
+        //TODO: Write fluff
+    }
+
+    private static void FactionLeaderDiesNaturally(SituationContainer sc = null)
+    {
+        var faction = PickFaction();
+
+        faction.CreateLeader();
+
+        //TODO: Write fluff
+    }
+
+    private static void FactionLeaderDisappears(SituationContainer sc = null)
+    {
+        var faction = PickFaction();
+
+        faction.CreateLeader();
+
+        //TODO: Write fluff
+    }
+
+    #endregion Situations
+
 }
