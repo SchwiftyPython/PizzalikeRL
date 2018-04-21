@@ -102,6 +102,8 @@ public class Generator : MonoBehaviour
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
     };
 
+    public Capper rarityCapper;
+
     private void Start()
     {
         Seed = WorldData.Instance.Seed;
@@ -161,6 +163,8 @@ public class Generator : MonoBehaviour
 
         GenerateBiomeMap();
         UpdateBiomeBitmask();
+
+        rarityCapper = new Capper();
 
         // Render a texture representation of our map
         /*

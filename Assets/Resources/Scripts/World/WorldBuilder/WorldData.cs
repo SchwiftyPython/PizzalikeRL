@@ -66,7 +66,7 @@ public class WorldData : MonoBehaviour {
     public GameObject[] AreaSwampTiles = new GameObject[9];
     public GameObject[] AreaIceTiles = new GameObject[1];
 
-    //Todo: This is going to need to be an xml file
+    //Todo: This is replaced by deck system
     public Dictionary<BiomeType, string[]> BiomePossibleEntities = new Dictionary<BiomeType, string[]>() {
         {BiomeType.Desert, new[]{"pepperoni worm"} },
         {BiomeType.Grassland, new[]{"pepperoni worm"} },
