@@ -26,7 +26,7 @@
 			</EntityTypes>
 		</FactionTemplate>
 		
-		<FactionTemplate type = "scotch brewer dwarves">
+		<FactionTemplate type = "brewer dwarves">
 		    <EntityTypes>
 			    <Type>dwarf</Type>
 			</EntityTypes>
