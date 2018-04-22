@@ -164,6 +164,9 @@ public class Generator : MonoBehaviour
         GenerateBiomeMap();
         UpdateBiomeBitmask();
 
+        CreateFactions();
+        AssignFactionsToCells();
+
         rarityCapper = new Capper();
 
         // Render a texture representation of our map
@@ -1042,6 +1045,81 @@ public class Generator : MonoBehaviour
                 if (c.HeightType == HeightType.River)
                 {
                     AddMoisture(c, (int)60);
+                }
+            }
+        }
+    }
+
+    private static void CreateFactions()
+    {
+        if (WorldData.Instance.Factions == null)
+        {
+            WorldData.Instance.Factions = new Dictionary<string, Faction>();
+        }
+
+        FactionTemplateLoader.Initialize();
+
+        var factionTypes = FactionTemplateLoader.GetFactionNames();
+
+        foreach (var factionType in factionTypes)
+        {
+            WorldData.Instance.Factions.Add(factionType, new Faction(FactionTemplateLoader.GetFactionByName(factionType)));
+
+            WorldData.Instance.Factions[factionType].Population = Random.Range(100, 1000);
+        }
+    }
+
+    private void AssignFactionsToCells()
+    {
+        const float startingChanceToPlace = 0.005f;
+        const int chanceIncrement = 30;
+
+        var deck = new FactionDeck();
+        var numCellsTilNextDraw = deck.NumCellsToSkipBeforeNextDraw;
+
+        var currentX = 0;
+        var currentY = 0;
+        var currentCell = _cells[currentX, currentY];
+
+        foreach (var card in deck.Cards)
+        {
+            var placed = false;
+            var chanceToPlaceCard = startingChanceToPlace;
+            while (!placed)
+            {
+                var roll = Random.Range(0.000f, 1.000f);
+                if (roll <= chanceToPlaceCard)
+                {
+                    currentCell.PresentFaction = card;
+                    placed = true;
+                    Debug.Log(card + " placed at " + currentX + ", " + currentY);
+                }
+//                else
+//                {
+//                    if (chanceToPlaceCard + chanceIncrement > 100)
+//                    {
+//                        chanceToPlaceCard = startingChanceToPlace;
+//                    }
+//                    chanceToPlaceCard += chanceIncrement;
+//                }
+
+                if (currentX + numCellsTilNextDraw >= _width)
+                {
+                    currentX += numCellsTilNextDraw - _width;
+                    
+                    if (currentY + 1 >= _height)
+                    {
+                        currentY = 0;
+                    }
+                    else
+                    {
+                        currentY ++;
+                    }
+
+                }
+                else
+                {
+                    currentX += numCellsTilNextDraw;
                 }
             }
         }

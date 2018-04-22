@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
 		switch(CurrentState) {
 		case GameState.Start:
 		        if (WorldMapGenComplete){
-                    CurrentState = GameState.EnterArea;
+                    //CurrentState = GameState.EnterArea;
                 }
                 break;
             case GameState.HistoryGeneration:

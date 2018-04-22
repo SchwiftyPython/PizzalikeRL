@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public enum HeightType {
@@ -83,6 +82,8 @@ public class Cell {
     public int RiverSize { get; set; }
 
     public GameObject WorldMapSprite { get; set; }
+
+    public string PresentFaction;
 
     public BiomeType biomeType {
         get { return BiomeType; }
@@ -285,8 +286,8 @@ public class Cell {
             case BiomeType.Woodland:
                 WorldMapSprite = WorldData.Instance.WorldForestTile;
                 break;
-            default:
-                throw new ArgumentOutOfRangeException("biome", biome, null);
+//            default:
+//                throw new ArgumentOutOfRangeException("biome", biome, null);
         }
     }
 
