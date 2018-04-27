@@ -102,6 +102,8 @@ public class Generator : MonoBehaviour
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
     };
 
+    public Capper rarityCapper;
+
     private void Start()
     {
         Seed = WorldData.Instance.Seed;
@@ -123,7 +125,8 @@ public class Generator : MonoBehaviour
         GameManager.Instance.CurrentCell.HasNPCs = true;
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
-        SceneManager.LoadScene("Area");
+        SceneManager.LoadScene("WorldMap");
+        //SceneManager.LoadScene("Area");
     }
     #region Public Methods
     public BiomeType GetBiomeType(Cell cell)
@@ -161,6 +164,11 @@ public class Generator : MonoBehaviour
 
         GenerateBiomeMap();
         UpdateBiomeBitmask();
+
+        CreateFactions();
+        AssignFactionsToCells();
+
+        rarityCapper = new Capper();
 
         // Render a texture representation of our map
         /*
@@ -1039,6 +1047,84 @@ public class Generator : MonoBehaviour
                 {
                     AddMoisture(c, (int)60);
                 }
+            }
+        }
+    }
+
+    private static void CreateFactions()
+    {
+        if (WorldData.Instance.Factions == null)
+        {
+            WorldData.Instance.Factions = new Dictionary<string, Faction>();
+        }
+
+        FactionTemplateLoader.Initialize();
+
+        var factionTypes = FactionTemplateLoader.GetFactionNames();
+
+        foreach (var factionType in factionTypes)
+        {
+            WorldData.Instance.Factions.Add(factionType, new Faction(FactionTemplateLoader.GetFactionByName(factionType)));
+
+            WorldData.Instance.Factions[factionType].Population = Random.Range(100, 1000);
+        }
+    }
+
+    private void AssignFactionsToCells()
+    {
+        var factionTiles = new Dictionary<string, GameObject>
+        {
+            {"wrestling", WorldData.Instance.WrestlingFactionTile },
+            {"geriatric", WorldData.Instance.GeriatricFactionTile },
+            {"clowns", WorldData.Instance.ClownsFactionTile },
+            {"biker gang", WorldData.Instance.BikerGangFactionTile }
+        };
+
+
+        const float chanceToPlaceCard = 0.005f;
+
+        var deck = new FactionDeck();
+        var numCellsTilNextDraw = deck.NumCellsToSkipBeforeNextDraw;
+
+        var currentX = 0;
+        var currentY = 0;
+        var currentCell = _cells[currentX, currentY];
+
+        foreach (var card in deck.Cards)
+        {
+            var placed = false;
+            while (!placed)
+            {
+                if (currentCell.BiomeType != BiomeType.Water || currentCell.BiomeType != BiomeType.Mountain)
+                {
+                    var roll = Random.Range(0.000f, 1.000f);
+                    if (roll <= chanceToPlaceCard)
+                    {
+                        currentCell.PresentFaction = card;
+                        currentCell.WorldMapSprite = factionTiles[card];
+                        placed = true;
+                        Debug.Log(card + " placed at " + currentX + ", " + currentY);
+                    }
+                }
+                if (currentX + numCellsTilNextDraw >= _width)
+                {
+                    currentX += numCellsTilNextDraw - _width;
+                    
+                    if (currentY + 1 >= _height)
+                    {
+                        currentY = 0;
+                    }
+                    else
+                    {
+                        currentY ++;
+                    }
+
+                }
+                else
+                {
+                    currentX += numCellsTilNextDraw;
+                }
+                currentCell = _cells[currentX, currentY];
             }
         }
     }

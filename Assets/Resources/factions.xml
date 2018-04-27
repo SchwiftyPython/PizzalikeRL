@@ -24,13 +24,7 @@
 		    <EntityTypes>
 			    <Type>human</Type>
 			</EntityTypes>
-		</FactionTemplate>
-		
-		<FactionTemplate type = "brewer dwarves">
-		    <EntityTypes>
-			    <Type>dwarf</Type>
-			</EntityTypes>
-		</FactionTemplate>
+		</FactionTemplate>		
 	
 	</FactionTemplates>
 </FactionTemplateCollection>

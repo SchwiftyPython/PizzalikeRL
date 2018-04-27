@@ -66,7 +66,7 @@ public class HistoryGenerator : MonoBehaviour {
         _situationStore = new SituationStore();
         _situationStore.Initialize();
 
-        FactionTemplateLoader.Initialize();
+        //FactionTemplateLoader.Initialize();
 
         ActiveSituations = new Dictionary<GUID, Situation>();
 
@@ -100,7 +100,7 @@ public class HistoryGenerator : MonoBehaviour {
 
         //Testing //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        if (WorldData.Instance.Factions == null)
+       /* if (WorldData.Instance.Factions == null)
         {
             WorldData.Instance.Factions = new Dictionary<string, Faction>();
         }
@@ -115,7 +115,7 @@ public class HistoryGenerator : MonoBehaviour {
         WorldData.Instance.Factions["geriatric"].Religions.Add("harley", 10);
 
         WorldData.Instance.Factions["biker gang"].Relationships.Add("geriatric", 0);
-        WorldData.Instance.Factions["geriatric"].Relationships.Add("biker gang", 0);
+        WorldData.Instance.Factions["geriatric"].Relationships.Add("biker gang", 0);*/
 
 //        foreach (var faction in WorldData.Instance.Factions.Values)
 //        {
