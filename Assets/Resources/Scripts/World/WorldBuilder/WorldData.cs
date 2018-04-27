@@ -60,6 +60,11 @@ public class WorldData : MonoBehaviour {
     public GameObject WorldIceTile;
     public GameObject WorldWaterTile;
 
+    public GameObject WrestlingFactionTile;
+    public GameObject GeriatricFactionTile;
+    public GameObject ClownsFactionTile;
+    public GameObject BikerGangFactionTile;
+
     public GameObject[] AreaGrassLandTiles = new GameObject[11];
     public GameObject[] AreaDesertTiles = new GameObject[2];
     public GameObject[] AreaWasteLandTiles = new GameObject[4];

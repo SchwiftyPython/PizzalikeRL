@@ -125,7 +125,8 @@ public class Generator : MonoBehaviour
         GameManager.Instance.CurrentCell.HasNPCs = true;
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
-        SceneManager.LoadScene("Area");
+        SceneManager.LoadScene("WorldMap");
+        //SceneManager.LoadScene("Area");
     }
     #region Public Methods
     public BiomeType GetBiomeType(Cell cell)
@@ -1071,8 +1072,16 @@ public class Generator : MonoBehaviour
 
     private void AssignFactionsToCells()
     {
-        const float startingChanceToPlace = 0.005f;
-        const int chanceIncrement = 30;
+        var factionTiles = new Dictionary<string, GameObject>
+        {
+            {"wrestling", WorldData.Instance.WrestlingFactionTile },
+            {"geriatric", WorldData.Instance.GeriatricFactionTile },
+            {"clowns", WorldData.Instance.ClownsFactionTile },
+            {"biker gang", WorldData.Instance.BikerGangFactionTile }
+        };
+
+
+        const float chanceToPlaceCard = 0.005f;
 
         var deck = new FactionDeck();
         var numCellsTilNextDraw = deck.NumCellsToSkipBeforeNextDraw;
@@ -1084,25 +1093,19 @@ public class Generator : MonoBehaviour
         foreach (var card in deck.Cards)
         {
             var placed = false;
-            var chanceToPlaceCard = startingChanceToPlace;
             while (!placed)
             {
-                var roll = Random.Range(0.000f, 1.000f);
-                if (roll <= chanceToPlaceCard)
+                if (currentCell.BiomeType != BiomeType.Water || currentCell.BiomeType != BiomeType.Mountain)
                 {
-                    currentCell.PresentFaction = card;
-                    placed = true;
-                    Debug.Log(card + " placed at " + currentX + ", " + currentY);
+                    var roll = Random.Range(0.000f, 1.000f);
+                    if (roll <= chanceToPlaceCard)
+                    {
+                        currentCell.PresentFaction = card;
+                        currentCell.WorldMapSprite = factionTiles[card];
+                        placed = true;
+                        Debug.Log(card + " placed at " + currentX + ", " + currentY);
+                    }
                 }
-//                else
-//                {
-//                    if (chanceToPlaceCard + chanceIncrement > 100)
-//                    {
-//                        chanceToPlaceCard = startingChanceToPlace;
-//                    }
-//                    chanceToPlaceCard += chanceIncrement;
-//                }
-
                 if (currentX + numCellsTilNextDraw >= _width)
                 {
                     currentX += numCellsTilNextDraw - _width;
@@ -1121,6 +1124,7 @@ public class Generator : MonoBehaviour
                 {
                     currentX += numCellsTilNextDraw;
                 }
+                currentCell = _cells[currentX, currentY];
             }
         }
     }
