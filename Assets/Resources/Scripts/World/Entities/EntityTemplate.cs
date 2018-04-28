@@ -51,4 +51,8 @@ public class EntityTemplate {
     [XmlArray("BodyParts")]
     [XmlArrayItem("Part")]
     public List<string> Parts;
+
+    [XmlArray("PossibleBiomes")]
+    [XmlArrayItem("Biome")]
+    public List<BiomeType> Biomes;
 }
