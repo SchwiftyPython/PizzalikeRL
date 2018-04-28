@@ -16,9 +16,9 @@ public class Generator : MonoBehaviour
 
     [Header("Height Map")]
     [SerializeField]
-    float _deepWater = 0.1f;
+    float _deepWater = 0.05f;
     [SerializeField]
-    float _shallowWater = 0.2f;
+    float _shallowWater = 0.075f;
     [SerializeField]
     float _sand = 0.5f;
     [SerializeField]
@@ -102,7 +102,7 @@ public class Generator : MonoBehaviour
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
     };
 
-    public Capper rarityCapper;
+    public Capper RarityCapper;
 
     private void Start()
     {
@@ -168,7 +168,7 @@ public class Generator : MonoBehaviour
         CreateFactions();
         AssignFactionsToCells();
 
-        rarityCapper = new Capper();
+        RarityCapper = new Capper();
 
         // Render a texture representation of our map
         /*
