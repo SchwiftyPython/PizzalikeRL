@@ -16,18 +16,21 @@ public class EnemyController : AstarAI {
         }
 	}
 
-    public IEnumerator MakeDecision() {
+    public IEnumerator MakeDecision()
+    {
         var enemy = GameManager.Instance.CurrentArea.TurnOrder.Peek();
         FindPathToPlayer(enemy, GameManager.Instance.Player.CurrentPosition); //move toward player test
         yield return new WaitForSeconds(0.1f);
         //Debug.Log(Path);
-        //Debug.Log("Present Entity: " + GameManager.Instance.CurrentAreaPosition.GetTileAt(Path.vectorPath[1]).GetPresentEntity());
-        if (GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity() == null) {
+        //Debug.Log("Present Entity: " + GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity());
+        if (GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity() == null)
+        {
             enemy.Move(Path.vectorPath[1]);
             TurnStarted = false;
             ActionTaken = true;
         }
-        else {
+        else
+        {
             TurnStarted = false;
             ActionTaken = true;
         }

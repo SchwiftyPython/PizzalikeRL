@@ -162,10 +162,6 @@ namespace Pathfinding {
 			// Convert to graph space
 			p = gg.transform.InverseTransform(p);
 
-			// Nodes are offset 0.5 graph space nodes
-			float xf = position.x-0.5F;
-			float zf = position.z-0.5f;
-
 			// Calculate graph position of this node
 			int x = NodeInGridIndex % gg.width;
 			int z = NodeInGridIndex / gg.width;
@@ -173,7 +169,7 @@ namespace Pathfinding {
 			// Handle the y coordinate separately
 			float y = gg.transform.InverseTransform((Vector3)position).y;
 
-			var closestInGraphSpace = new Vector3(Mathf.Clamp(xf, x-0.5f, x+0.5f)+0.5f, y, Mathf.Clamp(zf, z-0.5f, z+0.5f)+0.5f);
+			var closestInGraphSpace = new Vector3(Mathf.Clamp(p.x, x, x+1f), y, Mathf.Clamp(p.z, z, z+1f));
 
 			// Convert to world space
 			return gg.transform.Transform(closestInGraphSpace);
@@ -257,7 +253,7 @@ namespace Pathfinding {
 			int[] neighbourOffsets = gg.neighbourOffsets;
 			GridNode[] nodes = gg.nodes;
 
-			UpdateG(path, pathNode);
+			pathNode.UpdateG(path);
 			handler.heap.Add(pathNode);
 
 			ushort pid = handler.PathID;
@@ -296,6 +292,7 @@ namespace Pathfinding {
 
 						uint tmpCost = neighbourCosts[i];
 
+						// Check if the other node has not yet been visited by this path
 						if (otherPN.pathID != pid) {
 							otherPN.parent = pathNode;
 							otherPN.pathID = pid;
@@ -303,11 +300,9 @@ namespace Pathfinding {
 							otherPN.cost = tmpCost;
 
 							otherPN.H = path.CalculateHScore(other);
-							other.UpdateG(path, otherPN);
+							otherPN.UpdateG(path);
 
-							//Debug.Log ("G " + otherPN.G + " F " + otherPN.F);
 							handler.heap.Add(otherPN);
-							//Debug.DrawRay ((Vector3)otherPN.node.Position, Vector3.up,Color.blue);
 						} else {
 							// Sorry for the huge number of #ifs
 
@@ -325,20 +320,6 @@ namespace Pathfinding {
 								otherPN.parent = pathNode;
 
 								other.UpdateRecursiveG(path, otherPN, handler);
-
-								//Or if the path from this node ("other") to the current ("current") is better
-							}
-#if ASTAR_NO_TRAVERSAL_COST
-							else if (otherPN.G+tmpCost < pathNode.G)
-#else
-							else if (otherPN.G+tmpCost+path.GetTraversalCost(this) < pathNode.G)
-#endif
-							{
-								//Debug.Log ("Path better from " + otherPN.node.NodeIndex + " to " + NodeIndex + " " + (otherPN.G+tmpCost+path.GetTraversalCost (this)) + " < " + pathNode.G);
-								pathNode.parent = otherPN;
-								pathNode.cost = tmpCost;
-
-								UpdateRecursiveG(path, pathNode, handler);
 							}
 						}
 					}

@@ -82,6 +82,29 @@ namespace Pathfinding {
 	 * \ingroup utils
 	 */
 	public static class VectorMath {
+		/** Complex number multiplication.
+		 * \returns a * b
+		 *
+		 * Used to rotate vectors in an efficient way.
+		 *
+		 * \see https://en.wikipedia.org/wiki/Complex_number#Multiplication_and_division
+		 */
+		public static Vector2 ComplexMultiply (Vector2 a, Vector2 b) {
+			return new Vector2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
+		}
+
+		/** Complex number multiplication.
+		 * \returns a * conjugate(b)
+		 *
+		 * Used to rotate vectors in an efficient way.
+		 *
+		 * \see https://en.wikipedia.org/wiki/Complex_number#Multiplication_and_division
+		 * \see https://en.wikipedia.org/wiki/Complex_conjugate
+		 */
+		public static Vector2 ComplexMultiplyConjugate (Vector2 a, Vector2 b) {
+			return new Vector2(a.x * b.x + a.y * b.y, a.y * b.x - a.x * b.y);
+		}
+
 		/** Returns the closest point on the line.
 		 * The line is treated as infinite.
 		 * \see ClosestPointOnSegment
@@ -341,6 +364,15 @@ namespace Pathfinding {
 			return (long)(b.x - a.x) * (long)(p.z - a.z) - (long)(p.x - a.x) * (long)(b.z - a.z) < 0;
 		}
 
+		/** Returns which side of the line \a a - \a b that \a p lies on.
+		 * Uses XZ space.
+		 */
+		public static Side SideXZ (Int3 a, Int3 b, Int3 p) {
+			var s = (long)(b.x - a.x) * (long)(p.z - a.z) - (long)(p.x - a.x) * (long)(b.z - a.z);
+
+			return s > 0 ? Side.Left : (s < 0 ? Side.Right : Side.Colinear);
+		}
+
 		/** Returns if \a p lies on the right side of the line \a a - \a b.
 		 * Also returns true if the points are colinear.
 		 */
@@ -394,6 +426,21 @@ namespace Pathfinding {
 		/** Returns true if the points a in a clockwise order or if they are colinear */
 		public static bool IsClockwiseOrColinear (Int2 a, Int2 b, Int2 c) {
 			return RightOrColinear(a, b, c);
+		}
+
+		/** Returns if the points are colinear (lie on a straight line) */
+		public static bool IsColinear (Vector3 a, Vector3 b, Vector3 c) {
+			var lhs = b - a;
+			var rhs = c - a;
+			// Take the cross product of lhs and rhs
+			// The magnitude of the cross product will be zero if the points a,b,c are colinear
+			float x = lhs.y * rhs.z - lhs.z * rhs.y;
+			float y = lhs.z * rhs.x - lhs.x * rhs.z;
+			float z = lhs.x * rhs.y - lhs.y * rhs.x;
+			float v = x*x + y*y + z*z;
+
+			// Epsilon not chosen with much thought, just that float.Epsilon was a bit too small.
+			return v <= 0.0000001f;
 		}
 
 		/** Returns if the points are colinear (lie on a straight line) */
@@ -1006,14 +1053,14 @@ namespace Pathfinding {
 			return ((bytes/(1024D*1024D*1024D))*sign).ToString("0.0") +" GiB";
 		}
 
-		/** Returns bit number \a b from int \a a. The bit number is zero based. Relevant \a b values are from 0 to 31\n
+		/** Returns bit number \a b from int \a a. The bit number is zero based. Relevant \a b values are from 0 to 31.
 		 * Equals to (a >> b) & 1
 		 */
 		static int Bit (int a, int b) {
 			return (a >> b) & 1;
 		}
 
-		/** Returns a nice color from int \a i with alpha \a a. Got code from the open-source Recast project, works really well\n
+		/** Returns a nice color from int \a i with alpha \a a. Got code from the open-source Recast project, works really well.
 		 * Seems like there are only 64 possible colors from studying the code
 		 */
 		public static Color IntToColor (int i, float a) {
@@ -1346,6 +1393,21 @@ namespace Pathfinding {
 			return inside;
 		}
 
+		/** Sample Y coordinate of the triangle (p1, p2, p3) at the point p in XZ space.
+		 * The y coordinate of \a p is ignored.
+		 *
+		 * \returns The interpolated y coordinate unless the triangle is degenerate in which case a DivisionByZeroException will be thrown
+		 *
+		 * \see https://en.wikipedia.org/wiki/Barycentric_coordinate_system
+		 */
+		public static int SampleYCoordinateInTriangle (Int3 p1, Int3 p2, Int3 p3, Int3 p) {
+			double det = ((double)(p2.z - p3.z)) * (p1.x - p3.x) + ((double)(p3.x - p2.x)) * (p1.z - p3.z);
+
+			double lambda1 = ((((double)(p2.z - p3.z)) * (p.x - p3.x) + ((double)(p3.x - p2.x)) * (p.z - p3.z)) / det);
+			double lambda2 = ((((double)(p3.z - p1.z)) * (p.x - p3.x) + ((double)(p1.x - p3.x)) * (p.z - p3.z)) / det);
+
+			return (int)Math.Round(lambda1 * p1.y + lambda2 * p2.y + (1 - lambda1 - lambda2) * p3.y);
+		}
 
 		/** Returns if \a p lies on the left side of the line \a a - \a b. Uses XZ space.
 		 * Does not return true if the points are colinear.
@@ -1686,7 +1748,7 @@ namespace Pathfinding {
 			return ClosestPointOnTriangle(triangle[0], triangle[1], triangle[2], point);
 		}
 
-		/** Closest point on the triangle abc to the point p.
+		/** Closest point on the triangle \a abc to the point \a p.
 		 * \see 'Real Time Collision Detection' by Christer Ericson, chapter 5.1, page 141
 		 */
 		public static Vector2 ClosestPointOnTriangle (Vector2 a, Vector2 b, Vector2 c, Vector2 p) {
@@ -1755,7 +1817,76 @@ namespace Pathfinding {
 			return p;
 		}
 
-		/** Closest point on the triangle abc to the point p.
+		/** Closest point on the triangle \a abc to the point \a p when seen from above.
+		 * \see 'Real Time Collision Detection' by Christer Ericson, chapter 5.1, page 141
+		 */
+		public static Vector3 ClosestPointOnTriangleXZ (Vector3 a, Vector3 b, Vector3 c, Vector3 p) {
+			// Check if p is in vertex region outside A
+			var ab = new Vector2(b.x - a.x, b.z - a.z);
+			var ac = new Vector2(c.x - a.x, c.z - a.z);
+			var ap = new Vector2(p.x - a.x, p.z - a.z);
+
+			var d1 = Vector2.Dot(ab, ap);
+			var d2 = Vector2.Dot(ac, ap);
+
+			// Barycentric coordinates (1,0,0)
+			if (d1 <= 0 && d2 <= 0) {
+				return a;
+			}
+
+			// Check if p is in vertex region outside B
+			var bp = new Vector2(p.x - b.x, p.z - b.z);
+			var d3 = Vector2.Dot(ab, bp);
+			var d4 = Vector2.Dot(ac, bp);
+
+			// Barycentric coordinates (0,1,0)
+			if (d3 >= 0 && d4 <= d3) {
+				return b;
+			}
+
+			// Check if p is in edge region outside AB, if so return a projection of p onto AB
+			var vc = d1 * d4 - d3 * d2;
+			if (d1 >= 0 && d3 <= 0 && vc <= 0) {
+				// Barycentric coordinates (1-v, v, 0)
+				var v = d1 / (d1 - d3);
+				return (1-v)*a + v*b;
+			}
+
+			// Check if p is in vertex region outside C
+			var cp = new Vector2(p.x - c.x, p.z - c.z);
+			var d5 = Vector2.Dot(ab, cp);
+			var d6 = Vector2.Dot(ac, cp);
+
+			// Barycentric coordinates (0,0,1)
+			if (d6 >= 0 && d5 <= d6) {
+				return c;
+			}
+
+			// Check if p is in edge region of AC, if so return a projection of p onto AC
+			var vb = d5 * d2 - d1 * d6;
+			if (d2 >= 0 && d6 <= 0 && vb <= 0) {
+				// Barycentric coordinates (1-v, 0, v)
+				var v = d2 / (d2 - d6);
+				return (1-v)*a + v*c;
+			}
+
+			// Check if p is in edge region of BC, if so return projection of p onto BC
+			var va = d3 * d6 - d5 * d4;
+			if ((d4 - d3) >= 0 && (d5 - d6) >= 0 && va <= 0) {
+				var v = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+				return b + (c - b) * v;
+			} else {
+				// P is inside the face region. Compute the point using its barycentric coordinates (u, v, w)
+				// Note that the x and z coordinates will be exactly the same as P's x and z coordinates
+				var denom = 1f / (va + vb + vc);
+				var v = vb * denom;
+				var w = vc * denom;
+
+				return new Vector3(p.x, (1 - v - w)*a.y + v*b.y + w*c.y, p.z);
+			}
+		}
+
+		/** Closest point on the triangle \a abc to the point \a p.
 		 * \see 'Real Time Collision Detection' by Christer Ericson, chapter 5.1, page 141
 		 */
 		public static Vector3 ClosestPointOnTriangle (Vector3 a, Vector3 b, Vector3 c, Vector3 p) {
@@ -1885,6 +2016,69 @@ namespace Pathfinding {
 				outVertices[i] = vertices[i];
 
 			ArrayPool<int>.Release(ref compressedPointers);
+		}
+
+		/** Given a set of edges between vertices, follows those edges and returns them as chains and cycles.
+		 * \param outline outline[a] = b if there is an edge from \a a to \a b.
+		 * \param hasInEdge \a hasInEdge should contain \a b if outline[a] = b for any key \a a.
+		 * \param results Will be called once for each contour with the contour as a parameter as well as a boolean indicating if the contour is a cycle or a chain (see image).
+		 *
+		 * \shadowimage{grid_contour_compressed.png}
+		 */
+		public static void TraceContours (Dictionary<int, int> outline, HashSet<int> hasInEdge, System.Action<List<int>, bool> results) {
+			// Iterate through chains of the navmesh outline.
+			// I.e segments of the outline that are not loops
+			// we need to start these at the beginning of the chain.
+			// Then iterate over all the loops of the outline.
+			// Since they are loops, we can start at any point.
+			var obstacleVertices = ListPool<int>.Claim();
+			var outlineKeys = ListPool<int>.Claim();
+
+			outlineKeys.AddRange(outline.Keys);
+			for (int k = 0; k <= 1; k++) {
+				bool cycles = k == 1;
+				for (int i = 0; i < outlineKeys.Count; i++) {
+					var startIndex = outlineKeys[i];
+
+					// Chains (not cycles) need to start at the start of the chain
+					// Cycles can start at any point
+					if (!cycles && hasInEdge.Contains(startIndex)) {
+						continue;
+					}
+
+					var index = startIndex;
+					obstacleVertices.Clear();
+					obstacleVertices.Add(index);
+
+					while (outline.ContainsKey(index)) {
+						var next = outline[index];
+						outline.Remove(index);
+
+						obstacleVertices.Add(next);
+
+						// We traversed a full cycle
+						if (next == startIndex) break;
+
+						index = next;
+					}
+
+					if (obstacleVertices.Count > 1) {
+						results(obstacleVertices, cycles);
+					}
+				}
+			}
+
+			ListPool<int>.Release(ref outlineKeys);
+			ListPool<int>.Release(ref obstacleVertices);
+		}
+
+		/** Divides each segment in the list into \a subSegments segments and fills the result list with the new points */
+		public static void Subdivide (List<Vector3> points, List<Vector3> result, int subSegments) {
+			for (int i = 0; i < points.Count-1; i++)
+				for (int j = 0; j < subSegments; j++)
+					result.Add(Vector3.Lerp(points[i], points[i+1], j / (float)subSegments));
+
+			result.Add(points[points.Count-1]);
 		}
 	}
 }

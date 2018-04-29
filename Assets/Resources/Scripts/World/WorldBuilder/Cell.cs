@@ -83,7 +83,7 @@ public class Cell {
 
     public GameObject WorldMapSprite { get; set; }
 
-    public string PresentFaction;
+    public List<Faction> PresentFaction;
 
     public BiomeType biomeType {
         get { return BiomeType; }

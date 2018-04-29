@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TinkerWorX.AccidentalNoiseLibrary;
 using UnityEngine.SceneManagement;
@@ -121,12 +122,32 @@ public class Generator : MonoBehaviour
         //DrawMap();
 
         WorldData.Instance.Map = _cells;
+
+        //TESTING if faction population works ///////////////////////////////////////////////////////
         GameManager.Instance.CurrentCell = _cells[25, 17];
+        var cellHasFaction = false; 
+        if (GameManager.Instance.CurrentCell.PresentFaction != null)
+        {
+            cellHasFaction = GameManager.Instance.CurrentCell.PresentFaction.Any();
+        }
+
+        while (!cellHasFaction)
+        {
+            GameManager.Instance.CurrentCell = _cells[Random.Range(0, _width), Random.Range(0, _height)];
+            if (GameManager.Instance.CurrentCell.PresentFaction != null)
+            {
+                cellHasFaction = GameManager.Instance.CurrentCell.PresentFaction.Any();
+            }
+        }
+        //END TESTING/////////////////////////////////////////////////////////////////////////////////////
+
+
+        //GameManager.Instance.CurrentCell = _cells[25, 17];
         GameManager.Instance.CurrentCell.HasNPCs = true;
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
-        SceneManager.LoadScene("WorldMap");
-        //SceneManager.LoadScene("Area");
+        //SceneManager.LoadScene("WorldMap");
+        SceneManager.LoadScene("Area");
     }
     #region Public Methods
     public BiomeType GetBiomeType(Cell cell)
@@ -1100,8 +1121,19 @@ public class Generator : MonoBehaviour
                     var roll = Random.Range(0.000f, 1.000f);
                     if (roll <= chanceToPlaceCard)
                     {
-                        currentCell.PresentFaction = card;
-                        currentCell.WorldMapSprite = factionTiles[card];
+                        if (currentCell.PresentFaction == null)
+                        {
+                            currentCell.PresentFaction = new List<Faction>();
+
+                            //Temporary for testing faction population
+                            currentCell.Areas[1,1].PresentFactions = new List<Faction>();
+                        }
+                        currentCell.PresentFaction.Add(card);
+
+                        //Temporary for testing faction population
+                        currentCell.Areas[1,1].PresentFactions.Add(card);
+
+                        currentCell.WorldMapSprite = factionTiles[card.Type];
                         placed = true;
                         Debug.Log(card + " placed at " + currentX + ", " + currentY);
                     }
