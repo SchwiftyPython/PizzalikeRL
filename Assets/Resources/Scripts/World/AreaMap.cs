@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,12 +43,16 @@ public class AreaMap : MonoBehaviour {
         {
             _player = new Entity(EntityTemplateLoader.GetEntityTemplate("human"), null, true);
             _playerSprite = Instantiate(_player.GetSpritePrefab(), new Vector2(0, 0), Quaternion.identity);
+            _playerSprite.transform.SetParent(GameManager.Instance.transform);
             _player.SetSprite(_playerSprite);
             GameManager.Instance.Player = _player;
         }
-        else
+        else if(_player == null || _player != GameManager.Instance.Player)
         {
             _player = GameManager.Instance.Player;
+            _playerSprite = Instantiate(_player.GetSpritePrefab(), _player.CurrentPosition, Quaternion.identity);
+            _playerSprite.transform.SetParent(GameManager.Instance.transform);
+            _player.SetSprite(_playerSprite);
         }
 
         _areaMapHolderTransform = AreaMapHolder.transform;
@@ -58,7 +63,7 @@ public class AreaMap : MonoBehaviour {
         _currentArea.BuildArea();
         DrawArea();
         PlacePlayer();
-        if (_currentArea.EntitiesPresent())
+        if (_currentArea.PresentEntities.Count > 1)
         {
             PlaceNPCs();
         }
@@ -93,47 +98,36 @@ public class AreaMap : MonoBehaviour {
         _currentArea.PresentEntities.Remove(entity);
     }
 
+    public void InstantiatePlayerSprite()
+    {
+        _playerSprite = Instantiate(_player.GetSpritePrefab(), _player.CurrentPosition, Quaternion.identity);
+        _playerSprite.transform.SetParent(GameManager.Instance.transform);
+        _player.SetSprite(_playerSprite);
+    }
+
     private void Deconstruct() {
-        RemoveAllNPCS();
+        RemoveAllNpcs();
         Destroy(AreaMapHolder);
     }
 
-    private void PlacePlayer() {
-        if (GameManager.Instance.PlayerInStartingArea) {
-            GameManager.Instance.PlayerInStartingArea = false;
-            if (_currentArea != null) {
-                //todo check if tile is blocked like when placing enemies
-                _playerSprite.transform.position = new Vector3(_currentArea.Width / 2, _currentArea.Height / 2);
-                _player.CurrentPosition = new Vector3(_currentArea.Width / 2, _currentArea.Height / 2);
-                //Debug.Log(("current area: " + _currentArea.AreaTiles[_currentArea.Width / 2, _currentArea.Height / 2]));
-                _currentArea.AreaTiles[_currentArea.Width / 2, _currentArea.Height / 2].SetPresentEntity(_player);
-            }
-        }
-        else {
-            _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
-        }
-        if (_currentArea != null)
+    private void PlacePlayer()
+    {
+        if (GameManager.Instance.PlayerInStartingArea)
         {
-            _currentArea.PresentEntities.Add(_player);
-        }
-    }
-
-    private void PlaceNPCs() {
-        NPCSpriteHolder = new GameObject("NPCSpriteHolder");
-        foreach (var e in _currentArea.PresentEntities) {
-            if (!e.IsPlayer()) {
+            GameManager.Instance.PlayerInStartingArea = false;
+            if (_currentArea != null)
+            {
                 var placed = false;
-                var y = Random.Range(0, _currentArea.Height);
-                var x = Random.Range(0, _currentArea.Width);
-                while (!placed) {
-                    if (!_currentArea.AreaTiles[x, y].GetBlocksMovement()) {
-                        var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector3(x, y, 0f), Quaternion.identity);
-                        npcSprite.transform.SetParent(NPCSpriteHolder.transform);
-                        e.SetSprite(npcSprite);
-                        _currentArea.AreaTiles[x, y].SetPresentEntity(e);
-                        _currentArea.AreaTiles[x, y].SetBlocksMovement(true);
-                        e.CurrentPosition = new Vector3(x, y, 0f);
-                        _currentArea.TurnOrder.Enqueue(e);
+                var y = _currentArea.Height / 2;
+                var x = _currentArea.Width / 2;
+                while (!placed)
+                {
+                    if (!_currentArea.AreaTiles[x, y].GetBlocksMovement())
+                    {
+                        _playerSprite.transform.position = new Vector3(x, y);
+                        _player.CurrentPosition = new Vector3(x, y);
+                        //Debug.Log(("current area: " + _currentArea.AreaTiles[x, y]));
+                        _currentArea.AreaTiles[x, y].SetPresentEntity(_player);
                         placed = true;
                     }
                     y = Random.Range(0, _currentArea.Height);
@@ -141,10 +135,51 @@ public class AreaMap : MonoBehaviour {
                 }
             }
         }
+        else
+        {
+            _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
+        }
+        _currentArea?.PresentEntities.Add(_player);
     }
 
-    private void RemoveAllNPCS() {
-        foreach (var e in _currentArea.PresentEntities) {
+    private void PlaceNPCs()
+    {
+        NPCSpriteHolder = new GameObject("NPCSpriteHolder");
+        foreach (var e in _currentArea.PresentEntities)
+        {
+            if (e.IsPlayer())
+            {
+                continue;
+            }
+
+            var placed = false;
+            var y = Random.Range(0, _currentArea.Height);
+            var x = Random.Range(0, _currentArea.Width);
+            while (!placed)
+            {
+                if (!_currentArea.AreaTiles[x, y].GetBlocksMovement())
+                {
+                    var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector3(x, y, 0f), Quaternion.identity);
+
+                    npcSprite.AddComponent<EnemyController>();
+                    npcSprite.AddComponent<Seeker>();
+
+                    npcSprite.transform.SetParent(NPCSpriteHolder.transform);
+                    e.SetSprite(npcSprite);
+                    _currentArea.AreaTiles[x, y].SetPresentEntity(e);
+                    _currentArea.AreaTiles[x, y].SetBlocksMovement(true);
+                    e.CurrentPosition = new Vector3(x, y, 0f);
+                    _currentArea.TurnOrder.Enqueue(e);
+                    placed = true;
+                }
+                y = Random.Range(0, _currentArea.Height);
+                x = Random.Range(0, _currentArea.Width);
+            }
+        }
+    }
+
+    private void RemoveAllNpcs() {
+        foreach (var e in _currentArea.PresentEntities.ToArray()) {
             RemoveEntity(e);
         }
         Destroy(NPCSpriteHolder);

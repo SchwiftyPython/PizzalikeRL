@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
 		switch(CurrentState) {
 		case GameState.Start:
 		        if (WorldMapGenComplete){
-                    //CurrentState = GameState.EnterArea;
+                    CurrentState = GameState.EnterArea;
                 }
                 break;
             case GameState.HistoryGeneration:
@@ -77,12 +77,11 @@ public class GameManager : MonoBehaviour {
 		        CurrentState = GameState.EndTurn;
                 }
             break;
-		case GameState.EndTurn:
-		    CheckMessages();
-		    //Todo: This is causing a problem. Create a branch for it.
-                //CheckForDeadEntities();
-                CurrentState = WhoseTurn();
-                break;
+		    case GameState.EndTurn:
+		        CheckMessages();
+		        CheckForDeadEntities();
+		        CurrentState = WhoseTurn();
+		        break;
 		}
 //        if (CurrentState == GameState.Playerturn || 
 //            CurrentState == GameState.Enemyturn) {
@@ -128,14 +127,13 @@ public class GameManager : MonoBehaviour {
     }
 
     private void CheckForDeadEntities() {
-        var temp = new List<Entity>();
-        for (var i = 0; i < CurrentArea.PresentEntities.Count; i++)
+        //var temp = new List<Entity>(CurrentArea.PresentEntities);
+        foreach (var entity in CurrentArea.PresentEntities.ToArray())
         {
-            if (!CurrentArea.PresentEntities[i].IsDead())
+            if (entity.IsDead())
             {
-                temp.Add(CurrentArea.PresentEntities[i]);
+                AreaMap.Instance.RemoveEntity(entity);
             }
-            AreaMap.Instance.RemoveEntity(CurrentArea.PresentEntities[i]);
         }
 
 //        foreach (var e in CurrentArea.PresentEntities) {
@@ -144,6 +142,6 @@ public class GameManager : MonoBehaviour {
 //            }
 //            AreaMap.Instance.RemoveEntity(e);
 //        }
-        CurrentArea.PresentEntities = temp;
+        //CurrentArea.PresentEntities = temp;
     }
 }

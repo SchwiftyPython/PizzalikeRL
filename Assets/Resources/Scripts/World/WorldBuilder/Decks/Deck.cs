@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Deck
+public abstract class Deck<T>
 {
-    public List<string> Cards { get; set; }
+    public abstract List<T> Cards { get; set; }
 
     public abstract void Build();
 
-    public abstract string Draw();
+    public abstract T Draw();
 
     public void Shuffle()
     {

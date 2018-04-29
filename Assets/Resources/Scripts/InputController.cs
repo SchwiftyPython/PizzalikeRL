@@ -28,9 +28,19 @@ public class InputController : MonoBehaviour {
 	}
 
     private void Update() {
-        if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn) {
-            _player = GameManager.Instance.Player;
-            //Debug.Log ("player reference in update: " + _player);
+        if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn)
+        { 
+            if (_player == null)
+            {
+                _player = GameManager.Instance.Player;
+                //Debug.Log ("player reference in update: " + _player);
+            }
+
+            if (_player.GetSprite() == null)
+            {
+                _player.SetSprite(GameManager.Instance.PlayerSprite);
+                AreaMap.Instance.InstantiatePlayerSprite();
+            }
 
             if (Input.GetKeyDown(KeyCode.Keypad8)) {
                 //Attempt move up                

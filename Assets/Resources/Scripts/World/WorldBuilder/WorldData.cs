@@ -68,7 +68,7 @@ public class WorldData : MonoBehaviour {
     public GameObject[] AreaGrassLandTiles = new GameObject[11];
     public GameObject[] AreaDesertTiles = new GameObject[2];
     public GameObject[] AreaWasteLandTiles = new GameObject[4];
-    public GameObject[] AreaSwampTiles = new GameObject[9];
+    public GameObject[] AreaSwampTiles = new GameObject[5];
     public GameObject[] AreaIceTiles = new GameObject[1];
 
     //Todo: This is replaced by deck system
