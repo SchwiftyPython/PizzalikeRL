@@ -54,5 +54,5 @@ public class EntityTemplate {
 
     [XmlArray("PossibleBiomes")]
     [XmlArrayItem("Biome")]
-    public List<string> Biomes;
+    public List<BiomeType> Biomes;
 }

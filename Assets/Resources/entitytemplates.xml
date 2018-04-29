@@ -29,6 +29,16 @@
 				<Part>human left foot</Part>
 				<Part>human right foot</Part>
 			</BodyParts>
+			<PossibleBiomes>
+			    <Biome>BiomeType.Ice</Biome>
+			    <Biome>BiomeType.WasteLand</Biome>
+			    <Biome>BiomeType.Swamp</Biome>
+			    <Biome>BiomeType.Grassland</Biome>
+			    <Biome>BiomeType.Woodland</Biome>
+			    <Biome>BiomeType.SeasonalForest</Biome>
+			    <Biome>BiomeType.TropicalRainforest</Biome>
+			    <Biome>BiomeType.Desert</Biome>			    
+			</PossibleBiomes>
 		</EntityTemplate>
 		
 		<EntityTemplate type = "pepperoni worm">      
@@ -50,6 +60,15 @@
 				<Part>worm body</Part>				
 				<Part>worm head</Part>
 			</BodyParts>
+			<PossibleBiomes>			    
+			    <Biome>BiomeType.WasteLand</Biome>
+			    <Biome>BiomeType.Swamp</Biome>
+			    <Biome>BiomeType.Grassland</Biome>
+			    <Biome>BiomeType.Woodland</Biome>
+			    <Biome>BiomeType.SeasonalForest</Biome>
+			    <Biome>BiomeType.TropicalRainforest</Biome>
+			    <Biome>BiomeType.Desert</Biome>	
+			</PossibleBiomes>
         </EntityTemplate>
 
 	</EntityTemplates>  
