@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class Pizza
 {
@@ -28,6 +30,7 @@ public class Pizza
 
     private enum Toppings
     {
+        Cheese,
         Pepperoni,
         Sausage,
         Meatball,
@@ -50,10 +53,30 @@ public class Pizza
     private Size _size;
     private Crust _crust;
     private Sauce _sauce;
-    private List<Toppings> _toppings;
+    private readonly List<Toppings> _toppings;
 
-    public Pizza()
+    public Pizza(int numToppings = 1)
     {
-        //TODO Generate pizza
+        _size = GetRandomPizzaComponent<Size>();
+        _crust = GetRandomPizzaComponent<Crust>();
+        _sauce = GetRandomPizzaComponent<Sauce>();
+        _toppings = new List<Toppings>();
+
+        for (var i = 0; i < numToppings; i++)
+        {
+            var topping = GetRandomPizzaComponent<Toppings>();
+
+            if (!_toppings.Contains(topping))
+            {
+                _toppings.Add(topping);
+            }
+        }
+    }
+
+    private static T GetRandomPizzaComponent<T>()
+    {
+        var values = Enum.GetValues(typeof(T));
+
+        return (T)values.GetValue(Random.Range(0, values.Length));
     }
 }

@@ -139,6 +139,12 @@ public class Generator : MonoBehaviour
                 cellHasFaction = GameManager.Instance.CurrentCell.PresentFaction.Any();
             }
         }
+
+        var testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Easy);
+
+        testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Medium);
+
+        testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Hard);
         //END TESTING/////////////////////////////////////////////////////////////////////////////////////
 
 

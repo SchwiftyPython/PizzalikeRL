@@ -22,12 +22,15 @@ public class Faction
 
     public Entity Leader;
 
+    public List<Entity> EntitiesWithFluff;
+
     public EntityTemplate EntityType;
 
     public Faction(FactionTemplate factionTemplate)
     {
         Relationships = new Dictionary<string, int>();
         Religions = new Dictionary<string, int>();
+        EntitiesWithFluff = new List<Entity>();
 
         Type = factionTemplate.Type;
 
@@ -75,5 +78,7 @@ public class Faction
     public void CreateLeader()
     {
         Leader = new Entity(EntityType, Name) {Fluff = new EntityFluff(EntityType.Type, Type)};
+
+        EntitiesWithFluff.Add(Leader);
     }
 }
