@@ -30,14 +30,14 @@
 				<Part>human right foot</Part>
 			</BodyParts>
 			<PossibleBiomes>
-			    <Biome>BiomeType.Ice</Biome>
-			    <Biome>BiomeType.WasteLand</Biome>
-			    <Biome>BiomeType.Swamp</Biome>
-			    <Biome>BiomeType.Grassland</Biome>
-			    <Biome>BiomeType.Woodland</Biome>
-			    <Biome>BiomeType.SeasonalForest</Biome>
-			    <Biome>BiomeType.TropicalRainforest</Biome>
-			    <Biome>BiomeType.Desert</Biome>			    
+			    <Biome>Ice</Biome>
+			    <Biome>WasteLand</Biome>
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+			    <Biome>SeasonalForest</Biome>
+			    <Biome>TropicalRainforest</Biome>
+			    <Biome>Desert</Biome>			    
 			</PossibleBiomes>
 		</EntityTemplate>
 		
@@ -61,13 +61,13 @@
 				<Part>worm head</Part>
 			</BodyParts>
 			<PossibleBiomes>			    
-			    <Biome>BiomeType.WasteLand</Biome>
-			    <Biome>BiomeType.Swamp</Biome>
-			    <Biome>BiomeType.Grassland</Biome>
-			    <Biome>BiomeType.Woodland</Biome>
-			    <Biome>BiomeType.SeasonalForest</Biome>
-			    <Biome>BiomeType.TropicalRainforest</Biome>
-			    <Biome>BiomeType.Desert</Biome>	
+			    <Biome>WasteLand</Biome>
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+			    <Biome>SeasonalForest</Biome>
+			    <Biome>TropicalRainforest</Biome>
+			    <Biome>Desert</Biome>	
 			</PossibleBiomes>
         </EntityTemplate>
 

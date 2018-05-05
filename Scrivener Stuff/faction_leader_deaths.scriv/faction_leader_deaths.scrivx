@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ScrivenerProject Template="No" Version="1.5" Creator="SCRWIN-1.9.7.0" Device="DESKTOP-B8TS73F" Modified="2018-04-06 18:35:52 -0400" ModID="0E0A940E-FE19-41EE-A4BD-1593DD0557F8">
+<ScrivenerProject Template="No" Version="1.5" Creator="SCRWIN-1.9.7.0" Device="EarlofHappyPant" Modified="2018-05-01 07:02:29 -0400" ModID="0E0A940E-FE19-41EE-A4BD-1593DD0557F8">
     <Binder>
         <BinderItem ID="28" UUID="BE84652C-D0A7-407D-A13F-704526D10548" Created="2010-10-23 10:15:26 -0400" Modified="2018-04-04 19:42:14 -0400" Type="Text">
             <Title>Short Story Format</Title>
@@ -63,6 +63,7 @@
                                 <IncludeInCompile>Yes</IncludeInCompile>
                             </MetaData>
                             <TextSettings>
+                                <TextSelection>145,0</TextSelection>
                                 <Target Type="Words">0</Target>
                             </TextSettings>
                         </BinderItem>
@@ -209,7 +210,7 @@
     <ProjectTargets>
         <DraftTarget Type="Words" CountIncludedOnly="Yes" CurrentCompileGroupOnly="Yes" Deadline="2011-04-21 11:42:42 +0100" IgnoreDeadline="Yes">0</DraftTarget>
         <SessionTarget Type="Words" CountDraftOnly="Yes" AllowNegatives="No" ResetType="Midnight" DeterminedFromDeadline="No" CanWriteOnDeadlineDate="No" WritingDays="">0</SessionTarget>
-        <PreviousSession Words="0" Characters="0" Date="2018-04-04 19:33:55 -0400"/>
+        <PreviousSession Words="0" Characters="0" Date="2018-04-16 19:36:46 -0400"/>
     </ProjectTargets>
     <Collections>
         <Collection Type="Binder" ID="B2518D9E-7284-4625-8391-B55AC213D66C" Color="0.901961 0.917647 0.933333">

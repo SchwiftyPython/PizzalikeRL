@@ -488,6 +488,8 @@
     <Compile Include="Assets\Resources\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\Messenger.cs" />
     <Compile Include="Assets\Resources\Scripts\MoveEntity.cs" />
+    <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Pizza.cs" />
+    <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\PizzaOrder.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Resources\Scripts\World\AreaMap.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
