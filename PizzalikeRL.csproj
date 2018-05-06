@@ -491,6 +491,7 @@
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Pizza.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\PizzaOrder.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Resources\Scripts\PopUpWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\World\AreaMap.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartContainer.cs" />

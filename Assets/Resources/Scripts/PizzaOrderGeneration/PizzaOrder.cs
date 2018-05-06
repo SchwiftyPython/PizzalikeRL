@@ -29,7 +29,7 @@ public class PizzaOrder
         switch (difficulty)
         {
             case OrderDifficulty.Easy:
-                return new List<Pizza>{ new Pizza()};
+                return new List<Pizza>{ new Pizza() };
 
             case OrderDifficulty.Medium:
                 maxToppings = 2;
