@@ -6,21 +6,21 @@ public class Pizza
 {
     #region Enums
 
-    private enum Size
+    public enum Size
     {
         Personal,
         Medium,
         Large
     }
 
-    private enum Crust
+    public enum Crust
     {
-        HandTossed,
+        Pan,
         Stuffed,
         Thin
     }
 
-    private enum Sauce
+    public enum Sauce
     {
         Marinara,
         White,
@@ -28,7 +28,7 @@ public class Pizza
         HotSauce
     }
 
-    private enum Toppings
+    public enum Toppings
     {
         Cheese,
         Pepperoni,
@@ -43,32 +43,31 @@ public class Pizza
         Spinach,
         Onion,
         Olives,
-        BellPepper,
         Pineapple,
         Jalapeno
     }
 
     #endregion Enums
 
-    private Size _size;
-    private Crust _crust;
-    private Sauce _sauce;
-    private readonly List<Toppings> _toppings;
+    public Size PizzaSize { get; }
+    public Crust PizzaCrust { get; }
+    public Sauce PizzaSauce { get; }
+    public readonly List<Toppings> PizzaToppings;
 
     public Pizza(int numToppings = 1)
     {
-        _size = GetRandomPizzaComponent<Size>();
-        _crust = GetRandomPizzaComponent<Crust>();
-        _sauce = GetRandomPizzaComponent<Sauce>();
-        _toppings = new List<Toppings>();
+        PizzaSize = GetRandomPizzaComponent<Size>();
+        PizzaCrust = GetRandomPizzaComponent<Crust>();
+        PizzaSauce = GetRandomPizzaComponent<Sauce>();
+        PizzaToppings = new List<Toppings>();
 
         for (var i = 0; i < numToppings; i++)
         {
             var topping = GetRandomPizzaComponent<Toppings>();
 
-            if (!_toppings.Contains(topping))
+            if (!PizzaToppings.Contains(topping))
             {
-                _toppings.Add(topping);
+                PizzaToppings.Add(topping);
             }
         }
     }

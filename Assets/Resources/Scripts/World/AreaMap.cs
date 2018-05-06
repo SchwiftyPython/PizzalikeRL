@@ -2,9 +2,9 @@
 using System.Linq;
 using Pathfinding;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class AreaMap : MonoBehaviour {
+public class AreaMap : MonoBehaviour
+{
     private Transform _areaMapHolderTransform;
     private Area _currentArea;
     private GameObject _playerSprite;
@@ -12,9 +12,11 @@ public class AreaMap : MonoBehaviour {
 
     public GameObject AStar;
     public GameObject AreaMapHolder;
-    public GameObject NPCSpriteHolder;
+    public GameObject NpcSpriteHolder;
     public float GraphOffset = -0.5f;
     public bool AreaReady;
+
+    public PopUpWindow PizzaOrderPopUp;
 
     public static AreaMap Instance;
 
@@ -29,8 +31,6 @@ public class AreaMap : MonoBehaviour {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-
-        //_playerSprite = Instantiate(GameManager.Instance.PlayerSprite, new Vector2(0, 0), Quaternion.identity);
     }
 
     private void Init()
@@ -67,6 +67,28 @@ public class AreaMap : MonoBehaviour {
         {
             PlaceNPCs();
         }
+
+        //Pizza Quest PopUp Test/////////////////////////////////////////////////////
+
+        /*var testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Medium);
+
+        var pizzaOrderDetails = string.Empty;
+
+        foreach (var pizza in testOrder.Pizzas)
+        {
+            pizzaOrderDetails += $" Size: {pizza.PizzaSize}" +
+                                 $" \nCrust: {pizza.PizzaCrust}" +
+                                 $" \nSauce: {pizza.PizzaSauce}" +
+                                 " \nToppings: ";
+
+            pizzaOrderDetails = pizza.PizzaToppings.Aggregate(pizzaOrderDetails, (current, topping) => current + $" {topping}\n ");
+        }
+
+        PizzaOrderPopUp.Show(pizzaOrderDetails);*/
+
+        //END Pizza Quest PopUp Test/////////////////////////////////////////////////////
+
+
         CreateAStarGraph();
         AstarPath.active.Scan();
         AreaReady = true;
@@ -74,7 +96,7 @@ public class AreaMap : MonoBehaviour {
    
     public void EnterArea()
     {
-        if (AreaMapHolder != null || NPCSpriteHolder != null) {
+        if (AreaMapHolder != null || NpcSpriteHolder != null) {
             Deconstruct();
         }
         Init();
@@ -144,7 +166,7 @@ public class AreaMap : MonoBehaviour {
 
     private void PlaceNPCs()
     {
-        NPCSpriteHolder = new GameObject("NPCSpriteHolder");
+        NpcSpriteHolder = new GameObject("NPCSpriteHolder");
         foreach (var e in _currentArea.PresentEntities)
         {
             if (e.IsPlayer())
@@ -164,7 +186,7 @@ public class AreaMap : MonoBehaviour {
                     npcSprite.AddComponent<EnemyController>();
                     npcSprite.AddComponent<Seeker>();
 
-                    npcSprite.transform.SetParent(NPCSpriteHolder.transform);
+                    npcSprite.transform.SetParent(NpcSpriteHolder.transform);
                     e.SetSprite(npcSprite);
                     _currentArea.AreaTiles[x, y].SetPresentEntity(e);
                     _currentArea.AreaTiles[x, y].SetBlocksMovement(true);
@@ -182,7 +204,7 @@ public class AreaMap : MonoBehaviour {
         foreach (var e in _currentArea.PresentEntities.ToArray()) {
             RemoveEntity(e);
         }
-        Destroy(NPCSpriteHolder);
+        Destroy(NpcSpriteHolder);
     }
 
     private void CreateAStarGraph() {
