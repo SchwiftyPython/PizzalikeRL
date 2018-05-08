@@ -65,7 +65,7 @@ public class Entity {
 
     public EntityFluff Fluff { get; set; }
 
-    private string _entityType;
+    public string EntityType;
     private string _factionType;
 
     private Vector3 _currentPosition;
@@ -83,7 +83,7 @@ public class Entity {
 
     public Entity (EntityTemplate template, string faction = null, bool isPlayer = false) {
         _isPlayer = isPlayer;
-        _entityType = template.Type;
+        EntityType = template.Type;
         _factionType = faction;
         _strength = GenStrength(template.MinStrength, template.MaxStrength);
         _agility = GenAgility(template.MinAgility, template.MaxAgility);
@@ -373,12 +373,12 @@ public class Entity {
             {
                 return;
             }
-            var message = _entityType + " killed " + target._entityType + "!";
+            var message = EntityType + " killed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
             //AreaMap.Instance.RemoveEntity(target);
         }
         else {
-            var message = _entityType + " missed " + target._entityType + "!";
+            var message = EntityType + " missed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
         }
     }
@@ -463,7 +463,7 @@ public class Entity {
 
     public void CreateFluff()
     {
-        Fluff = new EntityFluff(_entityType, _factionType);
+        Fluff = new EntityFluff(EntityType, _factionType);
     }
 
     private static bool MeleeRollHit(Entity target) {
@@ -479,7 +479,7 @@ public class Entity {
     private void ApplyMeleeDamage(Entity target) {
         const int unarmedDamage = 4;
         target._currentHP -= unarmedDamage;
-        var message = _entityType + " hits " + target._entityType + " for " + unarmedDamage + " hit points.";
+        var message = EntityType + " hits " + target.EntityType + " for " + unarmedDamage + " hit points.";
         Debug.Log("Target remaining hp: " + target._currentHP);
         GameManager.Instance.Messages.Add(message);
     }

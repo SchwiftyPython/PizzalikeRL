@@ -17,6 +17,7 @@ public class AreaMap : MonoBehaviour
     public bool AreaReady;
 
     public PopUpWindow PizzaOrderPopUp;
+    public GameObject ObjectInfoWindow;
 
     public static AreaMap Instance;
 
@@ -185,6 +186,7 @@ public class AreaMap : MonoBehaviour
 
                     npcSprite.AddComponent<EnemyController>();
                     npcSprite.AddComponent<Seeker>();
+                    npcSprite.AddComponent<ObjectInfo>();
 
                     npcSprite.transform.SetParent(NpcSpriteHolder.transform);
                     e.SetSprite(npcSprite);
