@@ -126,9 +126,12 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),Vector2.positiveInfinity);
+                var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.positiveInfinity);
 
-                hit.collider.GetComponent<ObjectInfo>().OnLeftClick();
+                if (hit)
+                {
+                    hit.collider.GetComponent<EntityInfo>()?.OnLeftClick();
+                }
             }
         }
     }

@@ -65,8 +65,8 @@ public class Entity {
 
     public EntityFluff Fluff { get; set; }
 
-    public string EntityType;
-    private string _factionType;
+    private readonly string _entityType;
+    private readonly string _factionType;
 
     private Vector3 _currentPosition;
 
@@ -83,7 +83,7 @@ public class Entity {
 
     public Entity (EntityTemplate template, string faction = null, bool isPlayer = false) {
         _isPlayer = isPlayer;
-        EntityType = template.Type;
+        _entityType = template.Type;
         _factionType = faction;
         _strength = GenStrength(template.MinStrength, template.MaxStrength);
         _agility = GenAgility(template.MinAgility, template.MaxAgility);
@@ -102,20 +102,16 @@ public class Entity {
         //equip
     }
 
-    //Testing constructor
-	/*public Entity(bool isPlayer, GameObject sprite){
-		_isPlayer = isPlayer;
-		_sprite = sprite;
-		_isDead = false;
-		_inventory = new List<Item>();
-        //blocker = sprite.GetComponent<SingleNodeBlocker>();
+    public string GetTypeForEntityInfoWindow()
+    {
+        return $"{_factionType}  {_entityType}";
+    }
 
-        //roll stats based on xml file info
-        //hard coded stats for combat testing        
-        _maxHP = 45;
-        _speed = 35;
-        _defense = 35;
-	}*/
+    public string GetStatsForEntityInfoWindow()
+    {
+        return $"Current HP: {_currentHP}\nStrength: {_strength}\nAgility: {_agility}\nConstitution: {_constitution}\nSpeed: {_speed}\nDefense: {_defense}";
+    }
+    
 
     private int GenStrength(int min, int max) {
         return Random.Range(min, max + 1);
@@ -373,12 +369,12 @@ public class Entity {
             {
                 return;
             }
-            var message = EntityType + " killed " + target.EntityType + "!";
+            var message = _entityType + " killed " + target._entityType + "!";
             GameManager.Instance.Messages.Add(message);
             //AreaMap.Instance.RemoveEntity(target);
         }
         else {
-            var message = EntityType + " missed " + target.EntityType + "!";
+            var message = _entityType + " missed " + target._entityType + "!";
             GameManager.Instance.Messages.Add(message);
         }
     }
@@ -463,7 +459,7 @@ public class Entity {
 
     public void CreateFluff()
     {
-        Fluff = new EntityFluff(EntityType, _factionType);
+        Fluff = new EntityFluff(_entityType, _factionType);
     }
 
     private static bool MeleeRollHit(Entity target) {
@@ -479,7 +475,7 @@ public class Entity {
     private void ApplyMeleeDamage(Entity target) {
         const int unarmedDamage = 4;
         target._currentHP -= unarmedDamage;
-        var message = EntityType + " hits " + target.EntityType + " for " + unarmedDamage + " hit points.";
+        var message = _entityType + " hits " + target._entityType + " for " + unarmedDamage + " hit points.";
         Debug.Log("Target remaining hp: " + target._currentHP);
         GameManager.Instance.Messages.Add(message);
     }
