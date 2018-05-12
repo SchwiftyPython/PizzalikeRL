@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
     public bool WorldMapGenComplete;
     public bool PlayerInStartingArea;
     public bool BusyGeneratingHistory;

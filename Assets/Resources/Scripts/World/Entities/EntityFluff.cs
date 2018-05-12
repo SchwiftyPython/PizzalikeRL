@@ -36,6 +36,11 @@ public class EntityFluff
         return (HistoryGenerator.CurrentTurn - _turnBorn) / HistoryGenerator.TurnsPerTime["year"];
     }
 
+    public List<string> GetBackground()
+    {
+        return background;
+    }
+
     private string GenerateName()
     {
         return new NameStore(_entityType, _sex).GenerateName();

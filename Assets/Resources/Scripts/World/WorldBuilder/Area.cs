@@ -86,7 +86,7 @@ public class Area {
             for (var k = 0; k < numNpcsToPlace; k++)
             {
                 PresentEntities.Add(k != numNpcsToPlace - 1
-                    ? new Entity(faction.EntityType)
+                    ? new Entity(faction.EntityType, faction.Type)
                     : faction.Leader);
             }
         }

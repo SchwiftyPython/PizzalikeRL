@@ -65,8 +65,8 @@ public class Entity {
 
     public EntityFluff Fluff { get; set; }
 
-    private string _entityType;
-    private string _factionType;
+    private readonly string _entityType;
+    private readonly string _factionType;
 
     private Vector3 _currentPosition;
 
@@ -102,20 +102,16 @@ public class Entity {
         //equip
     }
 
-    //Testing constructor
-	/*public Entity(bool isPlayer, GameObject sprite){
-		_isPlayer = isPlayer;
-		_sprite = sprite;
-		_isDead = false;
-		_inventory = new List<Item>();
-        //blocker = sprite.GetComponent<SingleNodeBlocker>();
+    public string GetTypeForEntityInfoWindow()
+    {
+        return $"{_factionType}  {_entityType}";
+    }
 
-        //roll stats based on xml file info
-        //hard coded stats for combat testing        
-        _maxHP = 45;
-        _speed = 35;
-        _defense = 35;
-	}*/
+    public string GetStatsForEntityInfoWindow()
+    {
+        return $"Current HP: {_currentHP}\nStrength: {_strength}\nAgility: {_agility}\nConstitution: {_constitution}\nSpeed: {_speed}\nDefense: {_defense}";
+    }
+    
 
     private int GenStrength(int min, int max) {
         return Random.Range(min, max + 1);
