@@ -121,10 +121,9 @@ public class GameManager : MonoBehaviour
             return;
         }
         foreach (var message in Messages) {
-             _messenger.CreateMessage(message, Color.black);
+             _messenger.CreateMessage(message);
         }
         Messages.Clear();
-        
     }
 
     private void CheckForDeadEntities() {
