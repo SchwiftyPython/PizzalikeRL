@@ -3,28 +3,55 @@ using UnityEngine.UI;
 
 public class GameMenuWindow : MonoBehaviour
 {
-    private GameObject _currentWindow;
-    private Button _currentWindowTab;
+    public GameObject CurrentWindow;
+    public Button CurrentWindowTab;
 
     public GameObject MainWindow;
     public GameObject PizzaOrderJournal;
 
     public Button PizzaOrderJournalTab;
 
-    public void Show(GameObject window, Button tab)
+    public static GameMenuWindow Instance;
+
+    public void Awake()
     {
-        Hide(_currentWindow, _currentWindowTab);
-        _currentWindow = window;
-        _currentWindowTab = tab;
-
-        var tabColor = _currentWindowTab.GetComponent<Image>().color;
-        tabColor.a = 0.5f;
-        _currentWindowTab.GetComponent<Image>().color = tabColor;
-
-        _currentWindow.SetActive(true);
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        MainWindow.SetActive(false);
     }
 
-    public void Hide(GameObject window, Button tab)
+    public void ShowMainWindow()
+    {
+        MainWindow.SetActive(true);
+        ShowInnerWindow(CurrentWindow, CurrentWindowTab);
+    }
+
+    public void HideMainWindow()
+    {
+        MainWindow.SetActive(false);
+        HideInnerWindow(CurrentWindow, CurrentWindowTab);
+    }
+
+    public void ShowInnerWindow(GameObject window, Button tab)
+    {
+        HideInnerWindow(CurrentWindow, CurrentWindowTab);
+        CurrentWindow = window;
+        CurrentWindowTab = tab;
+
+        var tabColor = CurrentWindowTab.GetComponent<Image>().color;
+        tabColor.a = 0.5f;
+        CurrentWindowTab.GetComponent<Image>().color = tabColor;
+
+        CurrentWindow.SetActive(true);
+    }
+
+    public void HideInnerWindow(GameObject window, Button tab)
     {
         var tabColor = tab.GetComponent<Image>().color;
         tabColor.a = 0.5f;
@@ -36,8 +63,8 @@ public class GameMenuWindow : MonoBehaviour
     {
         switch (tab.name)
         {
-            case "Orders":
-                Show(PizzaOrderJournal, tab);
+            case "PizzaOrderJournalTab":
+                ShowInnerWindow(PizzaOrderJournal, tab);
                 break;
         }
     }

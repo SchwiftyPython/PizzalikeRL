@@ -124,6 +124,41 @@ public class InputController : MonoBehaviour
                     ActionTaken = true;
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                var mainWindow = GameMenuWindow.Instance.MainWindow;
+
+                if (mainWindow.activeSelf)
+                {
+                    GameMenuWindow.Instance.HideMainWindow();
+                }
+                else
+                {
+                    GameMenuWindow.Instance.ShowMainWindow();
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.J))
+            {
+                if (GameMenuWindow.Instance.MainWindow.activeSelf)
+                {
+                    if (GameMenuWindow.Instance.CurrentWindow == GameMenuWindow.Instance.PizzaOrderJournal)
+                    {
+                        GameMenuWindow.Instance.HideMainWindow();
+                    }
+                    else
+                    {
+                        GameMenuWindow.Instance.OnTabSelected(GameMenuWindow.Instance.PizzaOrderJournalTab);
+                    }
+                }
+                else
+                {
+                    GameMenuWindow.Instance.ShowMainWindow();
+                    if (GameMenuWindow.Instance.CurrentWindow != GameMenuWindow.Instance.PizzaOrderJournal)
+                    {
+                        GameMenuWindow.Instance.OnTabSelected(GameMenuWindow.Instance.PizzaOrderJournalTab);
+                    }
+                }
+            }
             else if (Input.GetMouseButtonDown(0))
             {
                 var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.positiveInfinity);
