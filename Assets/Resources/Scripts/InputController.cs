@@ -6,6 +6,8 @@ public class InputController : MonoBehaviour
     [SerializeField]
     private LayerMask _clickable;
 
+    private bool _popupWindowOpen;
+
     public static InputController Instance;
 
     Entity _player;
@@ -131,10 +133,12 @@ public class InputController : MonoBehaviour
                 if (mainWindow.activeSelf)
                 {
                     GameMenuWindow.Instance.HideMainWindow();
+                    _popupWindowOpen = false;
                 }
                 else
                 {
                     GameMenuWindow.Instance.ShowMainWindow();
+                    _popupWindowOpen = true;
                 }
             }
             else if (Input.GetKeyDown(KeyCode.J))
@@ -144,6 +148,7 @@ public class InputController : MonoBehaviour
                     if (GameMenuWindow.Instance.CurrentWindow == GameMenuWindow.Instance.PizzaOrderJournal)
                     {
                         GameMenuWindow.Instance.HideMainWindow();
+                        _popupWindowOpen = false;
                     }
                     else
                     {
@@ -153,6 +158,7 @@ public class InputController : MonoBehaviour
                 else
                 {
                     GameMenuWindow.Instance.ShowMainWindow();
+                    _popupWindowOpen = true;
                     if (GameMenuWindow.Instance.CurrentWindow != GameMenuWindow.Instance.PizzaOrderJournal)
                     {
                         GameMenuWindow.Instance.OnTabSelected(GameMenuWindow.Instance.PizzaOrderJournalTab);
@@ -163,7 +169,7 @@ public class InputController : MonoBehaviour
             {
                 var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.positiveInfinity);
 
-                if (hit)
+                if (hit && !_popupWindowOpen)
                 {
                     hit.collider.GetComponent<EntityInfo>()?.OnLeftClick();
                 }
