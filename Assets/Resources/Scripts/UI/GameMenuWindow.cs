@@ -3,13 +3,20 @@ using UnityEngine.UI;
 
 public class GameMenuWindow : MonoBehaviour
 {
+    private readonly Color _inactiveTabColor = new Color(255, 255, 255, .5f);
+    private readonly Color _activeTabColor = new Color(255, 255, 255, .9f);
+
     public GameObject CurrentWindow;
     public Button CurrentWindowTab;
 
     public GameObject MainWindow;
     public GameObject PizzaOrderJournal;
+    public GameObject EquipmentWindow;
+    public GameObject InventoryWindow;
 
     public Button PizzaOrderJournalTab;
+    public Button EquipmentTab;
+    public Button InventoryTab;
 
     public static GameMenuWindow Instance;
 
@@ -24,6 +31,11 @@ public class GameMenuWindow : MonoBehaviour
             Destroy(gameObject);
         }
         MainWindow.SetActive(false);
+        PizzaOrderJournalTab.GetComponent<Image>().color = _inactiveTabColor;
+        EquipmentTab.GetComponent<Image>().color = _inactiveTabColor;
+        InventoryTab.GetComponent<Image>().color = _inactiveTabColor;
+
+        CurrentWindowTab.GetComponent<Image>().color = _activeTabColor;
     }
 
     public void ShowMainWindow()
@@ -40,22 +52,20 @@ public class GameMenuWindow : MonoBehaviour
 
     public void ShowInnerWindow(GameObject window, Button tab)
     {
-        HideInnerWindow(CurrentWindow, CurrentWindowTab);
-        CurrentWindow = window;
-        CurrentWindowTab = tab;
-
-        var tabColor = CurrentWindowTab.GetComponent<Image>().color;
-        tabColor.a = 0.5f;
-        CurrentWindowTab.GetComponent<Image>().color = tabColor;
+        if (window != CurrentWindow)
+        {
+            HideInnerWindow(CurrentWindow, CurrentWindowTab);
+            CurrentWindow = window;
+            CurrentWindowTab = tab;
+        }
+        CurrentWindowTab.GetComponent<Image>().color = _activeTabColor;
 
         CurrentWindow.SetActive(true);
     }
 
     public void HideInnerWindow(GameObject window, Button tab)
     {
-        var tabColor = tab.GetComponent<Image>().color;
-        tabColor.a = 0.5f;
-        tab.GetComponent<Image>().color = tabColor;
+        tab.GetComponent<Image>().color = _inactiveTabColor;
         window.SetActive(false);
     }
 
@@ -65,6 +75,12 @@ public class GameMenuWindow : MonoBehaviour
         {
             case "PizzaOrderJournalTab":
                 ShowInnerWindow(PizzaOrderJournal, tab);
+                break;
+            case "EquipmentTab":
+                ShowInnerWindow(EquipmentWindow, tab);
+                break;
+            case "InventoryTab":
+                ShowInnerWindow(InventoryWindow, tab);
                 break;
         }
     }
