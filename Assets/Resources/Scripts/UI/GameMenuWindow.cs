@@ -13,10 +13,12 @@ public class GameMenuWindow : MonoBehaviour
     public GameObject PizzaOrderJournal;
     public GameObject EquipmentWindow;
     public GameObject InventoryWindow;
+    public GameObject CharacterWindow;
 
     public Button PizzaOrderJournalTab;
     public Button EquipmentTab;
     public Button InventoryTab;
+    public Button CharacterTab;
 
     public static GameMenuWindow Instance;
 
@@ -34,6 +36,7 @@ public class GameMenuWindow : MonoBehaviour
         PizzaOrderJournalTab.GetComponent<Image>().color = _inactiveTabColor;
         EquipmentTab.GetComponent<Image>().color = _inactiveTabColor;
         InventoryTab.GetComponent<Image>().color = _inactiveTabColor;
+        CharacterTab.GetComponent<Image>().color = _inactiveTabColor;
 
         CurrentWindowTab.GetComponent<Image>().color = _activeTabColor;
     }
@@ -81,6 +84,9 @@ public class GameMenuWindow : MonoBehaviour
                 break;
             case "InventoryTab":
                 ShowInnerWindow(InventoryWindow, tab);
+                break;
+            case "CharacterTab":
+                ShowInnerWindow(CharacterWindow, tab);
                 break;
         }
     }

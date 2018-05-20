@@ -8,9 +8,10 @@
 			<MinAgility> 3 </MinAgility>
 			<MaxAgility> 6 </MaxAgility>
 			<MinConstitution> 3 </MinConstitution>
-			<MaxConstitution> 6 </MaxConstitution>	  
-			<Playable> true </Playable>
-			<Nameable> true </Nameable>
+			<MaxConstitution> 6 </MaxConstitution>
+            <MinIntelligence> 3 </MinIntelligence>	
+            <MaxIntelligence> 6 </MaxIntelligence>			
+			<Playable> true </Playable>			
 			<CanMutate> true </CanMutate>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
@@ -47,9 +48,10 @@
 			<MinAgility> 2 </MinAgility>
 			<MaxAgility> 3 </MaxAgility>
 			<MinConstitution> 2 </MinConstitution>
-			<MaxConstitution> 3 </MaxConstitution>	  
-			<Playable> false </Playable>
-			<Nameable> false </Nameable>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 3 </MinIntelligence>	
+            <MaxIntelligence> 6 </MaxIntelligence>				
+			<Playable> false </Playable>			
 			<CanMutate> false </CanMutate>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
