@@ -24,11 +24,14 @@ public class EntityTemplate {
     [XmlElement("MaxConstitution")]
     public int MaxConstitution;
 
+    [XmlElement("MinIntelligence")]
+    public int MinIntelligence;
+
+    [XmlElement("MaxIntelligence")]
+    public int MaxIntelligence;
+
     [XmlElement("Playable")]
     public bool Playable;
-
-    [XmlElement("Nameable")]
-    public bool Nameable;
 
     [XmlElement("CanMutate")]
     public bool CanMutate;
