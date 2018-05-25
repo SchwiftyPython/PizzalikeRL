@@ -493,6 +493,7 @@
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\PizzaOrder.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\CharacterWindow.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\EquipmentWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\GameMenuWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PopUpWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\World\AreaMap.cs" />
