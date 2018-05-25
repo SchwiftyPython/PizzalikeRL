@@ -37,24 +37,27 @@ public class Entity
     private bool _canMutate;
 
     //Base stats
-    private int _level;
 
-    private int _strength;
-    private int _agility;
-    private int _constitution;
-    private int _intelligence;
+    public int Level { get; }
+    public int Xp { get; }
+
+    public int Strength { get; }
+    public int Agility { get; }
+    public int Constitution { get; }
+    public int Intelligence { get; }
 
 
     //Stats dependent on base stat values
-    private int _maxHP;
-    private int _currentHP;
-    private int _speed;
-    private int _defense;
 
-    private List<Item> _inventory;
+    public int MaxHp { get; }
+    public int CurrentHp { get; private set; }
+    public int Speed { get; }
+    public int Defense { get; }
+
+    public List<Item> Inventory { get; }
 
     private List<Item> _equipped;
-    private IDictionary<string, BodyPart> _body = new Dictionary<string, BodyPart>();
+    public IDictionary<string, BodyPart> Body { get; } = new Dictionary<string, BodyPart>();
     private int _coins;
 
     private readonly GameObject _prefab;
@@ -85,21 +88,28 @@ public class Entity
         _isPlayer = isPlayer;
         _entityType = template.Type;
         _factionType = faction;
-        _strength = GenStrength(template.MinStrength, template.MaxStrength);
-        _agility = GenAgility(template.MinAgility, template.MaxAgility);
-        _constitution = GenConstitution(template.MinConstitution, template.MaxConstitution);
-        _intelligence = GenIntelligence(template.MinIntelligence, template.MaxIntelligence);
+        Strength = GenStrength(template.MinStrength, template.MaxStrength);
+        Agility = GenAgility(template.MinAgility, template.MaxAgility);
+        Constitution = GenConstitution(template.MinConstitution, template.MaxConstitution);
+        Intelligence = GenIntelligence(template.MinIntelligence, template.MaxIntelligence);
         _canMutate = template.CanMutate;
         _prefab = Resources.Load(template.SpritePath) as GameObject;
         //TODO: gen level
-        _level = 1;
-        _currentHP = _maxHP = GenMaxHp();
-        _speed = GenSpeed();
-        _defense = GenDefense();
+        Level = 1;
+        CurrentHp = MaxHp = GenMaxHp();
+        Speed = GenSpeed();
+        Defense = GenDefense();
         //TODO: gen coins
         //TODO: gen inventory
         BuildBody(template);
         //equip
+
+        //todo replace this with character creation values
+        if (_isPlayer)
+        {
+            CreateFluff();
+            Xp = 0;
+        }
     }
 
     public string GetTypeForEntityInfoWindow()
@@ -110,7 +120,7 @@ public class Entity
     public string GetStatsForEntityInfoWindow()
     {
         return
-            $"Current HP: {_currentHP}\nStrength: {_strength}\nAgility: {_agility}\nConstitution: {_constitution}\nSpeed: {_speed}\nDefense: {_defense}";
+            $"Current HP: {CurrentHp}\nStrength: {Strength}\nAgility: {Agility}\nConstitution: {Constitution}\nSpeed: {Speed}\nDefense: {Defense}";
     }
 
 
@@ -137,19 +147,19 @@ public class Entity
     private int GenMaxHp()
     {
         //temp for testing
-        return (_level + _constitution) * 10;
+        return (Level + Constitution) * 10;
     }
 
     private int GenSpeed()
     {
         //temp for testing
-        return (_level + _agility) * 5;
+        return (Level + Agility) * 5;
     }
 
     private int GenDefense()
     {
         //temp for testing
-        return (_level + _agility + _constitution) * 2;
+        return (Level + Agility + Constitution) * 2;
     }
 
     private void BuildBody(EntityTemplate template)
@@ -164,11 +174,11 @@ public class Entity
             }
             if (part.NeedsPart.Equals(""))
             {
-                _body.Add(part.Type, part);
+                Body.Add(part.Type, part);
             }
-            else if (_body.ContainsKey(part.NeedsPart))
+            else if (Body.ContainsKey(part.NeedsPart))
             {
-                _body.Add(part.Type, part);
+                Body.Add(part.Type, part);
             }
             else
             {
@@ -518,7 +528,7 @@ public class Entity
 
     public bool IsDead()
     {
-        return _currentHP <= 0;
+        return CurrentHp <= 0;
     }
 
     public void CreateFluff()
@@ -534,15 +544,15 @@ public class Entity
         const int unarmedBaseToHit = 3;
         roll += unarmedBaseToHit;
 
-        return roll >= target._defense;
+        return roll >= target.Defense;
     }
 
     private void ApplyMeleeDamage(Entity target)
     {
         const int unarmedDamage = 4;
-        target._currentHP -= unarmedDamage;
+        target.CurrentHp -= unarmedDamage;
         var message = _entityType + " hits " + target._entityType + " for " + unarmedDamage + " hit points.";
-        Debug.Log("Target remaining hp: " + target._currentHP);
+        Debug.Log("Target remaining hp: " + target.CurrentHp);
         GameManager.Instance.Messages.Add(message);
     }
 }

@@ -1122,7 +1122,7 @@ public class Generator : MonoBehaviour
             var placed = false;
             while (!placed)
             {
-                if (currentCell.BiomeType != BiomeType.Water || currentCell.BiomeType != BiomeType.Mountain)
+                if (currentCell.BiomeType != BiomeType.Water && currentCell.BiomeType != BiomeType.Mountain)
                 {
                     var roll = Random.Range(0.000f, 1.000f);
                     if (roll <= chanceToPlaceCard)
