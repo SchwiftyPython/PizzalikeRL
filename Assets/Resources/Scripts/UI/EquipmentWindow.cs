@@ -23,6 +23,7 @@ public class EquipmentWindow : MonoBehaviour
         PopulateWindow();
     }
 
+    //todo detect and update changes in window
     /*private void Update()
     {
         if (isActiveAndEnabled)
@@ -70,4 +71,8 @@ public class EquipmentWindow : MonoBehaviour
             _keyMapLetter = (char)(_keyMapLetter + 1);
         }
     }
+
+    //todo need a method to display available equipment for chosen body part
+
+    //todo need an equip method
 }
