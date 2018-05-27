@@ -47,6 +47,12 @@ public class AreaMap : MonoBehaviour
             _playerSprite.transform.SetParent(GameManager.Instance.transform);
             _player.SetSprite(_playerSprite);
             GameManager.Instance.Player = _player;
+
+            //Inventory Testing /////////////////////////////////////////////////////
+
+            _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Common));
+
+            //END Inventory Testing////////////////////////////////////////////////////////
         }
         else if(_player == null || _player != GameManager.Instance.Player)
         {

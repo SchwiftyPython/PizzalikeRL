@@ -100,7 +100,7 @@ public class Entity
         Speed = GenSpeed();
         Defense = GenDefense();
         //TODO: gen coins
-        //TODO: gen inventory
+        Inventory = new List<Item>();
         BuildBody(template);
         //equip
 
