@@ -17,12 +17,12 @@ public class DiceRoller : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public int RollDice(int numDice, int numSides)
+    public int RollDice(Dice dice)
     {
         var sum = 0;
-        for (var i = 0; i < numDice; i++)
+        for (var i = 0; i < dice.NumDice; i++)
         {
-            sum += Random.Range(1, numSides + 1);
+            sum += Random.Range(1, dice.NumSides + 1);
         }
         return sum;
     }

@@ -464,6 +464,7 @@
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelPerfectCamera.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelSnap.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
+    <Compile Include="Assets\Resources\Scripts\Dice.cs" />
     <Compile Include="Assets\Resources\Scripts\DiceRoller.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
@@ -514,6 +515,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\Weapon.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Area.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Cell.cs" />

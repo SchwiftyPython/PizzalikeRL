@@ -51,6 +51,10 @@ public class AreaMap : MonoBehaviour
             //Inventory Testing /////////////////////////////////////////////////////
 
             _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Common));
+            _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("sword"), ItemRarity.Common));
+
+            _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Rare));
+            _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("sword"), ItemRarity.Rare));
 
             //END Inventory Testing////////////////////////////////////////////////////////
         }

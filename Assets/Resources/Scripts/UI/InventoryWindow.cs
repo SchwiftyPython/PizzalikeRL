@@ -56,6 +56,7 @@ public class InventoryWindow : MonoBehaviour
             sectionHeaderText.text = FirstCharToUpper(section) + "s";
 
             var itemButtonsParent = sectionHeader.transform;
+
             foreach (var item in _sortedItems[section])
             {
                 var itemButton = Instantiate(ButtonPrefab, new Vector3(0, 0), Quaternion.identity);
@@ -63,8 +64,17 @@ public class InventoryWindow : MonoBehaviour
                 var textFields = itemButton.GetComponentsInChildren<Text>();
 
                 //todo come up with some kind of naming system based on material or legend
-                textFields[0].text = "-  " + item.ItemType; 
-                textFields[1].text = _keyMapLetter.ToString();
+                if (item.ItemCategory.Equals("weapon"))
+                {
+                    textFields[0].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
+                    textFields[1].text = _keyMapLetter.ToString();
+                }
+                else if (item.ItemCategory.Equals("armor"))
+                {
+                    var defense = ((Armor) item).Defense;
+                    textFields[0].text = "-  " + item.ItemType + "     [ " + defense + " def ]" ; //todo replace def with a shield icon
+                    textFields[1].text = _keyMapLetter.ToString();
+                }
                 NextKeyMapLetter();
             }
         }
