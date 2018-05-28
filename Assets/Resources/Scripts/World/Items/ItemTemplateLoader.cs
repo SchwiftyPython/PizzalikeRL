@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemTemplateLoader : MonoBehaviour {
@@ -11,6 +9,33 @@ public class ItemTemplateLoader : MonoBehaviour {
 
     private void Start()
     {
+        LoadTemplatesFromFile();
+    }
+
+    public static ItemTemplate GetEntityTemplate(string entityTemplateType)
+    {
+        if (_ic == null)
+        {
+            LoadTemplatesFromFile();
+        }
+        if (_ic == null)
+        {
+            return new ItemTemplate();
+        }
+
+        var index = _ic.ItemTemplates.FindIndex(item => item.Type.Equals(entityTemplateType.ToLower()));
+        var it = _ic.ItemTemplates[index];
+
+        return it;
+    }
+
+    public static List<string> GetEntityTemplateTypes()
+    {
+        return new List<string>(_itemTemplateTypes);
+    }
+
+    private static void LoadTemplatesFromFile()
+    {
         _ic = ItemTemplateContainer.Load(Path.TrimStart('\\', '/'));
 
         _itemTemplateTypes = new List<string>();
@@ -19,32 +44,5 @@ public class ItemTemplateLoader : MonoBehaviour {
         {
             _itemTemplateTypes.Add(i.Type);
         }
-
-    }
-
-    public static ItemTemplate GetEntityTemplate(string entityTemplateType)
-    {
-        if (_ic == null)
-        {
-//            var basePath = Environment.CurrentDirectory;
-//
-//            var fullPath = System.IO.Path.Combine(basePath, Path.TrimStart('\\', '/'));
-//
-//            fullPath = System.IO.Path.Combine(Path, fullPath);
-
-            _ic = ItemTemplateContainer.Load(Path);
-
-            _itemTemplateTypes = new List<string>();
-
-            foreach (var i in _ic.ItemTemplates)
-            {
-                _itemTemplateTypes.Add(i.Type);
-            }
-        }
-        var index = _ic.ItemTemplates.FindIndex(item => item.Type.Equals(entityTemplateType.ToLower()));
-        var it = _ic.ItemTemplates[index];
-
-        return it;
-
     }
 }
