@@ -464,6 +464,8 @@
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelPerfectCamera.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelSnap.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
+    <Compile Include="Assets\Resources\Scripts\Dice.cs" />
+    <Compile Include="Assets\Resources\Scripts\DiceRoller.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
     <Compile Include="Assets\Resources\Scripts\EntityInfo.cs" />
@@ -495,6 +497,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\CharacterWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\EquipmentWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\GameMenuWindow.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\InventoryWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PopUpWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\World\AreaMap.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
@@ -506,7 +509,13 @@
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplatesContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Names\NameStore.cs" />
-    <Compile Include="Assets\Resources\Scripts\World\Item.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\Armor.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\Item.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\ItemRarity.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplate.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateContainer.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\Weapon.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Area.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Cell.cs" />
@@ -545,6 +554,7 @@
     <None Include="Assets\JsonDotNet\link.xml" />
     <None Include="Assets\PixelPerfectCamera\README.txt" />
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
+    <None Include="Assets\Resources\Scripts\World\Items\itemtemplates.xml" />
     <None Include="Assets\Resources\bodyparts.xml" />
     <None Include="Assets\Resources\entitytemplates.xml" />
     <None Include="Assets\Resources\factions.xml" />

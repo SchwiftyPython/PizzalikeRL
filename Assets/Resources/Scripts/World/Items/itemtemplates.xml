@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ItemTemplateCollection>
+	<ItemTemplates>
+	
+	<ItemTemplate type = "helmet">
+	    <Category>armor</Category>
+		<BodyPartCategory>head</BodyPartCategory>
+		<StatModifiers>
+		    <StatModifier type = "positive">defense</StatModifier>
+		</StatModifiers>
+	</ItemTemplate>
+	
+	<ItemTemplate type = "sword">
+	    <Category>weapon</Category>
+		<BodyPartCategory>hand</BodyPartCategory>
+		<StatModifiers></StatModifiers>
+	</ItemTemplate>
+	
+	<ItemTemplate type = "bandage">
+	    <Category>consumable</Category>
+		<BodyPartCategory></BodyPartCategory>
+		<StatModifiers>
+		    <StatModifier type = "positive">hp</StatModifier>
+		</StatModifiers>
+	</ItemTemplate>
+	
+	</ItemTemplates>
+</ItemTemplateCollection>	
