@@ -13,6 +13,8 @@ public class GameMenuWindow : MonoBehaviour
     public GameObject PizzaOrderJournal;
     public GameObject EquipmentWindow;
     public GameObject InventoryWindow;
+    public GameObject FilteredInventoryWindow;
+    public GameObject FilteredInventoryWindowTitleBar;
     public GameObject CharacterWindow;
 
     public Button PizzaOrderJournalTab;

@@ -4,24 +4,17 @@
 	
 	<ItemTemplate type = "helmet">
 	    <Category>armor</Category>
-		<BodyPartCategory>head</BodyPartCategory>
-		<StatModifiers>
-		    <StatModifier type = "positive">defense</StatModifier>
-		</StatModifiers>
+		<BodyPartCategory>head</BodyPartCategory>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "sword">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
-		<StatModifiers></StatModifiers>
+		<BodyPartCategory>hand</BodyPartCategory>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "bandage">
 	    <Category>consumable</Category>
-		<BodyPartCategory></BodyPartCategory>
-		<StatModifiers>
-		    <StatModifier type = "positive">hp</StatModifier>
-		</StatModifiers>
+		<BodyPartCategory></BodyPartCategory>		
 	</ItemTemplate>
 	
 	</ItemTemplates>

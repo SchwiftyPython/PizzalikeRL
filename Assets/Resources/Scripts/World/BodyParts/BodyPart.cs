@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 public class BodyPart {
 
@@ -24,5 +25,12 @@ public class BodyPart {
     public string AttackVerb;
 
     [XmlElement("Coverage")]
-    public int Coverage;    
+    public int Coverage;
+
+    [XmlElement("MaxChildrenBodyParts")] 
+    public int MaxChildrenBodyParts;
+
+    public BodyPart ParentBodyPart;
+
+    public List<BodyPart> ChildrenBodyParts;
 }

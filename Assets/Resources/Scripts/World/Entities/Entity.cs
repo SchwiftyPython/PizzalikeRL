@@ -56,7 +56,7 @@ public class Entity
 
     public List<Item> Inventory { get; }
 
-    private List<Item> _equipped;
+    public IDictionary<BodyPart, Item> Equipped;
     public IDictionary<string, BodyPart> Body { get; } = new Dictionary<string, BodyPart>();
     private int _coins;
 
@@ -102,7 +102,7 @@ public class Entity
         //TODO: gen coins
         Inventory = new List<Item>();
         BuildBody(template);
-        //equip
+        PopulateEquipped();
 
         //todo replace this with character creation values
         if (_isPlayer)
@@ -123,6 +123,18 @@ public class Entity
             $"Current HP: {CurrentHp}\nStrength: {Strength}\nAgility: {Agility}\nConstitution: {Constitution}\nSpeed: {Speed}\nDefense: {Defense}";
     }
 
+    private void PopulateEquipped()
+    {
+        Equipped = new Dictionary<BodyPart, Item>();
+
+        foreach (var bodyPart in Body.Values)
+        {
+            if (!Equipped.ContainsKey(bodyPart))
+            {
+                Equipped.Add(bodyPart, new Item());
+            }
+        }
+    }
 
     private static int GenStrength(int min, int max)
     {
@@ -178,6 +190,10 @@ public class Entity
             }
             else if (Body.ContainsKey(part.NeedsPart))
             {
+                if (Body[part.NeedsPart].ChildrenBodyParts.Count > Body[part.NeedsPart].MaxChildrenBodyParts)
+                {
+                    Debug.Log(part.Name + " missing required part " + part.NeedsPart);
+                }
                 Body.Add(part.Type, part);
             }
             else

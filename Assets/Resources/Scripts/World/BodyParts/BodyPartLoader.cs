@@ -4,26 +4,32 @@ public class BodyPartLoader : MonoBehaviour {
 
     public const string Path = "bodyparts";
     public static string[] BodyPartNames;
+    public static string[] BodyPartTypes;
     private static BodyPartContainer _bc;
 
     public static void LoadBodyParts() {
         _bc = BodyPartContainer.Load(Path);
 
         BodyPartNames = new string[_bc.BodyParts.Count];
+        BodyPartTypes = new string[_bc.BodyParts.Count];
 
         var index = 0;
 
-        foreach (var bp in _bc.BodyParts) {
+        foreach (var bp in _bc.BodyParts)
+        {
             BodyPartNames[index] = bp.Name;
-            
-            //GetBodyPart(bp.Name); //testing
-
+            BodyPartTypes[index] = bp.Type;
             index++;
         }
     }
 
     public static string[] GetBodyPartNames() {
         return BodyPartNames;
+    }
+
+    public static string[] GetBodyPartTypes()
+    {
+        return BodyPartTypes;
     }
 
     public static string  GetBodyPartNameAt(int index) {

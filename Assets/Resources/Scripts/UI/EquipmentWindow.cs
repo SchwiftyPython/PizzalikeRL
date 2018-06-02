@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,13 +10,13 @@ public class EquipmentWindow : MonoBehaviour
     private List<GameObject> _bodyPartButtons;
     private Transform _parent;
 
-    private IDictionary<string, BodyPart> _playerBodyParts;
+    private IDictionary<BodyPart, Item> _playerEquipment;
 
     private char _keyMapLetter;
 
     private void Start()
     {
-        _playerBodyParts = GameManager.Instance.Player.Body;
+        _playerEquipment = GameManager.Instance.Player.Equipped;
         _bodyPartButtons = new List<GameObject>();
         _parent = transform;
         _keyMapLetter = 'a';
@@ -42,14 +43,15 @@ public class EquipmentWindow : MonoBehaviour
     private void PopulateWindow()
     {
         _keyMapLetter = 'a';
-        foreach (var bodyPart in _playerBodyParts)
+        foreach (var bodyPart in _playerEquipment.Keys)
         {
             var bodyPartButton = Instantiate(BodyPartPrefab, new Vector3(0, 0), Quaternion.identity);
             bodyPartButton.transform.SetParent(_parent);
             var textFields = bodyPartButton.GetComponentsInChildren<Text>();
-            textFields[0].text = "-  " + bodyPart.Key;
+            textFields[0].text = "-  " + bodyPart.Type;
             textFields[1].text = _keyMapLetter.ToString();
-            //textFields[2].text = todo display equipped item
+            textFields[2].text = string.IsNullOrEmpty(_playerEquipment[bodyPart].ItemType) ? " :   -- " 
+                : ":   " + _playerEquipment[bodyPart].ItemType;
 
             NextKeyMapLetter();
         }
@@ -71,7 +73,10 @@ public class EquipmentWindow : MonoBehaviour
         }
     }
 
-    //todo need a method to display available equipment for chosen body part
+    public void DisplayAvailableEquipmentForSelectedBodyPart()
+    {
+        
+    }
 
     //todo need an equip method
 }
