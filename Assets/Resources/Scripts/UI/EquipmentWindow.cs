@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ public class EquipmentWindow : MonoBehaviour
 {
     public GameObject BodyPartPrefab;
 
-    private List<GameObject> _bodyPartButtons;
+    private IDictionary<char, GameObject> _bodyPartButtons;
     private Transform _parent;
 
     private IDictionary<BodyPart, Item> _playerEquipment;
@@ -30,7 +31,7 @@ public class EquipmentWindow : MonoBehaviour
         }
 
         _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
-        _bodyPartButtons = new List<GameObject>();
+        _bodyPartButtons = new Dictionary<char, GameObject>();
         _parent = transform;
         _keyMapLetter = 'a';
         PopulateWindow();
@@ -38,20 +39,32 @@ public class EquipmentWindow : MonoBehaviour
     
     private void Update()
     {
-        if (isActiveAndEnabled && EquipmentChanged)
+        if (isActiveAndEnabled && !FilteredInventoryWindowPopUp.Instance.FilteredInventoryWindow.activeSelf)
         {
-            EquipmentChanged = false;
-            _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
-
-            if (_bodyPartButtons.Count > 0)
+            if (EquipmentChanged)
             {
-                foreach (var button in _bodyPartButtons.ToArray())
-                {
-                    Destroy(button);
-                }
-                _bodyPartButtons = new List<GameObject>();
+                EquipmentChanged = false;
+                _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
+
+                DestroyOldButtons();
+                PopulateWindow();
             }
-            PopulateWindow();
+            if (Input.anyKeyDown)
+            {
+                if (Input.inputString.Length < 1 || Input.inputString.Length > 1)
+                {
+                    return;
+                }
+
+                var keyPressed = Convert.ToChar(Input.inputString);
+                if (!_bodyPartButtons.ContainsKey(keyPressed))
+                {
+                    return;
+                }
+
+                var pressedButton = _bodyPartButtons[keyPressed].transform.GetComponent<Button>();
+                pressedButton.onClick.Invoke();
+            }
         }
     }
 
@@ -61,8 +74,9 @@ public class EquipmentWindow : MonoBehaviour
         foreach (var bodyPart in _playerEquipment.Keys)
         {
             var bodyPartButton = Instantiate(BodyPartPrefab, new Vector3(0, 0), Quaternion.identity);
-            _bodyPartButtons.Add(bodyPartButton);
+            _bodyPartButtons.Add(_keyMapLetter, bodyPartButton);
             bodyPartButton.transform.SetParent(_parent);
+
             var textFields = bodyPartButton.GetComponentsInChildren<Text>();
             textFields[0].text = "-  " + bodyPart.Type;
             textFields[1].text = _keyMapLetter.ToString();
@@ -86,6 +100,18 @@ public class EquipmentWindow : MonoBehaviour
         else
         {
             _keyMapLetter = (char)(_keyMapLetter + 1);
+        }
+    }
+
+    private void DestroyOldButtons()
+    {
+        if (_bodyPartButtons.Count > 0)
+        {
+            foreach (var button in _bodyPartButtons.Values.ToArray())
+            {
+                Destroy(button);
+            }
+            _bodyPartButtons = new Dictionary<char, GameObject>();
         }
     }
 }

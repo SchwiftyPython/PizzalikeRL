@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,15 +10,17 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
     public GameObject SectionPrefab;
     public GameObject ButtonPrefab;
 
-    private Dictionary<string, List<Item>> _sortedItems;
-    private List<GameObject> _itemSections;
-    private List<GameObject> _buttons;
+    private IDictionary<string, List<Item>> _sortedItems;
+    private IList<GameObject> _itemSections;
+    private IDictionary<char, GameObject> _buttons;
 
     private Transform _sectionParent;
 
     private IDictionary<Guid, Item> _playerInventory;
 
     private char _keyMapLetter;
+
+    private bool _processingInput;
 
     public GameObject FilteredInventoryWindow;
     public GameObject TitleBar;
@@ -26,7 +29,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 
     public static FilteredInventoryWindowPopUp Instance;
 
-    public void Start()
+    private void Start()
     {
         if (Instance == null)
         {
@@ -39,16 +42,36 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 
         FilteredInventoryWindow.SetActive(false);
         TitleBar.SetActive(false);
-
-        _itemSections = new List<GameObject>();
-        _buttons = new List<GameObject>();
         _sectionParent = transform;
+    }
+
+    private void Update()
+    {
+        if (Input.anyKeyDown && !_processingInput)
+        {
+            _processingInput = true;
+            char keyPressed;
+            char.TryParse(Input.inputString, out keyPressed);
+            if (_buttons.ContainsKey(keyPressed))
+            {
+                var pressedButton = _buttons[keyPressed].transform.GetComponent<Button>();
+                pressedButton.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Hide();
+            }
+            Debug.Log("Button Pressed: " + Input.inputString);
+            Debug.Log("_buttons count: " + _buttons.Count);
+            _processingInput = false;
+        }
     }
 
     public void DisplayAvailableEquipmentForSelectedBodyPart(BodyPart bodyPart)
     {
         _itemSections = new List<GameObject>();
-        _buttons = new List<GameObject>();
+        _buttons = new Dictionary<char, GameObject>();
 
         PopulateSectionDictionary(bodyPart.Type);
 
@@ -68,7 +91,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
             {
                 var itemButton = Instantiate(ButtonPrefab, new Vector3(0, 0), Quaternion.identity);
                 itemButton.transform.SetParent(itemButtonsParent);
-                _buttons.Add(itemButton);
+                _buttons.Add(_keyMapLetter, itemButton);
 
                 var textFields = itemButton.GetComponentsInChildren<Text>(true);
 
@@ -144,18 +167,20 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 
     private void DestroyOldItemButtons()
     {
-        foreach (var button in _buttons)
+        foreach (var button in _buttons.Values.ToArray())
         {
             Destroy(button);
         }
+        _buttons.Clear();
     }
 
     private void DestroyOldItemSections()
     {
-        foreach (var section in _itemSections)
+        foreach (var section in _itemSections.ToArray())
         {
             Destroy(section);
         }
+        _itemSections.Clear();
     }
 
     public void Hide()

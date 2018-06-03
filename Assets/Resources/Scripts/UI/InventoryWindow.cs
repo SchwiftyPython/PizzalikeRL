@@ -42,6 +42,8 @@ public class InventoryWindow : MonoBehaviour
 
         _itemSections = new List<GameObject>();
         _buttons = new List<GameObject>();
+
+        PlayerInventoryWindow.SetActive(false);
     }
 
     private void Start()
