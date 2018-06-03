@@ -1,16 +1,18 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Item
 {
     protected GameObject Prefab;
     protected GameObject Sprite;
 
-    protected string BodyPartCategory;
-
     protected ItemRarity Rarity;
 
+    public string BodyPartCategory;
     public string ItemType;
     public string ItemCategory;
+
+    public Guid Id;
 
     public Dice ItemDice;
 
@@ -24,5 +26,6 @@ public class Item
         ItemCategory = template.Category;
         BodyPartCategory = template.BodyPartCategory;
         Rarity = rarity;
+        Id = Guid.NewGuid();
     }
 }

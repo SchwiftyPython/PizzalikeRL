@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Entity
 {
@@ -54,9 +58,9 @@ public class Entity
     public int Speed { get; }
     public int Defense { get; }
 
-    public List<Item> Inventory { get; }
+    public IDictionary<Guid, Item> Inventory { get; }
 
-    private List<Item> _equipped;
+    public IDictionary<BodyPart, Item> Equipped;
     public IDictionary<string, BodyPart> Body { get; } = new Dictionary<string, BodyPart>();
     private int _coins;
 
@@ -100,9 +104,9 @@ public class Entity
         Speed = GenSpeed();
         Defense = GenDefense();
         //TODO: gen coins
-        Inventory = new List<Item>();
+        Inventory = new Dictionary<Guid, Item>();
         BuildBody(template);
-        //equip
+        PopulateEquipped();
 
         //todo replace this with character creation values
         if (_isPlayer)
@@ -123,6 +127,36 @@ public class Entity
             $"Current HP: {CurrentHp}\nStrength: {Strength}\nAgility: {Agility}\nConstitution: {Constitution}\nSpeed: {Speed}\nDefense: {Defense}";
     }
 
+    public void EquipItem(Item item, string bodyPartKey)
+    {
+        Inventory.Remove(item.Id);
+
+        var bodyPart = Body[bodyPartKey];
+
+        if (Equipped[bodyPart].Id != Guid.Empty)
+        {
+            var oldItem = Equipped[bodyPart];
+            Inventory.Add(oldItem.Id, oldItem);
+        }
+
+        Equipped[bodyPart] = item;
+
+        EquipmentWindow.Instance.EquipmentChanged = true;
+        InventoryWindow.Instance.InventoryChanged = true;
+    }
+
+    private void PopulateEquipped()
+    {
+        Equipped = new Dictionary<BodyPart, Item>();
+
+        foreach (var bodyPart in Body.Values)
+        {
+            if (!Equipped.ContainsKey(bodyPart))
+            {
+                Equipped.Add(bodyPart, new Item());
+            }
+        }
+    }
 
     private static int GenStrength(int min, int max)
     {
@@ -178,6 +212,10 @@ public class Entity
             }
             else if (Body.ContainsKey(part.NeedsPart))
             {
+                if (Body[part.NeedsPart].ChildrenBodyParts.Count > Body[part.NeedsPart].MaxChildrenBodyParts)
+                {
+                    Debug.Log(part.Name + " missing required part " + part.NeedsPart);
+                }
                 Body.Add(part.Type, part);
             }
             else

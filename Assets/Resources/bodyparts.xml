@@ -10,6 +10,7 @@
 			<NeedsPart>torso</NeedsPart>
 			<AttackVerb> strike </AttackVerb>
 			<Coverage> 50 </Coverage>	  
+			<MaxChildrenBodyParts> 1 </MaxChildrenBodyParts>
 		</BodyPart>
 
 		<BodyPart name = "human left arm">
@@ -19,7 +20,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>torso</NeedsPart>
 			<AttackVerb> strike </AttackVerb>
-			<Coverage> 50 </Coverage>	  
+			<Coverage> 50 </Coverage>	
+            <MaxChildrenBodyParts> 1 </MaxChildrenBodyParts>			
 		</BodyPart>
 
 		<BodyPart name = "human torso">
@@ -29,7 +31,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart/>
 			<AttackVerb> </AttackVerb>
-			<Coverage> 200 </Coverage>	  
+			<Coverage> 200 </Coverage>
+            <MaxChildrenBodyParts> 10 </MaxChildrenBodyParts>			
 		</BodyPart>
 
 		<BodyPart name = "human head">
@@ -39,7 +42,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>torso</NeedsPart>
 			<AttackVerb> bite </AttackVerb>
-			<Coverage> 40 </Coverage>	  
+			<Coverage> 40 </Coverage>
+            <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
 		</BodyPart>
 
 		<BodyPart name = "human left leg">
@@ -49,7 +53,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>torso</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
-			<Coverage> 100 </Coverage>	  
+			<Coverage> 100 </Coverage>
+            <MaxChildrenBodyParts> 1 </MaxChildrenBodyParts>			
 		</BodyPart>	
 
 		<BodyPart name = "human right leg">
@@ -59,7 +64,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>torso</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
-			<Coverage> 100 </Coverage>	  
+			<Coverage> 100 </Coverage>
+            <MaxChildrenBodyParts> 1 </MaxChildrenBodyParts>			
 		</BodyPart>	
 
 		<BodyPart name = "human left hand">
@@ -69,7 +75,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>left arm</NeedsPart>
 			<AttackVerb> strike </AttackVerb>
-			<Coverage> 10 </Coverage>	  
+			<Coverage> 10 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
 		</BodyPart>	
 
 		<BodyPart name = "human right hand">
@@ -79,7 +86,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>right arm</NeedsPart>
 			<AttackVerb> strike </AttackVerb>
-			<Coverage> 10 </Coverage>	  
+			<Coverage> 10 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
 		</BodyPart>	
 
 		<BodyPart name = "human left foot">
@@ -89,7 +97,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>left leg</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
-			<Coverage> 10 </Coverage>	  
+			<Coverage> 10 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
 		</BodyPart>	
 
 		<BodyPart name = "human right foot">
@@ -99,7 +108,8 @@
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>right leg</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
-			<Coverage> 10 </Coverage>	  
+			<Coverage> 10 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts> 			
 		</BodyPart>	
 
 		<BodyPart name = "worm head">
@@ -109,7 +119,8 @@
 			<CanEquipArmor> false </CanEquipArmor>
 			<NeedsPart>torso</NeedsPart>
 			<AttackVerb> bite </AttackVerb>
-			<Coverage> 15 </Coverage>	  
+			<Coverage> 15 </Coverage>
+            <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
 		</BodyPart>
 
 		<BodyPart name = "worm body">
@@ -119,7 +130,8 @@
 			<CanEquipArmor> false </CanEquipArmor>
 			<NeedsPart/>
 			<AttackVerb/>
-			<Coverage> 30 </Coverage>	  
+			<Coverage> 30 </Coverage>
+            <MaxChildrenBodyParts> 10 </MaxChildrenBodyParts>  			
 		</BodyPart> 
 
 	</BodyParts>

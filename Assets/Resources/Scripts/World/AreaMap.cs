@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Pathfinding;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class AreaMap : MonoBehaviour
 {
@@ -50,11 +52,17 @@ public class AreaMap : MonoBehaviour
 
             //Inventory Testing /////////////////////////////////////////////////////
 
-            _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Common));
-            _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("sword"), ItemRarity.Common));
+            var item = new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Common);
+            _player.Inventory.Add(item.Id, item);
 
-            _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Rare));
-            _player.Inventory.Add(new Armor(ItemTemplateLoader.GetEntityTemplate("sword"), ItemRarity.Rare));
+            item = new Armor(ItemTemplateLoader.GetEntityTemplate("sword"), ItemRarity.Common);
+            _player.Inventory.Add(item.Id, item);
+
+            item = new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Rare);
+            _player.Inventory.Add(item.Id, item);
+
+            item = new Armor(ItemTemplateLoader.GetEntityTemplate("sword"), ItemRarity.Rare);
+            _player.Inventory.Add(item.Id, item);
 
             //END Inventory Testing////////////////////////////////////////////////////////
         }

@@ -131,7 +131,7 @@ public class InputController : MonoBehaviour
                 //todo change this to open pause menu
                 var mainWindow = GameMenuWindow.Instance.MainWindow;
 
-                if (mainWindow.activeSelf)
+                if (mainWindow.activeSelf && !GameMenuWindow.Instance.FilteredInventoryWindow.activeSelf)
                 {
                     GameMenuWindow.Instance.HideMainWindow();
                     _popupWindowOpen = false;
