@@ -81,7 +81,7 @@ public class EquipmentWindow : MonoBehaviour
             textFields[0].text = "-  " + bodyPart.Type;
             textFields[1].text = _keyMapLetter.ToString();
             textFields[2].text = string.IsNullOrEmpty(_playerEquipment[bodyPart].ItemType) ? " :   -- " 
-                : ":   " + _playerEquipment[bodyPart].ItemType;
+                : ":   " + _playerEquipment[bodyPart].ItemType; //todo make this more descriptive of weapon like inventory screen
 
             NextKeyMapLetter();
         }
