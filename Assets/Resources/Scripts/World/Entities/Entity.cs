@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Entity
 {
@@ -54,7 +58,7 @@ public class Entity
     public int Speed { get; }
     public int Defense { get; }
 
-    public List<Item> Inventory { get; }
+    public IDictionary<Guid, Item> Inventory { get; }
 
     public IDictionary<BodyPart, Item> Equipped;
     public IDictionary<string, BodyPart> Body { get; } = new Dictionary<string, BodyPart>();
@@ -100,7 +104,7 @@ public class Entity
         Speed = GenSpeed();
         Defense = GenDefense();
         //TODO: gen coins
-        Inventory = new List<Item>();
+        Inventory = new Dictionary<Guid, Item>();
         BuildBody(template);
         PopulateEquipped();
 
@@ -121,6 +125,24 @@ public class Entity
     {
         return
             $"Current HP: {CurrentHp}\nStrength: {Strength}\nAgility: {Agility}\nConstitution: {Constitution}\nSpeed: {Speed}\nDefense: {Defense}";
+    }
+
+    public void EquipItem(Item item, string bodyPartKey)
+    {
+        Inventory.Remove(item.Id);
+
+        var bodyPart = Body[bodyPartKey];
+
+        if (Equipped[bodyPart].Id != Guid.Empty)
+        {
+            var oldItem = Equipped[bodyPart];
+            Inventory.Add(oldItem.Id, oldItem);
+        }
+
+        Equipped[bodyPart] = item;
+
+        EquipmentWindow.Instance.EquipmentChanged = true;
+        InventoryWindow.Instance.InventoryChanged = true;
     }
 
     private void PopulateEquipped()

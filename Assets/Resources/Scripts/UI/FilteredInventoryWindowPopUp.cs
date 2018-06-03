@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,16 +10,19 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
     public GameObject ButtonPrefab;
 
     private Dictionary<string, List<Item>> _sortedItems;
+    private List<GameObject> _itemSections;
     private List<GameObject> _buttons;
 
     private Transform _sectionParent;
 
-    private List<Item> _playerInventory;
+    private IDictionary<Guid, Item> _playerInventory;
 
     private char _keyMapLetter;
 
     public GameObject FilteredInventoryWindow;
     public GameObject TitleBar;
+
+    public string BodyPartFilter;
 
     public static FilteredInventoryWindowPopUp Instance;
 
@@ -38,12 +40,16 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         FilteredInventoryWindow.SetActive(false);
         TitleBar.SetActive(false);
 
+        _itemSections = new List<GameObject>();
         _buttons = new List<GameObject>();
         _sectionParent = transform;
     }
 
     public void DisplayAvailableEquipmentForSelectedBodyPart(BodyPart bodyPart)
     {
+        _itemSections = new List<GameObject>();
+        _buttons = new List<GameObject>();
+
         PopulateSectionDictionary(bodyPart.Type);
 
         _keyMapLetter = 'a';
@@ -51,6 +57,8 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         {
             var sectionHeader = Instantiate(SectionPrefab, new Vector3(0, 0), Quaternion.identity);
             sectionHeader.transform.SetParent(_sectionParent);
+            _itemSections.Add(sectionHeader);
+
             var sectionHeaderText = sectionHeader.GetComponent<Text>();
             sectionHeaderText.text = FirstCharToUpper(section) + "s";
 
@@ -60,7 +68,9 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
             {
                 var itemButton = Instantiate(ButtonPrefab, new Vector3(0, 0), Quaternion.identity);
                 itemButton.transform.SetParent(itemButtonsParent);
-                var textFields = itemButton.GetComponentsInChildren<Text>();
+                _buttons.Add(itemButton);
+
+                var textFields = itemButton.GetComponentsInChildren<Text>(true);
 
                 //todo come up with some kind of naming system based on material or legend
                 if (item.ItemCategory.Equals("weapon"))
@@ -74,6 +84,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
                     textFields[0].text = "-  " + item.ItemType + "     [ " + defense + " def ]"; //todo replace def with a shield icon
                     textFields[1].text = _keyMapLetter.ToString();
                 }
+                textFields[2].text = item.Id.ToString();
                 NextKeyMapLetter();
             }
         }
@@ -83,12 +94,13 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 
     private void PopulateSectionDictionary(string bodyPartType)
     {
+        BodyPartFilter = bodyPartType;
         _playerInventory = GameManager.Instance.Player.Inventory;
         _sortedItems = new Dictionary<string, List<Item>>();
 
-        foreach (var item in _playerInventory)
+        foreach (var item in _playerInventory.Values)
         {
-            if (bodyPartType.IndexOf(item.BodyPartCategory, StringComparison.Ordinal) == -1)
+            if (BodyPartFilter.IndexOf(item.BodyPartCategory, StringComparison.Ordinal) == -1)
             {
                 continue;
             }
@@ -120,7 +132,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         }
     }
 
-    public static string FirstCharToUpper(string input)
+    private static string FirstCharToUpper(string input)
     {
         switch (input)
         {
@@ -128,5 +140,29 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
             case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
             default: return input.First().ToString().ToUpper() + input.Substring(1);
         }
+    }
+
+    private void DestroyOldItemButtons()
+    {
+        foreach (var button in _buttons)
+        {
+            Destroy(button);
+        }
+    }
+
+    private void DestroyOldItemSections()
+    {
+        foreach (var section in _itemSections)
+        {
+            Destroy(section);
+        }
+    }
+
+    public void Hide()
+    {
+        DestroyOldItemSections();
+        DestroyOldItemButtons();
+        FilteredInventoryWindow.SetActive(false);
+        TitleBar.SetActive(false);
     }
 }

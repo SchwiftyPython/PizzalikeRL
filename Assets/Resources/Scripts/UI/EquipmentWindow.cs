@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,20 +14,35 @@ public class EquipmentWindow : MonoBehaviour
 
     private char _keyMapLetter;
 
+    public bool EquipmentChanged;
+
+    public static EquipmentWindow Instance;
+
     private void Start()
     {
-        _playerEquipment = GameManager.Instance.Player.Equipped;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
         _bodyPartButtons = new List<GameObject>();
         _parent = transform;
         _keyMapLetter = 'a';
         PopulateWindow();
     }
-
-    //todo detect and update changes in window
-    /*private void Update()
+    
+    private void Update()
     {
-        if (isActiveAndEnabled)
+        if (isActiveAndEnabled && EquipmentChanged)
         {
+            EquipmentChanged = false;
+            _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
+
             if (_bodyPartButtons.Count > 0)
             {
                 foreach (var button in _bodyPartButtons.ToArray())
@@ -38,7 +53,7 @@ public class EquipmentWindow : MonoBehaviour
             }
             PopulateWindow();
         }
-    }*/
+    }
 
     private void PopulateWindow()
     {
@@ -46,6 +61,7 @@ public class EquipmentWindow : MonoBehaviour
         foreach (var bodyPart in _playerEquipment.Keys)
         {
             var bodyPartButton = Instantiate(BodyPartPrefab, new Vector3(0, 0), Quaternion.identity);
+            _bodyPartButtons.Add(bodyPartButton);
             bodyPartButton.transform.SetParent(_parent);
             var textFields = bodyPartButton.GetComponentsInChildren<Text>();
             textFields[0].text = "-  " + bodyPart.Type;
@@ -72,11 +88,4 @@ public class EquipmentWindow : MonoBehaviour
             _keyMapLetter = (char)(_keyMapLetter + 1);
         }
     }
-
-    public void DisplayAvailableEquipmentForSelectedBodyPart()
-    {
-        
-    }
-
-    //todo need an equip method
 }

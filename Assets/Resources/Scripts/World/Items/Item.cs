@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Item
 {
@@ -10,6 +11,8 @@ public class Item
     public string BodyPartCategory;
     public string ItemType;
     public string ItemCategory;
+
+    public Guid Id;
 
     public Dice ItemDice;
 
@@ -23,5 +26,6 @@ public class Item
         ItemCategory = template.Category;
         BodyPartCategory = template.BodyPartCategory;
         Rarity = rarity;
+        Id = Guid.NewGuid();
     }
 }

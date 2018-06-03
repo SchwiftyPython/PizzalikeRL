@@ -500,6 +500,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\FilteredInventoryWindowPopUp.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\GameMenuWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\InventoryWindow.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\ItemButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PopUpWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\World\AreaMap.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
