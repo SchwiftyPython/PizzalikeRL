@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -20,6 +18,8 @@ public class AreaMap : MonoBehaviour
 
     public PopUpWindow PizzaOrderPopUp;
     public GameObject ObjectInfoWindow;
+
+    public GameObject Camera;
 
     public static AreaMap Instance;
 
@@ -107,7 +107,9 @@ public class AreaMap : MonoBehaviour
 
         //END Pizza Quest PopUp Test/////////////////////////////////////////////////////
 
-
+        Camera.transform.SetParent(_playerSprite.transform);
+        Camera.SetActive(true);
+        Camera.transform.localPosition = new Vector3(0, 0, -10);
         CreateAStarGraph();
         AstarPath.active.Scan();
         AreaReady = true;

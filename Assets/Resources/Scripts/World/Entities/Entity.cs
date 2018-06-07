@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class Entity
@@ -250,7 +249,7 @@ public class Entity
         _sprite.transform.position = newPosition;
     }
 
-    public void Move(Vector2 target)
+    public void AreaMove(Vector2 target)
     {
         //todo: clean up this code
         _startTile = CurrentPosition;
@@ -349,6 +348,22 @@ public class Entity
 
         //Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
         //Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
+    }
+
+    public void WorldMapMove(Vector2 targetCell)
+    {
+        if (CellOutOfBounds(targetCell))
+        {
+            Debug.Log("Cannot move. Edge of map.");
+        }
+        else
+        {
+            CurrentPosition = new Vector3((int) targetCell.x, (int) targetCell.y);
+
+            GameManager.Instance.Player.CurrentPosition = CurrentPosition;
+
+            GameManager.Instance.CurrentCell = WorldData.Instance.Map[(int) targetCell.x, (int) targetCell.y];
+        }
     }
 
     public void UpdateTileData(Tile startTile, Tile endTile)
@@ -491,20 +506,34 @@ public class Entity
 
     public bool MoveOrAttackSuccessful(Vector2 target)
     {
-        if (CanMove(target))
+        var currentScene = SceneManager.GetActiveScene().name;
+
+        if (currentScene.Equals("Area"))
         {
-            Move(target);
+            if (AreaMapCanMove(target))
+            {
+                AreaMove(target);
+                return true;
+            }
+            if (!EntityPresent(target))
+            {
+                return false;
+            }
+            MeleeAttack(GameManager.Instance.CurrentArea.GetTileAt(target).GetPresentEntity());
             return true;
         }
-        if (!EntityPresent(target))
+        else if (currentScene.Equals("WorldMap"))
         {
-            return false;
+            if (WorldMapCanMove(target))
+            {
+                WorldMapMove(target);
+                return true;
+            }
         }
-        MeleeAttack(GameManager.Instance.CurrentArea.GetTileAt(target).GetPresentEntity());
-        return true;
+        return false;
     }
 
-    public bool CanMove(Vector2 target)
+    public bool AreaMapCanMove(Vector2 target)
     {
         var currentArea = GameManager.Instance.CurrentArea;
         var currentCell = GameManager.Instance.CurrentCell;
@@ -523,6 +552,16 @@ public class Entity
         var nextCell = new Vector2(currentCell.X + _directions[direction].x,
             currentCell.Y + _directions[direction].y);
         if (!CellOutOfBounds(nextCell))
+        {
+            return true;
+        }
+        Debug.Log("Cannot move. Edge of map.");
+        return false;
+    }
+
+    public bool WorldMapCanMove(Vector2 targetCell)
+    {
+        if (!CellOutOfBounds(targetCell))
         {
             return true;
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentState { get; set; }
 
+    public Scene CurrentScene { get; set; }
+
     public static GameManager Instance;
     
     private void Awake () {
@@ -46,7 +49,19 @@ public class GameManager : MonoBehaviour
         Messages = new List<string>();
     }
 	
-    private void Update () {
+    private void Update ()
+    {
+        CurrentScene = SceneManager.GetActiveScene();
+
+        if (CurrentScene.name.Equals("WorldMap"))
+        {
+            AreaMap.Instance?.Camera.SetActive(false);
+        }
+        if (CurrentScene.name.Equals("Area"))
+        {
+            WorldMap.Instance?.Camera.SetActive(false);
+        }
+
         Debug.Log(CurrentState);
 		switch(CurrentState) {
 		case GameState.Start:
@@ -91,8 +106,10 @@ public class GameManager : MonoBehaviour
 //        }
     }
 
-    private GameState WhoseTurn() {
-        if (!CurrentArea.EntitiesPresent()) {
+    private GameState WhoseTurn()
+    {
+        if (!CurrentArea.EntitiesPresent() || CurrentScene.name.Equals("WorldMap"))
+        {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
@@ -104,7 +121,8 @@ public class GameManager : MonoBehaviour
         {
             CurrentArea.TurnOrder.Dequeue();
         }
-        if (CurrentArea.TurnOrder.Peek().IsPlayer()) {
+        if (CurrentArea.TurnOrder.Peek().IsPlayer())
+        {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
