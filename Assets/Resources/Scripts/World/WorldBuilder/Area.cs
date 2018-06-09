@@ -13,6 +13,7 @@ public class Area {
     //TODO: Could probably just reference parent cell for BiomeType
     public BiomeType BiomeType { get; set; }
 
+    public Cell ParentCell { get; set; }
     public Tile[,] AreaTiles { get; set; }
     public Queue<Entity> TurnOrder { get; set; }
 

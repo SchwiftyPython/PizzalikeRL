@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour
 {
@@ -173,6 +174,28 @@ public class InputController : MonoBehaviour
                 if (hit && !_popupWindowOpen)
                 {
                     hit.collider.GetComponent<EntityInfo>()?.OnLeftClick();
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.KeypadMinus))
+            {
+                var currentScene = GameManager.Instance.CurrentScene.name;
+
+                if (currentScene.Equals("Area"))
+                {
+                    //AreaMap.Instance.Camera.transform.SetParent(null);
+                    SceneManager.LoadScene("WorldMap");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            {
+                var currentScene = GameManager.Instance.CurrentScene.name;
+
+                if (currentScene.Equals("WorldMap"))
+                {
+                    //WorldMap.Instance.Camera.transform.SetParent(null);
+                    GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
+                    GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
+                    SceneManager.LoadScene("Area");
                 }
             }
         }

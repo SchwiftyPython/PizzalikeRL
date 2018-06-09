@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public enum HeightType {
@@ -85,18 +84,26 @@ public class Cell {
 
     public List<Faction> PresentFaction;
 
-    public BiomeType biomeType {
+    public BiomeType biomeType
+    {
         get { return BiomeType; }
-        set {
+        set
+        {
             BiomeType = value;
             SetCellSprite(value);
-            for (var i = 0; i < CellHeight; i++) {
-                for(var j = 0; j < CellWidth; j++){
-                    if (Areas[i, j] != null) {
+            for (var i = 0; i < CellHeight; i++)
+            {
+                for (var j = 0; j < CellWidth; j++)
+                {
+                    if (Areas[i, j] != null)
+                    {
                         Areas[i, j].BiomeType = value;
                     }
-                    else {
-                        Areas[i, j] = new Area {
+                    else
+                    {
+                        Areas[i, j] = new Area
+                        {
+                            ParentCell = this,
                             BiomeType = value,
                             X = i,
                             Y = j

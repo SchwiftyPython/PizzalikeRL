@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public bool WorldMapGenComplete;
     public bool PlayerInStartingArea;
+    public bool PlayerEnteringAreaFromWorldMap;
     public bool BusyGeneratingHistory;
 
     public Cell CurrentCell;
@@ -17,24 +19,31 @@ public class GameManager : MonoBehaviour
     public List<string> Messages;
     private Messenger _messenger;
 
-	public enum GameState {
-		Start,
+    public enum GameState
+    {
+        Start,
         Worldmap,
         HistoryGeneration,
         EnterArea,
-		Playerturn,
-		Enemyturn,
-		EndTurn
-	}
+        Playerturn,
+        Enemyturn,
+        EndTurn
+    }
 
     public GameState CurrentState { get; set; }
 
-    public static GameManager Instance;
+    public Scene CurrentScene { get; set; }
     
-    private void Awake () {
-        if (Instance == null) {
+    public static GameManager Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
             Instance = this;
-        } else if (Instance != this) {
+        }
+        else if (Instance != this)
+        {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
@@ -45,17 +54,23 @@ public class GameManager : MonoBehaviour
 
         Messages = new List<string>();
     }
-	
-    private void Update () {
+
+    private void Update()
+    {
+        CurrentScene = SceneManager.GetActiveScene();
+
         Debug.Log(CurrentState);
-		switch(CurrentState) {
-		case GameState.Start:
-		        if (WorldMapGenComplete){
+        switch (CurrentState)
+        {
+            case GameState.Start:
+                if (WorldMapGenComplete)
+                {
                     CurrentState = GameState.EnterArea;
                 }
                 break;
             case GameState.HistoryGeneration:
-                if (!BusyGeneratingHistory) {
+                if (!BusyGeneratingHistory)
+                {
                     BusyGeneratingHistory = true;
                 }
                 break;
@@ -66,33 +81,42 @@ public class GameManager : MonoBehaviour
                     CurrentState = GameState.Playerturn;
                 }
                 break;
-		case GameState.Playerturn:
-		    if (InputController.Instance.ActionTaken) {
-                //CurrentState = WhoseTurn();
-		        CurrentState = GameState.EndTurn;
-		    }
-		    break;
-		case GameState.Enemyturn:
-		    if (EnemyController.ActionTaken){
-                    //CurrentState = WhoseTurn();
-		        CurrentState = GameState.EndTurn;
+            case GameState.Playerturn:
+                if (PlayerInvisible())
+                {
+                    MoveCameraToPlayer();
                 }
-            break;
-		    case GameState.EndTurn:
-		        CheckMessages();
-		        CheckForDeadEntities();
-		        CurrentState = WhoseTurn();
-		        break;
-		}
-//        if (CurrentState == GameState.Playerturn || 
-//            CurrentState == GameState.Enemyturn) {
-//            CheckMessages();
-//            CheckForDeadEntities();
-//        }
+                if (InputController.Instance.ActionTaken)
+                {
+                    CurrentState = GameState.EndTurn;
+                }
+                break;
+            case GameState.Enemyturn:
+                if (EnemyController.ActionTaken)
+                {
+                    CurrentState = GameState.EndTurn;
+                }
+                break;
+            case GameState.EndTurn:
+                if (CurrentScene.name.Equals("WorldMap"))
+                {
+                    InputController.Instance.ActionTaken = false;
+                    CurrentState = GameState.Playerturn;
+                }
+                else
+                {
+                    CheckMessages();
+                    CheckForDeadEntities();
+                    CurrentState = WhoseTurn();
+                }
+                break;
+        }
     }
 
-    private GameState WhoseTurn() {
-        if (!CurrentArea.EntitiesPresent()) {
+    private GameState WhoseTurn()
+    {
+        if (CurrentScene.name.Equals("WorldMap") || !CurrentArea.EntitiesPresent())
+        {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
@@ -104,7 +128,8 @@ public class GameManager : MonoBehaviour
         {
             CurrentArea.TurnOrder.Dequeue();
         }
-        if (CurrentArea.TurnOrder.Peek().IsPlayer()) {
+        if (CurrentArea.TurnOrder.Peek().IsPlayer())
+        {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
@@ -112,22 +137,25 @@ public class GameManager : MonoBehaviour
         return GameState.Enemyturn;
     }
 
-    private void CheckMessages() {
-        if (_messenger == null) {
+    private void CheckMessages()
+    {
+        if (_messenger == null)
+        {
             _messenger = Messenger.GetInstance();
         }
         if (Messages.Count <= 0)
         {
             return;
         }
-        foreach (var message in Messages) {
-             _messenger.CreateMessage(message);
+        foreach (var message in Messages)
+        {
+            _messenger.CreateMessage(message);
         }
         Messages.Clear();
     }
 
-    private void CheckForDeadEntities() {
-        //var temp = new List<Entity>(CurrentArea.PresentEntities);
+    private void CheckForDeadEntities()
+    {
         foreach (var entity in CurrentArea.PresentEntities.ToArray())
         {
             if (entity.IsDead())
@@ -135,13 +163,18 @@ public class GameManager : MonoBehaviour
                 AreaMap.Instance.RemoveEntity(entity);
             }
         }
+    }
 
-//        foreach (var e in CurrentArea.PresentEntities) {
-//            if (!e.IsDead()) {
-//                temp.Add(e);
-//            }
-//            AreaMap.Instance.RemoveEntity(e);
-//        }
-        //CurrentArea.PresentEntities = temp;
+    private bool PlayerInvisible()
+    {
+        var viewPosition = Camera.main.WorldToViewportPoint(Player.GetSprite().GetComponent<Renderer>().bounds.center);
+
+        return viewPosition.x <= 0 || viewPosition.x >= 1 || viewPosition.y <= 0 || viewPosition.y >= 1;
+    }
+
+    private void MoveCameraToPlayer()
+    {
+        //todo make this smoother by setting min max settings for x and y for camera
+        Camera.main.transform.localPosition = new Vector3(Player.CurrentPosition.x, Player.CurrentPosition.y, -10);
     }
 }
