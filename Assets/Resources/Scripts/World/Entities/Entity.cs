@@ -75,6 +75,10 @@ public class Entity
 
     private Vector3 _currentPosition;
 
+    public Cell CurrentCell;
+    public Area CurrentArea;
+    public Tile CurrentTile;
+
     public Vector3 CurrentPosition
     {
         get { return _currentPosition; }
@@ -254,8 +258,6 @@ public class Entity
         //todo: clean up this code
         _startTile = CurrentPosition;
         _endTile = target;
-        var currentArea = GameManager.Instance.CurrentArea;
-        var currentCell = GameManager.Instance.CurrentCell;
 
 //        Debug.Log("entity.currentPosition before move: " + CurrentPosition.x + " " + CurrentPosition.y);
 //        Debug.Log("sprite.currentPosition before move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
@@ -264,72 +266,84 @@ public class Entity
 
         if (TileOutOfBounds(target))
         {
-            var direction = AreaOutOfBoundsDirection(target, currentArea);
-            var nextAreaPosition = new Vector2(currentArea.X + _directions[direction].x,
-                currentArea.Y + _directions[direction].y);
+            var direction = AreaOutOfBoundsDirection(target, CurrentArea);
+            var nextAreaPosition = new Vector2(CurrentArea.X + _directions[direction].x,
+                CurrentArea.Y + _directions[direction].y);
             if (AreaOutOfBounds(nextAreaPosition))
             {
-                direction = CellOutOfBoundsDirection(nextAreaPosition, currentCell);
-                var nextCellPositon = new Vector2(currentCell.X + _directions[direction].x,
-                    currentCell.Y + _directions[direction].y);
+                direction = CellOutOfBoundsDirection(nextAreaPosition, CurrentCell);
+                var nextCellPositon = new Vector2(CurrentCell.X + _directions[direction].x,
+                    CurrentCell.Y + _directions[direction].y);
                 if (CellOutOfBounds(nextCellPositon))
                 {
                     Debug.Log("Cannot move. Edge of map.");
                 }
                 else
                 {
-                    currentCell = WorldData.Instance.Map[currentCell.X + (int) _directions[direction].x,
-                        currentCell.Y + (int) _directions[direction].y];
+                    CurrentCell = WorldData.Instance.Map[CurrentCell.X + (int) _directions[direction].x,
+                        CurrentCell.Y + (int) _directions[direction].y];
 
-                    currentArea = CalculateCellEntryArea(nextAreaPosition);
+                    CurrentArea = CalculateCellEntryArea(nextAreaPosition);
 
-                    if (!currentArea.AreaBuilt())
+                    if (!CurrentArea.AreaBuilt())
                     {
-                        currentArea.BuildArea();
+                        CurrentArea.BuildArea();
                     }
-                    GameManager.Instance.CurrentTile = CalculateAreaEntryTile(target);
+
+                    if (IsPlayer())
+                    {
+                        GameManager.Instance.CurrentTile = CalculateAreaEntryTile(target);
+                    }
+                    CurrentTile = CalculateAreaEntryTile(target);
 
                     //update tile data for start and end tiles
-                    UpdateTileData(currentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                        currentArea.AreaTiles[(int) GameManager.Instance.CurrentTile.GetGridPosition().x,
+                    UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
+                        CurrentArea.AreaTiles[(int) GameManager.Instance.CurrentTile.GetGridPosition().x,
                             (int) GameManager.Instance.CurrentTile.GetGridPosition().y]);
 
                     CurrentPosition = new Vector3((int) GameManager.Instance.CurrentTile.GetGridPosition().x,
                         (int) GameManager.Instance.CurrentTile.GetGridPosition().y);
+
                     if (_isPlayer)
                     {
                         GameManager.Instance.Player.CurrentPosition = CurrentPosition;
+                        GameManager.Instance.CurrentArea = CurrentArea;
+                        GameManager.Instance.CurrentCell = CurrentCell;
+                        GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                     }
-                    GameManager.Instance.CurrentArea = currentArea;
-                    GameManager.Instance.CurrentCell = currentCell;
-                    GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                 }
             }
             else
             {
                 //move to next area but not next cell
-                currentArea = currentCell.Areas[currentArea.X + (int) _directions[direction].x,
-                    currentArea.Y + (int) _directions[direction].y];
+                CurrentArea = CurrentCell.Areas[CurrentArea.X + (int) _directions[direction].x,
+                    CurrentArea.Y + (int) _directions[direction].y];
 
-                if (!currentArea.AreaBuilt())
+                if (!CurrentArea.AreaBuilt())
                 {
-                    currentArea.BuildArea();
+                    CurrentArea.BuildArea();
                 }
+
                 //calc area entry tile
-                GameManager.Instance.CurrentTile = CalculateAreaEntryTile(target);
+                if (IsPlayer())
+                {
+                    GameManager.Instance.CurrentTile = CalculateAreaEntryTile(target);
+                }
+                CurrentTile = CalculateAreaEntryTile(target);
 
                 //update tile data for start and end tiles
                 CurrentPosition = new Vector3((int) GameManager.Instance.CurrentTile.GetGridPosition().x,
                     (int) GameManager.Instance.CurrentTile.GetGridPosition().y);
-                UpdateTileData(currentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                    currentArea.AreaTiles[(int) GameManager.Instance.CurrentTile.GetGridPosition().x,
+                UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
+                    CurrentArea.AreaTiles[(int) GameManager.Instance.CurrentTile.GetGridPosition().x,
                         (int) GameManager.Instance.CurrentTile.GetGridPosition().y]);
+
                 if (_isPlayer)
                 {
                     GameManager.Instance.Player.CurrentPosition = CurrentPosition;
+                    GameManager.Instance.CurrentArea = CurrentArea;
+                    GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                 }
-                GameManager.Instance.CurrentArea = currentArea;
-                GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
             }
         }
         else
@@ -342,8 +356,8 @@ public class Entity
             //SetSpritePosition(EndTile);
 
             //update tile data for start and end tiles
-            UpdateTileData(currentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                currentArea.AreaTiles[(int) _endTile.x, (int) _endTile.y]);
+            UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
+                CurrentArea.AreaTiles[(int) _endTile.x, (int) _endTile.y]);
         }
 
         //Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
@@ -363,6 +377,11 @@ public class Entity
             GameManager.Instance.Player.CurrentPosition = CurrentPosition;
 
             GameManager.Instance.CurrentCell = WorldData.Instance.Map[(int) targetCell.x, (int) targetCell.y];
+            CurrentCell = GameManager.Instance.CurrentCell;
+
+            //Set to middle area of cell
+            CurrentArea = CurrentCell.Areas[1, 1];
+            GameManager.Instance.CurrentArea = CurrentArea;
         }
     }
 
@@ -377,14 +396,12 @@ public class Entity
 
     public bool TileOutOfBounds(Vector2 target)
     {
-        var currentArea = GameManager.Instance.CurrentArea;
-        return target.x >= currentArea.Width || target.x < 0 || target.y >= currentArea.Height || target.y < 0;
+        return target.x >= CurrentArea.Width || target.x < 0 || target.y >= CurrentArea.Height || target.y < 0;
     }
 
     public bool AreaOutOfBounds(Vector2 target)
     {
-        var currentCell = GameManager.Instance.CurrentCell;
-        return target.x >= currentCell.GetCellWidth() || target.x < 0 || target.y >= currentCell.GetCellHeight() ||
+        return target.x >= CurrentCell.GetCellWidth() || target.x < 0 || target.y >= CurrentCell.GetCellHeight() ||
                target.y < 0;
     }
 

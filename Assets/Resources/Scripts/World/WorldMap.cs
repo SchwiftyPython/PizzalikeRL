@@ -24,6 +24,7 @@ public class WorldMap : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        //Destroy(AreaMap.Instance?.Camera);
         DrawMap();
         PlacePlayer();
     }
@@ -50,8 +51,8 @@ public class WorldMap : MonoBehaviour
         _playerSprite = GameManager.Instance.Player.GetSprite();
         _playerSprite.transform.position = new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
         GameManager.Instance.Player.CurrentPosition = _playerSprite.transform.position;
-        Camera.transform.SetParent(_playerSprite.transform);
-        Camera.SetActive(true);
-        Camera.transform.localPosition = new Vector3(0, 0, -10);
+//        Camera.transform.SetParent(_playerSprite.transform);
+//        Camera.SetActive(true);
+//        Camera.transform.localPosition = new Vector3(0, 0, -10);
     }
 }

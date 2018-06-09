@@ -33,7 +33,7 @@ public class AreaMap : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     private void Init()
@@ -69,9 +69,9 @@ public class AreaMap : MonoBehaviour
         else if(_player == null || _player != GameManager.Instance.Player)
         {
             _player = GameManager.Instance.Player;
-            _playerSprite = Instantiate(_player.GetSpritePrefab(), _player.CurrentPosition, Quaternion.identity);
+            _playerSprite = _player.GetSprite();
             _playerSprite.transform.SetParent(GameManager.Instance.transform);
-            _player.SetSprite(_playerSprite);
+            //_player.SetSprite(_playerSprite);
         }
 
         _areaMapHolderTransform = AreaMapHolder.transform;
@@ -107,9 +107,9 @@ public class AreaMap : MonoBehaviour
 
         //END Pizza Quest PopUp Test/////////////////////////////////////////////////////
 
-        Camera.transform.SetParent(_playerSprite.transform);
-        Camera.SetActive(true);
-        Camera.transform.localPosition = new Vector3(0, 0, -10);
+//        Camera.transform.SetParent(_playerSprite.transform);
+//        Camera.SetActive(true);
+//        Camera.transform.localPosition = new Vector3(0, 0, -10);
         CreateAStarGraph();
         AstarPath.active.Scan();
         AreaReady = true;
@@ -117,15 +117,20 @@ public class AreaMap : MonoBehaviour
    
     public void EnterArea()
     {
-        if (AreaMapHolder != null || NpcSpriteHolder != null) {
+        //Destroy(WorldMap.Instance?.Camera);
+        if (AreaMapHolder != null || NpcSpriteHolder != null)
+        {
             Deconstruct();
         }
         Init();
     }
 
-    public void DrawArea() {
-        for (var i = 0; i < _currentArea.Width; i++){
-            for (var j = 0; j < _currentArea.Height; j++) {
+    public void DrawArea()
+    {
+        for (var i = 0; i < _currentArea.Width; i++)
+        {
+            for (var j = 0; j < _currentArea.Height; j++)
+            {
                 var texture = _currentArea.AreaTiles[i, j].GetTileTexture();
                 var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
                 instance.transform.SetParent(_areaMapHolderTransform);
@@ -133,11 +138,12 @@ public class AreaMap : MonoBehaviour
         }
     }
 
-    public void RemoveEntity(Entity entity) {
+    public void RemoveEntity(Entity entity)
+    {
         Destroy(entity.GetSprite());
 
-        _currentArea.AreaTiles[(int)entity.CurrentPosition.x, (int)entity.CurrentPosition.y].SetBlocksMovement(false);
-        _currentArea.AreaTiles[(int)entity.CurrentPosition.x, (int)entity.CurrentPosition.y].SetPresentEntity(null);
+        _currentArea.AreaTiles[(int) entity.CurrentPosition.x, (int) entity.CurrentPosition.y].SetBlocksMovement(false);
+        _currentArea.AreaTiles[(int) entity.CurrentPosition.x, (int) entity.CurrentPosition.y].SetPresentEntity(null);
         _currentArea.PresentEntities.Remove(entity);
     }
 
@@ -148,21 +154,23 @@ public class AreaMap : MonoBehaviour
         _player.SetSprite(_playerSprite);
     }
 
-    private void Deconstruct() {
+    private void Deconstruct()
+    {
         RemoveAllNpcs();
         Destroy(AreaMapHolder);
     }
 
     private void PlacePlayer()
     {
-        if (GameManager.Instance.PlayerInStartingArea)
+        if (GameManager.Instance.PlayerInStartingArea || GameManager.Instance.PlayerEnteringAreaFromWorldMap)
         {
+            GameManager.Instance.PlayerEnteringAreaFromWorldMap = false;
             GameManager.Instance.PlayerInStartingArea = false;
             if (_currentArea != null)
             {
                 var placed = false;
-                var y = _currentArea.Height / 2;
-                var x = _currentArea.Width / 2;
+                var y = 2;
+                var x = _currentArea.Width - 20;
                 while (!placed)
                 {
                     if (!_currentArea.AreaTiles[x, y].GetBlocksMovement())
@@ -173,8 +181,8 @@ public class AreaMap : MonoBehaviour
                         _currentArea.AreaTiles[x, y].SetPresentEntity(_player);
                         placed = true;
                     }
-                    y = Random.Range(0, _currentArea.Height);
-                    x = Random.Range(0, _currentArea.Width);
+                    y = Random.Range(0, 10);
+                    x = Random.Range(_currentArea.Width - 25, _currentArea.Width);
                 }
             }
         }
@@ -183,6 +191,12 @@ public class AreaMap : MonoBehaviour
             _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
         }
         _currentArea?.PresentEntities.Add(_player);
+        _player.CurrentArea = _currentArea;
+
+        if (_currentArea != null)
+        {
+            _player.CurrentCell = _currentArea.ParentCell;
+        }
     }
 
     private void PlaceNPCs()
@@ -219,17 +233,22 @@ public class AreaMap : MonoBehaviour
                 y = Random.Range(0, _currentArea.Height);
                 x = Random.Range(0, _currentArea.Width);
             }
+            e.CurrentArea = _currentArea;
+            e.CurrentCell = _currentArea.ParentCell;
         }
     }
 
-    private void RemoveAllNpcs() {
-        foreach (var e in _currentArea.PresentEntities.ToArray()) {
+    private void RemoveAllNpcs()
+    {
+        foreach (var e in _currentArea.PresentEntities.ToArray())
+        {
             RemoveEntity(e);
         }
         Destroy(NpcSpriteHolder);
     }
 
-    private void CreateAStarGraph() {
+    private void CreateAStarGraph()
+    {
         var data = AStar.GetComponent<AstarPath>().data;
         var gg = data.AddGraph(typeof(GridGraph)) as GridGraph;
 
