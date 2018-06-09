@@ -175,6 +175,6 @@ public class GameManager : MonoBehaviour
     private void MoveCameraToPlayer()
     {
         //todo make this smoother by setting min max settings for x and y for camera
-        Camera.main.transform.localPosition = new Vector3(Player.CurrentPosition.x, Player.CurrentPosition.y, -10);
+        Camera.main.transform.localPosition = new Vector3(Player.CurrentPosition.x + .5f, Player.CurrentPosition.y + .5f, -10);
     }
 }
