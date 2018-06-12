@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public Entity Player;
     public GameObject PlayerSprite;
 
+    public List<PizzaOrder> ActiveOrders;
+
     public List<string> Messages;
     private Messenger _messenger;
 
@@ -84,6 +86,7 @@ public class GameManager : MonoBehaviour
             case GameState.Playerturn:
                 if (PlayerInvisible())
                 {
+                    Debug.Log("Player not in camera!");
                     MoveCameraToPlayer();
                 }
                 if (InputController.Instance.ActionTaken)

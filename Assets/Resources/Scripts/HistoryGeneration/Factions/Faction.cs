@@ -40,6 +40,8 @@ public class Faction
 
         CreateLeader();
 
+        WorldData.Instance.FactionLeaders.Add(Leader);
+
         //Debug.Log("Leader name: " + Leader.Fluff.Name);
     }
 

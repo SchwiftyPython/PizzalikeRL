@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Pathfinding;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -89,27 +90,12 @@ public class AreaMap : MonoBehaviour
 
         //Pizza Quest PopUp Test/////////////////////////////////////////////////////
 
-        /*var testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Medium);
+        var testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Medium);
 
-        var pizzaOrderDetails = string.Empty;
-
-        foreach (var pizza in testOrder.Pizzas)
-        {
-            pizzaOrderDetails += $" Size: {pizza.PizzaSize}" +
-                                 $" \nCrust: {pizza.PizzaCrust}" +
-                                 $" \nSauce: {pizza.PizzaSauce}" +
-                                 " \nToppings: ";
-
-            pizzaOrderDetails = pizza.PizzaToppings.Aggregate(pizzaOrderDetails, (current, topping) => current + $" {topping}\n ");
-        }
-
-        PizzaOrderPopUp.Show(pizzaOrderDetails);*/
+        PizzaOrderPopUp.Show(testOrder);
 
         //END Pizza Quest PopUp Test/////////////////////////////////////////////////////
 
-//        Camera.transform.SetParent(_playerSprite.transform);
-//        Camera.SetActive(true);
-//        Camera.transform.localPosition = new Vector3(0, 0, -10);
         CreateAStarGraph();
         AstarPath.active.Scan();
         AreaReady = true;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class WorldData : MonoBehaviour {
@@ -11,6 +10,8 @@ public class WorldData : MonoBehaviour {
     private string _seed;
 
     public Dictionary<string, Faction> Factions { get; set; }
+    public List<Entity> FactionLeaders { get; set; }
+    public List<Entity> OtherNamedNpcs { get; set; }
 
     public string Seed
     {
@@ -93,6 +94,8 @@ public class WorldData : MonoBehaviour {
             Destroy(gameObject);
         }
         Factions = new Dictionary<string, Faction>();
+        FactionLeaders = new List<Entity>();
+        OtherNamedNpcs = new List<Entity>();
     }
 
     public GameObject[] GetBiomeTiles(BiomeType biomeType){

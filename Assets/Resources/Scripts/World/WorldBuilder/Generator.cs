@@ -1137,7 +1137,12 @@ public class Generator : MonoBehaviour
                         currentCell.PresentFaction.Add(card);
 
                         //Temporary for testing faction population
+
                         currentCell.Areas[1,1].PresentFactions.Add(card);
+
+                        //end testing//////////////////////////////////////
+                        
+                        currentCell.Areas[1,1].BuildArea();
 
                         //currentCell.WorldMapSprite = factionTiles[card.Type]; todo replace with some kind of settlement marker
                         placed = true;

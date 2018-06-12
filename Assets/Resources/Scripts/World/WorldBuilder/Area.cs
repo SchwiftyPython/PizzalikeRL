@@ -82,13 +82,17 @@ public class Area {
 
         foreach (var faction in PresentFactions)
         {
+            faction.Leader.CurrentArea = this;
+            faction.Leader.CurrentCell = ParentCell;
+
             var numNpcsToPlace = Random.Range(1, maxNpcsPlacedAtOnce + 1);
 
             for (var k = 0; k < numNpcsToPlace; k++)
             {
                 PresentEntities.Add(k != numNpcsToPlace - 1
-                    ? new Entity(faction.EntityType, faction.Type)
+                    ? new Entity(faction.EntityType, faction.Type) {CurrentArea = this, CurrentCell = ParentCell}
                     : faction.Leader);
+
             }
         }
     }
