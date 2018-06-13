@@ -94,6 +94,8 @@ public class AreaMap : MonoBehaviour
 
         PizzaOrderPopUp.Show(testOrder);
 
+        GameManager.Instance.ActiveOrders.Add(testOrder.Customer.Fluff.Name, testOrder);
+
         //END Pizza Quest PopUp Test/////////////////////////////////////////////////////
 
         CreateAStarGraph();

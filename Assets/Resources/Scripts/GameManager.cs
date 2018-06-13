@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public Entity Player;
     public GameObject PlayerSprite;
 
-    public List<PizzaOrder> ActiveOrders;
+    public Dictionary<string, PizzaOrder> ActiveOrders;
 
     public List<string> Messages;
     private Messenger _messenger;
@@ -55,6 +55,8 @@ public class GameManager : MonoBehaviour
         PlayerInStartingArea = true;
 
         Messages = new List<string>();
+
+        ActiveOrders = new Dictionary<string, PizzaOrder>();
     }
 
     private void Update()
