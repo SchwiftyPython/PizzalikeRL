@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -69,6 +70,16 @@ public class StoryGenerator : MonoBehaviour
         const string file = "faction_leader_assassination.json";
         const string oldFactionLeader = "oldfactionleader";
         const string newFactionLeader = "newfactionleader";
+
+        WorldData.Instance.FactionLeaders.Remove(details.NamedCharacters[0]);
+
+        WorldData.Instance.FactionLeaders.Add(details.NamedCharacters[1]);
+
+        var faction = details.Factions.FirstOrDefault();
+        if (faction != null)
+        {
+            faction.Leader = details.NamedCharacters[1];
+        }
 
         var story = GenerateText(file);
 

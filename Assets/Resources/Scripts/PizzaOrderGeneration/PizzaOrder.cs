@@ -13,14 +13,15 @@ public class PizzaOrder
     public List<Pizza> Pizzas;
     public Entity Customer;
     
-    //TODO customer's location
+    public Cell CustomerLocation;
 
     public PizzaOrder(OrderDifficulty difficulty = OrderDifficulty.Easy)
     {
         Pizzas = new List<Pizza>();
         Pizzas.AddRange(GenerateOrder(difficulty));
 
-        //TODO for customer, Pick either a named entity or make one 
+        ChooseCustomer();
+        CustomerLocation = Customer.CurrentCell; //todo Use name of region cell is in when implemented
     }
 
     private static IEnumerable<Pizza> GenerateOrder(OrderDifficulty difficulty)
@@ -50,5 +51,13 @@ public class PizzaOrder
                 default:
                     return new List<Pizza> { new Pizza() };
         }
+    }
+
+    private void ChooseCustomer()
+    {
+        var allNamedNpcs = new List<Entity>(WorldData.Instance.FactionLeaders);
+        allNamedNpcs.AddRange(WorldData.Instance.OtherNamedNpcs);
+
+        Customer = allNamedNpcs[Random.Range(0, allNamedNpcs.Count)];
     }
 }
