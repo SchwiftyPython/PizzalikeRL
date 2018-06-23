@@ -16,7 +16,7 @@
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
-			<SpritePath>Prefabs/player_2</SpritePath>
+			<SpritePath>Prefabs/human_male_1</SpritePath>
 			<!-- <AITypes> </AITypes> -->
 			<BodyParts>
 			    <Part>human torso</Part>

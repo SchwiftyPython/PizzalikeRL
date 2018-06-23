@@ -90,11 +90,11 @@ public class AreaMap : MonoBehaviour
 
         //Pizza Quest PopUp Test/////////////////////////////////////////////////////
 
-        var testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Medium);
-
-        PizzaOrderPopUp.Show(testOrder);
-
-        GameManager.Instance.ActiveOrders.Add(testOrder.Customer.Fluff.Name, testOrder);
+//        var testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Medium);
+//
+//        PizzaOrderPopUp.Show(testOrder);
+//
+//        GameManager.Instance.ActiveOrders.Add(testOrder.Customer.Fluff.Name, testOrder);
 
         //END Pizza Quest PopUp Test/////////////////////////////////////////////////////
 
