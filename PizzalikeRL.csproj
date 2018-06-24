@@ -525,6 +525,7 @@
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Area.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Cell.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\CellGroup.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Decks\AreaTileDeck.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Decks\Capper.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Decks\Deck.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Decks\FactionDeck.cs" />

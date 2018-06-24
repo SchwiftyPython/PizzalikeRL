@@ -3,6 +3,8 @@ using UnityEngine;
 
 public abstract class Deck<T>
 {
+    public int Size;
+
     public abstract List<T> Cards { get; set; }
 
     public abstract void Build();

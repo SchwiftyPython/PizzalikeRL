@@ -1111,7 +1111,7 @@ public class Generator : MonoBehaviour
         const float chanceToPlaceCard = 0.005f;
 
         var deck = new FactionDeck();
-        var numCellsTilNextDraw = deck.NumCellsToSkipBeforeNextDraw;
+        const int numCellsTilNextDraw = 25;
 
         var currentX = 0;
         var currentY = 0;

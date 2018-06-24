@@ -2,8 +2,6 @@
 
 public sealed class FactionDeck : Deck<Faction>
 {
-    public int NumCellsToSkipBeforeNextDraw { get; } = 25;
-
     public int CardIndex;
 
     public override List<Faction> Cards { get; set; }
@@ -27,12 +25,13 @@ public sealed class FactionDeck : Deck<Faction>
                 Cards.Add(faction);
             }
         }
+        Size = Cards.Count;
     }
 
     public override Faction Draw()
     {
         var card = Cards[CardIndex];
-        if (CardIndex >= Cards.Count)
+        if (CardIndex >= Size)
         {
             Shuffle();
             CardIndex = 0;
