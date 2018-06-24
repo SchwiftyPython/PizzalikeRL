@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Area {
-    private GameObject[] _biomeTypeTiles;
+public class Area
+{
+    private Dictionary<GameObject, Rarities> _biomeTypeTiles;
 
     public List<Entity> PresentEntities { get; set; }
-    public List<Faction> PresentFactions{ get; set; }
+    public List<Faction> PresentFactions { get; set; }
 
     public int Width = 80;
     public int Height = 25;
@@ -18,25 +19,21 @@ public class Area {
     public Queue<Entity> TurnOrder { get; set; }
 
     private int _x;
-    public int X {
-        get {
-            return _x;
-        }
 
-        set {
-            _x = value;
-        }
+    public int X
+    {
+        get { return _x; }
+
+        set { _x = value; }
     }
 
     private int _y;
-    public int Y {
-        get {
-            return _y;
-        }
 
-        set {
-            _y = value;
-        }
+    public int Y
+    {
+        get { return _y; }
+
+        set { _y = value; }
     }
 
     public void BuildArea()
@@ -49,13 +46,14 @@ public class Area {
         PresentEntities = new List<Entity>();
         //PresentFactions = new List<Faction>();
         AreaTiles = new Tile[Width, Height];
-        _biomeTypeTiles = WorldData.Instance.GetBiomeTiles(BiomeType);
+
+        var tileDeck = new AreaTileDeck(BiomeType);
 
         for (var i = 0; i < Width; i++)
         {
             for (var j = 0; j < Height; j++)
             {
-                var texture = _biomeTypeTiles[Random.Range(0, _biomeTypeTiles.Length)];
+                var texture = tileDeck.Draw();
                 if (texture.layer == LayerMask.NameToLayer("Obstacle"))
                 {
                     AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), true, true);
@@ -92,7 +90,6 @@ public class Area {
                 PresentEntities.Add(k != numNpcsToPlace - 1
                     ? new Entity(faction.EntityType, faction.Type) {CurrentArea = this, CurrentCell = ParentCell}
                     : faction.Leader);
-
             }
         }
     }
@@ -109,6 +106,6 @@ public class Area {
 
     public Tile GetTileAt(Vector3 position)
     {
-        return AreaTiles[(int)position.x, (int)position.y];
+        return AreaTiles[(int) position.x, (int) position.y];
     }
 }

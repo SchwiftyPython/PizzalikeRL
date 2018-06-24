@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class Capper
 {
     private const int NumCardsToRecord = 10;
 
     //Rarity caps per _numCardsToRecord
-    private const int CommonCap = 5;
+    private const int CommonCap = 6;
     private const int UncommonCap = 4;
     private const int RareCap = 1;
 
