@@ -195,7 +195,7 @@ public class Generator : MonoBehaviour
         CreateFactions();
         AssignFactionsToCells();
 
-        RarityCapper = new Capper();
+        //RarityCapper = new Capper();
 
         // Render a texture representation of our map
         /*

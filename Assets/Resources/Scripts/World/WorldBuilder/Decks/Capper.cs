@@ -3,25 +3,23 @@ using System.Linq;
 
 public class Capper
 {
-    private const int NumCardsToRecord = 10;
-
-    //Rarity caps per _numCardsToRecord
-    private const int CommonCap = 6;
-    private const int UncommonCap = 4;
-    private const int RareCap = 1;
+    private readonly int _numCardsToRecord;
 
     private readonly Dictionary<Rarities, int> _rarityCaps;
 
     public Queue<Rarities> RecordedCards;
 
-    public Capper()
+    public Capper(int numCardsToRecord, int commonCap, int uncommonCap, int rareCap)
     {
         RecordedCards = new Queue<Rarities>();
+
+        _numCardsToRecord = numCardsToRecord;
+
         _rarityCaps = new Dictionary<Rarities, int>
         {
-            { Rarities.Common, CommonCap },
-            { Rarities.Uncommon, UncommonCap },
-            { Rarities.Rare, RareCap }
+            { Rarities.Common, commonCap },
+            { Rarities.Uncommon, uncommonCap },
+            { Rarities.Rare, rareCap }
         };
     }
 
@@ -34,7 +32,7 @@ public class Capper
 
     public void RecordCardRarity(Rarities rarity)
     {
-        if (RecordedCards.Count >= NumCardsToRecord)
+        if (RecordedCards.Count >= _numCardsToRecord)
         {
             RecordedCards.Dequeue();
         }
