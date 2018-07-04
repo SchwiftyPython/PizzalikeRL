@@ -1,0 +1,13 @@
+
+building_small
+10 10
+2111111113
+0fddddddg0       
+0baaaaaaa0        
+0baaaaaaa0         
+0baaaaaaa0          
+0baaaaaaa0         
+0baaaaaaa0         
+0baaaaaaa0         
+0ieeeeeeh0         
+5111111114

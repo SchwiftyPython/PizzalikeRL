@@ -523,6 +523,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Items\Weapon.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Area.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\BuildingPrefabStore.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Cell.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\CellGroup.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Decks\AreaTileDeck.cs" />
@@ -561,6 +562,7 @@
     <None Include="Assets\PixelPerfectCamera\README.txt" />
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
     <None Include="Assets\Resources\Scripts\World\Items\itemtemplates.xml" />
+    <None Include="Assets\Resources\Scripts\World\WorldBuilder\building_prefabs.txt" />
     <None Include="Assets\Resources\bodyparts.xml" />
     <None Include="Assets\Resources\entitytemplates.xml" />
     <None Include="Assets\Resources\factions.xml" />
