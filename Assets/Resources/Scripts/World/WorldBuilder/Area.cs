@@ -78,6 +78,8 @@ public class Area
             return;
         }
 
+        //todo build settlement
+
         foreach (var faction in PresentFactions)
         {
             faction.Leader.CurrentArea = this;
