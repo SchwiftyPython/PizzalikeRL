@@ -84,6 +84,8 @@ public class Cell {
 
     public List<Faction> PresentFaction;
 
+    public Settlement Settlement;
+
     public BiomeType biomeType
     {
         get { return BiomeType; }

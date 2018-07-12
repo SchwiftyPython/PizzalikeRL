@@ -1119,11 +1119,8 @@ public class Generator : MonoBehaviour
                         currentCell.PresentFaction.Add(card);
 
                         CreateSettlement(card, currentCell);
-                        
-                        //todo change this to wherever a settlement exists in the cell
-                        currentCell.Areas[1,1].BuildArea();
 
-                        //currentCell.WorldMapSprite = factionTiles[card.Type]; todo replace with some kind of settlement marker
+                        currentCell.WorldMapSprite = factionTiles[card.Type]; //todo replace with some kind of settlement marker
                         placed = true;
                         //Debug.Log(card + " placed at " + currentX + ", " + currentY);
                     }

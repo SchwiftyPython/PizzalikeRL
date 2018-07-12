@@ -18,6 +18,8 @@ public class Area
     public Tile[,] AreaTiles { get; set; }
     public Queue<Entity> TurnOrder { get; set; }
 
+    public Settlement settlement;
+
     private int _x;
 
     public int X

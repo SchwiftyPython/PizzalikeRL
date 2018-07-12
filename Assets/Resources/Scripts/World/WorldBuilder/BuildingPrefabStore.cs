@@ -11,14 +11,17 @@ public class BuildingPrefabStore : MonoBehaviour
         Template
     }
 
-    private IDictionary<char, string> _tileKeys = new Dictionary<char, string>
+    private static readonly IDictionary<string, char[,]> _buildingPrefabs = new Dictionary<string, char[,]>();
+
+    public static IDictionary<char, string> TileKeys = new Dictionary<char, string>
     {
-        {'0', "wall_vertical_straight" },
-        {'1', "wall_horizontal_straight" },
+        {'0', "wall_vertical_straight_right" },
+        {'1', "wall_vertical_straight_left" },
         {'2', "wall_upper_left_corner" },
         {'3', "wall_upper_right_corner" },
         {'4', "wall_lower_right_corner" },
         {'5', "wall_lower_left_corner" },
+        {'6', "wall_horizontal_straight" },
         {'a', "floor_center" },
         {'b', "floor_left_side" },
         {'c', "floor_right_side" },
@@ -30,15 +33,16 @@ public class BuildingPrefabStore : MonoBehaviour
         {'i', "floor_lower_left_corner" }
     };
 
-    private readonly IDictionary<string, char[,]> _buildingPrefabs = new Dictionary<string, char[,]>();
+    public static IDictionary<string, GameObject> BrownStoneWallTiles;
 
-    public const string Path = "\\Scripts\\World\\WorldBuilder\\building_prefabs";
+    public static IDictionary<string, GameObject> WoodenFloorTiles;
 
     public TextAsset BuildingPrefabFile;
 
 	private void Start ()
     {
 		LoadPrefabsFromFile();
+        PopulateTileDictionaries();
 	}
 
     private void LoadPrefabsFromFile()
@@ -96,6 +100,53 @@ public class BuildingPrefabStore : MonoBehaviour
                 x++;
             }
         }
+    }
+
+    private static void PopulateTileDictionaries()
+    {
+        BrownStoneWallTiles = new Dictionary<string, GameObject>
+        {
+            { "wall_vertical_straight_right", null},
+            { "wall_vertical_straight_left", null},
+            { "wall_upper_left_corner", null},
+            { "wall_upper_right_corner", null},
+            { "wall_lower_right_corner", null},
+            { "wall_lower_left_corner", null},
+            { "wall_horizontal_straight", null}
+        };
+        
+        WoodenFloorTiles = new Dictionary<string, GameObject>
+        {
+            {"floor_center", null },
+            {"floor_left_side", null },
+            {"floor_right_side", null },
+            {"floor_upper_center", null },
+            {"floor_lower_center", null },
+            {"floor_upper_left_corner", null },
+            {"floor_upper_right_corner", null },
+            {"floor_lower_right_corner", null },
+            {"floor_lower_left_corner", null }
+        };
+
+        var i = 0;
+        foreach (var tile in BrownStoneWallTiles.Keys.ToArray())
+        {
+            BrownStoneWallTiles[tile] = WorldData.Instance.BrownStoneWallTiles[i];
+            i++;
+        }
+
+        i = 0;
+        foreach (var tile in WoodenFloorTiles.Keys.ToArray())
+        {
+            WoodenFloorTiles[tile] = WorldData.Instance.WoodenFloorTiles[i];
+            i++;
+        }
+
+    }
+
+    public static char[,] GetBuildingPrefab(string buildingType)
+    {
+        return _buildingPrefabs[buildingType];
     }
 	
 }

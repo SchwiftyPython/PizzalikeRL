@@ -82,21 +82,12 @@ public class AreaMap : MonoBehaviour
         _currentArea.TurnOrder.Enqueue(_player);
         _currentArea.BuildArea();
         DrawArea();
+        DrawSettlement();
         PlacePlayer();
         if (_currentArea.PresentEntities.Count > 1)
         {
             PlaceNPCs();
         }
-
-        //Pizza Quest PopUp Test/////////////////////////////////////////////////////
-
-//        var testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Medium);
-//
-//        PizzaOrderPopUp.Show(testOrder);
-//
-//        GameManager.Instance.ActiveOrders.Add(testOrder.Customer.Fluff.Name, testOrder);
-
-        //END Pizza Quest PopUp Test/////////////////////////////////////////////////////
 
         CreateAStarGraph();
         AstarPath.active.Scan();
@@ -122,6 +113,40 @@ public class AreaMap : MonoBehaviour
                 var texture = _currentArea.AreaTiles[i, j].GetTileTexture();
                 var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
                 instance.transform.SetParent(_areaMapHolderTransform);
+            }
+        }
+    }
+
+    public void DrawSettlement()
+    {
+        var settlement = _currentArea.settlement;
+
+        //testing
+        var areaY = 20;
+
+        //testing
+        var buildingType = "building_small";
+
+        var buildingBlueprint = BuildingPrefabStore.GetBuildingPrefab(buildingType);
+
+        for (var x = 0; x < buildingBlueprint.GetLength(0); x++)
+        {
+            var areaX = 40;
+            areaY--;
+            for (var y = 0; y < buildingBlueprint.GetLength(1); y++)
+            {
+                var tileCode = buildingBlueprint[x, y];
+                var tileType = BuildingPrefabStore.TileKeys[tileCode];
+
+                Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
+
+                var tile = tileType.Contains("wall") ? BuildingPrefabStore.BrownStoneWallTiles[tileType] : BuildingPrefabStore.WoodenFloorTiles[tileType];
+
+                _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                instance.transform.SetParent(_areaMapHolderTransform);
+
+                areaX++;
             }
         }
     }
