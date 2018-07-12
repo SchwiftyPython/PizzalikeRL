@@ -13,7 +13,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
     private static readonly IDictionary<string, char[,]> _buildingPrefabs = new Dictionary<string, char[,]>();
 
-    public static IDictionary<char, string> TileKeys = new Dictionary<char, string>
+    public static IDictionary<char, string> WallTileKeys = new Dictionary<char, string>
     {
         {'0', "wall_vertical_straight_right" },
         {'1', "wall_vertical_straight_left" },
@@ -21,16 +21,21 @@ public class BuildingPrefabStore : MonoBehaviour
         {'3', "wall_upper_right_corner" },
         {'4', "wall_lower_right_corner" },
         {'5', "wall_lower_left_corner" },
-        {'6', "wall_horizontal_straight" },
+        {'6', "wall_horizontal_straight_top" },
+        {'7', "wall_horizontal_straight_bottom" }
+    };
+
+    public static IDictionary<char, string> FloorTileKeys = new Dictionary<char, string>
+    {
         {'a', "floor_center" },
-        {'b', "floor_left_side" },
-        {'c', "floor_right_side" },
-        {'d', "floor_upper_center" },
-        {'e', "floor_lower_center" },
-        {'f', "floor_upper_left_corner" },
-        {'g', "floor_upper_right_corner" },
-        {'h', "floor_lower_right_corner" },
-        {'i', "floor_lower_left_corner" }
+        {'0', "floor_right_side" },
+        {'1', "floor_left_side" },
+        {'2', "floor_upper_left_corner" },
+        {'3', "floor_upper_right_corner" },
+        {'4', "floor_lower_right_corner" },
+        {'5', "floor_lower_left_corner" },
+        {'6', "floor_upper_center" },
+        {'7', "floor_lower_center" }
     };
 
     public static IDictionary<string, GameObject> BrownStoneWallTiles;
@@ -53,7 +58,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
         var currentPreFab = string.Empty;
 
-        var height = 0;
+        var numColumns = 0;
         
         var x = 0;
 
@@ -83,18 +88,27 @@ public class BuildingPrefabStore : MonoBehaviour
             if (currentStep == LoadingSteps.Dimensions)
             {
                 var dimensions = trimmedLine.Split(' ');
-                var width = int.Parse(dimensions[0]);
-                height = int.Parse(dimensions[1]);
-                _buildingPrefabs[currentPreFab] = new char[width, height];
+                numColumns = int.Parse(dimensions[0]);
+                var numRows = int.Parse(dimensions[1]);
+                _buildingPrefabs[currentPreFab] = new char[numRows, numColumns];
                 currentStep = LoadingSteps.Template;
                 continue;
             }
 
             if (currentStep == LoadingSteps.Template)
             {
-                for (var y = 0; y < height; y++)
+                for (var y = 0; y < numColumns; y++)
                 {
                     var row = _buildingPrefabs[currentPreFab];
+
+                    if (x == 19)
+                    {
+                        Debug.Log("");
+                    }
+
+
+                    Debug.Log($"x: {x}  y: {y}");
+
                     row[x, y] = trimmedLine[y];
                 }
                 x++;
@@ -112,20 +126,21 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_upper_right_corner", null},
             { "wall_lower_right_corner", null},
             { "wall_lower_left_corner", null},
-            { "wall_horizontal_straight", null}
+            { "wall_horizontal_straight_top", null},
+            { "wall_horizontal_straight_bottom", null}
         };
         
         WoodenFloorTiles = new Dictionary<string, GameObject>
         {
             {"floor_center", null },
-            {"floor_left_side", null },
             {"floor_right_side", null },
-            {"floor_upper_center", null },
-            {"floor_lower_center", null },
+            {"floor_left_side", null },
             {"floor_upper_left_corner", null },
             {"floor_upper_right_corner", null },
             {"floor_lower_right_corner", null },
-            {"floor_lower_left_corner", null }
+            {"floor_lower_left_corner", null },
+            {"floor_upper_center", null },
+            {"floor_lower_center", null }
         };
 
         var i = 0;

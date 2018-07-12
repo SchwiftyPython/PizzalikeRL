@@ -135,6 +135,17 @@ public class Generator : MonoBehaviour
         WorldData.Instance.Map = _cells;
 
         GameManager.Instance.CurrentCell = _cells[25, 17];
+
+        //testing
+        while(GameManager.Instance.CurrentCell.BiomeType == BiomeType.Water || GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain)
+        {
+            var x = Random.Range(0, _width);
+            var y = Random.Range(0, _height);
+
+            GameManager.Instance.CurrentCell = _cells[x, y];
+        }
+
+
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
         //SceneManager.LoadScene("WorldMap");
