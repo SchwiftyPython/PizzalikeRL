@@ -11,7 +11,7 @@ public class BuildingPrefabStore : MonoBehaviour
         Template
     }
 
-    private static readonly IDictionary<string, char[,]> _buildingPrefabs = new Dictionary<string, char[,]>();
+    private static readonly IDictionary<string, char[,]> BuildingPrefabs = new Dictionary<string, char[,]>();
 
     public static IDictionary<char, string> WallTileKeys = new Dictionary<char, string>
     {
@@ -73,12 +73,12 @@ public class BuildingPrefabStore : MonoBehaviour
 
             if (currentStep == LoadingSteps.AddKey)
             {
-                if (_buildingPrefabs.ContainsKey(trimmedLine))
+                if (BuildingPrefabs.ContainsKey(trimmedLine))
                 {
                     Debug.Log("Building template already exists in _buildingPrefabs!");
-                    return;
+                    continue;
                 }
-                _buildingPrefabs.Add(trimmedLine, null);
+                BuildingPrefabs.Add(trimmedLine, null);
                 currentPreFab = trimmedLine;
                 currentStep = LoadingSteps.Dimensions;
                 x = 0;
@@ -90,7 +90,7 @@ public class BuildingPrefabStore : MonoBehaviour
                 var dimensions = trimmedLine.Split(' ');
                 numColumns = int.Parse(dimensions[0]);
                 var numRows = int.Parse(dimensions[1]);
-                _buildingPrefabs[currentPreFab] = new char[numRows, numColumns];
+                BuildingPrefabs[currentPreFab] = new char[numRows, numColumns];
                 currentStep = LoadingSteps.Template;
                 continue;
             }
@@ -99,15 +99,7 @@ public class BuildingPrefabStore : MonoBehaviour
             {
                 for (var y = 0; y < numColumns; y++)
                 {
-                    var row = _buildingPrefabs[currentPreFab];
-
-                    if (x == 19)
-                    {
-                        Debug.Log("");
-                    }
-
-
-                    Debug.Log($"x: {x}  y: {y}");
+                    var row = BuildingPrefabs[currentPreFab];
 
                     row[x, y] = trimmedLine[y];
                 }
@@ -161,7 +153,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
     public static char[,] GetBuildingPrefab(string buildingType)
     {
-        return _buildingPrefabs[buildingType];
+        return BuildingPrefabs[buildingType];
     }
 	
 }

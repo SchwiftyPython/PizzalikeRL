@@ -353,7 +353,8 @@
     <None Include="Assets\PixelPerfectCamera\README.txt" />
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
     <None Include="Assets\Resources\Scripts\World\Items\itemtemplates.xml" />
-    <None Include="Assets\Resources\Scripts\World\WorldBuilder\building_prefabs.txt" />
+    <None Include="Assets\Resources\Scripts\World\Settlements\Buildings\building_prefabs.txt" />
+    <None Include="Assets\Resources\Scripts\World\Settlements\settlement_prefabs.txt" />
     <None Include="Assets\Resources\bodyparts.xml" />
     <None Include="Assets\Resources\entitytemplates.xml" />
     <None Include="Assets\Resources\factions.xml" />
