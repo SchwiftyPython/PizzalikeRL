@@ -471,10 +471,6 @@
     <Compile Include="Assets\Resources\Scripts\EntityInfo.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\ConditionChecker.cs" />
-    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Factions\Faction.cs" />
-    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Factions\FactionTemplate.cs" />
-    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Factions\FactionTemplateContainer.cs" />
-    <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Factions\FactionTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\HistoryGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\Situation.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Situations\SituationContainer.cs" />
@@ -514,6 +510,10 @@
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplatesContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Names\NameStore.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Factions\Faction.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplate.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplateContainer.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Armor.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Item.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemRarity.cs" />
@@ -522,7 +522,10 @@
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Weapon.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Settlement.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\SettlementSize.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Area.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\BuildingPrefabStore.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Cell.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\CellGroup.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Decks\AreaTileDeck.cs" />
@@ -561,6 +564,7 @@
     <None Include="Assets\PixelPerfectCamera\README.txt" />
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
     <None Include="Assets\Resources\Scripts\World\Items\itemtemplates.xml" />
+    <None Include="Assets\Resources\Scripts\World\WorldBuilder\building_prefabs.txt" />
     <None Include="Assets\Resources\bodyparts.xml" />
     <None Include="Assets\Resources\entitytemplates.xml" />
     <None Include="Assets\Resources\factions.xml" />

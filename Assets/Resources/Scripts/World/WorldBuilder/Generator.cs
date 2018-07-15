@@ -93,7 +93,8 @@ public class Generator : MonoBehaviour
     MeshRenderer _moistureMapRenderer;
     MeshRenderer _biomeMapRenderer;
 
-    private readonly BiomeType[,] _biomeTable = {   
+    private readonly BiomeType[,] _biomeTable = 
+    {   
 		//COLDEST        //COLDER             //COLD                  //HOT                          //HOTTER                       //HOTTEST
 		{ BiomeType.Ice, BiomeType.WasteLand, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
 		{ BiomeType.Ice, BiomeType.WasteLand, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
@@ -101,6 +102,16 @@ public class Generator : MonoBehaviour
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.WasteLand,    BiomeType.Woodland,            BiomeType.WasteLand,           BiomeType.WasteLand },             //WET
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
+    };
+
+    private readonly IDictionary<SettlementSize, int> _settlementSizePopulationCaps = new Dictionary<SettlementSize, int>
+    {
+        { SettlementSize.Outpost, 10 },
+        { SettlementSize.Hamlet, 20 },
+        { SettlementSize.Village, 50 },
+        { SettlementSize.SmallCity, 250 },
+        { SettlementSize.Fortress, 500 },
+        { SettlementSize.LargeCity, 1000 }
     };
 
     public Capper RarityCapper;
@@ -123,33 +134,18 @@ public class Generator : MonoBehaviour
 
         WorldData.Instance.Map = _cells;
 
-        //TESTING if faction population works ///////////////////////////////////////////////////////
         GameManager.Instance.CurrentCell = _cells[25, 17];
-        var cellHasFaction = false; 
-        if (GameManager.Instance.CurrentCell.PresentFaction != null)
+
+        //testing
+        while(GameManager.Instance.CurrentCell.BiomeType == BiomeType.Water || GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain)
         {
-            cellHasFaction = GameManager.Instance.CurrentCell.PresentFaction.Any();
+            var x = Random.Range(0, _width);
+            var y = Random.Range(0, _height);
+
+            GameManager.Instance.CurrentCell = _cells[x, y];
         }
 
-        while (!cellHasFaction)
-        {
-            GameManager.Instance.CurrentCell = _cells[Random.Range(0, _width), Random.Range(0, _height)];
-            if (GameManager.Instance.CurrentCell.PresentFaction != null)
-            {
-                cellHasFaction = GameManager.Instance.CurrentCell.PresentFaction.Any();
-            }
-        }
 
-        var testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Easy);
-
-        testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Medium);
-
-        testOrder = new PizzaOrder(PizzaOrder.OrderDifficulty.Hard);
-        //END TESTING/////////////////////////////////////////////////////////////////////////////////////
-
-
-        //GameManager.Instance.CurrentCell = _cells[25, 17];
-        GameManager.Instance.CurrentCell.HasNPCs = true;
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
         //SceneManager.LoadScene("WorldMap");
@@ -193,9 +189,9 @@ public class Generator : MonoBehaviour
         UpdateBiomeBitmask();
 
         CreateFactions();
-        AssignFactionsToCells();
+        PlaceSettlements();
 
-        RarityCapper = new Capper();
+        //RarityCapper = new Capper();
 
         // Render a texture representation of our map
         /*
@@ -1097,7 +1093,7 @@ public class Generator : MonoBehaviour
         }
     }
 
-    private void AssignFactionsToCells()
+    private void PlaceSettlements()
     {
         var factionTiles = new Dictionary<string, GameObject>
         {
@@ -1130,21 +1126,12 @@ public class Generator : MonoBehaviour
                         if (currentCell.PresentFaction == null)
                         {
                             currentCell.PresentFaction = new List<Faction>();
-
-                            //Temporary for testing faction population
-                            currentCell.Areas[1,1].PresentFactions = new List<Faction>();
                         }
                         currentCell.PresentFaction.Add(card);
 
-                        //Temporary for testing faction population
+                        CreateSettlement(card, currentCell);
 
-                        currentCell.Areas[1,1].PresentFactions.Add(card);
-
-                        //end testing//////////////////////////////////////
-                        
-                        currentCell.Areas[1,1].BuildArea();
-
-                        //currentCell.WorldMapSprite = factionTiles[card.Type]; todo replace with some kind of settlement marker
+                        currentCell.WorldMapSprite = factionTiles[card.Type]; //todo replace with some kind of settlement marker
                         placed = true;
                         //Debug.Log(card + " placed at " + currentX + ", " + currentY);
                     }
@@ -1169,6 +1156,22 @@ public class Generator : MonoBehaviour
                 }
                 currentCell = _cells[currentX, currentY];
             }
+        }
+    }
+
+    private void CreateSettlement(Faction faction, Cell cell)
+    {
+        var currentPopulation = faction.Population;
+
+        var values = Enum.GetValues(typeof(SettlementSize));
+
+        var size = (SettlementSize)values.GetValue(Random.Range(0, values.Length));
+
+        if (currentPopulation < _settlementSizePopulationCaps[size])
+        {
+            var settlementPopulation = currentPopulation - _settlementSizePopulationCaps[size];
+            var settlement = new Settlement(faction, size, cell, settlementPopulation);
+            //todo add to cell?
         }
     }
     #endregion

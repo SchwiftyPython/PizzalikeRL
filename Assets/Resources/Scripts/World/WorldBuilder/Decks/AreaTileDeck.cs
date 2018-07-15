@@ -5,7 +5,7 @@ public sealed class AreaTileDeck : Deck<GameObject>
 {
     private readonly Dictionary<GameObject, Rarities> _cardRarityReference;
 
-    private Capper _capper;
+    private readonly Capper _capper;
 
     public int CardIndex;
 
@@ -17,7 +17,7 @@ public sealed class AreaTileDeck : Deck<GameObject>
         CardIndex = 0;
         Build();
         Shuffle();
-        _capper = new Capper();
+        _capper = new Capper(80, 77, 2, 1);
     }
 
     public override void Build()
@@ -28,7 +28,7 @@ public sealed class AreaTileDeck : Deck<GameObject>
 
     public override GameObject Draw()
     {
-        const int maxTries = 3;
+        var maxTries = Size;
         var validCard = false;
         var numTries = 0;
 
