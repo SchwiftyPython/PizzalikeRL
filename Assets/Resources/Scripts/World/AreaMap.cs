@@ -82,7 +82,7 @@ public class AreaMap : MonoBehaviour
         _currentArea.TurnOrder.Enqueue(_player);
         _currentArea.BuildArea();
         DrawArea();
-        DrawSettlement();
+        //DrawSettlement();
         PlacePlayer();
         if (_currentArea.PresentEntities.Count > 1)
         {
@@ -119,7 +119,7 @@ public class AreaMap : MonoBehaviour
 
     public void DrawSettlement()
     {
-        var settlement = _currentArea.settlement;
+        var settlement = _currentArea.Settlement;
 
         //testing
         var areaY = 24;

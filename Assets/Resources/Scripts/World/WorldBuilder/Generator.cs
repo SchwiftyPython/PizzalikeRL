@@ -1167,12 +1167,15 @@ public class Generator : MonoBehaviour
 
         var size = (SettlementSize)values.GetValue(Random.Range(0, values.Length));
 
-        if (currentPopulation < _settlementSizePopulationCaps[size])
-        {
-            var settlementPopulation = currentPopulation - _settlementSizePopulationCaps[size];
-            var settlement = new Settlement(faction, size, cell, settlementPopulation);
-            //todo add to cell?
-        }
+//        if (currentPopulation < _settlementSizePopulationCaps[size])
+//        {
+//            var settlementPopulation = currentPopulation - _settlementSizePopulationCaps[size];
+//            
+//            cell.Settlement = new Settlement(faction, size, cell, settlementPopulation);
+//        }
+
+        //testing
+        cell.Settlement = new Settlement(faction, SettlementSize.Outpost, cell, 5);
     }
     #endregion
 

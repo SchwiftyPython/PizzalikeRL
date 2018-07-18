@@ -11,7 +11,7 @@ public class BuildingPrefabStore : MonoBehaviour
         Template
     }
 
-    private static readonly IDictionary<string, char[,]> BuildingPrefabs = new Dictionary<string, char[,]>();
+    private static readonly IDictionary<string, BuildingPrefab> BuildingPrefabs = new Dictionary<string, BuildingPrefab>();
 
     public static IDictionary<char, string> WallTileKeys = new Dictionary<char, string>
     {
@@ -90,7 +90,7 @@ public class BuildingPrefabStore : MonoBehaviour
                 var dimensions = trimmedLine.Split(' ');
                 numColumns = int.Parse(dimensions[0]);
                 var numRows = int.Parse(dimensions[1]);
-                BuildingPrefabs[currentPreFab] = new char[numRows, numColumns];
+                BuildingPrefabs[currentPreFab] = new BuildingPrefab(new char[numRows, numColumns]);
                 currentStep = LoadingSteps.Template;
                 continue;
             }
@@ -99,7 +99,7 @@ public class BuildingPrefabStore : MonoBehaviour
             {
                 for (var y = 0; y < numColumns; y++)
                 {
-                    var row = BuildingPrefabs[currentPreFab];
+                    var row = BuildingPrefabs[currentPreFab].Blueprint;
 
                     row[x, y] = trimmedLine[y];
                 }
@@ -153,7 +153,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
     public static char[,] GetBuildingPrefab(string buildingType)
     {
-        return BuildingPrefabs[buildingType];
+        return BuildingPrefabs[buildingType].Blueprint;
     }
 	
 }

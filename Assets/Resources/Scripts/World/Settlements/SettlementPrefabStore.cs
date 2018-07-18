@@ -6,11 +6,11 @@ public class SettlementPrefabStore : MonoBehaviour
 {
     private enum LoadingSteps
     {
-        AddKey,
+        NewPrefab,
         Template
     }
 
-    private static readonly IDictionary<string, SettlementPrefab> SettlementPrefabs = new Dictionary<string, SettlementPrefab>();
+    private static readonly IDictionary<SettlementSize, List<SettlementPrefab>> SettlementPrefabs = new Dictionary<SettlementSize, List<SettlementPrefab>>();
 
     public static IDictionary<char, string> PathTileKeys = new Dictionary<char, string>
     {
@@ -43,11 +43,12 @@ public class SettlementPrefabStore : MonoBehaviour
     {
         var rawPrefabInfo = SettlementPrefabFile.text.Split("\r\n"[0]).ToList();
 
-        var currentStep = LoadingSteps.AddKey;
+        var currentStep = LoadingSteps.NewPrefab;
 
-        var currentPreFab = string.Empty;
+        var currentPreFab = SettlementSize.Outpost;
 
-        const int numColumns = 25;
+        const int numColumns = 80;
+        const int numRows = 25;
 
         var x = 0;
 
@@ -56,20 +57,18 @@ public class SettlementPrefabStore : MonoBehaviour
             var trimmedLine = line.Trim('\n');
             if (string.IsNullOrEmpty(trimmedLine))
             {
-                currentStep = LoadingSteps.AddKey;
+                currentStep = LoadingSteps.NewPrefab;
                 continue;
             }
 
-            if (currentStep == LoadingSteps.AddKey)
+            if (currentStep == LoadingSteps.NewPrefab)
             {
-                if (SettlementPrefabs.ContainsKey(trimmedLine))
+                currentPreFab = GetSettlementSize(trimmedLine);
+                if (!SettlementPrefabs.ContainsKey(currentPreFab))
                 {
-                    Debug.Log("Settlement template already exists in SettlementPrefabs!");
-                    continue;
+                    SettlementPrefabs.Add(currentPreFab, new List<SettlementPrefab>());
                 }
-                SettlementPrefabs.Add(trimmedLine, null);
-                currentPreFab = trimmedLine;
-                SettlementPrefabs[currentPreFab] = new SettlementPrefab(new char[80, numColumns]);
+                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[numColumns, numRows]));
 
                 currentStep = LoadingSteps.Template;
                 x = 0;
@@ -78,9 +77,9 @@ public class SettlementPrefabStore : MonoBehaviour
 
             if (currentStep == LoadingSteps.Template)
             {
-                for (var y = 0; y < numColumns; y++)
+                for (var y = 0; y < numRows; y++)
                 {
-                    var row = SettlementPrefabs[currentPreFab].Blueprint;
+                    var row = SettlementPrefabs[currentPreFab].Last().Blueprint;
 
                     Debug.Log($"x: {x}  y: {y}");
 
@@ -89,5 +88,22 @@ public class SettlementPrefabStore : MonoBehaviour
                 x++;
             }
         }
+    }
+
+    private static SettlementSize GetSettlementSize(string size)
+    {
+        switch (size)
+        {
+            case "outpost":
+                return SettlementSize.Outpost;
+                default:
+                    return SettlementSize.Outpost; 
+        }
+    }
+
+
+    public static SettlementPrefab GetSettlementPrefab(SettlementSize size)
+    {
+        return SettlementPrefabs[size][Random.Range(0, SettlementPrefabs[size].Count)];
     }
 }

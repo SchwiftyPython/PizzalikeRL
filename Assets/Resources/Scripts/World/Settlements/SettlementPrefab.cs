@@ -9,6 +9,7 @@ public class SettlementPrefab
     public SettlementPrefab(char [,] blueprint)
     {
         Blueprint = blueprint;
+        _lots = new List<Lot>();
     }
 
 }
