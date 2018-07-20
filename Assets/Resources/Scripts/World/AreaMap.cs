@@ -144,7 +144,7 @@ public class AreaMap : MonoBehaviour
 
                     var tile = BuildingPrefabStore.WoodenFloorTiles[tileType];
 
-                    Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
+                    //Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
 
                     _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
                     var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
@@ -159,7 +159,7 @@ public class AreaMap : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log($"Tile Code: {tileCode} ");
+                    //Debug.Log($"Tile Code: {tileCode} ");
 
                     if (tileCode != 'a')
                     {
@@ -170,7 +170,7 @@ public class AreaMap : MonoBehaviour
 
                     var tile = BuildingPrefabStore.WoodenFloorTiles[tileType];
 
-                    Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
+                    //Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
 
                     _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
                     var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);

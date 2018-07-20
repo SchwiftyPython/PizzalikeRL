@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SettlementPrefabStore : MonoBehaviour
 {
@@ -37,6 +39,7 @@ public class SettlementPrefabStore : MonoBehaviour
     private void Start ()
     {
 		LoadPrefabsFromFile();
+        PopulateTileDictionaries();
 	}
 
     private void LoadPrefabsFromFile()
@@ -68,7 +71,7 @@ public class SettlementPrefabStore : MonoBehaviour
                 {
                     SettlementPrefabs.Add(currentPreFab, new List<SettlementPrefab>());
                 }
-                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[numColumns, numRows]));
+                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[numRows, numColumns]));
 
                 currentStep = LoadingSteps.Template;
                 x = 0;
@@ -77,11 +80,14 @@ public class SettlementPrefabStore : MonoBehaviour
 
             if (currentStep == LoadingSteps.Template)
             {
-                for (var y = 0; y < numRows; y++)
+                var charArray = trimmedLine.ToCharArray();
+                Array.Reverse(charArray);
+                trimmedLine = new string(charArray);
+                for (var y = 0; y < numColumns; y++)
                 {
                     var row = SettlementPrefabs[currentPreFab].Last().Blueprint;
 
-                    Debug.Log($"x: {x}  y: {y}");
+                    //Debug.Log($"x: {x}  y: {y}");
 
                     row[x, y] = trimmedLine[y];
                 }
@@ -99,6 +105,66 @@ public class SettlementPrefabStore : MonoBehaviour
                 default:
                     return SettlementSize.Outpost; 
         }
+    }
+
+    private void PopulateTileDictionaries()
+    {
+        GrassDirtPathTiles = new Dictionary<string, GameObject>
+        {
+            { "path_vertical_straight_left", null },
+            { "path_vertical_straight_right", null },
+            { "path_upper_left_corner_outside", null },
+            { "path_upper_right_corner_outside", null },
+            { "path_lower_right_corner_outside", null },
+            { "path_lower_left_corner_outside", null },
+            { "path_upper_left_corner_inside", null },
+            { "path_upper_right_corner_inside", null },
+            { "path_lower_right_corner_inside", null },
+            { "path_lower_left_corner_inside", null },
+            { "path_horizontal_straight_top", null },
+            { "path_horizontal_straight_bottom", null }
+        };
+
+        var i = 0;
+        foreach (var tile in GrassDirtPathTiles.Keys.ToArray())
+        {
+            GrassDirtPathTiles[tile] = WorldData.Instance.GrassDirtPathTiles[i];
+            i++;
+        }
+    }
+
+    public static char[,] Rotate180(char[,] blueprint){
+        
+        var height = blueprint.GetLength(0);
+        var width = blueprint.GetLength(1);
+        var answer = new char[height, width];
+
+        for (var y = 0; y < height / 2; y++)
+        {
+            var topY = y;
+            var bottomY = height - 1 - y;
+            for (var topX = 0; topX < width; topX++)
+            {
+                var bottomX = width - topX - 1;
+                answer[topY, topX] = blueprint[bottomY, bottomX];
+                answer[bottomY, bottomX] = blueprint[topY, topX];
+            }
+        }
+
+        if (height % 2 == 0)
+        {
+            return answer;
+        }
+
+        var centerY = height / 2;
+        for (var leftX = 0; leftX < Mathf.CeilToInt(width / 2f); leftX++)
+        {
+            var rightX = width - 1 - leftX;
+            answer[centerY, leftX] = blueprint[centerY, rightX];
+            answer[centerY, rightX] = blueprint[centerY, leftX];
+        }
+        
+        return answer;
     }
 
 

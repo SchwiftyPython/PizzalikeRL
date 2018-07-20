@@ -74,13 +74,13 @@ public class Area
 
         var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
 
-        var settlementBluePrint = settlementPrefab.Blueprint;
+        var settlementBluePrint = SettlementPrefabStore.Rotate180(settlementPrefab.Blueprint);
 
-        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(0); currentRow++)
+        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
         {
-            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(1); currentColumn++)
+            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(0); currentColumn++)
             {
-                var tileCode = settlementBluePrint[currentRow, currentColumn];
+                var tileCode = settlementBluePrint[currentColumn, currentRow];
 
                 if (tileCode == 'x')
                 {
@@ -90,14 +90,23 @@ public class Area
                 {
                     //get lot dimensions
                     //pick building
+                    continue;
                 }
 
+                //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
+                Debug.Log($"x: {currentRow}  y: {currentColumn}");
+                Debug.Log($"tilecode: {tileCode}");
                 var tileType = SettlementPrefabStore.PathTileKeys[tileCode];
 
                 //testing
                 var tile = SettlementPrefabStore.GrassDirtPathTiles[tileType];
                 AreaTiles[currentRow, currentColumn] = new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
             }
+        }
+
+        if (PresentFactions == null)
+        {
+            return;
         }
 
         foreach (var faction in PresentFactions)
