@@ -155,5 +155,12 @@ public class BuildingPrefabStore : MonoBehaviour
     {
         return BuildingPrefabs[buildingType].Blueprint;
     }
-	
+
+    public static BuildingPrefab GetBuildingPrefabForLot(Lot lot)
+    {
+        var buildingsThatWillFit =
+            BuildingPrefabs.Values.Where(buildingPrefab => buildingPrefab.WillFitInLot(lot)).ToList();
+
+        return buildingsThatWillFit[Random.Range(0, buildingsThatWillFit.Count)];
+    }
 }

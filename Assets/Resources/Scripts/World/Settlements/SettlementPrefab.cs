@@ -4,12 +4,11 @@ public class SettlementPrefab
 {
     public char[,] Blueprint;
 
-    private List<Lot> _lots;
+    public List<Lot> Lots;
 
     public SettlementPrefab(char [,] blueprint)
     {
         Blueprint = blueprint;
-        _lots = new List<Lot>();
+        Lots = new List<Lot>();
     }
-
 }

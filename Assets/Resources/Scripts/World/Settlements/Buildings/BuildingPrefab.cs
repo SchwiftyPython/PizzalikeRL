@@ -10,4 +10,9 @@
         Width = blueprint.GetLength(0);
         Height = blueprint.GetLength(1);
     }
+
+    public bool WillFitInLot(Lot lot)
+    {
+        return Height <= lot.Height && Width <= lot.Width;
+    }
 }

@@ -74,6 +74,8 @@ public class Area
 
         var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
 
+        Settlement.Lots = settlementPrefab.Lots;
+
         var settlementBluePrint = SettlementPrefabStore.Rotate180(settlementPrefab.Blueprint);
 
         for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
@@ -94,8 +96,8 @@ public class Area
                 }
 
                 //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
-                Debug.Log($"x: {currentRow}  y: {currentColumn}");
-                Debug.Log($"tilecode: {tileCode}");
+                //Debug.Log($"x: {currentRow}  y: {currentColumn}");
+                //Debug.Log($"tilecode: {tileCode}");
                 var tileType = SettlementPrefabStore.PathTileKeys[tileCode];
 
                 //testing

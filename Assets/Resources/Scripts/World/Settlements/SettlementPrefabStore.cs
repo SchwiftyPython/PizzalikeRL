@@ -6,6 +6,9 @@ using Random = UnityEngine.Random;
 
 public class SettlementPrefabStore : MonoBehaviour
 {
+    private const int NumColumns = 80;
+    private const int NumRows = 25;
+
     private enum LoadingSteps
     {
         NewPrefab,
@@ -50,9 +53,6 @@ public class SettlementPrefabStore : MonoBehaviour
 
         var currentPreFab = SettlementSize.Outpost;
 
-        const int numColumns = 80;
-        const int numRows = 25;
-
         var x = 0;
 
         foreach (var line in rawPrefabInfo)
@@ -71,7 +71,7 @@ public class SettlementPrefabStore : MonoBehaviour
                 {
                     SettlementPrefabs.Add(currentPreFab, new List<SettlementPrefab>());
                 }
-                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[numRows, numColumns]));
+                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[NumRows, NumColumns]));
 
                 currentStep = LoadingSteps.Template;
                 x = 0;
@@ -83,7 +83,8 @@ public class SettlementPrefabStore : MonoBehaviour
                 var charArray = trimmedLine.ToCharArray();
                 Array.Reverse(charArray);
                 trimmedLine = new string(charArray);
-                for (var y = 0; y < numColumns; y++)
+
+                for (var y = 0; y < NumColumns; y++)
                 {
                     var row = SettlementPrefabs[currentPreFab].Last().Blueprint;
 
@@ -94,6 +95,69 @@ public class SettlementPrefabStore : MonoBehaviour
                 x++;
             }
         }
+        FindLotsInBlueprint(SettlementPrefabs[currentPreFab].Last());
+    }
+
+    private static void FindLotsInBlueprint(SettlementPrefab prefab)
+    {
+        var blueprint = prefab.Blueprint;
+
+        for (var x = 0; x < NumRows; x++)
+        {
+            for (var y = 0; y < NumColumns; y++)
+            {
+                if (blueprint[x, y] != LotKey)
+                {
+                    continue;
+                }
+
+                if (prefab.Lots.Count == 0)
+                {
+                    var lot = GetNewLotInfo(new Vector2(x, y), blueprint);
+                    prefab.Lots.Add(lot);
+                }
+                else
+                {
+                    if (IsPartOfExistingLot(new Vector2(x, y), prefab.Lots))
+                    {
+                        continue;
+                    }
+
+                    var lot = GetNewLotInfo(new Vector2(x, y), blueprint);
+                    prefab.Lots.Add(lot);
+                }
+            }
+        }
+    }
+
+    private static bool IsPartOfExistingLot(Vector2 point, List<Lot> lots)
+    {
+        return lots.Any(lot => lot.IsPartOfLot(point));
+    }
+
+    private static Lot GetNewLotInfo(Vector2 upperLeftCorner, char[,] blueprint)
+    {
+        var x = (int)upperLeftCorner.x;
+        var y = (int)upperLeftCorner.y;
+
+        var width = 0;
+        var height = 0;
+
+        while (blueprint[x,y] == LotKey)
+        {
+            width++;
+            y++;
+        }
+
+        y = (int)upperLeftCorner.y;
+
+        while (blueprint[x, y] == LotKey)
+        {
+            height++;
+            x++;
+        }
+
+        return new Lot(upperLeftCorner, height, width);
     }
 
     private static SettlementSize GetSettlementSize(string size)
@@ -107,7 +171,7 @@ public class SettlementPrefabStore : MonoBehaviour
         }
     }
 
-    private void PopulateTileDictionaries()
+    private static void PopulateTileDictionaries()
     {
         GrassDirtPathTiles = new Dictionary<string, GameObject>
         {

@@ -24,6 +24,7 @@ public class Settlement
 
     public string Name;
     public readonly SettlementSize Size;
+    public List<Lot> Lots;
 
     public Settlement(Faction faction, SettlementSize size, Cell cell, int population)
     {
