@@ -95,7 +95,23 @@ public class SettlementPrefabStore : MonoBehaviour
                 x++;
             }
         }
-        FindLotsInBlueprint(SettlementPrefabs[currentPreFab].Last());
+        foreach (var prefabType in SettlementPrefabs.Values)
+        { 
+            foreach(var prefab in prefabType)
+            {
+                prefab.Blueprint = Rotate180(prefab.Blueprint);
+                FindLotsInBlueprint(prefab);
+            }
+        }
+    }
+
+    public static void AssignBuildingToLots(SettlementPrefab prefab)
+    {
+        foreach (var lot in prefab.Lots)
+        {
+            var buildingPrefab = BuildingPrefabStore.GetBuildingPrefabForLot(lot);
+            lot.AssignedBuilding = new Building(buildingPrefab); 
+        }
     }
 
     private static void FindLotsInBlueprint(SettlementPrefab prefab)

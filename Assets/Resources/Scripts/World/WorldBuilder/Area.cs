@@ -74,9 +74,13 @@ public class Area
 
         var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
 
+        SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
+
         Settlement.Lots = settlementPrefab.Lots;
 
-        var settlementBluePrint = SettlementPrefabStore.Rotate180(settlementPrefab.Blueprint);
+//        var settlementBluePrint = SettlementPrefabStore.Rotate180(settlementPrefab.Blueprint);
+
+        var settlementBluePrint = settlementPrefab.Blueprint;
 
         for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
         {
@@ -90,8 +94,6 @@ public class Area
                 }
                 if (tileCode == SettlementPrefabStore.LotKey)
                 {
-                    //get lot dimensions
-                    //pick building
                     continue;
                 }
 

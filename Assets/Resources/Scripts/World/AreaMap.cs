@@ -128,15 +128,45 @@ public class AreaMap : MonoBehaviour
 
         foreach (var lot in settlement.Lots)
         {
-            var buildingPrefab = BuildingPrefabStore.GetBuildingPrefabForLot(lot);
+            var areaY = (int)lot.LowerLeftCorner.x;
+            var areaX = (int)lot.LowerLeftCorner.y;
+            var building = lot.AssignedBuilding;
+            for (var currentRow = 0; currentRow < building.Height; currentRow++)
+            {
+                areaY--;
+                for (var currentColumn = 0; currentColumn < building.Width; currentColumn++)
+                {
+                    if (building.WallTiles[currentRow, currentColumn] != null)
+                    {
+                        var tile = building.FloorTiles[currentRow, currentColumn];
 
-            var buildingBlueprint = buildingPrefab.Blueprint;
-            
-            var areaY = (int)lot.UpperLeftCorner.y;
+                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
 
+                        tile = building.WallTiles[currentRow, currentColumn];
+
+                        _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
+                        instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
+                    }
+                    else
+                    {
+                        var tile = building.FloorTiles[currentRow, currentColumn];
+
+                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
+                    }
+                    areaX++;
+                }
+                areaX = (int)lot.LowerLeftCorner.y;
+            }
+
+
+            /*var areaX = (int) lot.UpperLeftCorner.x;
             for (var x = 0; x < buildingBlueprint.GetLength(0); x++)
             {
-                var areaX = (int)lot.UpperLeftCorner.x;
                 areaY--;
                 for (var y = 0; y < buildingBlueprint.GetLength(1); y++)
                 {
@@ -181,12 +211,9 @@ public class AreaMap : MonoBehaviour
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
-
-
-
                     areaX++;
                 }
-            }
+            }*/
         }
     }
 
