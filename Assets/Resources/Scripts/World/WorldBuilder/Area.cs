@@ -18,7 +18,7 @@ public class Area
     public Tile[,] AreaTiles { get; set; }
     public Queue<Entity> TurnOrder { get; set; }
 
-    public Settlement settlement;
+    public Settlement Settlement;
 
     private int _x;
 
@@ -63,15 +63,48 @@ public class Area
                 else
                 {
                     AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), false, false);
-
-//                    //for testing
-//                    const int maxNPCS = 5;
-//                    if (Random.Range(0, 100) < 1 && PresentEntities.Count < maxNPCS) {
-//                        var npcTypes = WorldData.Instance.BiomePossibleEntities[BiomeType];
-//                        var npc = EntityTemplateLoader.GetEntityTemplate(npcTypes[0]);
-//                        PresentEntities.Add(new Entity(npc));
-//                    }
                 }
+            }
+        }
+        
+        if (Settlement == null)
+        {
+            return;
+        }
+
+        var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
+
+        SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
+
+        Settlement.Lots = settlementPrefab.Lots;
+
+//        var settlementBluePrint = SettlementPrefabStore.Rotate180(settlementPrefab.Blueprint);
+
+        var settlementBluePrint = settlementPrefab.Blueprint;
+
+        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
+        {
+            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(0); currentColumn++)
+            {
+                var tileCode = settlementBluePrint[currentColumn, currentRow];
+
+                if (tileCode == 'x')
+                {
+                    continue;
+                }
+                if (tileCode == SettlementPrefabStore.LotKey)
+                {
+                    continue;
+                }
+
+                //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
+                //Debug.Log($"x: {currentRow}  y: {currentColumn}");
+                //Debug.Log($"tilecode: {tileCode}");
+                var tileType = SettlementPrefabStore.PathTileKeys[tileCode];
+
+                //testing
+                var tile = SettlementPrefabStore.GrassDirtPathTiles[tileType];
+                AreaTiles[currentRow, currentColumn] = new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
             }
         }
 
@@ -79,8 +112,6 @@ public class Area
         {
             return;
         }
-
-        //todo build settlement
 
         foreach (var faction in PresentFactions)
         {

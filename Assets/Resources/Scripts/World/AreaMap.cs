@@ -82,7 +82,7 @@ public class AreaMap : MonoBehaviour
         _currentArea.TurnOrder.Enqueue(_player);
         _currentArea.BuildArea();
         DrawArea();
-        DrawSettlement();
+        PlaceBuildings();
         PlacePlayer();
         if (_currentArea.PresentEntities.Count > 1)
         {
@@ -117,70 +117,103 @@ public class AreaMap : MonoBehaviour
         }
     }
 
-    public void DrawSettlement()
+    public void PlaceBuildings()
     {
-        var settlement = _currentArea.settlement;
-
-        //testing
-        var areaY = 24;
-
-        //testing
-        var buildingType = "building_medium";
-
-        var buildingBlueprint = BuildingPrefabStore.GetBuildingPrefab(buildingType);
-
-        for (var x = 0; x < buildingBlueprint.GetLength(0); x++)
+        if (_currentArea.Settlement?.Lots == null)
         {
-            var areaX = 40;
-            areaY--;
-            for (var y = 0; y < buildingBlueprint.GetLength(1); y++)
+            return;
+        }
+
+        var settlement = _currentArea.Settlement;
+
+        foreach (var lot in settlement.Lots)
+        {
+            var areaY = (int)lot.LowerLeftCorner.x;
+            var areaX = (int)lot.LowerLeftCorner.y;
+            var building = lot.AssignedBuilding;
+            for (var currentRow = 0; currentRow < building.Height; currentRow++)
             {
-                var tileCode = buildingBlueprint[x, y];
-
-                //Need to place floor tile before wall tile
-                if (BuildingPrefabStore.WallTileKeys.ContainsKey(tileCode))
+                areaY--;
+                for (var currentColumn = 0; currentColumn < building.Width; currentColumn++)
                 {
-                    var tileType = BuildingPrefabStore.FloorTileKeys[tileCode];
-
-                    var tile = BuildingPrefabStore.WoodenFloorTiles[tileType];
-
-                    Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
-
-                    _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
-                    var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
-                    instance.transform.SetParent(_areaMapHolderTransform);
-
-                    tileType = BuildingPrefabStore.WallTileKeys[tileCode];
-                    tile = BuildingPrefabStore.BrownStoneWallTiles[tileType];
-
-                    _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
-                    instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
-                    instance.transform.SetParent(_areaMapHolderTransform);
-                }
-                else
-                {
-                    Debug.Log($"Tile Code: {tileCode} ");
-
-                    if (tileCode != 'a')
+                    if (building.WallTiles[currentRow, currentColumn] != null)
                     {
-                        continue;
+                        var tile = building.FloorTiles[currentRow, currentColumn];
+
+                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
+
+                        tile = building.WallTiles[currentRow, currentColumn];
+
+                        _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
+                        instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
                     }
+                    else
+                    {
+                        var tile = building.FloorTiles[currentRow, currentColumn];
 
-                    var tileType = BuildingPrefabStore.FloorTileKeys[tileCode];
-
-                    var tile = BuildingPrefabStore.WoodenFloorTiles[tileType];
-
-                    Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
-
-                    _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
-                    var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
-                    instance.transform.SetParent(_areaMapHolderTransform);
+                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
+                    }
+                    areaX++;
                 }
-
-                
-
-                areaX++;
+                areaX = (int)lot.LowerLeftCorner.y;
             }
+
+
+            /*var areaX = (int) lot.UpperLeftCorner.x;
+            for (var x = 0; x < buildingBlueprint.GetLength(0); x++)
+            {
+                areaY--;
+                for (var y = 0; y < buildingBlueprint.GetLength(1); y++)
+                {
+                    var tileCode = buildingBlueprint[x, y];
+
+                    //Need to place floor tile before wall tile
+                    if (BuildingPrefabStore.WallTileKeys.ContainsKey(tileCode))
+                    {
+                        var tileType = BuildingPrefabStore.FloorTileKeys[tileCode];
+
+                        var tile = BuildingPrefabStore.WoodenFloorTiles[tileType];
+
+                        //Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
+
+                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
+
+                        tileType = BuildingPrefabStore.WallTileKeys[tileCode];
+                        tile = BuildingPrefabStore.BrownStoneWallTiles[tileType];
+
+                        _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
+                        instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
+                    }
+                    else
+                    {
+                        //Debug.Log($"Tile Code: {tileCode} ");
+
+                        if (tileCode != 'a')
+                        {
+                            continue;
+                        }
+
+                        var tileType = BuildingPrefabStore.FloorTileKeys[tileCode];
+
+                        var tile = BuildingPrefabStore.WoodenFloorTiles[tileType];
+
+                        //Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
+
+                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance.transform.SetParent(_areaMapHolderTransform);
+                    }
+                    areaX++;
+                }
+            }*/
         }
     }
 

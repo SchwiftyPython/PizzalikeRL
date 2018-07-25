@@ -14,22 +14,23 @@ public class Settlement
     };
 
     private int _population;
-    private readonly SettlementSize _size;
     private readonly Cell _cell;
     private Faction _faction;
     private int _yearFounded;
     private string _history;
     private List<Entity> _namedNpcs;
     private List<Area> _areas;
+    private List<Building> _buildings;
 
     public string Name;
+    public readonly SettlementSize Size;
+    public List<Lot> Lots;
 
     public Settlement(Faction faction, SettlementSize size, Cell cell, int population)
     {
         _faction = faction;
-        _size = size;
+        Size = size;
         _cell = cell;
-        cell.Settlement = this;
         _population = population;
 
         PickAreas();
@@ -39,7 +40,7 @@ public class Settlement
     private void PickAreas()
     {
         _areas = new List<Area>();
-        for (var i = 0; i < _numAreasForSettlementSize[_size]; i++)
+        for (var i = 0; i < _numAreasForSettlementSize[Size]; i++)
         {
             var settlementPlaced = false;
             while (!settlementPlaced)
@@ -49,12 +50,12 @@ public class Settlement
 
                 var area = _cell.Areas[x, y];
 
-                if (area.settlement != null)
+                if (area.Settlement != null)
                 {
                     continue;
                 }
 
-                area.settlement = this;
+                area.Settlement = this;
                 _areas.Add(area);
                 settlementPlaced = true;
             }

@@ -164,14 +164,14 @@ public class WorldData : MonoBehaviour
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
-                    biomeTiles = biomeTiles?.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
+                    biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 tilesToAdd = AddRareTiles(AreaGrassLandTilesRare);
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
-                    biomeTiles = biomeTiles?.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
+                    biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 return biomeTiles;
@@ -187,14 +187,14 @@ public class WorldData : MonoBehaviour
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
-                    biomeTiles = biomeTiles?.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
+                    biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 tilesToAdd = AddRareTiles(AreaIceTilesRare);
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
-                    biomeTiles = biomeTiles?.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
+                    biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 return biomeTiles;
@@ -210,14 +210,14 @@ public class WorldData : MonoBehaviour
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
-                    biomeTiles = biomeTiles?.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
+                    biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 tilesToAdd = AddRareTiles(AreaSwampTilesRare);
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
-                    biomeTiles = biomeTiles?.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
+                    biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 return biomeTiles;
@@ -233,19 +233,19 @@ public class WorldData : MonoBehaviour
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
-                    biomeTiles = biomeTiles?.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
+                    biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 tilesToAdd = AddRareTiles(AreaWasteLandTilesRare);
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
-                    biomeTiles = biomeTiles?.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
+                    biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 return biomeTiles;
             default:
-                throw new ArgumentOutOfRangeException("biomeType", biomeType, null);
+                throw new ArgumentOutOfRangeException(nameof(biomeType), biomeType, null);
         }
     }
 
