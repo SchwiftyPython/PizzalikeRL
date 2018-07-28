@@ -6,6 +6,9 @@ public class EntityTemplate {
     [XmlAttribute("type")]
     public string Type;
 
+    [XmlElement("Description")]
+    public string Description;
+
     [XmlElement("MinStrength")]
     public int MinStrength;
 
@@ -45,11 +48,6 @@ public class EntityTemplate {
 
     [XmlElement("SpritePath")]
     public string SpritePath;
-
-    /*
-    [XmlArray("AITypes")]
-    [XmlArrayItem("AI")]
-    */
 
     [XmlArray("BodyParts")]
     [XmlArrayItem("Part")]

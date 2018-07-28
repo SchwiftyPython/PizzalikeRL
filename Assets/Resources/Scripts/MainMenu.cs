@@ -1,28 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour {
+public class MainMenu : MonoBehaviour
+{
     private const string WorldGenerationSetupScene = "WorldGenerationSetup";
+    private const string CharacterCreationScene = "CharacterCreation";
 
-    public static MainMenu instance = null;
+    public static MainMenu Instance;
 
-    void Awake() {
-        if (instance == null) {
-            instance = this;
-        } else if (instance != this) {
-            // Destroy the current object, so there is just one 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
             Destroy(gameObject);
         }
-
     }
-    
-    public void LoadWorldGenerationScene() {
+
+    public void LoadWorldGenerationScene()
+    {
         SceneManager.LoadScene(WorldGenerationSetupScene);
     }
 
-    public void QuitToDesktop() {
+    public void LoadCharacterCreationScene()
+    {
+        SceneManager.LoadScene(CharacterCreationScene);
+    }
+
+    public void QuitToDesktop()
+    {
         Application.Quit();
     }
     
