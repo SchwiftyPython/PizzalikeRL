@@ -1,11 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class CharacterCreation : MonoBehaviour
 {
+    private readonly List<string> _nonPlayableSpecies = new List<string>
+    {
+        "pepperoni worm"
+    };
+
     private const string MainMenuScene = "MainMenu";
+
+    private List<string> _playableSpecies;
 
     public GameObject CurrentPage;
 
@@ -14,7 +22,7 @@ public class CharacterCreation : MonoBehaviour
 
     private void Awake()
     {
-        //todo load species list
+        LoadPlayableSpeciesList();
     }
 
     public void OnBackFromSpeciesSelectPage()
@@ -27,5 +35,12 @@ public class CharacterCreation : MonoBehaviour
         StatPointAllocationPage.SetActive(true);
 
         SpeciesSelectPage.SetActive(false);
+    }
+
+    private void LoadPlayableSpeciesList()
+    {
+        var allSpecies = EntityTemplateLoader.GetEntityTemplateTypes().ToList();
+
+        _playableSpecies = allSpecies.Where(species => !_nonPlayableSpecies.Contains(species)).ToList();
     }
 }
