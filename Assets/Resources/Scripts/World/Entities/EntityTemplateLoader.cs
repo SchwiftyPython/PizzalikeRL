@@ -6,7 +6,7 @@ public class EntityTemplateLoader : MonoBehaviour {
     private static string[] _entityTemplateTypes;
     private static EntityTemplatesContainer _ec;
 
-    private void Start() {
+    private void Awake() {
         BodyPartLoader.LoadBodyParts();
 
         _ec = EntityTemplatesContainer.Load(Path);

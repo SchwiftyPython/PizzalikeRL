@@ -95,28 +95,34 @@ public class Entity
         _isPlayer = isPlayer;
         _entityType = template.Type;
         _factionType = faction;
-        Strength = GenStrength(template.MinStrength, template.MaxStrength);
-        Agility = GenAgility(template.MinAgility, template.MaxAgility);
-        Constitution = GenConstitution(template.MinConstitution, template.MaxConstitution);
-        Intelligence = GenIntelligence(template.MinIntelligence, template.MaxIntelligence);
+
+        if (isPlayer)
+        {
+            Level = 1;
+            Xp = 0;
+        }
+        else
+        {
+            Strength = GenStrength(template.MinStrength, template.MaxStrength);
+            Agility = GenAgility(template.MinAgility, template.MaxAgility);
+            Constitution = GenConstitution(template.MinConstitution, template.MaxConstitution);
+            Intelligence = GenIntelligence(template.MinIntelligence, template.MaxIntelligence);
+
+            CurrentHp = MaxHp = GenMaxHp();
+            Speed = GenSpeed();
+            Defense = GenDefense();
+
+            //TODO: gen level
+            //TODO: gen coins
+        }
+
         _canMutate = template.CanMutate;
+
         _prefab = Resources.Load(template.SpritePath) as GameObject;
-        //TODO: gen level
-        Level = 1;
-        CurrentHp = MaxHp = GenMaxHp();
-        Speed = GenSpeed();
-        Defense = GenDefense();
-        //TODO: gen coins
+        
         Inventory = new Dictionary<Guid, Item>();
         BuildBody(template);
         PopulateEquipped();
-
-        //todo replace this with character creation values
-        if (_isPlayer)
-        {
-            CreateFluff();
-            Xp = 0;
-        }
     }
 
     public string GetTypeForEntityInfoWindow()
