@@ -26,6 +26,10 @@ public class CharacterCreation : MonoBehaviour
     public RectTransform SpeciesOptionParent;
     public GameObject SpeciesDescription;
 
+    public GameObject BackgroundOptionPrefab;
+    public RectTransform BackgroundOptionParent;
+    public GameObject BackgroundDescription;
+
     public GameObject StrengthValueBox;
     public GameObject IncreaseStrengthButton;
     public GameObject DecreaseStrengthButton;
@@ -197,5 +201,10 @@ public class CharacterCreation : MonoBehaviour
 
             option.transform.GetChild(0).GetComponent<Text>().text = species;
         }
+    }
+
+    private void LoadCharacterBackgrounds()
+    {
+        
     }
 }

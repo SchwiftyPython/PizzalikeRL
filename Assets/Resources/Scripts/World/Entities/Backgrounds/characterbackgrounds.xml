@@ -1,0 +1,69 @@
+<BackgroundCollection>
+	<Backgrounds>
+
+		<Background name = "religious">
+			<Description> You have dedicated your life to your faith. </Description>			
+		</Background>
+		
+		<Background name = "con artist">
+			<Description> You have made a living cheating folk out of money. </Description>			
+		</Background>
+		
+		<Background name = "criminal">
+			<Description> You break the law. </Description>			
+		</Background>
+		
+		<Background name = "entertainer">
+			<Description> You love to perform. A natural at winning over a crowd. </Description>			
+		</Background>
+		
+		<Background name = "arena fighter">
+			<Description> You fight to the death for coin and glory. </Description>			
+		</Background>
+		
+		<Background name = "brewer">
+			<Description> Your ales are legendary. Not to mention your salesmanship. </Description>			
+		</Background>
+		
+		<Background name = "gem cutter">
+			<Description> You make works of art from valuable stones. </Description>			
+		</Background>
+		
+		<Background name = "bowyer">
+			<Description> You come from a long line of bow makers. Your family name is respected by all archers. </Description>			
+		</Background>
+		
+		<Background name = "royalty">
+			<Description> You've lived the pampered life. Away from the peasants. </Description>			
+		</Background>
+		
+		<Background name = "knight">
+			<Description> An elite bodyguard in service to a powerful family. </Description>			
+		</Background>
+		
+		<Background name = "nomad">
+			<Description> You've travelled the lands going where the food is. </Description>			
+		</Background>
+		
+		<Background name = "scholar">
+			<Description> You love to learn and are a master in your field. </Description>			
+		</Background>
+		
+		<Background name = "fisherman">
+			<Description> The sea is your home and the salt your skin. </Description>			
+		</Background>
+		
+		<Background name = "pirate">
+			<Description> You were a terror of the waters and pillaged all that you could. </Description>			
+		</Background>
+		
+		<Background name = "military">
+			<Description> You served in your homeland's army. </Description>			
+		</Background>
+		
+		<Background name = "street rat">
+			<Description> You grew up an orphan in the streets. </Description>			
+		</Background>
+
+	</Backgrounds>
+</BackgroundCollection>

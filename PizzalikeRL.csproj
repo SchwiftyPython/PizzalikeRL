@@ -506,6 +506,9 @@
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\CharacterBackground.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\CharacterBackgroundContainer.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\CharacterBackgroundLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Entity.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityFluff.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplate.cs" />
@@ -570,7 +573,7 @@
     <None Include="Assets\JsonDotNet\link.xml" />
     <None Include="Assets\PixelPerfectCamera\README.txt" />
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
-    <None Include="Assets\Resources\Scripts\World\Entities\characterbackgrounds.xml" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Backgrounds\characterbackgrounds.xml" />
     <None Include="Assets\Resources\Scripts\World\Items\itemtemplates.xml" />
     <None Include="Assets\Resources\Scripts\World\Settlements\Buildings\building_prefabs.txt" />
     <None Include="Assets\Resources\Scripts\World\Settlements\settlement_prefabs.txt" />
