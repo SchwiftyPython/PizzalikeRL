@@ -3,6 +3,7 @@
 	<EntityTemplates>
 
 		<EntityTemplate type = "human">      
+		<Description> A human </Description>
 			<MinStrength> 2 </MinStrength>
 			<MaxStrength> 4 </MaxStrength>
 			<MinAgility> 3 </MinAgility>
@@ -16,8 +17,7 @@
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
-			<SpritePath>Prefabs/human_male_1</SpritePath>
-			<!-- <AITypes> </AITypes> -->
+			<SpritePath>Prefabs/human_male_1</SpritePath>			
 			<BodyParts>
 			    <Part>human torso</Part>
 				<Part>human head</Part>
@@ -42,7 +42,8 @@
 			</PossibleBiomes>
 		</EntityTemplate>
 		
-		<EntityTemplate type = "pepperoni worm">      
+		<EntityTemplate type = "pepperoni worm">
+            <Description> A worm made of pepperoni</Description>		
 			<MinStrength> 1 </MinStrength>
 			<MaxStrength> 2 </MaxStrength>
 			<MinAgility> 2 </MinAgility>
@@ -56,8 +57,7 @@
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
-			<SpritePath>Prefabs/pep_worm</SpritePath>
-			<!-- <AITypes> </AITypes> -->
+			<SpritePath>Prefabs/pep_worm</SpritePath>			
 			<BodyParts>				
 				<Part>worm body</Part>				
 				<Part>worm head</Part>
