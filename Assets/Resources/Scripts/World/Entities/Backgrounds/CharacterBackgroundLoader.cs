@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CharacterBackgroundLoader : MonoBehaviour
 {
@@ -15,12 +13,11 @@ public class CharacterBackgroundLoader : MonoBehaviour
 
         _characterBackgroundTypes = new string[_characterBackgroundContainer.CharacterBackgrounds.Count];
 
-
         var index = 0;
 
         foreach (var cb in _characterBackgroundContainer.CharacterBackgrounds)
         {
-            _characterBackgroundTypes[index] = cb.name;
+            _characterBackgroundTypes[index] = cb.Name;
 
             index++;
         }

@@ -41,21 +41,21 @@ public class Entity
 
     //Base stats
 
-    public int Level { get; }
-    public int Xp { get; }
+    public int Level { get; private set; }
+    public int Xp { get; private set; }
 
-    public int Strength { get; }
-    public int Agility { get; }
-    public int Constitution { get; }
-    public int Intelligence { get; }
+    public int Strength { get; private set; }
+    public int Agility { get; private set; }
+    public int Constitution { get; private set; }
+    public int Intelligence { get; private set; }
 
 
     //Stats dependent on base stat values
 
-    public int MaxHp { get; }
+    public int MaxHp { get; private set; }
     public int CurrentHp { get; private set; }
-    public int Speed { get; }
-    public int Defense { get; }
+    public int Speed { get; private set; }
+    public int Defense { get; private set; }
 
     public IDictionary<Guid, Item> Inventory { get; }
 
@@ -123,6 +123,18 @@ public class Entity
         Inventory = new Dictionary<Guid, Item>();
         BuildBody(template);
         PopulateEquipped();
+    }
+
+    public void SetStats(int strength, int agility, int constitution, int intelligence)
+    {
+        Strength = strength;
+        Agility = agility;
+        Constitution = constitution;
+        Intelligence = intelligence;
+
+        CurrentHp = MaxHp = GenMaxHp();
+        Speed = GenSpeed();
+        Defense = GenDefense();
     }
 
     public string GetTypeForEntityInfoWindow()
@@ -633,7 +645,7 @@ public class Entity
 
     public void CreateFluff()
     {
-        Fluff = new EntityFluff(_entityType, _factionType);
+        Fluff = new EntityFluff(_entityType);
     }
 
     private static bool MeleeRollHit(Entity target)

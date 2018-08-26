@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-using UnityEngine;
 
-public class CharacterBackground : MonoBehaviour
+public class CharacterBackground
 {
     [XmlAttribute("name")]
     public string Name;

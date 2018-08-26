@@ -11,11 +11,23 @@ public class EntityFluff
     };
 
     public string Name;
+    public CharacterBackground BackgroundType;
+    public List<string> Background;
+    public int Age;
 
     private readonly int _turnBorn;  
     private readonly string _entityType;
-    private List<string> background;
     private readonly string _sex;
+    private string _factionType;
+
+    public EntityFluff(string entityType)
+    {
+        _sex = _sexes[Random.Range(0, _sexes.Count)];
+        _entityType = entityType;
+        Name = GenerateName();
+        Background = new List<string>();
+        _turnBorn = HistoryGenerator.CurrentTurn;
+    }
 
     public EntityFluff(string entityType, string factionType)
     {
@@ -23,12 +35,13 @@ public class EntityFluff
         _entityType = entityType;
         Name = GenerateName();
         _turnBorn = HistoryGenerator.CurrentTurn;
-        background = new List<string>();
+        Background = new List<string>();
+        _factionType = factionType;
     }
 
     public void AddToBackground(string story)
     {
-        background.Add(story);
+        Background.Add(story);
     }
 
     public int GetAgeInTurns()
@@ -38,7 +51,7 @@ public class EntityFluff
 
     public List<string> GetBackground()
     {
-        return background;
+        return Background;
     }
 
     private string GenerateName()

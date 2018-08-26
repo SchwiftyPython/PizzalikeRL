@@ -491,6 +491,7 @@
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\PizzaOrder.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\BodyPartButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterBackgroundOptionButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterCreation.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\SpeciesOptionButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\CharacterWindow.cs" />
@@ -506,6 +507,7 @@
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\BackgroundGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\CharacterBackground.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\CharacterBackgroundContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\CharacterBackgroundLoader.cs" />

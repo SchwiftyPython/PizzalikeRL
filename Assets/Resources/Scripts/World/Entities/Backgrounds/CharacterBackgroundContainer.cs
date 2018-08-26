@@ -3,10 +3,10 @@ using System.IO;
 using System.Xml.Serialization;
 using UnityEngine;
 
-[XmlRoot("EntityTemplatesCollection")]
+[XmlRoot("BackgroundCollection")]
 public class CharacterBackgroundContainer 
 {
-    [XmlArray("BackgroundCollection")]
+    [XmlArray("Backgrounds")]
     [XmlArrayItem("Background")]
     public List<CharacterBackground> CharacterBackgrounds = new List<CharacterBackground>();
 

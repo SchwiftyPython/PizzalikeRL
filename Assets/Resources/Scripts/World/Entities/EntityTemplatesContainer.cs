@@ -6,7 +6,6 @@ using UnityEngine;
 [XmlRoot("EntityTemplatesCollection")]
 public class EntityTemplatesContainer
 {
-
     [XmlArray("EntityTemplates")]
     [XmlArrayItem("EntityTemplate")]
     public List<EntityTemplate> EntityTemplates = new List<EntityTemplate>();

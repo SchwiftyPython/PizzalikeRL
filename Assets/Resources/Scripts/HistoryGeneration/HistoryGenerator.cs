@@ -127,6 +127,11 @@ public class HistoryGenerator : MonoBehaviour {
         { 
             while (turnsLeftInYear > 0)
             {
+                if (CurrentTurn >= GameManager.Instance.Player.Fluff.Age * TurnsPerDay * DaysPerYear)
+                {
+                    GameManager.Instance.Player.Fluff.AddToBackground(BackgroundGenerator.GenerateLifeEvent());
+                }
+
                 while (turnsLeftInMonth > 0)
                 {
                     while (turnsLeftInDay > 0)
