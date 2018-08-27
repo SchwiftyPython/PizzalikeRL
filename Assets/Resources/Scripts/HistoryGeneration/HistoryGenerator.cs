@@ -4,13 +4,14 @@ using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class HistoryGenerator : MonoBehaviour {
+public class HistoryGenerator : MonoBehaviour
+{
     private const int TurnsPerDay = 6;
     private const int DaysPerWeek = 7;
     private const int DaysPerMonth = 28;
     private const int DaysPerYear = 112;
-    private const int MinTurns = 20 * TurnsPerDay * DaysPerYear;
-    private const int MaxTurns = 30 * TurnsPerDay * DaysPerYear;
+    private const int MinTurns = 18 * TurnsPerDay * DaysPerYear;
+    private const int MaxTurns = 28 * TurnsPerDay * DaysPerYear;
 
     private enum SituationTypes
     {
@@ -83,7 +84,7 @@ public class HistoryGenerator : MonoBehaviour {
 
         Generate();
 
-        Debug.Log($"Done Generating on {_currentMonth} {_currentDayOfTheWeek}, {_currentYear}");
+        //Debug.Log($"Done Generating on {_currentMonth} {_currentDayOfTheWeek}, {_currentYear}");
 
 //        foreach (var faction in WorldData.Instance.Factions.Values)
 //        {
@@ -98,35 +99,15 @@ public class HistoryGenerator : MonoBehaviour {
         var turnsLeftInYear = TurnsPerTime["year"];
         var turnsLeftInHistoryGeneration = Random.Range(MinTurns, MaxTurns);
 
-        //Testing //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-       /* if (WorldData.Instance.Factions == null)
-        {
-            WorldData.Instance.Factions = new Dictionary<string, Faction>();
-        }
-
-        WorldData.Instance.Factions.Add("biker gang", new Faction(FactionTemplateLoader.GetFactionByName("biker gang")));
-        WorldData.Instance.Factions.Add("geriatric", new Faction(FactionTemplateLoader.GetFactionByName("geriatric")));
-
-        WorldData.Instance.Factions["biker gang"].Population = 550;
-        WorldData.Instance.Factions["geriatric"].Population = 600;
-
-        WorldData.Instance.Factions["biker gang"].Religions.Add("harley", 500);
-        WorldData.Instance.Factions["geriatric"].Religions.Add("harley", 10);
-
-        WorldData.Instance.Factions["biker gang"].Relationships.Add("geriatric", 0);
-        WorldData.Instance.Factions["geriatric"].Relationships.Add("biker gang", 0);*/
-
-//        foreach (var faction in WorldData.Instance.Factions.Values)
-//        {
-//            Debug.Log($"Faction Leader for {faction.Type} at start: {faction.Leader.Fluff.Name}");
-//        }
-
-        // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         while (turnsLeftInHistoryGeneration > 0)
         { 
             while (turnsLeftInYear > 0)
             {
+                if (CurrentTurn >= GameManager.Instance.Player.Fluff.Age * TurnsPerDay * DaysPerYear)
+                {
+                    GameManager.Instance.Player.Fluff.AddToBackground(BackgroundGenerator.Instance.GenerateLifeEvent());
+                }
+
                 while (turnsLeftInMonth > 0)
                 {
                     while (turnsLeftInDay > 0)

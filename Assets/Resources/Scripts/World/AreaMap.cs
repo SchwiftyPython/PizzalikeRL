@@ -42,37 +42,10 @@ public class AreaMap : MonoBehaviour
         AreaReady = false;
         AreaMapHolder = new GameObject("AreaMapHolder");
 
-        //temp til player creation
-        if (GameManager.Instance.Player == null)
-        {
-            _player = new Entity(EntityTemplateLoader.GetEntityTemplate("human"), null, true);
-            _playerSprite = Instantiate(_player.GetSpritePrefab(), new Vector2(0, 0), Quaternion.identity);
-            _playerSprite.transform.SetParent(GameManager.Instance.transform);
-            _player.SetSprite(_playerSprite);
-            GameManager.Instance.Player = _player;
-
-            //Inventory Testing /////////////////////////////////////////////////////
-
-            var item = new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Common);
-            _player.Inventory.Add(item.Id, item);
-
-            item = new Armor(ItemTemplateLoader.GetEntityTemplate("sword"), ItemRarity.Common);
-            _player.Inventory.Add(item.Id, item);
-
-            item = new Armor(ItemTemplateLoader.GetEntityTemplate("helmet"), ItemRarity.Rare);
-            _player.Inventory.Add(item.Id, item);
-
-            item = new Armor(ItemTemplateLoader.GetEntityTemplate("sword"), ItemRarity.Rare);
-            _player.Inventory.Add(item.Id, item);
-
-            //END Inventory Testing////////////////////////////////////////////////////////
-        }
-        else if(_player == null || _player != GameManager.Instance.Player)
+        if(_player == null || _player != GameManager.Instance.Player)
         {
             _player = GameManager.Instance.Player;
-            _playerSprite = _player.GetSprite();
-            _playerSprite.transform.SetParent(GameManager.Instance.transform);
-            //_player.SetSprite(_playerSprite);
+            InstantiatePlayerSprite();
         }
 
         _areaMapHolderTransform = AreaMapHolder.transform;

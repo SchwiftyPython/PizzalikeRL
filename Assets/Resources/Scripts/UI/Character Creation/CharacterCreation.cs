@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,11 +13,18 @@ public class CharacterCreation : MonoBehaviour
     };
 
     private const string MainMenuScene = "MainMenu";
+    private const string WorldGenerationSetupScene = "WorldGenerationSetup";
 
     private List<string> _playableSpecies;
 
     private EntityTemplate _playerTemplate;
     private Entity _player;
+    private CharacterBackground _selectedBackground;
+
+    private int _strength;
+    private int _agility;
+    private int _constitution;
+    private int _intelligence;
 
     public GameObject SpeciesSelectPage;
     public GameObject StatPointAllocationPage;
@@ -25,6 +33,10 @@ public class CharacterCreation : MonoBehaviour
     public GameObject SpeciesOptionPrefab;
     public RectTransform SpeciesOptionParent;
     public GameObject SpeciesDescription;
+
+    public GameObject BackgroundOptionPrefab;
+    public RectTransform BackgroundOptionParent;
+    public GameObject BackgroundDescription;
 
     public GameObject StrengthValueBox;
     public GameObject IncreaseStrengthButton;
@@ -60,6 +72,8 @@ public class CharacterCreation : MonoBehaviour
     {
         LoadPlayableSpeciesList();
 
+        LoadCharacterBackgrounds();
+
         _playerTemplate = EntityTemplateLoader.GetEntityTemplate(_playableSpecies.First());
 
         DisplaySpeciesDescription(_playerTemplate.Description);
@@ -90,6 +104,11 @@ public class CharacterCreation : MonoBehaviour
 
     public void OnNextFromStatPointAllocationPage()
     {
+        _strength = Convert.ToInt32(StrengthValueBox.GetComponent<Text>().text);
+        _agility = Convert.ToInt32(AgilityValueBox.GetComponent<Text>().text);
+        _constitution = Convert.ToInt32(ConstitutionValueBox.GetComponent<Text>().text);
+        _intelligence = Convert.ToInt32(IntelligenceValueBox.GetComponent<Text>().text);
+
         ChooseBackgroundPage.SetActive(true);
 
         StatPointAllocationPage.SetActive(false);
@@ -104,7 +123,17 @@ public class CharacterCreation : MonoBehaviour
 
     public void OnNextFromChooseBackgroundPage()
     {
-        //Create world scene?
+        _player = new Entity(_playerTemplate, null, true);
+        _player.SetStats(_strength, _agility, _constitution, _intelligence);
+
+        _player.CreateFluff();
+        _player.Fluff.BackgroundType = _selectedBackground;
+        _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
+        _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
+
+        GameManager.Instance.Player = _player;
+
+        SceneManager.LoadScene(WorldGenerationSetupScene);
     }
 
     #endregion Navigation Buttons
@@ -114,6 +143,13 @@ public class CharacterCreation : MonoBehaviour
         _playerTemplate = template;
 
         DisplaySpeciesDescription(template.Description);
+    }
+
+    public void SelectCharacterBackgroundOption(CharacterBackground background)
+    {
+        _selectedBackground = background;
+
+        DisplayCharacterBackgroundDescription(background.Description);
     }
 
     #region Stat Buttons
@@ -196,6 +232,28 @@ public class CharacterCreation : MonoBehaviour
             option.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
 
             option.transform.GetChild(0).GetComponent<Text>().text = species;
+        }
+    }
+
+    private void DisplayCharacterBackgroundDescription(string description)
+    {
+        BackgroundDescription.GetComponent<Text>().text = description;
+    }
+
+    private void LoadCharacterBackgrounds()
+    {
+        var allBackgrounds = CharacterBackgroundLoader.GetCharacterBackgroundTypes().ToList();
+
+        foreach (var background in allBackgrounds)
+        {
+            var option = Instantiate(BackgroundOptionPrefab, BackgroundOptionPrefab.transform.position,
+                Quaternion.identity);
+
+            option.transform.SetParent(BackgroundOptionParent);
+
+            option.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+
+            option.transform.GetChild(0).GetComponent<Text>().text = background;
         }
     }
 }
