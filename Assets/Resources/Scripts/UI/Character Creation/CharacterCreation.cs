@@ -13,12 +13,14 @@ public class CharacterCreation : MonoBehaviour
     };
 
     private const string MainMenuScene = "MainMenu";
+    private const string WorldGenerationSetupScene = "WorldGenerationSetup";
 
     private List<string> _playableSpecies;
 
     private EntityTemplate _playerTemplate;
     private Entity _player;
     private CharacterBackground _selectedBackground;
+
     private int _strength;
     private int _agility;
     private int _constitution;
@@ -126,8 +128,12 @@ public class CharacterCreation : MonoBehaviour
 
         _player.CreateFluff();
         _player.Fluff.BackgroundType = _selectedBackground;
-        _player.Fluff.Background = BackgroundGenerator.GenerateBackground();
+        _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
         _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
+
+        GameManager.Instance.Player = _player;
+
+        SceneManager.LoadScene(WorldGenerationSetupScene);
     }
 
     #endregion Navigation Buttons

@@ -21,7 +21,7 @@
 	"gangMember": [ "You and a gang member become enemies." ],
 	"coworkerEnemy": [ "A rivalry starts with a co-worker" ],
 	"governmentOfficial": [ "A government official set their sights on you." ],
-	"cause": [ #ruinedReputation#, ],
+	"cause": [ #ruinedReputation# ],
     "romance": [ #happyLoveAffair#, #tragicLoveAffair#, #complicatedAffair# ],
 	"happyLoveAffair": [ "You had a happy love affair."],
 	"tragicLoveAffair": [ #loverDiedInAccident#, #loverVanished#, #didNotWork#, #goalConflict#, #loverKidnapped#, #loverInsane#, #loverSuicide#, #loverKilled#, #stolenByRival#, #loverImprisoned# ],

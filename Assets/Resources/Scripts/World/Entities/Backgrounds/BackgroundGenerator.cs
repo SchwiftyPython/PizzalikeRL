@@ -2,41 +2,57 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public class BackgroundGenerator : MonoBehaviour
 {
     private const string StartSymbol = "#origin#";
 
-    public static TextAsset ChildhoodFile;
-    public static TextAsset ParentStatusFile;
-    public static TextAsset LifeEventsFile;
+    public  TextAsset ChildhoodFile;
+    public  TextAsset ParentStatusFile;
+    public  TextAsset LifeEventsFile;
 
-    public static List<string> GenerateBackground()
+    public static BackgroundGenerator Instance;
+
+    private void Awake()
     {
-       return new List<string> {GenerateChildhood(), GenerateParentStatus()};
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public static string GenerateLifeEvent()
+
+    public List<string> GenerateBackground()
+    {
+        return new List<string> {GenerateChildhood(), GenerateParentStatus()};
+    }
+
+    public string GenerateLifeEvent()
     {
         return GenerateText(LifeEventsFile);
     }
 
-    private static string GenerateChildhood()
+    private string GenerateChildhood()
     {
         return GenerateText(ChildhoodFile);
     }
 
-    private static string GenerateParentStatus()
+    private string GenerateParentStatus()
     {
         return GenerateText(ParentStatusFile);
     }
 
-    private static string GenerateText(TextAsset file)
+    private string GenerateText(TextAsset file)
     {
         try
         {
-            var grammar = new TraceryNet.Grammar(new FileInfo(file.text));
+            var grammar = new TraceryNet.Grammar(new FileInfo(AssetDatabase.GetAssetPath(file)));
             return grammar.Flatten(StartSymbol);
         }
         catch (Exception e)
