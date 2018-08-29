@@ -182,7 +182,6 @@ public class InputController : MonoBehaviour
 
                 if (currentScene.Equals("Area"))
                 {
-                    //AreaMap.Instance.Camera.transform.SetParent(null);
                     SceneManager.LoadScene("WorldMap");
                 }
             }
@@ -192,7 +191,6 @@ public class InputController : MonoBehaviour
 
                 if (currentScene.Equals("WorldMap"))
                 {
-                    //WorldMap.Instance.Camera.transform.SetParent(null);
                     GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                     SceneManager.LoadScene("Area");

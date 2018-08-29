@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-public class BodyPart {
-
+public class BodyPart
+{
     [XmlAttribute("name")]
     public string Name;
 
@@ -33,4 +33,6 @@ public class BodyPart {
     public BodyPart ParentBodyPart;
 
     public List<BodyPart> ChildrenBodyParts;
+
+    public int CurrentHp;
 }
