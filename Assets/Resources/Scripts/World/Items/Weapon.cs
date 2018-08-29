@@ -13,7 +13,7 @@ public class Weapon : Item
 
     private readonly Dictionary<string, int> _weaponTypeRanges = new Dictionary<string, int>
     {
-        { "sword", 0 }
+        { "sword", 1 }
     };
 
     public string Type;

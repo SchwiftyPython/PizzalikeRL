@@ -679,9 +679,23 @@ public class Entity
         return part;
     }
 
+    public void RangedAttack(Entity target)
+    {
+        if (RangedHit(target))
+        {
+            ApplyRangedDamage(target);
+        }
+        else
+        {
+            //todo make this missed with weapon used
+            var message = _entityType + " missed " + target._entityType + "!";
+            GameManager.Instance.Messages.Add(message);
+        }
+    }
+
     private static bool MeleeRollHit(Entity target)
     {
-        var roll = Random.Range(1, 101);
+        var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
 
         //Rolling a one always misses
         if (roll == 1)
@@ -700,9 +714,10 @@ public class Entity
     {
         var unarmedDamageDice = new Dice(1, 4);
 
+        //This will work as long as we only allow one melee and one ranged weapon to be equipped
         var equippedMeleeWeapon = (Weapon)(from e in Equipped.Values
                                   where e.GetType() == typeof(Weapon) 
-                                  && ((Weapon) e).Range < 1
+                                  && ((Weapon) e).Range < 2
                                   select e).FirstOrDefault();
 
         var damageDice = equippedMeleeWeapon != null ? equippedMeleeWeapon.ItemDice : unarmedDamageDice;
@@ -720,5 +735,68 @@ public class Entity
         //Debug.Log("Target remaining hp: " + target.CurrentHp);
     }
 
-    
+    private bool RangedHit(Entity target)
+    {
+        var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
+
+        var chanceToHit = CalculateChanceToHitRanged(target);
+
+        return roll <= chanceToHit;
+    }
+
+    private int CalculateChanceToHitRanged(Entity target)
+    {
+        const int startingChanceToHit = 60;
+
+        var chanceToHit = startingChanceToHit;
+
+        var rangeToTarget = CalculateRangeToTarget(target);
+
+        if (rangeToTarget < 6)
+        {
+            chanceToHit += 3;
+        }
+
+        //todo + attack bonus?
+        //todo + 10 if attacker has not moved in last two turns
+
+        //todo - 1-15 if defender moved last turn
+        //todo - 10 if defender moved last turn
+        //todo - 10 if defender is flying
+        //todo - defender bonus?
+
+        return chanceToHit;
+    }
+
+    private int CalculateRangeToTarget(Entity target)
+    {
+        var a = target.CurrentPosition.x - CurrentPosition.x;
+        var b = target.CurrentPosition.y - CurrentPosition.y;
+
+        return (int) Math.Sqrt(a * a + b * b);
+    }
+
+    private void ApplyRangedDamage(Entity target)
+    {
+        //This should work as long as we only allow one melee and one ranged weapon to be equipped
+        var equippedRangedWeapon = (Weapon)(from e in Equipped.Values
+            where e.GetType() == typeof(Weapon)
+                  && ((Weapon)e).Range > 1
+            select e).FirstOrDefault();
+
+        ApplyDamage(target, equippedRangedWeapon?.ItemDice);
+    }
+
+    private void ApplyDamage(Entity target, Dice damageDice)
+    {
+        var damageRoll = DiceRoller.Instance.RollDice(damageDice);
+
+        var hitBodyPart = target.BodyPartHit();
+
+        target.CurrentHp -= damageRoll;
+        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
+
+        var message = _entityType + " hits " + target._entityType + " for " + damageRoll + " hit points.";
+        GameManager.Instance.Messages.Add(message);
+    }
 }
