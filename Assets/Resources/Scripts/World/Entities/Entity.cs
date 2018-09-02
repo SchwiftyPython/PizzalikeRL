@@ -39,6 +39,18 @@ public class Entity
     private bool _isHostile;
     private bool _canMutate;
 
+    private int _coins;
+
+    private readonly GameObject _prefab;
+    private GameObject _sprite;
+
+    private readonly string _entityType;
+    private readonly string _factionType;
+
+    private int _totalBodyPartCoverage;
+
+    private Vector3 _currentPosition;
+
     //Base stats
 
     public int Level { get; private set; }
@@ -58,22 +70,13 @@ public class Entity
     public int Defense { get; private set; }
 
     public IDictionary<Guid, Item> Inventory { get; }
-
     public IDictionary<BodyPart, Item> Equipped;
+
     public IDictionary<string, BodyPart> Body { get; } = new Dictionary<string, BodyPart>();
-    private int _coins;
 
-    private readonly GameObject _prefab;
-
-    private GameObject _sprite;
     //SingleNodeBlocker blocker;
 
     public EntityFluff Fluff { get; set; }
-
-    private readonly string _entityType;
-    private readonly string _factionType;
-
-    private Vector3 _currentPosition;
 
     public Cell CurrentCell;
     public Area CurrentArea;
@@ -122,6 +125,7 @@ public class Entity
         
         Inventory = new Dictionary<Guid, Item>();
         BuildBody(template);
+        CalculateTotalBodyPartCoverage();
         PopulateEquipped();
     }
 
@@ -244,6 +248,11 @@ public class Entity
                 Debug.Log(part.Name + " missing required part " + part.NeedsPart);
             }
         }
+    }
+
+    private void CalculateTotalBodyPartCoverage()
+    {
+        _totalBodyPartCoverage = (from bp in Body.Values select bp.Coverage).Sum();
     }
 
     public bool IsPlayer()
@@ -648,9 +657,51 @@ public class Entity
         Fluff = new EntityFluff(_entityType);
     }
 
+    public BodyPart BodyPartHit()
+    {
+        var bodyPartsDeck = new BodyPartDeck((List<BodyPart>)Body.Values);
+
+        var dice = new Dice(1, 100);
+
+        BodyPart part = null;
+        var partHit = false;
+        while (!partHit)
+        {
+            part = bodyPartsDeck.Draw();
+
+            var roll = DiceRoller.Instance.RollDice(dice);
+
+            var chanceToHit = part.Coverage / _totalBodyPartCoverage;
+
+            partHit = roll <= chanceToHit;
+        }
+
+        return part;
+    }
+
+    public void RangedAttack(Entity target)
+    {
+        if (RangedHit(target))
+        {
+            ApplyRangedDamage(target);
+        }
+        else
+        {
+            //todo make this missed with weapon used
+            var message = _entityType + " missed " + target._entityType + "!";
+            GameManager.Instance.Messages.Add(message);
+        }
+    }
+
     private static bool MeleeRollHit(Entity target)
     {
-        var roll = Random.Range(1, 101);
+        var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
+
+        //Rolling a one always misses
+        if (roll == 1)
+        {
+            return false;
+        }
 
         //unarmed for testing. Will check for equipped weapon and add appropriate bonuses
         const int unarmedBaseToHit = 3;
@@ -661,10 +712,91 @@ public class Entity
 
     private void ApplyMeleeDamage(Entity target)
     {
-        const int unarmedDamage = 4;
-        target.CurrentHp -= unarmedDamage;
-        var message = _entityType + " hits " + target._entityType + " for " + unarmedDamage + " hit points.";
-        Debug.Log("Target remaining hp: " + target.CurrentHp);
+        var unarmedDamageDice = new Dice(1, 4);
+
+        //This will work as long as we only allow one melee and one ranged weapon to be equipped
+        var equippedMeleeWeapon = (Weapon)(from e in Equipped.Values
+                                  where e.GetType() == typeof(Weapon) 
+                                  && ((Weapon) e).Range < 2
+                                  select e).FirstOrDefault();
+
+        var damageDice = equippedMeleeWeapon != null ? equippedMeleeWeapon.ItemDice : unarmedDamageDice;
+
+        var damageRoll = DiceRoller.Instance.RollDice(damageDice);
+
+        var hitBodyPart = target.BodyPartHit();
+
+        target.CurrentHp -= damageRoll;
+        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
+
+        var message = _entityType + " hits " + target._entityType + " for " + damageRoll + " hit points.";
+        GameManager.Instance.Messages.Add(message);
+
+        //Debug.Log("Target remaining hp: " + target.CurrentHp);
+    }
+
+    private bool RangedHit(Entity target)
+    {
+        var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
+
+        var chanceToHit = CalculateChanceToHitRanged(target);
+
+        return roll <= chanceToHit;
+    }
+
+    private int CalculateChanceToHitRanged(Entity target)
+    {
+        const int startingChanceToHit = 60;
+
+        var chanceToHit = startingChanceToHit;
+
+        var rangeToTarget = CalculateRangeToTarget(target);
+
+        if (rangeToTarget < 6)
+        {
+            chanceToHit += 3;
+        }
+
+        //todo + attack bonus?
+        //todo + 10 if attacker has not moved in last two turns
+
+        //todo - 1-15 if defender moved last turn
+        //todo - 10 if defender moved last turn
+        //todo - 10 if defender is flying
+        //todo - defender bonus?
+
+        return chanceToHit;
+    }
+
+    private int CalculateRangeToTarget(Entity target)
+    {
+        var a = target.CurrentPosition.x - CurrentPosition.x;
+        var b = target.CurrentPosition.y - CurrentPosition.y;
+
+        return (int) Math.Sqrt(a * a + b * b);
+    }
+
+    private void ApplyRangedDamage(Entity target)
+    {
+        //This should work as long as we only allow one melee and one ranged weapon to be equipped
+        var equippedRangedWeapon = (Weapon)(from e in Equipped.Values
+            where e.GetType() == typeof(Weapon)
+                  && ((Weapon)e).Range > 1
+            select e).FirstOrDefault();
+
+        ApplyDamage(target, equippedRangedWeapon?.ItemDice);
+    }
+
+    private void ApplyDamage(Entity target, Dice damageDice)
+    {
+        var damageRoll = DiceRoller.Instance.RollDice(damageDice);
+
+        var hitBodyPart = target.BodyPartHit();
+
+        target.CurrentHp -= damageRoll;
+        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
+
+        var message = _entityType + " hits " + target._entityType + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
     }
 }
