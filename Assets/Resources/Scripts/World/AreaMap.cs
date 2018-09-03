@@ -83,9 +83,11 @@ public class AreaMap : MonoBehaviour
         {
             for (var j = 0; j < _currentArea.Height; j++)
             {
-                var texture = _currentArea.AreaTiles[i, j].GetTileTexture();
+                var texture = _currentArea.AreaTiles[i, j].GetPrefabTileTexture();
                 var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
+                _currentArea.AreaTiles[i, j].TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
+                instance.GetComponent<SpriteRenderer>().color = Color.white;
             }
         }
     }
@@ -113,7 +115,7 @@ public class AreaMap : MonoBehaviour
                     {
                         var tile = building.FloorTiles[currentRow, currentColumn];
 
-                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
 
@@ -127,7 +129,7 @@ public class AreaMap : MonoBehaviour
                     {
                         var tile = building.FloorTiles[currentRow, currentColumn];
 
-                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
@@ -204,6 +206,8 @@ public class AreaMap : MonoBehaviour
         _playerSprite = Instantiate(_player.GetSpritePrefab(), _player.CurrentPosition, Quaternion.identity);
         _playerSprite.transform.SetParent(GameManager.Instance.transform);
         _player.SetSprite(_playerSprite);
+        _player.GetSprite().AddComponent<Seeker>();
+        _player.GetSprite().AddComponent<AstarAI>();
     }
 
     private void Deconstruct()
@@ -318,5 +322,10 @@ public class AreaMap : MonoBehaviour
         gg.collision.mask.value = 256; //Set mask to obstacle        
         gg.rotation.x = -90;
         gg.cutCorners = false;
+    }
+
+    private void HighlightPathToSelectedTile()
+    {
+        
     }
 }

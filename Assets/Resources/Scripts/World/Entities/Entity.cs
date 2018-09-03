@@ -693,6 +693,25 @@ public class Entity
         }
     }
 
+    public bool HasRangedWeaponEquipped()
+    {
+        var equippedRangedWeapon = (Weapon)(from e in Equipped.Values
+            where e.GetType() == typeof(Weapon)
+                  && ((Weapon)e).Range > 1
+            select e).FirstOrDefault();
+        return equippedRangedWeapon != null;
+    }
+
+    public bool EquippedWeaponInRangeOfTarget(Entity target)
+    {
+        var equippedRangedWeapon = (Weapon)(from e in Equipped.Values
+            where e.GetType() == typeof(Weapon)
+                  && ((Weapon)e).Range > 1
+            select e).FirstOrDefault();
+
+        return equippedRangedWeapon != null && CalculateDistanceToTarget(target) <= equippedRangedWeapon.Range;
+    }
+
     private static bool MeleeRollHit(Entity target)
     {
         var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
@@ -750,9 +769,9 @@ public class Entity
 
         var chanceToHit = startingChanceToHit;
 
-        var rangeToTarget = CalculateRangeToTarget(target);
+        var distanceToTarget = CalculateDistanceToTarget(target);
 
-        if (rangeToTarget < 6)
+        if (distanceToTarget < 6)
         {
             chanceToHit += 3;
         }
@@ -768,7 +787,7 @@ public class Entity
         return chanceToHit;
     }
 
-    private int CalculateRangeToTarget(Entity target)
+    public int CalculateDistanceToTarget(Entity target)
     {
         var a = target.CurrentPosition.x - CurrentPosition.x;
         var b = target.CurrentPosition.y - CurrentPosition.y;
