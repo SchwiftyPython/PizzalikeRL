@@ -127,6 +127,12 @@ public class Entity
         BuildBody(template);
         CalculateTotalBodyPartCoverage();
         PopulateEquipped();
+
+        //Testing ranged attack////////////////////////
+        var testBow = new Weapon(ItemTemplateLoader.GetEntityTemplate("bow"), ItemRarity.Common);
+
+        if (isPlayer) Inventory.Add(testBow.Id, testBow );
+        ////////////////////////////////////////
     }
 
     public void SetStats(int strength, int agility, int constitution, int intelligence)
@@ -659,7 +665,7 @@ public class Entity
 
     public BodyPart BodyPartHit()
     {
-        var bodyPartsDeck = new BodyPartDeck((List<BodyPart>)Body.Values);
+        var bodyPartsDeck = new BodyPartDeck(Body.Values.ToList());
 
         var dice = new Dice(1, 100);
 
@@ -688,27 +694,20 @@ public class Entity
         else
         {
             //todo make this missed with weapon used
-            var message = _entityType + " missed " + target._entityType + "!";
+            var message = _entityType + " missed " + target._entityType + " with ranged attack!";
             GameManager.Instance.Messages.Add(message);
         }
     }
 
     public bool HasRangedWeaponEquipped()
     {
-        var equippedRangedWeapon = (Weapon)(from e in Equipped.Values
-            where e.GetType() == typeof(Weapon)
-                  && ((Weapon)e).Range > 1
-            select e).FirstOrDefault();
+        var equippedRangedWeapon = GetEquippedRangedWeapon();
         return equippedRangedWeapon != null;
     }
 
     public bool EquippedWeaponInRangeOfTarget(Entity target)
     {
-        var equippedRangedWeapon = (Weapon)(from e in Equipped.Values
-            where e.GetType() == typeof(Weapon)
-                  && ((Weapon)e).Range > 1
-            select e).FirstOrDefault();
-
+        var equippedRangedWeapon = GetEquippedRangedWeapon();
         return equippedRangedWeapon != null && CalculateDistanceToTarget(target) <= equippedRangedWeapon.Range;
     }
 
@@ -798,10 +797,7 @@ public class Entity
     private void ApplyRangedDamage(Entity target)
     {
         //This should work as long as we only allow one melee and one ranged weapon to be equipped
-        var equippedRangedWeapon = (Weapon)(from e in Equipped.Values
-            where e.GetType() == typeof(Weapon)
-                  && ((Weapon)e).Range > 1
-            select e).FirstOrDefault();
+        var equippedRangedWeapon = GetEquippedRangedWeapon();
 
         ApplyDamage(target, equippedRangedWeapon?.ItemDice);
     }
@@ -815,7 +811,16 @@ public class Entity
         target.CurrentHp -= damageRoll;
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
 
-        var message = _entityType + " hits " + target._entityType + " for " + damageRoll + " hit points.";
+        var message = _entityType + " hits " + target._entityType + "'s " + hitBodyPart + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
+    }
+
+    private Weapon GetEquippedRangedWeapon()
+    {
+        //This should work as long as we only allow one melee and one ranged weapon to be equipped
+        return (Weapon)(from e in Equipped.Values
+            where e.GetType() == typeof(Weapon)
+                  && ((Weapon)e).Range > 1
+            select e).FirstOrDefault();
     }
 }

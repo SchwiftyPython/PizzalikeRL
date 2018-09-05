@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class BodyPartDeck : Deck<BodyPart>
+public sealed class BodyPartDeck : Deck<BodyPart>
 {
     private readonly List<BodyPart> _body;
 

@@ -14,7 +14,7 @@ public class AreaMap : MonoBehaviour
     public GameObject AStar;
     public GameObject AreaMapHolder;
     public GameObject NpcSpriteHolder;
-    public float GraphOffset = -0.5f;
+    public float Offset = .5f;
     public bool AreaReady;
 
     public PopUpWindow PizzaOrderPopUp;
@@ -46,6 +46,7 @@ public class AreaMap : MonoBehaviour
         {
             _player = GameManager.Instance.Player;
             InstantiatePlayerSprite();
+            
         }
 
         _areaMapHolderTransform = AreaMapHolder.transform;
@@ -57,6 +58,10 @@ public class AreaMap : MonoBehaviour
         DrawArea();
         PlaceBuildings();
         PlacePlayer();
+
+        //testing
+        _currentArea.PresentEntities.Add(new Entity(EntityTemplateLoader.GetEntityTemplate("human")));
+
         if (_currentArea.PresentEntities.Count > 1)
         {
             PlaceNPCs();
@@ -203,8 +208,16 @@ public class AreaMap : MonoBehaviour
 
     public void InstantiatePlayerSprite()
     {
+       var existingPlayerSprite = GameObject.FindWithTag("Player");
+
+        if (existingPlayerSprite != null)
+        {
+            Destroy(existingPlayerSprite);
+        }
+
         _playerSprite = Instantiate(_player.GetSpritePrefab(), _player.CurrentPosition, Quaternion.identity);
         _playerSprite.transform.SetParent(GameManager.Instance.transform);
+        _playerSprite.tag = "Player";
         _player.SetSprite(_playerSprite);
         _player.GetSprite().AddComponent<Seeker>();
         _player.GetSprite().AddComponent<AstarAI>();
@@ -315,17 +328,12 @@ public class AreaMap : MonoBehaviour
         gg.width = _currentArea.Width;
         gg.depth = _currentArea.Height;
         gg.nodeSize = 1;
-        gg.center = new Vector3(gg.width / 2 + GraphOffset, gg.depth / 2, -0.1f);
+        gg.center = new Vector3(gg.width / 2 , gg.depth / 2 + Offset, -0.1f);
         gg.SetDimensions(gg.width, gg.depth, gg.nodeSize);
         gg.collision.use2D = true;
         gg.collision.type = ColliderType.Ray;
         gg.collision.mask.value = 256; //Set mask to obstacle        
         gg.rotation.x = -90;
         gg.cutCorners = false;
-    }
-
-    private void HighlightPathToSelectedTile()
-    {
-        
     }
 }

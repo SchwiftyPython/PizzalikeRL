@@ -11,6 +11,8 @@ public class ItemButton : MonoBehaviour
             Guid itemToEquipId;
             Guid.TryParse(transform.GetComponentsInChildren<Text>(true)[2].text, out itemToEquipId);
 
+            //Debug.Log(transform.GetComponentsInChildren<Text>(true)[2].text + "    " + itemToEquipId);
+
             var player = GameManager.Instance.Player;
 
             var itemToEquip = player.Inventory[itemToEquipId];

@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public Tile CurrentTile;
 
     public Entity Player;
-    public GameObject PlayerSprite;
+    public GameObject PlayerSpritePrefab;
 
     public Dictionary<string, PizzaOrder> ActiveOrders;
 

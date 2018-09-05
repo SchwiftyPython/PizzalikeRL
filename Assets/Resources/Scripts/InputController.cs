@@ -62,7 +62,6 @@ public class InputController : MonoBehaviour
 
             if (_player.GetSprite() == null)
             {
-                _player.SetSprite(GameManager.Instance.PlayerSprite);
                 AreaMap.Instance.InstantiatePlayerSprite();
             }
 
@@ -148,6 +147,11 @@ public class InputController : MonoBehaviour
                     GameMenuWindow.Instance.HideMainWindow();
                     _popupWindowOpen = false;
                 }
+                else if (ActionWindow.Instance.Window.activeSelf)
+                {
+                    ActionWindow.Instance.Window.SetActive(false);
+                    ClearHighlights();
+                }
                 else
                 {
                     GameMenuWindow.Instance.ShowMainWindow();
@@ -180,10 +184,11 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                if (currentScene.Equals("Area") && !ActionWindow.Instance.isActiveAndEnabled)
+                if (currentScene.Equals("Area") && !ActionWindow.Instance.isActiveAndEnabled &&
+                    !GameMenuWindow.Instance.MainWindow.activeSelf)
                 {
                     var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int)pos.x, (int)pos.y];
+                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int) pos.x, (int) pos.y];
 
                     //highlight tile and path to it
                     StartCoroutine(HighlightPathToTarget(_player, selectedTile.GetGridPosition()));
@@ -233,7 +238,8 @@ public class InputController : MonoBehaviour
             _seeker = GameManager.Instance.Player.GetSprite().GetComponent<Seeker>();
         }
         _seeker.StartPath(currentEntity.CurrentPosition, target, OnPathComplete);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.1f);
+        Path.vectorPath.Add(target);
         HighlightPath();
     }
 

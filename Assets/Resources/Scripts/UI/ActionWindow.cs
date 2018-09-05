@@ -3,13 +3,14 @@ using UnityEngine.UI;
 
 public class ActionWindow : MonoBehaviour
 {
+    private Entity _player;
+    private Tile _selectedTile;
+
     public GameObject Window;
 
     public GameObject MoveHereButton;
     public GameObject RangedAttackButton;
     public GameObject MeleeAttackButton;
-
-    public Tile SelectedTile;
 
     public static ActionWindow Instance;
     
@@ -28,12 +29,13 @@ public class ActionWindow : MonoBehaviour
 
     public void OnTileSelected(Tile tile)
     {
-        var player = GameManager.Instance.Player;
+        _selectedTile = tile;
+        _player = GameManager.Instance.Player;
 
         MoveHereButton.GetComponent<Button>().interactable = !tile.GetBlocksMovement();
 
-        if (tile.GetPresentEntity() != null && player.HasRangedWeaponEquipped() &&
-            player.EquippedWeaponInRangeOfTarget(tile.GetPresentEntity()))
+        if (tile.GetPresentEntity() != null && _player.HasRangedWeaponEquipped() &&
+            _player.EquippedWeaponInRangeOfTarget(tile.GetPresentEntity()))
         {
             RangedAttackButton.GetComponent<Button>().interactable = true;
         }
@@ -43,7 +45,7 @@ public class ActionWindow : MonoBehaviour
         }
 
         if (tile.GetPresentEntity() != null &&
-            player.CalculateDistanceToTarget(tile.GetPresentEntity()) < 2)
+            _player.CalculateDistanceToTarget(tile.GetPresentEntity()) < 2)
         {
             MeleeAttackButton.GetComponent<Button>().interactable = true;
         }
@@ -64,16 +66,22 @@ public class ActionWindow : MonoBehaviour
 
     public void OnMoveHereButtonClicked()
     {
+        //todo auto move
+        InputController.Instance.ClearHighlights();
         Window.SetActive(false);
     }
 
     public void OnRangedAttackButtonClicked()
     {
+        _player.RangedAttack(_selectedTile.GetPresentEntity());
+        InputController.Instance.ClearHighlights();
         Window.SetActive(false);
     }
 
     public void OnMeleeAttackButtonClicked()
     {
+        //todo melee attack
+        InputController.Instance.ClearHighlights();
         Window.SetActive(false);
     }
 }
