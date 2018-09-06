@@ -64,7 +64,7 @@ public class AreaMap : MonoBehaviour
 
         if (_currentArea.PresentEntities.Count > 1)
         {
-            PlaceNPCs();
+            PlaceNpcs();
         }
 
         CreateAStarGraph();
@@ -268,7 +268,7 @@ public class AreaMap : MonoBehaviour
         }
     }
 
-    private void PlaceNPCs()
+    private void PlaceNpcs()
     {
         NpcSpriteHolder = new GameObject("NPCSpriteHolder");
         foreach (var e in _currentArea.PresentEntities)

@@ -671,15 +671,18 @@ public class Entity
 
         BodyPart part = null;
         var partHit = false;
-        while (!partHit)
+        var triesToHit = 0;
+        while (!partHit && triesToHit < Body.Values.Count)
         {
             part = bodyPartsDeck.Draw();
 
             var roll = DiceRoller.Instance.RollDice(dice);
 
-            var chanceToHit = part.Coverage / _totalBodyPartCoverage;
+            var chanceToHit = (float)part.Coverage / (float)_totalBodyPartCoverage * 100;
 
             partHit = roll <= chanceToHit;
+
+            triesToHit++;
         }
 
         return part;
@@ -697,6 +700,7 @@ public class Entity
             var message = _entityType + " missed " + target._entityType + " with ranged attack!";
             GameManager.Instance.Messages.Add(message);
         }
+        GameManager.Instance.CurrentState = GameManager.GameState.EndTurn;
     }
 
     public bool HasRangedWeaponEquipped()
@@ -811,7 +815,7 @@ public class Entity
         target.CurrentHp -= damageRoll;
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
 
-        var message = _entityType + " hits " + target._entityType + "'s " + hitBodyPart + " for " + damageRoll + " hit points.";
+        var message = _entityType + " hits " + target._entityType + "'s " + hitBodyPart.Name + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
     }
 

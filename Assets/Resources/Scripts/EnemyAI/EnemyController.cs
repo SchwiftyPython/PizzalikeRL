@@ -25,7 +25,8 @@ public class EnemyController : AstarAI {
         //Debug.Log("Present Entity: " + GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity());
         if (GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity() == null)
         {
-            enemy.AreaMove(Path.vectorPath[1]);
+            var nextTilePosition = new Vector2((int)Path.vectorPath[1].x, (int)Path.vectorPath[1].y);
+            enemy.AreaMove(nextTilePosition);
             TurnStarted = false;
             ActionTaken = true;
         }

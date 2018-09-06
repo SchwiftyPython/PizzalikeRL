@@ -29,7 +29,7 @@ public sealed class BodyPartDeck : Deck<BodyPart>
     public override BodyPart Draw()
     {
         var card = Cards[CardIndex];
-        if (CardIndex >= Size)
+        if (CardIndex >= Size - 1)
         {
             Shuffle();
             CardIndex = 0;
