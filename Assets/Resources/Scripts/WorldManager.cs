@@ -59,7 +59,7 @@ public class WorldManager : MonoBehaviour {
 
 				var tile = new Tile (tileTypeToInstantiate, new Vector3 (x, y, 0), blocksMovement, blocksLight);
 
-				var instance = Instantiate (tile.GetTileTexture(), tile.GetGridPosition(), Quaternion.identity);
+				var instance = Instantiate (tile.GetPrefabTileTexture(), tile.GetGridPosition(), Quaternion.identity);
 				instance.transform.SetParent (_boardHolder);
 
 				_board [x, y] = tile;

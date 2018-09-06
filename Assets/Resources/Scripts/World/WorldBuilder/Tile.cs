@@ -6,16 +6,19 @@ public class Tile {
     private Entity _presentEntity;
     private Prop _presentProp;
     private Item _presentItem;
-    private GameObject _texture;
+    private GameObject _prefabTexture;
     private Vector2 _gridPosition;
 
     private bool _blocksMovement;
     private bool _blocksLight;
 
-	public Tile(){}
+    public GameObject TextureInstance;
+
+
+    public Tile(){}
 
 	public Tile(GameObject texture, Vector2 position, bool blocksMovement, bool blocksLight){
-		_texture = texture;
+		_prefabTexture = texture;
 		_gridPosition = position;
 		_blocksMovement = blocksMovement;
 		_blocksLight = blocksLight;
@@ -37,12 +40,12 @@ public class Tile {
 		return _gridPosition;
 	}
 
-	public void SetTileTexture(GameObject texture){
-		_texture = texture;
+	public void SetPrefabTileTexture(GameObject texture){
+		_prefabTexture = texture;
 	}
 
-	public GameObject GetTileTexture(){
-		return _texture;
+	public GameObject GetPrefabTileTexture(){
+		return _prefabTexture;
 	}
 
 	public void SetBlocksMovement(bool blocksMovement){

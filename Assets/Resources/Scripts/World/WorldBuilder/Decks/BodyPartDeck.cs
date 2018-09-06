@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class BodyPartDeck : Deck<BodyPart>
+public sealed class BodyPartDeck : Deck<BodyPart>
 {
     private readonly List<BodyPart> _body;
 
@@ -29,7 +29,7 @@ public class BodyPartDeck : Deck<BodyPart>
     public override BodyPart Draw()
     {
         var card = Cards[CardIndex];
-        if (CardIndex >= Size)
+        if (CardIndex >= Size - 1)
         {
             Shuffle();
             CardIndex = 0;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,9 +13,16 @@ public class InputController : MonoBehaviour
 
     public static InputController Instance;
 
-    Entity _player;
+    private Entity _player;
+    private Seeker _seeker;
 
-    public bool ActionTaken; //for basic AI pathfinding testing
+    public Path Path;
+    public bool PathCalculated;
+
+    public Color HighlightedColor;
+    private List<Tile> _highlightedTiles;
+
+    public bool ActionTaken; 
     //Vector2 target;
 
     private void Start()
@@ -41,6 +50,8 @@ public class InputController : MonoBehaviour
 
     private void Update()
     {
+        var currentScene = GameManager.Instance.CurrentScene.name;
+
         if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn)
         {
             if (_player == null)
@@ -51,7 +62,6 @@ public class InputController : MonoBehaviour
 
             if (_player.GetSprite() == null)
             {
-                _player.SetSprite(GameManager.Instance.PlayerSprite);
                 AreaMap.Instance.InstantiatePlayerSprite();
             }
 
@@ -137,6 +147,11 @@ public class InputController : MonoBehaviour
                     GameMenuWindow.Instance.HideMainWindow();
                     _popupWindowOpen = false;
                 }
+                else if (ActionWindow.Instance.Window.activeSelf)
+                {
+                    ActionWindow.Instance.Window.SetActive(false);
+                    ClearHighlights();
+                }
                 else
                 {
                     GameMenuWindow.Instance.ShowMainWindow();
@@ -169,17 +184,34 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.positiveInfinity);
-
-                if (hit && !_popupWindowOpen)
+                if (currentScene.Equals("Area") && !ActionWindow.Instance.isActiveAndEnabled &&
+                    !GameMenuWindow.Instance.MainWindow.activeSelf)
                 {
-                    hit.collider.GetComponent<EntityInfo>()?.OnLeftClick();
+                    var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int) pos.x, (int) pos.y];
+
+                    //highlight tile and path to it
+                    StartCoroutine(HighlightPathToTarget(_player, selectedTile.GetGridPosition()));
+
+                    ActionWindow.Instance.OnTileSelected(selectedTile);
+                }
+
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                if (currentScene.Equals("Area"))
+                {
+                    var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
+                        Vector2.positiveInfinity);
+
+                    if (hit && !_popupWindowOpen)
+                    {
+                        hit.collider.GetComponent<EntityInfo>()?.OnRightClick();
+                    }
                 }
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                var currentScene = GameManager.Instance.CurrentScene.name;
-
                 if (currentScene.Equals("Area"))
                 {
                     SceneManager.LoadScene("WorldMap");
@@ -187,8 +219,6 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.KeypadPlus))
             {
-                var currentScene = GameManager.Instance.CurrentScene.name;
-
                 if (currentScene.Equals("WorldMap"))
                 {
                     GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
@@ -196,6 +226,56 @@ public class InputController : MonoBehaviour
                     SceneManager.LoadScene("Area");
                 }
             }
+        }
+    }
+
+    public IEnumerator HighlightPathToTarget(Entity currentEntity, Vector2 target)
+    {
+        ClearHighlights();
+        PathCalculated = false;
+        if (_seeker == null)
+        {
+            _seeker = GameManager.Instance.Player.GetSprite().GetComponent<Seeker>();
+        }
+        _seeker.StartPath(currentEntity.CurrentPosition, target, OnPathComplete);
+        yield return new WaitForSeconds(0.1f);
+        Path.vectorPath.Add(target);
+        HighlightPath();
+    }
+
+    public void OnPathComplete(Path p)
+    {
+        //Debug.Log("Path returned. Error? " + p.error);
+        if (!p.error)
+        {
+            Path = p;
+            PathCalculated = true;
+            //Debug.Log("Vector Path: " + Path.vectorPath[1]);
+        }
+    }
+
+    public void HighlightPath()
+    {
+        var currentArea = GameManager.Instance.CurrentArea;
+        _highlightedTiles = new List<Tile>();
+        foreach (var tilePosition in Path.vectorPath)
+        {
+            var tile = currentArea.AreaTiles[(int) tilePosition.x, (int) tilePosition.y];
+            tile.TextureInstance.GetComponent<SpriteRenderer>().color = HighlightedColor;
+            _highlightedTiles.Add(tile);
+        }
+    }
+
+    public void ClearHighlights()
+    {
+        if (_highlightedTiles == null || _highlightedTiles.Count <= 0)
+        {
+            return;
+        }
+
+        foreach (var tile in _highlightedTiles)
+        {
+            tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
         }
     }
 }

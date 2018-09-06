@@ -490,6 +490,7 @@
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Pizza.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\PizzaOrder.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\ActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\BodyPartButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterBackgroundOptionButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterCreation.cs" />

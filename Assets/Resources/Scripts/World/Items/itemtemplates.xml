@@ -12,6 +12,11 @@
 		<BodyPartCategory>hand</BodyPartCategory>		
 	</ItemTemplate>
 	
+	<ItemTemplate type = "bow">
+	    <Category>weapon</Category>
+		<BodyPartCategory>hand</BodyPartCategory>		
+	</ItemTemplate>
+	
 	<ItemTemplate type = "bandage">
 	    <Category>consumable</Category>
 		<BodyPartCategory></BodyPartCategory>		

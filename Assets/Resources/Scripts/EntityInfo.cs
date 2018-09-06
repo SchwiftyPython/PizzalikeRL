@@ -17,7 +17,7 @@ public class EntityInfo : MonoBehaviour
         Stats = textBoxes[1];
     }
 
-    public void OnLeftClick()
+    public void OnRightClick()
     {
         if (Window == null)
         {

@@ -14,7 +14,7 @@ public class AreaMap : MonoBehaviour
     public GameObject AStar;
     public GameObject AreaMapHolder;
     public GameObject NpcSpriteHolder;
-    public float GraphOffset = -0.5f;
+    public float Offset = .5f;
     public bool AreaReady;
 
     public PopUpWindow PizzaOrderPopUp;
@@ -46,6 +46,7 @@ public class AreaMap : MonoBehaviour
         {
             _player = GameManager.Instance.Player;
             InstantiatePlayerSprite();
+            
         }
 
         _areaMapHolderTransform = AreaMapHolder.transform;
@@ -57,9 +58,13 @@ public class AreaMap : MonoBehaviour
         DrawArea();
         PlaceBuildings();
         PlacePlayer();
+
+        //testing
+        _currentArea.PresentEntities.Add(new Entity(EntityTemplateLoader.GetEntityTemplate("human")));
+
         if (_currentArea.PresentEntities.Count > 1)
         {
-            PlaceNPCs();
+            PlaceNpcs();
         }
 
         CreateAStarGraph();
@@ -83,9 +88,11 @@ public class AreaMap : MonoBehaviour
         {
             for (var j = 0; j < _currentArea.Height; j++)
             {
-                var texture = _currentArea.AreaTiles[i, j].GetTileTexture();
+                var texture = _currentArea.AreaTiles[i, j].GetPrefabTileTexture();
                 var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
+                _currentArea.AreaTiles[i, j].TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
+                instance.GetComponent<SpriteRenderer>().color = Color.white;
             }
         }
     }
@@ -113,7 +120,7 @@ public class AreaMap : MonoBehaviour
                     {
                         var tile = building.FloorTiles[currentRow, currentColumn];
 
-                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
 
@@ -127,7 +134,7 @@ public class AreaMap : MonoBehaviour
                     {
                         var tile = building.FloorTiles[currentRow, currentColumn];
 
-                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
+                        _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
@@ -201,9 +208,19 @@ public class AreaMap : MonoBehaviour
 
     public void InstantiatePlayerSprite()
     {
+       var existingPlayerSprite = GameObject.FindWithTag("Player");
+
+        if (existingPlayerSprite != null)
+        {
+            Destroy(existingPlayerSprite);
+        }
+
         _playerSprite = Instantiate(_player.GetSpritePrefab(), _player.CurrentPosition, Quaternion.identity);
         _playerSprite.transform.SetParent(GameManager.Instance.transform);
+        _playerSprite.tag = "Player";
         _player.SetSprite(_playerSprite);
+        _player.GetSprite().AddComponent<Seeker>();
+        _player.GetSprite().AddComponent<AstarAI>();
     }
 
     private void Deconstruct()
@@ -251,7 +268,7 @@ public class AreaMap : MonoBehaviour
         }
     }
 
-    private void PlaceNPCs()
+    private void PlaceNpcs()
     {
         NpcSpriteHolder = new GameObject("NPCSpriteHolder");
         foreach (var e in _currentArea.PresentEntities)
@@ -311,7 +328,7 @@ public class AreaMap : MonoBehaviour
         gg.width = _currentArea.Width;
         gg.depth = _currentArea.Height;
         gg.nodeSize = 1;
-        gg.center = new Vector3(gg.width / 2 + GraphOffset, gg.depth / 2, -0.1f);
+        gg.center = new Vector3(gg.width / 2 , gg.depth / 2 + Offset, -0.1f);
         gg.SetDimensions(gg.width, gg.depth, gg.nodeSize);
         gg.collision.use2D = true;
         gg.collision.type = ColliderType.Ray;
