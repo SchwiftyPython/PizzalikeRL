@@ -61,27 +61,30 @@ public class ActionWindow : MonoBehaviour
         Window.transform.position = new Vector2(pos.x + 60f, pos.y + 50f);
 
         Window.SetActive(true);
-
     }
 
     public void OnMoveHereButtonClicked()
     {
         //todo auto move
-        InputController.Instance.ClearHighlights();
-        Window.SetActive(false);
+        AfterActionCleanup();
     }
 
     public void OnRangedAttackButtonClicked()
     {
         _player.RangedAttack(_selectedTile.GetPresentEntity());
-        InputController.Instance.ClearHighlights();
-        Window.SetActive(false);
+        AfterActionCleanup();
     }
 
     public void OnMeleeAttackButtonClicked()
     {
-        //todo melee attack
+        _player.MeleeAttack(_selectedTile.GetPresentEntity());
+        AfterActionCleanup();
+    }
+
+    private void AfterActionCleanup()
+    {
         InputController.Instance.ClearHighlights();
         Window.SetActive(false);
+        GameManager.Instance.CurrentState = GameManager.GameState.EndTurn;
     }
 }
