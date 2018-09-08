@@ -17,6 +17,8 @@ public class AreaMap : MonoBehaviour
     public float Offset = .5f;
     public bool AreaReady;
 
+    public Fov fieldOfView;
+
     public PopUpWindow PizzaOrderPopUp;
     public GameObject ObjectInfoWindow;
 
@@ -69,6 +71,8 @@ public class AreaMap : MonoBehaviour
 
         CreateAStarGraph();
         AstarPath.active.Scan();
+        fieldOfView = AreaMapHolder.AddComponent<Fov>();
+        fieldOfView.Init(_currentArea);
         AreaReady = true;
     }
    

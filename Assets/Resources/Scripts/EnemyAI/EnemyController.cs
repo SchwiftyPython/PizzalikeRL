@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class EnemyController : AstarAI {
@@ -25,7 +26,7 @@ public class EnemyController : AstarAI {
         //Debug.Log("Present Entity: " + GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity());
         if (GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity() == null)
         {
-            var nextTilePosition = new Vector2((int)Path.vectorPath[1].x, (int)Path.vectorPath[1].y);
+            var nextTilePosition = new Vector2((float) Math.Ceiling(Path.vectorPath[1].x), (float)Math.Ceiling(Path.vectorPath[1].y));
             enemy.AreaMove(nextTilePosition);
             TurnStarted = false;
             ActionTaken = true;

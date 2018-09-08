@@ -54,8 +54,6 @@ public class ActionWindow : MonoBehaviour
             MeleeAttackButton.GetComponent<Button>().interactable = false;
         }
 
-        var selectedTilePosition = tile.GetGridPosition();
-
         var pos = Input.mousePosition;
 
         Window.transform.position = new Vector2(pos.x + 60f, pos.y + 50f);
