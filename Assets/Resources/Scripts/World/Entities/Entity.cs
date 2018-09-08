@@ -700,7 +700,6 @@ public class Entity
             var message = _entityType + " missed " + target._entityType + " with ranged attack!";
             GameManager.Instance.Messages.Add(message);
         }
-        GameManager.Instance.CurrentState = GameManager.GameState.EndTurn;
     }
 
     public bool HasRangedWeaponEquipped()
