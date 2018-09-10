@@ -17,6 +17,8 @@ public class AreaMap : MonoBehaviour
     public float Offset = .5f;
     public bool AreaReady;
 
+    public Fov fieldOfView;
+
     public PopUpWindow PizzaOrderPopUp;
     public GameObject ObjectInfoWindow;
 
@@ -59,9 +61,6 @@ public class AreaMap : MonoBehaviour
         PlaceBuildings();
         PlacePlayer();
 
-        //testing
-        _currentArea.PresentEntities.Add(new Entity(EntityTemplateLoader.GetEntityTemplate("human")));
-
         if (_currentArea.PresentEntities.Count > 1)
         {
             PlaceNpcs();
@@ -69,6 +68,13 @@ public class AreaMap : MonoBehaviour
 
         CreateAStarGraph();
         AstarPath.active.Scan();
+
+        fieldOfView = AreaMapHolder.AddComponent<Fov>();
+        fieldOfView.Init(_currentArea);
+        
+        var v = new Vinteger((int) _player.GetSprite().transform.position.x, (int)_player.GetSprite().transform.position.y);
+        fieldOfView.Refresh(v);
+
         AreaReady = true;
     }
    
@@ -92,7 +98,8 @@ public class AreaMap : MonoBehaviour
                 var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
                 _currentArea.AreaTiles[i, j].TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
-                instance.GetComponent<SpriteRenderer>().color = Color.white;
+
+                //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[i, j].Revealed ? Color.gray : Color.black;
             }
         }
     }
@@ -127,7 +134,9 @@ public class AreaMap : MonoBehaviour
                         tile = building.WallTiles[currentRow, currentColumn];
 
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
+                        _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(true);
                         instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        _currentArea.AreaTiles[areaX, areaY].PresentWallTile = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
                     else
@@ -258,6 +267,7 @@ public class AreaMap : MonoBehaviour
         else
         {
             _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
+            
         }
         _currentArea?.PresentEntities.Add(_player);
         _player.CurrentArea = _currentArea;
@@ -265,6 +275,8 @@ public class AreaMap : MonoBehaviour
         if (_currentArea != null)
         {
             _player.CurrentCell = _currentArea.ParentCell;
+            _currentArea.AreaTiles[(int) _playerSprite.transform.position.x, (int) _playerSprite.transform.position.y]
+                .Visibility = Tile.Visibilities.Visible;
         }
     }
 

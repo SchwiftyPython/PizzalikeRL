@@ -469,6 +469,7 @@
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
     <Compile Include="Assets\Resources\Scripts\EntityInfo.cs" />
+    <Compile Include="Assets\Resources\Scripts\Fov.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\ConditionChecker.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\HistoryGenerator.cs" />

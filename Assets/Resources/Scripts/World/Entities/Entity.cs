@@ -563,6 +563,8 @@ public class Entity
             if (AreaMapCanMove(target))
             {
                 AreaMove(target);
+                var v = new Vinteger((int)_sprite.transform.position.x, (int)_sprite.transform.position.y);
+                AreaMap.Instance.fieldOfView.Refresh(v);
                 return true;
             }
             if (!EntityPresent(target))
