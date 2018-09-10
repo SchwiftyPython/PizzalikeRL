@@ -26,7 +26,7 @@ public class EnemyController : AstarAI {
         //Debug.Log("Present Entity: " + GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity());
         if (GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity() == null)
         {
-            var nextTilePosition = new Vector2((float) Math.Ceiling(Path.vectorPath[1].x), (float)Math.Ceiling(Path.vectorPath[1].y));
+            var nextTilePosition = new Vector2(Path.vectorPath[1].x, Path.vectorPath[1].y); //todo figure out half values problem
             enemy.AreaMove(nextTilePosition);
             TurnStarted = false;
             ActionTaken = true;

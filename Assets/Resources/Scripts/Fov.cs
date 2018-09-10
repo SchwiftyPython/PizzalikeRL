@@ -1,29 +1,30 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Fov : MonoBehaviour
 {
-    private const int ViewDistance = 52; //average of area width and height. May change to max tiles visible on screen.
-    private const int ShadowDistance = 20; //arbitrary
+    private const int ViewDistance = 100; 
+    private const int ShadowDistance = 5; 
 
-    private Tile[,] grid;
-    private int gridHeight;
-    private int gridWidth;
+    private Tile[,] _grid;
+    private int _gridHeight;
+    private int _gridWidth;
 
     private Entity _player;
 
     public void Init(Area area)
     {
-        grid = area.AreaTiles;
-        gridHeight = area.Height;
-        gridWidth = area.Width;
+        _grid = area.AreaTiles;
+        _gridHeight = area.Height;
+        _gridWidth = area.Width;
 
         _player = GameManager.Instance.Player;
     }
 
     public void Refresh(Vinteger pos)
     {
-        for (int octant = 0; octant < 8; octant++)
+        for (var octant = 0; octant < 8; octant++)
         {
             RefreshOctant(pos, octant);
         }
@@ -31,100 +32,68 @@ public class Fov : MonoBehaviour
 
     public void RefreshOctant(Vinteger start, int octant, int maxRows = 999)
     {
-        ShadowLine line = new ShadowLine();
+        var line = new ShadowLine();
 
-        bool fullShadow = false;
+        var fullShadow = false;
 
         for (var row = 1; row < maxRows; row++)
         {
-            Vinteger bounds = start.Add(TransformOctant(row, 0, octant));
-            if (!InBoundsAndClose(bounds.x, bounds.y))
+            var bounds = start.Add(TransformOctant(row, 0, octant));
+            if (!InBoundsAndClose(bounds.X, bounds.Y))
             {
                 break;
             }
 
             for (var col = 0; col <= row; col++)
             {
-                Vinteger pos = start.Add(TransformOctant(row, col, octant));
+                var pos = start.Add(TransformOctant(row, col, octant));
 
-                if (!InBoundsAndClose(pos.x, pos.y))
+                if (!InBoundsAndClose(pos.X, pos.Y))
                 {
                     break;
                 }
 
                 if (fullShadow)
                 {
-                    Tile tile = grid[pos.x, pos.y];
-                    if(tile != null)
-                    {
-                        if (tile.Visibility == 0) //todo make enum 0 for black, 1 for white????
-                        {
-                            tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.black;
-                        }
-                        else
-                        {
-                            tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.gray;
-                        }
-                    }
+                    var tile = _grid[pos.X, pos.Y];
+                    tile.Visibility = Tile.Visibilities.Invisible;
                 }
                 else
                 {
-                    Shadow projection = ProjectTile(row, col);
+                    var projection = ProjectTile(row, col);
 
-                    bool visible = !line.IsInShadow(projection);
+                    var visible = !line.IsInShadow(projection);
 
-                    Tile tile = grid[pos.x, pos.y];
+                    var tile = _grid[pos.X, pos.Y];
 
-                    bool isWall = false;
+                    var blocksLight = tile.GetBlocksLight();
 
-                    if (tile != null)
+                    if (!visible)
                     {
-                        if (tile.GetBlocksMovement()) //todo maybe tagged wall? or blocks light?
-                        {
-                            isWall = true;
-                        }
-
-                        Color color = Color.white;
-
-                        if (!visible)
-                        {
-                            if (tile.Visibility == 0)
-                            {
-                                tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.black;
-                            }
-                            else
-                            {
-                                tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.gray;
-                            }
-                        }
-                        else
-                        {
-                            tile.Visibility = 1;
-                        }
-                       
-                        tile.TextureInstance.GetComponent<SpriteRenderer>().color = color;
+                        tile.Visibility = Tile.Visibilities.Invisible;
                     }
                     else
                     {
-                        isWall = true;
+                        tile.Visibility = Tile.Visibilities.Visible;
+                        tile.Revealed = true;
                     }
 
-                    if (visible && isWall)
+                    if (visible && blocksLight)
                     {
                         line.Add(projection);
                         fullShadow = line.IsFullShadow();
                     }
                 }
 
-                float posDist = pos.Distance(start);
+                /*var posDist = pos.Distance(start);
                 if (posDist > ShadowDistance)
                 {
-                    Tile tile = grid[pos.x, pos.y];
+                    var tile = grid[pos.x, pos.y];
                     if (tile != null)
                     {
-                        if (posDist < ShadowDistance + 20)
+                        if (posDist < ShadowDistance + 1)
                         {
-                            if (tile.Visibility == 0)
+                            if (tile.Visibility == (Tile.Visibilities) 1 && tile.Revealed)
                             {
                                 tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.gray;
                             }
@@ -138,7 +107,7 @@ public class Fov : MonoBehaviour
                             tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.black;
                         }
                     }
-                }
+                }*/
             }
         }
         //return line.shadows;
@@ -146,21 +115,21 @@ public class Fov : MonoBehaviour
 
     public bool InBoundsAndClose(int x, int y)
     {
-        bool retVal = !(x < 0 || y < 0 || x > gridWidth - 1 || y > gridHeight - 1);
+        var inBounds = !(x < 0 || y < 0 || x > _gridWidth - 1 || y > _gridHeight - 1);
 
-        if (retVal)
+        if (inBounds)
         {
             if (Mathf.Abs(x - _player.CurrentPosition.x) > ViewDistance ||
                 Mathf.Abs(y - _player.CurrentPosition.y) > ViewDistance)
             {
-                retVal = false;
+                inBounds = false;
             }
         }
 
-        return retVal;
+        return inBounds;
     }
 
-    private Vinteger TransformOctant(int row, int col, int octant)
+    private static Vinteger TransformOctant(int row, int col, int octant)
     {
         switch (octant)
         {
@@ -185,10 +154,10 @@ public class Fov : MonoBehaviour
         }
     }
 
-    private Shadow ProjectTile(int row, int col)
+    private static Shadow ProjectTile(int row, int col)
     {
-        float topLeft = (float) col / (row + 2);
-        float bottomRight = (float) (col + 1) / (row + 1);
+        var topLeft = (float) col / (row + 2);
+        var bottomRight = (float) (col + 1) / (row + 1);
 
         return new Shadow(topLeft, bottomRight, new Vinteger(col, row + 2), new Vinteger(col + 1, row + 1));
     }
@@ -196,116 +165,109 @@ public class Fov : MonoBehaviour
 
 public class ShadowLine
 {
-    public List<Shadow> shadows = new List<Shadow>();
+    public List<Shadow> Shadows = new List<Shadow>();
 
     public bool IsInShadow(Shadow projection)
     {
-        foreach (var sh in shadows)
-        {
-            if (sh.Contains(projection))
-            {
-                return true;
-            }
-        }
-        return false;
+        return Shadows.Any(sh => sh.Contains(projection));
     }
 
     public void Add(Shadow sh)
     {
-        int index = 0;
-        for (; index < shadows.Count; index++)
+        var index = 0;
+        for (; index < Shadows.Count; index++)
         {
-            if (shadows[index].start >= sh.start)
+            if (Shadows[index].Start >= sh.Start)
             {
                 break;
             }
         }
 
-        Shadow o_previous = null;
-        if (index > 0 && shadows[index - 1].end > sh.start)
+        Shadow overlappingPrevious = null;
+        if (index > 0 && Shadows[index - 1].End > sh.Start)
         {
-            o_previous = shadows[index - 1];
+            overlappingPrevious = Shadows[index - 1];
         }
 
-        Shadow o_next = null;
-        if (index < shadows.Count && shadows[index].start < sh.end)
+        Shadow overlappingNext = null;
+        if (index < Shadows.Count && Shadows[index].Start < sh.End)
         {
-            o_next = shadows[index];
+            overlappingNext = Shadows[index];
         }
 
-        if (o_next != null)
+        if (overlappingNext != null)
         {
-            if (o_previous != null)
+            if (overlappingPrevious != null)
             {
-                o_previous.end = o_next.end;
-                o_previous.endPos = o_next.endPos;
-                shadows.RemoveAt(index);
+                overlappingPrevious.End = overlappingNext.End;
+                overlappingPrevious.EndPos = overlappingNext.EndPos;
+                Shadows.RemoveAt(index);
             }
             else
             {
-                o_next.start = sh.start;
-                o_next.startPos = sh.startPos;
+                overlappingNext.Start = sh.Start;
+                overlappingNext.StartPos = sh.StartPos;
             }
         }
         else
         {
-            if (o_previous != null)
+            if (overlappingPrevious != null)
             {
-                o_previous.end = sh.end;
-                o_previous.endPos = sh.endPos;
+                overlappingPrevious.End = sh.End;
+                overlappingPrevious.EndPos = sh.EndPos;
             }
             else
             {
-                shadows.Insert(index, sh);
+                Shadows.Insert(index, sh);
             }
         }
     }
 
     public bool IsFullShadow()
     {
-        return shadows.Count == 1 && shadows[0].start == 0 && shadows[0].end == 1;
+        return Shadows.Count == 1 && Shadows[0].Start == 0f && Shadows[0].End == 1f;
     }
 }
 
 public class Shadow
 {
-    public float start;
-    public float end;
-    public Vinteger startPos;
-    public Vinteger endPos;
+    public float Start;
+    public float End;
+    public Vinteger StartPos;
+    public Vinteger EndPos;
 
     public Shadow(float shadowStart, float shadowEnd, Vinteger startPosition, Vinteger endPosition)
     {
-        start = shadowStart;
-        end = shadowEnd;
-        startPos = startPosition;
-        endPos = endPosition;
+        Start = shadowStart;
+        End = shadowEnd;
+        StartPos = startPosition;
+        EndPos = endPosition;
     }
 
     public bool Contains(Shadow other)
     {
-        return start <= other.start && end >= other.end;
+        return Start <= other.Start && End >= other.End;
     }
 }
 
 public class Vinteger
 {
-    public int x;
-    public int y;
+    public int X;
+    public int Y;
 
     public Vinteger(int x, int y)
     {
-        this.x = x;
-        this.y = y;
+        this.X = x;
+        this.Y = y;
     }
 
     public Vinteger Add(Vinteger other)
     {
-        return new Vinteger(x + other.x, y + other.y);
+        return new Vinteger(X + other.X, Y + other.Y);
     }
 
     public float Distance(Vinteger other)
     {
-        return Mathf.Sqrt(Mathf.Pow(this.x - other.x, 2) + Mathf.Pow(this.y + other.y, 2));
+        return Mathf.Sqrt(Mathf.Pow(this.X - other.X, 2) + Mathf.Pow(this.Y - other.Y, 2));
     }
 }

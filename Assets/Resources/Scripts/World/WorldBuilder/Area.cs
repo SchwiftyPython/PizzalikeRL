@@ -64,6 +64,7 @@ public class Area
                 {
                     AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), false, false);
                 }
+                AreaTiles[i, j].Visibility = Tile.Visibilities.Invisible;
             }
         }
         
