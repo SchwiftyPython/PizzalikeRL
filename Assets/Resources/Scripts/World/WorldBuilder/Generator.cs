@@ -1095,12 +1095,16 @@ public class Generator : MonoBehaviour
 
     private void PlaceSettlements()
     {
-        var factionTiles = new Dictionary<string, GameObject>
+        var settlementTiles = new Dictionary<BiomeType, GameObject>
         {
-            {"wrestling", WorldData.Instance.WrestlingFactionTile },
-            {"geriatric", WorldData.Instance.GeriatricFactionTile },
-            {"clowns", WorldData.Instance.ClownsFactionTile },
-            {"biker gang", WorldData.Instance.BikerGangFactionTile }
+            {BiomeType.Grassland, WorldData.Instance.GrassSettlementTile},
+            {BiomeType.SeasonalForest, WorldData.Instance.GrassSettlementTile},
+            {BiomeType.Woodland, WorldData.Instance.GrassSettlementTile},
+            {BiomeType.TropicalRainforest, WorldData.Instance.GrassSettlementTile},
+            {BiomeType.Desert, WorldData.Instance.DesertSettlementTile},
+            {BiomeType.Ice, WorldData.Instance.SnowSettlementTile},
+            {BiomeType.WasteLand, WorldData.Instance.WastelandSettlementTile},
+            {BiomeType.Swamp, WorldData.Instance.SwampSettlementTile}
         };
 
 
@@ -1131,7 +1135,7 @@ public class Generator : MonoBehaviour
 
                         CreateSettlement(card, currentCell);
 
-                        currentCell.WorldMapSprite = factionTiles[card.Type]; //todo replace with some kind of settlement marker
+                        currentCell.WorldMapSprite = settlementTiles[currentCell.BiomeType]; 
                         placed = true;
                         //Debug.Log(card + " placed at " + currentX + ", " + currentY);
                     }
