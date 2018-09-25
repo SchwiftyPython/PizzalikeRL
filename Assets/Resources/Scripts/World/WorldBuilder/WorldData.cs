@@ -53,16 +53,22 @@ public class WorldData : MonoBehaviour
     public GameObject WorldGrassLandTile;
     public GameObject WorldForestTile;
     public GameObject WorldDesertTile;
-    public GameObject WorldMountainTile;
     public GameObject WorldWasteLandTile;
     public GameObject WorldSwampTile;
     public GameObject WorldIceTile;
     public GameObject WorldWaterTile;
 
-    public GameObject WrestlingFactionTile;
-    public GameObject GeriatricFactionTile;
-    public GameObject ClownsFactionTile;
-    public GameObject BikerGangFactionTile;
+    public GameObject GrassSettlementTile;
+    public GameObject SwampSettlementTile;
+    public GameObject WastelandSettlementTile;
+    public GameObject SnowSettlementTile;
+    public GameObject DesertSettlementTile;
+
+    public GameObject GrassMountainTile;
+    public GameObject SwampMountainTile;
+    public GameObject WastelandMountainTile;
+    public GameObject SnowMountainTile;
+    public GameObject DesertMountainTile;
 
     public GameObject[] AreaGrassLandTilesCommon = new GameObject[1];
     public GameObject[] AreaDesertTilesCommon = new GameObject[1];

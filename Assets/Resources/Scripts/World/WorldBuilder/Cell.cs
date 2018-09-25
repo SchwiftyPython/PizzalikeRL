@@ -44,7 +44,8 @@ public enum BiomeType {
     Water
 }
 
-public class Cell {
+public class Cell
+{
     private const int CellWidth = 3;
     private const int CellHeight = 3;
 
@@ -267,10 +268,11 @@ public class Cell {
         }
     }
 
-    private void SetCellSprite(BiomeType biome) {
+    private void SetCellSprite(BiomeType biome)
+    {
         switch (biome) {
             case BiomeType.Mountain:
-                WorldMapSprite = WorldData.Instance.WorldMountainTile;
+                WorldMapSprite = PickMountainTile();
                 break;
             case BiomeType.Desert:
                 WorldMapSprite = WorldData.Instance.WorldDesertTile;
@@ -298,6 +300,50 @@ public class Cell {
 //            default:
 //                throw new ArgumentOutOfRangeException("biome", biome, null);
         }
+    }
+
+    private GameObject PickMountainTile()
+    {
+        var mountainTiles = new Dictionary<BiomeType, GameObject>
+        {
+            {BiomeType.Grassland, WorldData.Instance.GrassMountainTile},
+            {BiomeType.SeasonalForest, WorldData.Instance.GrassMountainTile},
+            {BiomeType.Woodland, WorldData.Instance.GrassMountainTile},
+            {BiomeType.TropicalRainforest, WorldData.Instance.GrassMountainTile},
+            {BiomeType.Desert, WorldData.Instance.DesertMountainTile},
+            {BiomeType.Ice, WorldData.Instance.SnowMountainTile},
+            {BiomeType.WasteLand, WorldData.Instance.WastelandMountainTile},
+            {BiomeType.Swamp, WorldData.Instance.SwampMountainTile}
+        };
+        
+        Cell neighbor = null;
+        var maxTries = 4;
+        while (maxTries > 0 && (neighbor == null || !mountainTiles.ContainsKey(neighbor.biomeType)))
+        {
+            var cellNumber = Random.Range(0, 3);
+
+            switch (cellNumber)
+            {
+                case 0:
+                    neighbor = Bottom;
+                    break;
+                case 1:
+                    neighbor = Left;
+                    break;
+                case 2:
+                    neighbor = Top;
+                    break;
+                case 3:
+                    neighbor = Right;
+                    break;
+                default:
+                    neighbor = Bottom;
+                    break;
+            }
+            maxTries--;
+        }
+        
+        return maxTries <= 0 || neighbor == null ? mountainTiles[BiomeType.Grassland] : mountainTiles[neighbor.biomeType];
     }
 
 }
