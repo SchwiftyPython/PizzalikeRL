@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ public class Tile
 
     private bool _blocksMovement;
     private bool _blocksLight;
+
+    public GameObject FovTile;
 
     public bool Revealed;
     public GameObject PresentWallTile { get; set; }
@@ -106,15 +109,27 @@ public class Tile
 
     private void SetTileVisibility(Visibilities visibility)
     {
-        var color = Color.white;
+        var visibleColor = new Color(1, 1, 1, 0);
+        var revealedColor = new Color(0f, 0f, 0f, 0.5f);
+        var invisibleColor = Color.black;
+
+        var color = visibleColor;
         if (visibility != Visibilities.Visible)
         {
-            color = Revealed ? Color.gray : Color.black;
+            color = Revealed ? revealedColor : invisibleColor;
         }
 
-        TextureInstance.GetComponent<SpriteRenderer>().color = color;
+        FovTile.GetComponent<SpriteRenderer>().color = color;
 
-        if (_presentEntity != null && !_presentEntity.IsPlayer())
+//        //Hack to deal with floor tiles under walls -- doesn't work. Going to make walls take up entire tile for simplicity
+//        if (PresentWallTile != null && TextureInstance.name.IndexOf("floor", StringComparison.OrdinalIgnoreCase) != -1)
+//        {
+//            TextureInstance.GetComponent<SpriteRenderer>().color = color;
+//        }
+
+        //TextureInstance.GetComponent<SpriteRenderer>().color = color;
+
+        /*if (_presentEntity != null && !_presentEntity.IsPlayer())
         {
             _presentEntity.GetSprite().GetComponent<SpriteRenderer>().color = color;
         }
@@ -131,6 +146,6 @@ public class Tile
         {
             //todo
             //_presentProp.GetComponent<SpriteRenderer>().color = color;
-        }
+        }*/
     }
 }
