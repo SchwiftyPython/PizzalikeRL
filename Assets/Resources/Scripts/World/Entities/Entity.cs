@@ -564,7 +564,7 @@ public class Entity
             {
                 AreaMove(target);
                 var v = new Vinteger((int)_sprite.transform.position.x, (int)_sprite.transform.position.y);
-                AreaMap.Instance.fieldOfView.Refresh(v);
+                AreaMap.Instance.Fov.Refresh(v);
                 return true;
             }
             if (!EntityPresent(target))

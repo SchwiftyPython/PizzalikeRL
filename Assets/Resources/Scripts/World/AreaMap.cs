@@ -17,7 +17,8 @@ public class AreaMap : MonoBehaviour
     public float Offset = .5f;
     public bool AreaReady;
 
-    public Fov fieldOfView;
+    public Fov Fov;
+    public GameObject FovHolder;
 
     public PopUpWindow PizzaOrderPopUp;
     public GameObject ObjectInfoWindow;
@@ -43,8 +44,9 @@ public class AreaMap : MonoBehaviour
     {
         AreaReady = false;
         AreaMapHolder = new GameObject("AreaMapHolder");
+        Fov = FovHolder.GetComponent<Fov>();
 
-        if(_player == null || _player != GameManager.Instance.Player)
+        if (_player == null || _player != GameManager.Instance.Player)
         {
             _player = GameManager.Instance.Player;
             InstantiatePlayerSprite();
@@ -69,11 +71,11 @@ public class AreaMap : MonoBehaviour
         CreateAStarGraph();
         AstarPath.active.Scan();
 
-        fieldOfView = AreaMapHolder.AddComponent<Fov>();
-        fieldOfView.Init(_currentArea);
-        
+        //fieldOfView = AreaMapHolder.AddComponent<Fov>();
+
+        Fov.Init(_currentArea);
         var v = new Vinteger((int) _player.GetSprite().transform.position.x, (int)_player.GetSprite().transform.position.y);
-        fieldOfView.Refresh(v);
+        Fov.Refresh(v);
 
         AreaReady = true;
     }
@@ -94,10 +96,15 @@ public class AreaMap : MonoBehaviour
         {
             for (var j = 0; j < _currentArea.Height; j++)
             {
-                var texture = _currentArea.AreaTiles[i, j].GetPrefabTileTexture();
+                var tile = _currentArea.AreaTiles[i, j];
+
+                var texture = tile.GetPrefabTileTexture();
                 var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
-                _currentArea.AreaTiles[i, j].TextureInstance = instance;
+                tile.TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
+
+                tile.FovTile = Instantiate(Fov.FovTilePrefab, new Vector3(i, j, -4), Quaternion.identity);
+                tile.FovTile.transform.SetParent(FovHolder.transform);
 
                 //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[i, j].Revealed ? Color.gray : Color.black;
             }
@@ -128,6 +135,12 @@ public class AreaMap : MonoBehaviour
                         var tile = building.FloorTiles[currentRow, currentColumn];
 
                         _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
+
+                        if (_currentArea.AreaTiles[areaX, areaY].TextureInstance != null)
+                        {
+                            Destroy(_currentArea.AreaTiles[areaX, areaY].TextureInstance);
+                        }
+
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
 
@@ -144,6 +157,12 @@ public class AreaMap : MonoBehaviour
                         var tile = building.FloorTiles[currentRow, currentColumn];
 
                         _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
+
+                        if (_currentArea.AreaTiles[areaX, areaY].TextureInstance != null)
+                        {
+                            Destroy(_currentArea.AreaTiles[areaX, areaY].TextureInstance);
+                        }
+
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
@@ -236,6 +255,11 @@ public class AreaMap : MonoBehaviour
     {
         RemoveAllNpcs();
         Destroy(AreaMapHolder);
+
+        for (var i = 0; i < FovHolder.transform.childCount; i++)
+        {
+            Destroy(FovHolder.transform.GetChild(i).gameObject);
+        }
     }
 
     private void PlacePlayer()

@@ -13,6 +13,8 @@ public class Fov : MonoBehaviour
 
     private Entity _player;
 
+    public GameObject FovTilePrefab;
+
     public void Init(Area area)
     {
         _grid = area.AreaTiles;
