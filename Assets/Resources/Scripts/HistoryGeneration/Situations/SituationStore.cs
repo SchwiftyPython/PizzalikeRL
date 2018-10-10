@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -155,11 +154,11 @@ public class SituationStore
             "plague cured"
         };
 
-        var id = GUID.Generate();
+        var id = new Guid();
 
         while (HistoryGenerator.SituationIdExists(id))
         {
-            id = GUID.Generate();
+            id = new Guid();
         }
 
         var situationContainer = new SituationContainer

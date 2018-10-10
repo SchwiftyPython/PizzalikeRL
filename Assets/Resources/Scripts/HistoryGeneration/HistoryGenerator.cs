@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -53,7 +53,7 @@ public class HistoryGenerator : MonoBehaviour
 //    private List<string> _middleSituations;
 //    private List<string> _endSituations;
 
-    public static Dictionary<GUID, Situation> ActiveSituations { get; set; }
+    public static Dictionary<Guid, Situation> ActiveSituations { get; set; }
 
     private string _currentDayOfTheWeek;
     private int _currentNumericalDay;
@@ -69,7 +69,7 @@ public class HistoryGenerator : MonoBehaviour
 
         //FactionTemplateLoader.Initialize();
 
-        ActiveSituations = new Dictionary<GUID, Situation>();
+        ActiveSituations = new Dictionary<Guid, Situation>();
 
         _startSituations = _situationStore.GetSituationsOfType(SituationTypes.Start.ToString());
 //        _middleSituations = _situationStore.GetSituationsOfType(SituationTypes.Middle.ToString());
@@ -196,7 +196,7 @@ public class HistoryGenerator : MonoBehaviour
         ActiveSituations.Remove(sc.SituationId);
     }
 
-    public static bool SituationIdExists(GUID id)
+    public static bool SituationIdExists(Guid id)
     {
         return ActiveSituations.ContainsKey(id);
     }

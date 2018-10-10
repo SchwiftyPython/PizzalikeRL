@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
+﻿using System;
+using System.Collections.Generic;
 
 public class SituationContainer
 {
-    public GUID SituationId;
+    public Guid SituationId;
 
     public List<string> NextSituations;
 

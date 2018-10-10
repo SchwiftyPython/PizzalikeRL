@@ -37,11 +37,22 @@ public class NameStore
 
     public string GenerateName()
     {
-        var index = Random.Range(0, _firstNames.Count);
-        var firstName = _firstNames[index];
+        var firstName = String.Empty;
+        var lastName = String.Empty;
+        try
+        {
+            var index = Random.Range(0, _firstNames.Count);
+            firstName = _firstNames[index];
 
-        index = Random.Range(0, _lastNames.Count);
-        var lastName = _lastNames[index];
+            index = Random.Range(0, _lastNames.Count);
+            lastName = _lastNames[index];
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            firstName = String.Empty;
+            lastName = String.Empty;
+        }
 
         return firstName + " " + lastName;
     }
