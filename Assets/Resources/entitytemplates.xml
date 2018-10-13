@@ -17,7 +17,7 @@
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
-			<SpritePath>Prefabs/human_male_1</SpritePath>			
+			<SpritePath>Prefabs/Sprites/Humanoids/human_male_2</SpritePath>			
 			<BodyParts>
 			    <Part>human torso</Part>
 				<Part>human head</Part>
@@ -57,7 +57,7 @@
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
-			<SpritePath>Prefabs/pep_worm</SpritePath>			
+			<SpritePath>Prefabs/Sprites/Creatures/pepperoni_worm_1</SpritePath>			
 			<BodyParts>				
 				<Part>worm body</Part>				
 				<Part>worm head</Part>

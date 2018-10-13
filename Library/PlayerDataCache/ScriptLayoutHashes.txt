@@ -149,6 +149,7 @@ c3f9cdf6a924bc315be1da4dfe079e3e Assembly-CSharp.dll:.EnemyController
 e063e2e1ddafaf151004c437c1c2bafc Assembly-CSharp.dll:.PizzaOrderJournalWindow
 127a67a2bfce977f3959af3ef5df2d3e Assembly-CSharp.dll:.AstarAI
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.PlayerController
+a957044275389ea54dfa5c409990a7bf Assembly-CSharp.dll:.SystemWindow
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.PixelSnap
 3fb488a090a660c965a7e8901635d491 Assembly-CSharp.dll:.ActionWindow
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.StoryGenerator
@@ -209,7 +210,7 @@ fa701de4c8e5a4fa795049ccfb143352 Assembly-CSharp.dll:Pathfinding.Examples.TurnBa
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LoadWorldMapScene
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 571d48b0e867fa3d5384e382f2fc88d7 Assembly-CSharp.dll:Pathfinding.BlockManager
-c4051c32df5d782d190aec2ff0ac0dac Assembly-CSharp.dll:.GameMenuWindow
+fb22c4fa0217f76a2522dd23e9ed1687 Assembly-CSharp.dll:.GameMenuWindow
 ad0f126fcba09821bc39d20a791e1921 Assembly-CSharp.dll:Pathfinding.NodeLink3
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.EntityTemplateLoader
 b1a3ad5368292866ce0a612638dc94ac Assembly-CSharp.dll:Pathfinding.Examples.ProceduralWorld
