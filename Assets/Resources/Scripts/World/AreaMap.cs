@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Pathfinding;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -251,10 +250,14 @@ public class AreaMap : MonoBehaviour
         _player.GetSprite().AddComponent<AstarAI>();
     }
 
-    private void Deconstruct()
+    public void Deconstruct()
     {
         RemoveAllNpcs();
-        Destroy(AreaMapHolder);
+
+        if (AreaMapHolder != null)
+        {
+            Destroy(AreaMapHolder);
+        }
 
         for (var i = 0; i < FovHolder.transform.childCount; i++)
         {
