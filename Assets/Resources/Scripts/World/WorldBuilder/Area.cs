@@ -101,10 +101,9 @@ public class Area
                 //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
                 //Debug.Log($"x: {currentRow}  y: {currentColumn}");
                 //Debug.Log($"tilecode: {tileCode}");
-                var tileType = SettlementPrefabStore.PathTileKeys[tileCode];
 
-                //testing
-                var tile = SettlementPrefabStore.GrassDirtPathTiles[tileType];
+                var tile = GetTilePrefab(tileCode);
+              
                 AreaTiles[currentRow, currentColumn] = new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
             }
         }
@@ -143,5 +142,33 @@ public class Area
     public Tile GetTileAt(Vector3 position)
     {
         return AreaTiles[(int) position.x, (int) position.y];
+    }
+
+    private GameObject GetTilePrefab(char tileCode)
+    {
+        var tileType = GetTileType(tileCode);
+
+        switch (BiomeType)
+        {
+            case BiomeType.Grassland:
+                return SettlementPrefabStore.GrassDirtPathTiles[tileType];
+            case BiomeType.Desert:
+                return SettlementPrefabStore.DesertAsphaltRoadTiles[tileType];
+            default:
+                return SettlementPrefabStore.GrassDirtPathTiles[tileType];
+        }
+    }
+
+    private string GetTileType(char tileCode)
+    {
+        switch (BiomeType)
+        {
+            case BiomeType.Grassland:
+                return SettlementPrefabStore.GrassDirtPathTileKeys[tileCode];
+            case BiomeType.Desert:
+                return SettlementPrefabStore.DesertAsphaltRoadTileKeys[tileCode];
+            default:
+                return SettlementPrefabStore.GrassDirtPathTileKeys[tileCode];
+        }
     }
 }
