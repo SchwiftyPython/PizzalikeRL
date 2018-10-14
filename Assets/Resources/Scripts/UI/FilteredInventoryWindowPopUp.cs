@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,6 +8,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 {
     public GameObject SectionPrefab;
     public GameObject ButtonPrefab;
+    public GameObject UnequipButton;
 
     private IDictionary<string, List<Item>> _sortedItems;
     private IList<GameObject> _itemSections;
@@ -24,6 +24,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 
     public GameObject FilteredInventoryWindow;
     public GameObject TitleBar;
+    public GameObject ActionBar;
 
     public string BodyPartFilter;
 
@@ -42,6 +43,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 
         FilteredInventoryWindow.SetActive(false);
         TitleBar.SetActive(false);
+        ActionBar.SetActive(false);
         _sectionParent = transform;
     }
 
@@ -111,8 +113,12 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
                 NextKeyMapLetter();
             }
         }
+
+        UnequipButton.SetActive(GameManager.Instance.Player.Equipped[bodyPart].Id != Guid.Empty);
+
         FilteredInventoryWindow.SetActive(true);
         TitleBar.SetActive(true);
+        ActionBar.SetActive(true);
     }
 
     private void PopulateSectionDictionary(string bodyPartType)
@@ -189,5 +195,6 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         DestroyOldItemButtons();
         FilteredInventoryWindow.SetActive(false);
         TitleBar.SetActive(false);
+        ActionBar.SetActive(false);
     }
 }

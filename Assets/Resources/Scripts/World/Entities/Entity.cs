@@ -176,6 +176,22 @@ public class Entity
         InventoryWindow.Instance.InventoryChanged = true;
     }
 
+    public void UnequipItem(string bodyPartKey)
+    {
+        var bodyPart = Body[bodyPartKey];
+
+        if (Equipped[bodyPart].Id != Guid.Empty)
+        {
+            var item = Equipped[bodyPart];
+            Inventory.Add(item.Id, item);
+        }
+
+        Equipped[bodyPart] = new Item();
+
+        EquipmentWindow.Instance.EquipmentChanged = true;
+        InventoryWindow.Instance.InventoryChanged = true;
+    }
+
     private void PopulateEquipped()
     {
         Equipped = new Dictionary<BodyPart, Item>();
