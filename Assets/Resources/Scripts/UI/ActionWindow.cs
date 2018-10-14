@@ -14,7 +14,7 @@ public class ActionWindow : MonoBehaviour
 
     public static ActionWindow Instance;
     
-    private void Start()
+    private void Awake()
     {
         if (Instance == null)
         {
