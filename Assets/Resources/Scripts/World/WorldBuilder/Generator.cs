@@ -177,9 +177,9 @@ public class Generator : MonoBehaviour
         LoadCells();
         UpdateNeighbors();
 
-        //GenerateRivers();
-        //BuildRiverGroups();
-        //DigRiverGroups();
+        GenerateRivers();
+        BuildRiverGroups();
+        DigRiverGroups();
         AdjustMoistureMap();
 
         UpdateBitmasks();
@@ -597,9 +597,8 @@ public class Generator : MonoBehaviour
                 if (river.TurnCount < _minRiverTurns || river.Cells.Count < _minRiverLength || river.Intersections > _maxRiverIntersections)
                 {
                     //Validation failed - remove this river
-                    for (var i = 0; i < river.Cells.Count; i++)
+                    foreach (var c in river.Cells.ToArray())
                     {
-                        var c = river.Cells[i];
                         c.Rivers.Remove(river);
                     }
                 }

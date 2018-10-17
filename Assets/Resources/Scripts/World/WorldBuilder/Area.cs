@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Area
@@ -170,5 +171,64 @@ public class Area
             default:
                 return SettlementPrefabStore.GrassDirtPathTileKeys[tileCode];
         }
+    }
+
+    private void PlaceWaterTiles()
+    {
+        var waterTiles = GetWaterTiles();
+
+
+    }
+
+    private IDictionary<string, GameObject> GetWaterTiles()
+    {
+        switch (BiomeType)
+        {
+            case BiomeType.Grassland:
+                return
+                    (Dictionary<string, GameObject>) PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
+            case BiomeType.Desert:
+                return
+                    (Dictionary<string, GameObject>) PopulateWaterTileDictionary(WorldData.Instance.DesertWaterTiles);
+            default:
+                return
+                    (Dictionary<string, GameObject>) PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
+        }
+    }
+
+    private IDictionary<string, GameObject> PopulateWaterTileDictionary(IReadOnlyList<GameObject> waterTilePrefabs)
+    {
+        var waterTiles = new Dictionary<string, GameObject>
+        {
+            { "center", null },
+            { "lower_left", null },
+            { "lower_right", null },
+            { "upper_left", null },
+            { "upper_right", null },
+            { "horizontal_bottom", null },
+            { "horizontal_top", null },
+            { "vertical_left", null },
+            { "vertical_right", null }
+        };
+
+        var waterTileKeys = new List<string>
+        {
+            "center",
+            "lower_left",
+            "lower_right",
+            "upper_left",
+            "upper_right",
+            "horizontal_bottom",
+            "horizontal_top",
+            "vertical_left",
+            "vertical_right"
+        };
+
+        for (var i = 0; i < waterTiles.Count; i++)
+        {
+            waterTiles[waterTileKeys[i]] = waterTilePrefabs[i];
+        }
+
+        return waterTiles;
     }
 }
