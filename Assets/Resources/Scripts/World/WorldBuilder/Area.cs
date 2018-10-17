@@ -1,10 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Area
 {
     private Dictionary<GameObject, Rarities> _biomeTypeTiles;
+
+    private Dictionary<string, GameObject> _waterTiles;
 
     public List<Entity> PresentEntities { get; set; }
     public List<Faction> PresentFactions { get; set; }
@@ -68,45 +70,51 @@ public class Area
                 AreaTiles[i, j].Visibility = Tile.Visibilities.Invisible;
             }
         }
-        
-        if (Settlement == null)
+
+        if (Settlement != null)
         {
-            return;
-        }
+            var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
 
-        var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
+            SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
 
-        SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
-
-        Settlement.Lots = settlementPrefab.Lots;
+            Settlement.Lots = settlementPrefab.Lots;
 
 //        var settlementBluePrint = SettlementPrefabStore.Rotate180(settlementPrefab.Blueprint);
 
-        var settlementBluePrint = settlementPrefab.Blueprint;
+            var settlementBluePrint = settlementPrefab.Blueprint;
 
-        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
-        {
-            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(0); currentColumn++)
+            for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
             {
-                var tileCode = settlementBluePrint[currentColumn, currentRow];
-
-                if (tileCode == 'x')
+                for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(0); currentColumn++)
                 {
-                    continue;
-                }
-                if (tileCode == SettlementPrefabStore.LotKey)
-                {
-                    continue;
-                }
+                    var tileCode = settlementBluePrint[currentColumn, currentRow];
 
-                //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
-                //Debug.Log($"x: {currentRow}  y: {currentColumn}");
-                //Debug.Log($"tilecode: {tileCode}");
+                    if (tileCode == 'x')
+                    {
+                        continue;
+                    }
+                    if (tileCode == SettlementPrefabStore.LotKey)
+                    {
+                        continue;
+                    }
 
-                var tile = GetTilePrefab(tileCode);
-              
-                AreaTiles[currentRow, currentColumn] = new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
+                    //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
+                    //Debug.Log($"x: {currentRow}  y: {currentColumn}");
+                    //Debug.Log($"tilecode: {tileCode}");
+
+                    var tile = GetTilePrefab(tileCode);
+
+                    AreaTiles[currentRow, currentColumn] =
+                        new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
+                }
             }
+        }
+
+        UpdateNeighbors();
+
+        if (ParentCell.Rivers.Count > 0)
+        {
+            PlaceWaterTiles();
         }
 
         if (PresentFactions == null)
@@ -175,28 +183,90 @@ public class Area
 
     private void PlaceWaterTiles()
     {
-        var waterTiles = GetWaterTiles();
+        const int maxTries = 3;
+
+        _waterTiles = GetWaterTiles();
+
+        var foundStartingPoint = false;
+        var numTries = 0;
+        Tile startTile = null;
+        while (!foundStartingPoint && numTries < maxTries)
+        {
+            var x = Random.Range(0, Width);
+            var y = Random.Range(0, Height);
+            
+            startTile = AreaTiles[x, y];
+
+            if (CanPlaceWaterTile(startTile))
+            {
+                foundStartingPoint = true;
+            }
+            else
+            {
+                numTries++;
+            }
+        }
+
+        if (numTries > maxTries || startTile == null)
+        {
+            return;
+        }
+
+        var waterWidth = Random.Range(0, Width);
+        var waterHeight = Random.Range(0, Height);
+
+        var tempMap = new Tile[Height, Width];
+
+        for (var currentRow = (int) startTile.GridPosition.y; currentRow < waterHeight; currentRow++)
+        {
+            for (var currentColumn = (int) startTile.GridPosition.x; currentColumn < waterWidth; currentColumn++)
+            {
+                var currentTile = tempMap[currentRow, currentColumn];
+
+                if (CanPlaceWaterTile(currentTile))
+                {
+                    var waterTilePrefab = GetCorrectWaterTilePrefab(currentTile);
+                }
+            }
+        }
 
 
     }
 
-    private IDictionary<string, GameObject> GetWaterTiles()
+    private bool CanPlaceWaterTile(Tile tile)
+    {
+        return Settlement == null ||
+               Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y)));
+    }
+
+    private Dictionary<string, GameObject> GetWaterTiles()
     {
         switch (BiomeType)
         {
             case BiomeType.Grassland:
                 return
-                    (Dictionary<string, GameObject>) PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
+                    PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
             case BiomeType.Desert:
                 return
-                    (Dictionary<string, GameObject>) PopulateWaterTileDictionary(WorldData.Instance.DesertWaterTiles);
+                    PopulateWaterTileDictionary(WorldData.Instance.DesertWaterTiles);
             default:
                 return
-                    (Dictionary<string, GameObject>) PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
+                    PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
         }
     }
 
-    private IDictionary<string, GameObject> PopulateWaterTileDictionary(IReadOnlyList<GameObject> waterTilePrefabs)
+    private GameObject GetCorrectWaterTilePrefab(Tile tile)
+    {
+        if (tile.Left == null)
+        {
+            if (tile.Top == null)
+            {
+                return _waterTiles["upper_left"];
+            }
+        }
+    }
+
+    private Dictionary<string, GameObject> PopulateWaterTileDictionary(IReadOnlyList<GameObject> waterTilePrefabs)
     {
         var waterTiles = new Dictionary<string, GameObject>
         {
@@ -230,5 +300,38 @@ public class Area
         }
 
         return waterTiles;
+    }
+
+    private Tile GetTop(Tile t)
+    {
+        return AreaTiles[(int) t.GridPosition.x, MathHelper.Mod((int) (t.GridPosition.y - 1), Height)];
+    }
+    private Tile GetBottom(Tile t)
+    {
+        return AreaTiles[(int) t.GridPosition.x, MathHelper.Mod((int) (t.GridPosition.y + 1), Height)];
+    }
+    private Tile GetLeft(Tile t)
+    {
+        return AreaTiles[MathHelper.Mod((int) (t.GridPosition.x - 1), Width), (int) t.GridPosition.y];
+    }
+    private Tile GetRight(Tile t)
+    {
+        return AreaTiles[MathHelper.Mod((int) (t.GridPosition.x + 1), Width), (int) t.GridPosition.y];
+    }
+
+    private void UpdateNeighbors()
+    {
+        for (var x = 0; x < Width; x++)
+        {
+            for (var y = 0; y < Height; y++)
+            {
+                var c = AreaTiles[x, y];
+
+                c.Top = GetTop(c);
+                c.Bottom = GetBottom(c);
+                c.Left = GetLeft(c);
+                c.Right = GetRight(c);
+            }
+        }
     }
 }

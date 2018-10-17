@@ -345,7 +345,6 @@ public class Cell
         
         return maxTries <= 0 || neighbor == null ? mountainTiles[BiomeType.Grassland] : mountainTiles[neighbor.biomeType];
     }
-
 }
 
 
