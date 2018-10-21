@@ -17,6 +17,7 @@ public class SettlementPrefabStore : MonoBehaviour
 
     private static readonly IDictionary<SettlementSize, List<SettlementPrefab>> SettlementPrefabs = new Dictionary<SettlementSize, List<SettlementPrefab>>();
 
+    //todo replace with intersection pieces when available
     public static IDictionary<char, string> GrassDirtPathTileKeys = new Dictionary<char, string>
     {
         {'0', "path_dirt_vertical_straight_left" },
@@ -26,7 +27,12 @@ public class SettlementPrefabStore : MonoBehaviour
         {'4', "path_dirt_corner_lower_left" },
         {'5', "path_dirt_corner_lower_right" },
         {'6', "path_dirt_straight_horizontal_bottom" },
-        {'7', "path_dirt_straight_horizontal_top" }
+        {'7', "path_dirt_straight_horizontal_top" },
+//        {'8', "path_dirt_straight_horizontal_top" },
+//        {'9', "path_dirt_straight_horizontal_top" },
+//        {'A', "path_dirt_straight_horizontal_top" },
+//        {'B', "path_dirt_straight_horizontal_top" },
+//        {'C', "path_dirt_straight_horizontal_top" }
     };
 
     public static IDictionary<char, string> DesertAsphaltRoadTileKeys = new Dictionary<char, string>
@@ -38,13 +44,54 @@ public class SettlementPrefabStore : MonoBehaviour
         {'4', "road_desert_corner_lower_left" },
         {'5', "road_desert_corner_lower_right" },
         {'6', "road_desert_straight_horizontal_bottom" },
-        {'7', "road_desert_straight_horizontal_top" }
+        {'7', "road_desert_straight_horizontal_top" },
+        {'8', "road_desert_intersection_3_way_bottom" },
+        {'9', "road_desert_intersection_3_way_left" },
+        {'A', "road_desert_intersection_3_way_right" },
+        {'B', "road_desert_intersection_3_way_top" },
+        {'C', "road_desert_intersection_4_way_center" }
+    };
+
+    public static IDictionary<char, string> SwampDirtPathTileKeys = new Dictionary<char, string>
+    {
+        {'0', "path_dirt_vertical_straight_left" },
+        {'1', "path_dirt_vertical_straight_right" },
+        {'2', "path_dirt_corner_upper_left" },
+        {'3', "path_dirt_corner_upper_right" },
+        {'4', "path_dirt_corner_lower_left" },
+        {'5', "path_dirt_corner_lower_right" },
+        {'6', "path_dirt_straight_horizontal_bottom" },
+        {'7', "path_dirt_straight_horizontal_top" },
+        {'8', "path_dirt_3_way-bottom" },
+        {'9', "path_dirt_3_way-left" },
+        {'A', "path_dirt_3_way-right" },
+        {'B', "path_dirt_3_way-top" },
+        {'C', "path_dirt_4_way-center" }
+    };
+
+    public static IDictionary<char, string> IceAsphaltRoadTileKeys = new Dictionary<char, string>
+    {
+        {'0', "road_snow_straight_vertical_left" },
+        {'1', "road_snow_straight_vertical_right" },
+        {'2', "road_snow_corner_upper_left" },
+        {'3', "road_snow_corner_upper_right" },
+        {'4', "road_snow_corner_lower_left" },
+        {'5', "road_snow_corner_lower_right" },
+        {'6', "road_snow_straight_horizontal_bottom" },
+        {'7', "road_snow_straight_horizontal_top" },
+        {'8', "road_snow_intersection_3_way_bottom" },
+        {'9', "road_snow_intersection_3_way_left" },
+        {'A', "road_snow_intersection_3_way_right" },
+        {'B', "road_snow_intersection_3_way_top" },
+        {'C', "road_snow_intersection_4_way_center" }
     };
 
     public static char LotKey = 'L';
 
     public static IDictionary<string, GameObject> GrassDirtPathTiles;
     public static IDictionary<string, GameObject> DesertAsphaltRoadTiles;
+    public static IDictionary<string, GameObject> SwampDirtPathTiles;
+    public static IDictionary<string, GameObject> IceAsphaltRoadTiles;
 
     public TextAsset SettlementPrefabFile;
 
@@ -207,22 +254,67 @@ public class SettlementPrefabStore : MonoBehaviour
             { "path_dirt_corner_lower_left", null },
             { "path_dirt_corner_lower_right", null },
             { "path_dirt_straight_horizontal_bottom", null },
-            { "path_dirt_straight_horizontal_top", null }
+            { "path_dirt_straight_horizontal_top", null },
+//            { "path_dirt_straight_horizontal_top", null },
+//            { "path_dirt_straight_horizontal_top", null },
+//            { "path_dirt_straight_horizontal_top", null },
+//            { "path_dirt_straight_horizontal_top", null },
+//            { "path_dirt_straight_horizontal_top", null }
+        };
+
+        SwampDirtPathTiles = new Dictionary<string, GameObject>
+        {
+            { "path_dirt_vertical_straight_left", null },
+            { "path_dirt_vertical_straight_right", null },
+            { "path_dirt_corner_upper_left", null },
+            { "path_dirt_corner_upper_right", null },
+            { "path_dirt_corner_lower_left", null },
+            { "path_dirt_corner_lower_right", null },
+            { "path_dirt_straight_horizontal_bottom", null },
+            { "path_dirt_straight_horizontal_top", null },
+            { "path_dirt_3_way-bottom", null },
+            { "path_dirt_3_way-left", null },
+            { "path_dirt_3_way-right", null },
+            { "path_dirt_3_way-top", null },
+            { "path_dirt_4_way-center", null }
         };
 
         DesertAsphaltRoadTiles = new Dictionary<string, GameObject>
         {
-            {"road_desert_straight_vertical_left", null },
-            {"road_desert_straight_vertical_right", null },
-            {"road_desert_corner_upper_left", null },
-            {"road_desert_corner_upper_right", null },
-            {"road_desert_corner_lower_left", null },
-            {"road_desert_corner_lower_right", null },
-            {"road_desert_straight_horizontal_bottom", null },
-            {"road_desert_straight_horizontal_top", null }
-            };
+            { "road_desert_straight_vertical_left", null },
+            { "road_desert_straight_vertical_right", null },
+            { "road_desert_corner_upper_left", null },
+            { "road_desert_corner_upper_right", null },
+            { "road_desert_corner_lower_left", null },
+            { "road_desert_corner_lower_right", null },
+            { "road_desert_straight_horizontal_bottom", null },
+            { "road_desert_straight_horizontal_top", null },
+            { "road_desert_intersection_3_way_bottom", null },
+            { "road_desert_intersection_3_way_left", null },
+            { "road_desert_intersection_3_way_right", null },
+            { "road_desert_intersection_3_way_top", null },
+            { "road_desert_intersection_4_way_center", null }
 
-        var i = 0;
+        };
+
+        IceAsphaltRoadTiles = new Dictionary<string, GameObject>
+        {
+            { "road_snow_straight_vertical_left", null },
+            { "road_snow_straight_vertical_right", null },
+            { "road_snow_corner_upper_left", null },
+            { "road_snow_corner_upper_right", null },
+            { "road_snow_corner_lower_left", null },
+            { "road_snow_corner_lower_right", null },
+            { "road_snow_straight_horizontal_bottom", null },
+            { "road_snow_straight_horizontal_top", null },
+            { "road_snow_intersection_3_way_bottom", null },
+            { "road_snow_intersection_3_way_left", null },
+            { "road_snow_intersection_3_way_right", null },
+            { "road_snow_intersection_3_way_top", null },
+            { "road_snow_intersection_4_way_center", null }
+        };
+
+    var i = 0;
         foreach (var tile in GrassDirtPathTiles.Keys.ToArray())
         {
             GrassDirtPathTiles[tile] = WorldData.Instance.GrassDirtPathTiles[i];
@@ -233,6 +325,20 @@ public class SettlementPrefabStore : MonoBehaviour
         foreach (var tile in DesertAsphaltRoadTiles.Keys.ToArray())
         {
             DesertAsphaltRoadTiles[tile] = WorldData.Instance.DesertAsphaltRoadTiles[i];
+            i++;
+        }
+
+        i = 0;
+        foreach (var tile in SwampDirtPathTiles.Keys.ToArray())
+        {
+            SwampDirtPathTiles[tile] = WorldData.Instance.SwampDirtPathTiles[i];
+            i++;
+        }
+
+        i = 0;
+        foreach (var tile in IceAsphaltRoadTiles.Keys.ToArray())
+        {
+            IceAsphaltRoadTiles[tile] = WorldData.Instance.IceAsphaltRoadTiles[i];
             i++;
         }
     }

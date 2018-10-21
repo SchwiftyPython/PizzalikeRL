@@ -17,7 +17,7 @@ public sealed class AreaTileDeck : Deck<GameObject>
         CardIndex = 0;
         Build();
         Shuffle();
-        _capper = new Capper(80, 77, 2, 1);
+        _capper = new Capper(45, 42, 2, 1);
     }
 
     public override void Build()

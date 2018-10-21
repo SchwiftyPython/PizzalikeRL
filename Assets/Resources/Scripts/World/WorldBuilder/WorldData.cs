@@ -94,9 +94,13 @@ public class WorldData : MonoBehaviour
 
     public GameObject[] GrassDirtPathTiles = new GameObject[1];
     public GameObject[] DesertAsphaltRoadTiles = new GameObject[1];
+    public GameObject[] SwampDirtPathTiles = new GameObject[1];
+    public GameObject[] IceAsphaltRoadTiles = new GameObject[1];
 
     public GameObject[] GrassWaterTiles = new GameObject[1];
     public GameObject[] DesertWaterTiles = new GameObject[1];
+    public GameObject[] SwampWaterTiles = new GameObject[1];
+    public GameObject[] IceWaterTiles = new GameObject[1];
 
     //Todo: This is replaced by deck system
     public Dictionary<BiomeType, string[]> BiomePossibleEntities = new Dictionary<BiomeType, string[]>

@@ -163,6 +163,10 @@ public class Area
                 return SettlementPrefabStore.GrassDirtPathTiles[tileType];
             case BiomeType.Desert:
                 return SettlementPrefabStore.DesertAsphaltRoadTiles[tileType];
+            case BiomeType.Ice:
+                return SettlementPrefabStore.IceAsphaltRoadTiles[tileType];
+            case BiomeType.Swamp:
+                return SettlementPrefabStore.SwampDirtPathTiles[tileType];
             default:
                 return SettlementPrefabStore.GrassDirtPathTiles[tileType];
         }
@@ -176,6 +180,10 @@ public class Area
                 return SettlementPrefabStore.GrassDirtPathTileKeys[tileCode];
             case BiomeType.Desert:
                 return SettlementPrefabStore.DesertAsphaltRoadTileKeys[tileCode];
+            case BiomeType.Ice:
+                return SettlementPrefabStore.IceAsphaltRoadTileKeys[tileCode];
+            case BiomeType.Swamp:
+                return SettlementPrefabStore.SwampDirtPathTileKeys[tileCode];
             default:
                 return SettlementPrefabStore.GrassDirtPathTileKeys[tileCode];
         }
@@ -290,6 +298,12 @@ public class Area
             case BiomeType.Desert:
                 return
                     PopulateWaterTileDictionary(WorldData.Instance.DesertWaterTiles);
+            case BiomeType.Swamp:
+                return
+                    PopulateWaterTileDictionary(WorldData.Instance.SwampWaterTiles);
+            case BiomeType.Ice:
+                return
+                    PopulateWaterTileDictionary(WorldData.Instance.IceWaterTiles);
             default:
                 return
                     PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
