@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Pathfinding;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -9,6 +10,8 @@ public class AreaMap : MonoBehaviour
     private Area _currentArea;
     private GameObject _playerSprite;
     private Entity _player;
+
+    private Dictionary<string, GameObject> _waterTiles;
 
     public GameObject AStar;
     public GameObject AreaMapHolder;
@@ -58,6 +61,12 @@ public class AreaMap : MonoBehaviour
         _currentArea.TurnOrder = new Queue<Entity>();
         _currentArea.TurnOrder.Enqueue(_player);
         _currentArea.BuildArea();
+
+//        if (_currentArea.ParentCell.Rivers.Count > 0)
+//        {
+//            PlaceWaterTiles();
+//        }
+
         DrawArea();
         PlaceBuildings();
         PlacePlayer();
@@ -91,21 +100,21 @@ public class AreaMap : MonoBehaviour
 
     public void DrawArea()
     {
-        for (var i = 0; i < _currentArea.Width; i++)
+        for (var i = 0; i < _currentArea.Height; i++)
         {
-            for (var j = 0; j < _currentArea.Height; j++)
+            for (var j = 0; j < _currentArea.Width; j++)
             {
-                var tile = _currentArea.AreaTiles[i, j];
+                var tile = _currentArea.AreaTiles[j, i];
 
                 var texture = tile.GetPrefabTileTexture();
-                var instance = Instantiate(texture, new Vector2(i, j), Quaternion.identity);
+                var instance = Instantiate(texture, new Vector2(j, i), Quaternion.identity);
                 tile.TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
 
-                tile.FovTile = Instantiate(Fov.FovTilePrefab, new Vector3(i, j, -4), Quaternion.identity);
+                tile.FovTile = Instantiate(Fov.FovTilePrefab, new Vector3(j, i, -4), Quaternion.identity);
                 tile.FovTile.transform.SetParent(FovHolder.transform);
 
-                //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[i, j].Revealed ? Color.gray : Color.black;
+                //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[j, i].Revealed ? Color.gray : Color.black;
             }
         }
     }
@@ -374,5 +383,216 @@ public class AreaMap : MonoBehaviour
         gg.collision.mask.value = 256; //Set mask to obstacle        
         gg.rotation.x = -90;
         gg.cutCorners = false;
+    }
+
+    private void PlaceWaterTiles()
+    {
+        const int maxTries = 3;
+
+        _waterTiles = GetWaterTiles();
+
+        var foundStartingPoint = false;
+        var numTries = 0;
+        Tile startTile = null;
+        while (!foundStartingPoint && numTries < maxTries)
+        {
+            var x = Random.Range(0, _currentArea.Width);
+            var y = Random.Range(0, _currentArea.Height);
+
+            startTile = _currentArea.AreaTiles[x, y];
+
+            if (CanPlaceWaterTile(startTile))
+            {
+                foundStartingPoint = true;
+            }
+            else
+            {
+                numTries++;
+            }
+        }
+
+        if (numTries > maxTries || startTile == null)
+        {
+            return;
+        }
+
+        //todo temporary until additional water tiles available 
+        var maxWidthAndHeight = Random.Range(3, _currentArea.Height / 2);
+
+        var maxWaterHeight = maxWidthAndHeight;
+        var maxWaterWidth = maxWidthAndHeight;
+
+        var tempMap = new Tile[_currentArea.Width, _currentArea.Height];
+        var currentWidth = 0;
+        var success = true;
+        for (var currentRow = (int)startTile.GridPosition.y; currentWidth < maxWaterWidth; currentRow++)
+        {
+            var currentHeight = 0;
+            for (var currentColumn = (int)startTile.GridPosition.x; currentHeight < maxWaterHeight; currentColumn++)
+            {
+                if (currentRow >= _currentArea.Height || currentColumn >= _currentArea.Width)
+                {
+                    success = false;
+                    break;
+                }
+
+                var currentTile = tempMap[currentColumn, currentRow] ?? new Tile(null, new Vector2(currentColumn, currentRow), false, false);
+
+                UpdateNeighborsForTempTile(currentTile, tempMap);
+
+                if (CanPlaceWaterTile(currentTile))
+                {
+                    var waterTilePrefab = GetCorrectWaterTilePrefab(currentTile, currentWidth, currentHeight, maxWaterWidth, maxWaterHeight);
+
+                    tempMap[currentColumn, currentRow] = new Tile(waterTilePrefab, new Vector2(currentColumn, currentRow), false, false);
+                }
+                else
+                {
+                    success = false;
+                    break;
+                }
+                currentHeight++;
+            }
+            currentWidth++;
+        }
+
+        if (!success)
+        {
+            return;
+        }
+
+        currentWidth = 0;
+        for (var currentRow = (int)startTile.GridPosition.y; currentWidth < maxWaterWidth; currentRow++)
+        {
+            var currentHeight = 0;
+            for (var currentColumn = (int)startTile.GridPosition.x; currentHeight < maxWaterHeight; currentColumn++)
+            {
+                _currentArea.AreaTiles[currentColumn, currentRow] = tempMap[currentColumn, currentRow];
+                currentHeight++;
+            }
+            currentWidth++;
+        }
+
+        //Debug.Log($"Water placed in cell {_currentArea.ParentCell.X}, {_currentArea.ParentCell.Y}");
+    }
+
+    private bool CanPlaceWaterTile(Tile tile)
+    {
+        return _currentArea.Settlement == null ||
+               _currentArea.Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y)));
+    }
+
+    private Dictionary<string, GameObject> GetWaterTiles()
+    {
+        switch (_currentArea.BiomeType)
+        {
+            case BiomeType.Grassland:
+                return
+                    PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
+            case BiomeType.Desert:
+                return
+                    PopulateWaterTileDictionary(WorldData.Instance.DesertWaterTiles);
+            default:
+                return
+                    PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
+        }
+    }
+
+    private GameObject GetCorrectWaterTilePrefab(Tile tile, int currentWidth, int currentHeight, int maxWaterWidth, int maxWaterHeight)
+    {
+        if (tile.Left == null)
+        {
+            if (tile.Top == null)
+            {
+                return _waterTiles["upper_left"];
+            }
+            if (currentHeight == maxWaterHeight - 1)
+            {
+                return _waterTiles["lower_left"];
+            }
+            return _waterTiles["vertical_left"];
+        }
+        if (tile.Top == null)
+        {
+            if (currentWidth == maxWaterWidth - 1)
+            {
+                return _waterTiles["upper_right"];
+            }
+            return _waterTiles["horizontal_top"];
+        }
+        if (currentHeight == maxWaterHeight - 1)
+        {
+            if (currentWidth == maxWaterWidth - 1)
+            {
+                return _waterTiles["lower_right"];
+            }
+            return _waterTiles["horizontal_bottom"];
+        }
+        if (currentWidth == maxWaterWidth - 1)
+        {
+            return _waterTiles["vertical_right"];
+        }
+        return _waterTiles["center"];
+    }
+
+    private Dictionary<string, GameObject> PopulateWaterTileDictionary(IReadOnlyList<GameObject> waterTilePrefabs)
+    {
+        var waterTiles = new Dictionary<string, GameObject>
+        {
+            { "center", null },
+            { "lower_left", null },
+            { "lower_right", null },
+            { "upper_left", null },
+            { "upper_right", null },
+            { "horizontal_bottom", null },
+            { "horizontal_top", null },
+            { "vertical_left", null },
+            { "vertical_right", null }
+        };
+
+        var waterTileKeys = new List<string>
+        {
+            "center",
+            "lower_left",
+            "lower_right",
+            "upper_left",
+            "upper_right",
+            "horizontal_bottom",
+            "horizontal_top",
+            "vertical_left",
+            "vertical_right"
+        };
+
+        for (var i = 0; i < waterTiles.Count; i++)
+        {
+            waterTiles[waterTileKeys[i]] = waterTilePrefabs[i];
+        }
+
+        return waterTiles;
+    }
+
+    private void UpdateNeighborsForTempTile(Tile tile, Tile[,] tempMap)
+    {
+        tile.Top = GetTempTop(tile, tempMap);
+        tile.Bottom = GetTempBottom(tile, tempMap);
+        tile.Left = GetTempLeft(tile, tempMap);
+        tile.Right = GetTempRight(tile, tempMap);
+    }
+
+    private Tile GetTempTop(Tile t, Tile[,] tempMap)
+    {
+        return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y - 1), _currentArea.Height)];
+    }
+    private Tile GetTempBottom(Tile t, Tile[,] tempMap)
+    {
+        return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y + 1), _currentArea.Height)];
+    }
+    private Tile GetTempLeft(Tile t, Tile[,] tempMap)
+    {
+        return tempMap[MathHelper.Mod((int)(t.GridPosition.x - 1), _currentArea.Width), (int)t.GridPosition.y];
+    }
+    private Tile GetTempRight(Tile t, Tile[,] tempMap)
+    {
+        return tempMap[MathHelper.Mod((int)(t.GridPosition.x + 1), _currentArea.Width), (int)t.GridPosition.y];
     }
 }

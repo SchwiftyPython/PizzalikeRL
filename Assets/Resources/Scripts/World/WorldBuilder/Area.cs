@@ -54,20 +54,20 @@ public class Area
 
         var tileDeck = new AreaTileDeck(BiomeType);
 
-        for (var i = 0; i < Width; i++)
+        for (var i = 0; i < Height; i++)
         {
-            for (var j = 0; j < Height; j++)
+            for (var j = 0; j < Width; j++)
             {
                 var texture = tileDeck.Draw();
                 if (texture.layer == LayerMask.NameToLayer("Obstacle"))
                 {
-                    AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), true, true);
+                    AreaTiles[j, i] = new Tile(texture, new Vector2(j, i), true, true);
                 }
                 else
                 {
-                    AreaTiles[i, j] = new Tile(texture, new Vector2(i, j), false, false);
+                    AreaTiles[j , i] = new Tile(texture, new Vector2(j, i), false, false);
                 }
-                AreaTiles[i, j].Visibility = Tile.Visibilities.Invisible;
+                AreaTiles[j, i].Visibility = Tile.Visibilities.Invisible;
             }
         }
 
@@ -212,25 +212,66 @@ public class Area
             return;
         }
 
-        var waterWidth = Random.Range(0, Width);
-        var waterHeight = Random.Range(0, Height);
+        //todo temporary until additional water tiles available 
+        var maxWidthAndHeight = Random.Range(3, Height / 2);
 
-        var tempMap = new Tile[Height, Width];
+        var maxWaterHeight = maxWidthAndHeight;
+        var maxWaterWidth = maxWidthAndHeight;
 
-        for (var currentRow = (int) startTile.GridPosition.y; currentRow < waterHeight; currentRow++)
+        var tempMap = new Tile[Width, Height];
+        var currentHeight = 0;
+        var success = true;
+        for (var currentRow = (int) startTile.GridPosition.y; currentHeight < maxWaterHeight; currentRow++)
         {
-            for (var currentColumn = (int) startTile.GridPosition.x; currentColumn < waterWidth; currentColumn++)
+            var currentWidth = 0;
+            for (var currentColumn = (int) startTile.GridPosition.x; currentWidth < maxWaterWidth; currentColumn++)
             {
-                var currentTile = tempMap[currentRow, currentColumn];
+                if (currentRow >= Height || currentColumn >= Width)
+                {
+                    success = false;
+                    break;
+                }
+
+                var currentTile = tempMap[currentColumn, currentRow] ?? new Tile(null, new Vector2(currentColumn, currentRow), false, false);
+
+                UpdateNeighborsForTempTile(currentTile, tempMap);
 
                 if (CanPlaceWaterTile(currentTile))
                 {
-                    var waterTilePrefab = GetCorrectWaterTilePrefab(currentTile);
+                    var waterTilePrefab = GetCorrectWaterTilePrefab(currentTile, currentWidth, currentHeight, maxWaterWidth, maxWaterHeight);
+
+                    tempMap[currentColumn, currentRow] = new Tile(waterTilePrefab, new Vector2(currentColumn, currentRow), false, false);
                 }
+                else
+                {
+                    success = false;
+                    break;
+                }
+                currentWidth++;
             }
+            currentHeight++;
         }
 
+        if (!success)
+        {
+            return;
+        }
 
+        //tempMap = Rotate180(tempMap);
+
+        currentHeight = 0;
+        for (var currentRow = (int) startTile.GridPosition.y; currentHeight < maxWaterHeight; currentRow++)
+        {
+            var currentWidth = 0;
+            for (var currentColumn = (int) startTile.GridPosition.x; currentWidth < maxWaterWidth; currentColumn++)
+            {
+                AreaTiles[currentColumn, currentRow] = tempMap[currentColumn, currentRow];
+                currentWidth++;
+            }
+            currentHeight++;
+        }
+        
+        Debug.Log($"Water placed in cell {ParentCell.X}, {ParentCell.Y}");
     }
 
     private bool CanPlaceWaterTile(Tile tile)
@@ -255,15 +296,41 @@ public class Area
         }
     }
 
-    private GameObject GetCorrectWaterTilePrefab(Tile tile)
+    private GameObject GetCorrectWaterTilePrefab(Tile tile, int currentWidth, int currentHeight, int maxWaterWidth, int maxWaterHeight)
     {
         if (tile.Left == null)
         {
             if (tile.Top == null)
             {
+                return _waterTiles["lower_left"];
+            }
+            if (currentHeight == maxWaterHeight - 1)
+            {
                 return _waterTiles["upper_left"];
             }
+            return _waterTiles["vertical_left"];
         }
+        if (tile.Top == null)
+        {
+            if (currentWidth == maxWaterWidth - 1)
+            {
+                return _waterTiles["lower_right"];
+            }
+            return _waterTiles["horizontal_bottom"];
+        }
+        if (currentHeight == maxWaterHeight - 1)
+        {
+            if (currentWidth == maxWaterWidth - 1)
+            {
+                return _waterTiles["upper_right"];
+            }
+            return _waterTiles["horizontal_top"];
+        }
+        if (currentWidth == maxWaterWidth - 1)
+        {
+            return _waterTiles["vertical_right"];
+        }
+        return _waterTiles["center"];
     }
 
     private Dictionary<string, GameObject> PopulateWaterTileDictionary(IReadOnlyList<GameObject> waterTilePrefabs)
@@ -325,13 +392,73 @@ public class Area
         {
             for (var y = 0; y < Height; y++)
             {
-                var c = AreaTiles[x, y];
+                var t = AreaTiles[x, y];
 
-                c.Top = GetTop(c);
-                c.Bottom = GetBottom(c);
-                c.Left = GetLeft(c);
-                c.Right = GetRight(c);
+                t.Top = GetTop(t);
+                t.Bottom = GetBottom(t);
+                t.Left = GetLeft(t);
+                t.Right = GetRight(t);
             }
         }
+    }
+
+    private void UpdateNeighborsForTempTile(Tile tile, Tile[,] tempMap)
+    {
+        tile.Top = GetTempTop(tile, tempMap);
+        tile.Bottom = GetTempBottom(tile, tempMap);
+        tile.Left = GetTempLeft(tile, tempMap);
+        tile.Right = GetTempRight(tile, tempMap);
+    }
+
+    private Tile GetTempTop(Tile t, Tile[,] tempMap)
+    {
+        return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y - 1), Height)];
+    }
+    private Tile GetTempBottom(Tile t, Tile[,] tempMap)
+    {
+        return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y + 1), Height)];
+    }
+    private Tile GetTempLeft(Tile t, Tile[,] tempMap)
+    {
+        return tempMap[MathHelper.Mod((int)(t.GridPosition.x - 1), Width), (int)t.GridPosition.y];
+    }
+    private Tile GetTempRight(Tile t, Tile[,] tempMap)
+    {
+        return tempMap[MathHelper.Mod((int)(t.GridPosition.x + 1), Width), (int)t.GridPosition.y];
+    }
+
+    public static Tile[,] Rotate180(Tile[,] blueprint)
+    {
+
+        var height = blueprint.GetLength(0);
+        var width = blueprint.GetLength(1);
+        var answer = new Tile[height, width];
+
+        for (var y = 0; y < height / 2; y++)
+        {
+            var topY = y;
+            var bottomY = height - 1 - y;
+            for (var topX = 0; topX < width; topX++)
+            {
+                var bottomX = width - topX - 1;
+                answer[topY, topX] = blueprint[bottomY, bottomX];
+                answer[bottomY, bottomX] = blueprint[topY, topX];
+            }
+        }
+
+        if (height % 2 == 0)
+        {
+            return answer;
+        }
+
+        var centerY = height / 2;
+        for (var leftX = 0; leftX < Mathf.CeilToInt(width / 2f); leftX++)
+        {
+            var rightX = width - 1 - leftX;
+            answer[centerY, leftX] = blueprint[centerY, rightX];
+            answer[centerY, rightX] = blueprint[centerY, leftX];
+        }
+
+        return answer;
     }
 }
