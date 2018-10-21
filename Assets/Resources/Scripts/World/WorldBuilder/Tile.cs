@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Tile
 {
@@ -17,10 +14,16 @@ public class Tile
     private Prop _presentProp;
     private Item _presentItem;
     private GameObject _prefabTexture;
-    private Vector2 _gridPosition;
 
     private bool _blocksMovement;
     private bool _blocksLight;
+
+    public Tile Left;
+    public Tile Right;
+    public Tile Top;
+    public Tile Bottom;
+
+    public Vector2 GridPosition;
 
     public GameObject FovTile;
 
@@ -52,7 +55,7 @@ public class Tile
     public Tile(GameObject texture, Vector2 position, bool blocksMovement, bool blocksLight)
     {
         _prefabTexture = texture;
-        _gridPosition = position;
+        GridPosition = position;
         _blocksMovement = blocksMovement;
         _blocksLight = blocksLight;
     }
@@ -69,12 +72,12 @@ public class Tile
 
     public void SetGridPosition(Vector2 position)
     {
-        _gridPosition = position;
+        GridPosition = position;
     }
 
     public Vector2 GetGridPosition()
     {
-        return _gridPosition;
+        return GridPosition;
     }
 
     public void SetPrefabTileTexture(GameObject texture)

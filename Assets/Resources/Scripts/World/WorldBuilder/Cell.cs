@@ -206,6 +206,8 @@ public class Cell
         HeightType = HeightType.River;
         HeightValue = 0;
         Collidable = false;
+
+        Debug.Log($"River exists in Cell {X}, {Y}");
     }
 
     public void DigRiver(River river, int size) {
@@ -345,7 +347,6 @@ public class Cell
         
         return maxTries <= 0 || neighbor == null ? mountainTiles[BiomeType.Grassland] : mountainTiles[neighbor.biomeType];
     }
-
 }
 
 
