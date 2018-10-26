@@ -112,7 +112,7 @@ public class WorldData : MonoBehaviour
         {BiomeType.Woodland, new[] {"pepperoni worm"}},
         {BiomeType.Ice, new[] {"pepperoni worm"}},
         {BiomeType.Swamp, new[] {"pepperoni worm"}},
-        {BiomeType.WasteLand, new[] {"pepperoni worm"}}
+        {BiomeType.Wasteland, new[] {"pepperoni worm"}}
     };
 
     public static WorldData Instance;
@@ -235,7 +235,7 @@ public class WorldData : MonoBehaviour
                 }
 
                 return biomeTiles;
-            case BiomeType.WasteLand:
+            case BiomeType.Wasteland:
                 tilesToAdd = AddCommonTiles(AreaWasteLandTilesCommon);
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)

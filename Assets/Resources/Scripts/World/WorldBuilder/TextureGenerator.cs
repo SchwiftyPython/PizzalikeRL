@@ -167,7 +167,7 @@ public class TextureGenerator {
                     case BiomeType.Ice:
                         pixels[x + y * width] = Ice;
                         break;
-                    case BiomeType.WasteLand:
+                    case BiomeType.Wasteland:
                         pixels[x + y * width] = Wasteland;
                         break;
                     case BiomeType.Desert:

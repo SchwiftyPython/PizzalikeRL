@@ -96,10 +96,10 @@ public class Generator : MonoBehaviour
     private readonly BiomeType[,] _biomeTable = 
     {   
 		//COLDEST        //COLDER             //COLD                  //HOT                          //HOTTER                       //HOTTEST
-		{ BiomeType.Ice, BiomeType.WasteLand, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
-		{ BiomeType.Ice, BiomeType.WasteLand, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
-		{ BiomeType.Ice, BiomeType.WasteLand, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.WasteLand,           BiomeType.WasteLand },             //DRY
-		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.WasteLand,    BiomeType.Woodland,            BiomeType.WasteLand,           BiomeType.WasteLand },             //WET
+		{ BiomeType.Ice, BiomeType.Wasteland, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
+		{ BiomeType.Ice, BiomeType.Wasteland, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
+		{ BiomeType.Ice, BiomeType.Wasteland, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.Wasteland,           BiomeType.Wasteland },             //DRY
+		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Wasteland,    BiomeType.Woodland,            BiomeType.Wasteland,           BiomeType.Wasteland },             //WET
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
     };
@@ -1102,7 +1102,7 @@ public class Generator : MonoBehaviour
             {BiomeType.TropicalRainforest, WorldData.Instance.GrassSettlementTile},
             {BiomeType.Desert, WorldData.Instance.DesertSettlementTile},
             {BiomeType.Ice, WorldData.Instance.SnowSettlementTile},
-            {BiomeType.WasteLand, WorldData.Instance.WastelandSettlementTile},
+            {BiomeType.Wasteland, WorldData.Instance.WastelandSettlementTile},
             {BiomeType.Swamp, WorldData.Instance.SwampSettlementTile}
         };
 
