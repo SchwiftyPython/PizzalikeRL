@@ -39,7 +39,7 @@ public enum BiomeType {
     Swamp,
     Mountain,
     SeasonalForest,
-    WasteLand,
+    Wasteland,
     Ice,
     Water
 }
@@ -288,7 +288,7 @@ public class Cell
             case BiomeType.Swamp:
                 WorldMapSprite = WorldData.Instance.WorldSwampTile;
                 break;
-            case BiomeType.WasteLand:
+            case BiomeType.Wasteland:
                 WorldMapSprite = WorldData.Instance.WorldWasteLandTile;
                 break;
             case BiomeType.Water:
@@ -314,7 +314,7 @@ public class Cell
             {BiomeType.TropicalRainforest, WorldData.Instance.GrassMountainTile},
             {BiomeType.Desert, WorldData.Instance.DesertMountainTile},
             {BiomeType.Ice, WorldData.Instance.SnowMountainTile},
-            {BiomeType.WasteLand, WorldData.Instance.WastelandMountainTile},
+            {BiomeType.Wasteland, WorldData.Instance.WastelandMountainTile},
             {BiomeType.Swamp, WorldData.Instance.SwampMountainTile}
         };
         

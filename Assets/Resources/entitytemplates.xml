@@ -32,12 +32,10 @@
 			</BodyParts>
 			<PossibleBiomes>
 			    <Biome>Ice</Biome>
-			    <Biome>WasteLand</Biome>
+			    <Biome>Wasteland</Biome>
 			    <Biome>Swamp</Biome>
 			    <Biome>Grassland</Biome>
-			    <Biome>Woodland</Biome>
-			    <Biome>SeasonalForest</Biome>
-			    <Biome>TropicalRainforest</Biome>
+			    <Biome>Woodland</Biome>			   
 			    <Biome>Desert</Biome>			    
 			</PossibleBiomes>
 		</EntityTemplate>
@@ -63,13 +61,246 @@
 				<Part>worm head</Part>
 			</BodyParts>
 			<PossibleBiomes>			    
-			    <Biome>WasteLand</Biome>
+			    <Biome>Wasteland</Biome>
 			    <Biome>Swamp</Biome>
 			    <Biome>Grassland</Biome>
-			    <Biome>Woodland</Biome>
-			    <Biome>SeasonalForest</Biome>
-			    <Biome>TropicalRainforest</Biome>
+			    <Biome>Woodland</Biome>			   
 			    <Biome>Desert</Biome>	
+			</PossibleBiomes>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "beetle">
+            <Description> 
+			A beagle-sized beetle. Powerful mandibles protrude from
+			its head. Not aggressive, but social.
+			</Description>		
+			<MinStrength> 1 </MinStrength>
+			<MaxStrength> 2 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 3 </MinIntelligence>	
+            <MaxIntelligence> 4 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<CanMutate> false </CanMutate>
+			<IsHostile> false </IsHostile>      	
+			<PossibleInventory>
+			</PossibleInventory>  
+			<SpritePath>Prefabs/Sprites/Creatures/beetle_1</SpritePath>			
+			<BodyParts>				
+				<Part>insect thorax</Part>
+                <Part>insect abdomen</Part>				
+				<Part>beetle head</Part>
+				<Part>insect left front leg</Part>
+				<Part>insect right front leg</Part>
+				<Part>insect left middle leg</Part>
+				<Part>insect right middle leg</Part>
+				<Part>insect left rear leg</Part>
+				<Part>insect right rear leg</Part>
+				<Part>insect left wing</Part>
+				<Part>insect right wing</Part>
+			</BodyParts>
+			<PossibleBiomes>			    
+			    <Biome>Wasteland</Biome>
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>			   
+			    <Biome>Desert</Biome>	
+			</PossibleBiomes>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "giant moth">
+            <Description> 
+			A big-ass moth.
+			</Description>		
+			<MinStrength> 1 </MinStrength>
+			<MaxStrength> 2 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 3 </MinIntelligence>	
+            <MaxIntelligence> 4 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<CanMutate> false </CanMutate>
+			<IsHostile> false </IsHostile>      	
+			<PossibleInventory>
+			</PossibleInventory>  
+			<SpritePath>Prefabs/Sprites/Creatures/giant_moth_1</SpritePath>			
+			<BodyParts>				
+				<Part>insect thorax</Part>
+                <Part>insect abdomen</Part>				
+				<Part>moth head</Part>
+				<Part>insect antennae</Part>
+				<Part>insect left front leg</Part>
+				<Part>insect right front leg</Part>
+				<Part>insect left middle leg</Part>
+				<Part>insect right middle leg</Part>
+				<Part>insect left rear leg</Part>
+				<Part>insect right rear leg</Part>
+				<Part>insect left wing</Part>
+				<Part>insect right wing</Part>
+			</BodyParts>
+			<PossibleBiomes>			    
+			    <Biome>Wasteland</Biome>
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>			   
+			    <Biome>Desert</Biome>	
+			</PossibleBiomes>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "goose">
+            <Description> 
+			A common waterbird identified in flight by its distinctive "V"-shaped flock formation.
+			</Description>		
+			<MinStrength> 1 </MinStrength>
+			<MaxStrength> 2 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 3 </MinIntelligence>	
+            <MaxIntelligence> 4 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<CanMutate> false </CanMutate>
+			<IsHostile> false </IsHostile>      	
+			<PossibleInventory>
+			</PossibleInventory>  
+			<SpritePath>Prefabs/Sprites/Creatures/goose_1</SpritePath>			
+			<BodyParts>				
+				<Part>large bird body</Part>                		
+				<Part>goose head</Part>				
+				<Part>large bird left leg</Part>
+				<Part>large bird right leg</Part>
+				<Part>large bird left webbed foot</Part>
+				<Part>large bird right webbed foot</Part>				
+				<Part>large bird left wing</Part>
+				<Part>large bird right wing</Part>
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>			   
+                <Biome>Ice</Biome>				
+			</PossibleBiomes>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "skunk">
+            <Description> 
+			A mammal known for their ability to spray a liquid with a strong unpleasant smell.
+			</Description>		
+			<MinStrength> 1 </MinStrength>
+			<MaxStrength> 2 </MaxStrength>
+			<MinAgility> 3 </MinAgility>
+			<MaxAgility> 4 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 3 </MinIntelligence>	
+            <MaxIntelligence> 4 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<CanMutate> false </CanMutate>
+			<IsHostile> false </IsHostile>      	
+			<PossibleInventory>
+			</PossibleInventory>  
+			<SpritePath>Prefabs/Sprites/Creatures/skunk_1</SpritePath>			
+			<BodyParts>				
+				<Part>small mammal body</Part>                		
+				<Part>skunk head</Part>				
+				<Part>small mammal left front leg</Part>
+				<Part>small mammal right front leg</Part>
+				<Part>small mammal left rear leg</Part>
+				<Part>small mammal right rear leg</Part>
+				<Part>small mammal left clawed foot</Part>
+				<Part>small mammal right clawed foot</Part>
+                <Part>small mammal left clawed foot</Part>
+				<Part>small mammal right clawed foot</Part>				
+				<Part>skunk tail</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>			    
+                <Biome>Ice</Biome>				
+			</PossibleBiomes>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "spider">
+            <Description> 
+		    Air-breathing arthropods that have eight legs and jaws with fangs able to inject venom.
+			</Description>		
+			<MinStrength> 2 </MinStrength>
+			<MaxStrength> 3 </MaxStrength>
+			<MinAgility> 4 </MinAgility>
+			<MaxAgility> 5 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 3 </MinIntelligence>	
+            <MaxIntelligence> 4 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<CanMutate> false </CanMutate>
+			<IsHostile> false </IsHostile>      	
+			<PossibleInventory>
+			</PossibleInventory>  
+			<SpritePath>Prefabs/Sprites/Creatures/spider_1</SpritePath>			
+			<BodyParts>		
+                <Part>arachnid cephalothorax</Part>			
+                <Part>arachnid abdomen</Part> 								
+				<Part>arachnid left front leg</Part>
+				<Part>arachnid right front leg</Part>
+				<Part>arachnid left middle front leg</Part>
+				<Part>arachnid right middle front leg</Part>
+				<Part>arachnid left middle rear leg</Part>
+				<Part>arachnid right middle rear leg</Part>
+				<Part>arachnid left rear leg</Part>
+				<Part>arachnid right rear leg</Part>
+				<Part>spinneret</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>			    
+                <Biome>Desert</Biome>	
+                <Biome>Wasteland</Biome> 				
+			</PossibleBiomes>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "turkey">
+            <Description> 
+		    A heavy, upland ground bird.
+			</Description>		
+			<MinStrength> 1 </MinStrength>
+			<MaxStrength> 3 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<CanMutate> false </CanMutate>
+			<IsHostile> false </IsHostile>      	
+			<PossibleInventory>
+			</PossibleInventory>  
+			<SpritePath>Prefabs/Sprites/Creatures/turkey_1</SpritePath>			
+			<BodyParts>		
+                <Part>large bird body</Part>                		
+				<Part>turkey head</Part>				
+				<Part>large bird left leg</Part>
+				<Part>large bird right leg</Part>
+				<Part>large bird left foot</Part>
+				<Part>large bird right foot</Part>				
+				<Part>large bird left wing</Part>
+				<Part>large bird right wing</Part>	
+				<Part>turkey tail</Part>
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>			    
+                <Biome>Desert</Biome>	
+                <Biome>Wasteland</Biome> 				
 			</PossibleBiomes>
         </EntityTemplate>
 
