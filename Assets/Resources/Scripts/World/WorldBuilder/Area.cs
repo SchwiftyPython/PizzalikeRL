@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Area
 {
@@ -54,20 +56,20 @@ public class Area
 
         var tileDeck = new AreaTileDeck(BiomeType);
 
-        for (var i = 0; i < Height; i++)
+        for (var row = 0; row < Height; row++)
         {
-            for (var j = 0; j < Width; j++)
+            for (var column = 0; column < Width; column++)
             {
                 var texture = tileDeck.Draw();
                 if (texture.layer == LayerMask.NameToLayer("Obstacle"))
                 {
-                    AreaTiles[j, i] = new Tile(texture, new Vector2(j, i), true, true);
+                    AreaTiles[column, row] = new Tile(texture, new Vector2(column, row), true, true);
                 }
                 else
                 {
-                    AreaTiles[j , i] = new Tile(texture, new Vector2(j, i), false, false);
+                    AreaTiles[column , row] = new Tile(texture, new Vector2(column, row), false, false);
                 }
-                AreaTiles[j, i].Visibility = Tile.Visibilities.Invisible;
+                AreaTiles[column, row].Visibility = Tile.Visibilities.Invisible;
             }
         }
 
@@ -112,7 +114,7 @@ public class Area
 
         UpdateNeighbors();
 
-        if (ParentCell.Rivers.Count > 0)
+        if (ParentCell.Rivers.Count > 0 || BiomeType == BiomeType.Swamp)
         {
             PlaceWaterTiles();
         }
@@ -220,11 +222,8 @@ public class Area
             return;
         }
 
-        //todo temporary until additional water tiles available 
-        var maxWidthAndHeight = Random.Range(3, Height / 2);
-
-        var maxWaterHeight = maxWidthAndHeight;
-        var maxWaterWidth = maxWidthAndHeight;
+        var maxWaterHeight = Random.Range(3, Height / 2);
+        var maxWaterWidth = Random.Range(3, Width / 2);
 
         var tempMap = new Tile[Width, Height];
         var currentHeight = 0;
@@ -246,14 +245,25 @@ public class Area
 
                 if (CanPlaceWaterTile(currentTile))
                 {
-                    var waterTilePrefab = GetCorrectWaterTilePrefab(currentTile, currentWidth, currentHeight, maxWaterWidth, maxWaterHeight);
+                    GameObject waterTilePrefab;
+                    try
+                    {
+                        waterTilePrefab = GetCorrectWaterTilePrefab(currentTile, currentWidth, currentHeight,
+                            maxWaterWidth, maxWaterHeight);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log(e.Message);
+                        success = false;
+                        break;
+                    }
+                    if (waterTilePrefab == null)
+                    {
+                        success = false;
+                        break;
+                    }
 
                     tempMap[currentColumn, currentRow] = new Tile(waterTilePrefab, new Vector2(currentColumn, currentRow), false, false);
-                }
-                else
-                {
-                    success = false;
-                    break;
                 }
                 currentWidth++;
             }
@@ -284,7 +294,7 @@ public class Area
 
     private bool CanPlaceWaterTile(Tile tile)
     {
-        return Settlement == null ||
+        return !tile.GetBlocksMovement() || Settlement == null ||
                Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y)));
     }
 
@@ -304,6 +314,9 @@ public class Area
             case BiomeType.Ice:
                 return
                     PopulateWaterTileDictionary(WorldData.Instance.IceWaterTiles);
+            case BiomeType.Wasteland:
+                return
+                PopulateWaterTileDictionary(WorldData.Instance.WastelandWaterTiles);
             default:
                 return
                     PopulateWaterTileDictionary(WorldData.Instance.GrassWaterTiles);
@@ -322,7 +335,8 @@ public class Area
             {
                 return _waterTiles["upper_left"];
             }
-            return _waterTiles["vertical_left"];
+
+            return  _waterTiles["vertical_left"];
         }
         if (tile.Top == null)
         {
@@ -330,6 +344,14 @@ public class Area
             {
                 return _waterTiles["lower_right"];
             }
+
+            var bottomRightNeighbor = new Tile(null, new Vector2(tile.GridPosition.x + 1, tile.GridPosition.y + 1), false, false);
+
+            if (!CanPlaceWaterTile(bottomRightNeighbor))
+            {
+                return _waterTiles["inside_upper_right"];
+            }
+
             return _waterTiles["horizontal_bottom"];
         }
         if (currentHeight == maxWaterHeight - 1)
@@ -344,6 +366,42 @@ public class Area
         {
             return _waterTiles["vertical_right"];
         }
+
+        var upperLeftNeighbor = new Tile(null, new Vector2(tile.GridPosition.x - 1, tile.GridPosition.y - 1), false, false);
+
+        if (!CanPlaceWaterTile(upperLeftNeighbor))
+        {
+            return _waterTiles["inside_lower_left"];
+        }
+
+        var bottomLeftNeighbor = new Tile(null, new Vector2(tile.GridPosition.x - 1, tile.GridPosition.y + 1), false, false);
+
+        if (!CanPlaceWaterTile(bottomLeftNeighbor))
+        {
+            return _waterTiles["inside_upper_left"];
+        }
+
+        var upperRightNeighbor = new Tile(null, new Vector2(tile.GridPosition.x + 1, tile.GridPosition.y - 1), false, false);
+
+        if (!CanPlaceWaterTile(upperRightNeighbor))
+        {
+            return _waterTiles["inside_lower_right"];
+        }
+
+        var rightNeighbor = new Tile(null, new Vector2(tile.GridPosition.x + 1, tile.GridPosition.y), false, false);
+
+        if (!CanPlaceWaterTile(rightNeighbor))
+        {
+            return _waterTiles["vertical_right"];
+        }
+
+        var bottomNeighbor = new Tile(null, new Vector2(tile.GridPosition.x, tile.GridPosition.y + 1), false, false);
+
+        if (!CanPlaceWaterTile(bottomNeighbor))
+        {
+            return _waterTiles["horizontal_top"];
+        }
+
         return _waterTiles["center"];
     }
 
@@ -359,7 +417,11 @@ public class Area
             { "horizontal_bottom", null },
             { "horizontal_top", null },
             { "vertical_left", null },
-            { "vertical_right", null }
+            { "vertical_right", null },
+            { "inside_lower_left", null },
+            { "inside_lower_right", null },
+            { "inside_upper_left", null },
+            { "inside_upper_right", null }
         };
 
         var waterTileKeys = new List<string>
@@ -372,10 +434,14 @@ public class Area
             "horizontal_bottom",
             "horizontal_top",
             "vertical_left",
-            "vertical_right"
+            "vertical_right",
+            "inside_lower_left",
+            "inside_lower_right",
+            "inside_upper_left",
+            "inside_upper_right"
         };
 
-        for (var i = 0; i < waterTiles.Count; i++)
+        for (var i = 0; i < (waterTilePrefabs.Count > waterTiles.Count ? waterTiles.Count : waterTilePrefabs.Count); i++)
         {
             waterTiles[waterTileKeys[i]] = waterTilePrefabs[i];
         }
