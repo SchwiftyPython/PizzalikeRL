@@ -222,8 +222,8 @@ public class Area
             return;
         }
 
-        var maxWaterHeight = Random.Range(3, Height / 2);
-        var maxWaterWidth = Random.Range(3, Width / 2);
+        var maxWaterHeight = BiomeType == BiomeType.Swamp ? Random.Range(Height / 6, Height - 5) : Random.Range(3, Height / 2);
+        var maxWaterWidth = BiomeType == BiomeType.Swamp ? Random.Range(Width / 6, Width - 5) : Random.Range(3, Width / 2);
 
         var tempMap = new Tile[Width, Height];
         var currentHeight = 0;
@@ -239,63 +239,62 @@ public class Area
                     break;
                 }
 
-                var currentTile = tempMap[currentColumn, currentRow] ?? new Tile(null, new Vector2(currentColumn, currentRow), false, false);
-
-                UpdateNeighborsForTempTile(currentTile, tempMap);
+                var currentTile = AreaTiles[currentColumn, currentRow];
 
                 if (CanPlaceWaterTile(currentTile))
                 {
                     GameObject waterTilePrefab;
                     try
                     {
+                        var tempTile = tempMap[currentColumn, currentRow] ?? new Tile(null, new Vector2(currentColumn, currentRow), false, false);
+
+                        UpdateNeighborsForTempTile(tempTile, tempMap);
+
                         waterTilePrefab = GetCorrectWaterTilePrefab(currentTile, currentWidth, currentHeight,
                             maxWaterWidth, maxWaterHeight);
                     }
                     catch (Exception e)
                     {
                         Debug.Log(e.Message);
-                        success = false;
-                        break;
+                        return;
                     }
                     if (waterTilePrefab == null)
                     {
-                        success = false;
-                        break;
+                        return;
                     }
 
                     tempMap[currentColumn, currentRow] = new Tile(waterTilePrefab, new Vector2(currentColumn, currentRow), false, false);
                 }
                 currentWidth++;
             }
-            currentHeight++;
-        }
-
-        if (!success)
-        {
-            return;
-        }
-
-        //tempMap = Rotate180(tempMap);
-
-        currentHeight = 0;
-        for (var currentRow = (int) startTile.GridPosition.y; currentHeight < maxWaterHeight; currentRow++)
-        {
-            var currentWidth = 0;
-            for (var currentColumn = (int) startTile.GridPosition.x; currentWidth < maxWaterWidth; currentColumn++)
+            if (!success)
             {
-                AreaTiles[currentColumn, currentRow] = tempMap[currentColumn, currentRow];
-                currentWidth++;
+                return;
             }
             currentHeight++;
         }
+
+        for (var currentRow = 0; currentRow < Height; currentRow++)
+        {
+            for (var currentColumn = 0; currentColumn < Width; currentColumn++)
+            {
+                if (tempMap[currentColumn, currentRow] == null)
+                {
+                    continue;
+                }
+
+                AreaTiles[currentColumn, currentRow] = tempMap[currentColumn, currentRow];
+            }
+        }
+
         
         Debug.Log($"Water placed in cell {ParentCell.X}, {ParentCell.Y}");
     }
 
     private bool CanPlaceWaterTile(Tile tile)
     {
-        return !tile.GetBlocksMovement() || Settlement == null ||
-               Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y)));
+        return !tile.GetBlocksMovement() && (Settlement == null ||
+               Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y))));
     }
 
     private Dictionary<string, GameObject> GetWaterTiles()
@@ -345,7 +344,7 @@ public class Area
                 return _waterTiles["lower_right"];
             }
 
-            var bottomRightNeighbor = new Tile(null, new Vector2(tile.GridPosition.x + 1, tile.GridPosition.y + 1), false, false);
+            var bottomRightNeighbor = AreaTiles[(int) (tile.GridPosition.x + 1), (int) tile.GridPosition.y + 1];
 
             if (!CanPlaceWaterTile(bottomRightNeighbor))
             {
@@ -367,39 +366,39 @@ public class Area
             return _waterTiles["vertical_right"];
         }
 
-        var upperLeftNeighbor = new Tile(null, new Vector2(tile.GridPosition.x - 1, tile.GridPosition.y - 1), false, false);
-
-        if (!CanPlaceWaterTile(upperLeftNeighbor))
-        {
-            return _waterTiles["inside_lower_left"];
-        }
-
-        var bottomLeftNeighbor = new Tile(null, new Vector2(tile.GridPosition.x - 1, tile.GridPosition.y + 1), false, false);
-
-        if (!CanPlaceWaterTile(bottomLeftNeighbor))
-        {
-            return _waterTiles["inside_upper_left"];
-        }
-
-        var upperRightNeighbor = new Tile(null, new Vector2(tile.GridPosition.x + 1, tile.GridPosition.y - 1), false, false);
-
-        if (!CanPlaceWaterTile(upperRightNeighbor))
-        {
-            return _waterTiles["inside_lower_right"];
-        }
-
-        var rightNeighbor = new Tile(null, new Vector2(tile.GridPosition.x + 1, tile.GridPosition.y), false, false);
+        var rightNeighbor = AreaTiles[(int) (tile.GridPosition.x + 1), (int) tile.GridPosition.y];
 
         if (!CanPlaceWaterTile(rightNeighbor))
         {
             return _waterTiles["vertical_right"];
         }
 
-        var bottomNeighbor = new Tile(null, new Vector2(tile.GridPosition.x, tile.GridPosition.y + 1), false, false);
+        var bottomNeighbor = AreaTiles[(int)(tile.GridPosition.x), (int)tile.GridPosition.y + 1];
 
         if (!CanPlaceWaterTile(bottomNeighbor))
         {
             return _waterTiles["horizontal_top"];
+        }
+
+        var upperLeftNeighbor = AreaTiles[(int)(tile.GridPosition.x - 1), (int)tile.GridPosition.y - 1];
+
+        if (!CanPlaceWaterTile(upperLeftNeighbor))
+        {
+            return _waterTiles["inside_lower_left"];
+        }
+
+        var bottomLeftNeighbor = AreaTiles[(int)(tile.GridPosition.x - 1), (int)tile.GridPosition.y + 1];
+
+        if (!CanPlaceWaterTile(bottomLeftNeighbor))
+        {
+            return _waterTiles["inside_upper_left"];
+        }
+
+        var upperRightNeighbor = AreaTiles[(int)(tile.GridPosition.x + 1), (int)tile.GridPosition.y - 1];
+
+        if (!CanPlaceWaterTile(upperRightNeighbor))
+        {
+            return _waterTiles["inside_lower_right"];
         }
 
         return _waterTiles["center"];
