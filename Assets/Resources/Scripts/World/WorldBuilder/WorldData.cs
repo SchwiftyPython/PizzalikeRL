@@ -72,19 +72,19 @@ public class WorldData : MonoBehaviour
 
     public GameObject[] AreaGrassLandTilesCommon = new GameObject[1];
     public GameObject[] AreaDesertTilesCommon = new GameObject[1];
-    public GameObject[] AreaWasteLandTilesCommon = new GameObject[1];
+    public GameObject[] AreaWastelandTilesCommon = new GameObject[1];
     public GameObject[] AreaSwampTilesCommon = new GameObject[1];
     public GameObject[] AreaIceTilesCommon = new GameObject[1];
 
     public GameObject[] AreaGrassLandTilesUnCommon = new GameObject[1];
     public GameObject[] AreaDesertTilesUnCommon = new GameObject[1];
-    public GameObject[] AreaWasteLandTilesUnCommon = new GameObject[1];
+    public GameObject[] AreaWastelandTilesUnCommon = new GameObject[1];
     public GameObject[] AreaSwampTilesUnCommon = new GameObject[1];
     public GameObject[] AreaIceTilesUnCommon = new GameObject[1];
 
     public GameObject[] AreaGrassLandTilesRare = new GameObject[1];
     public GameObject[] AreaDesertTilesRare = new GameObject[1];
-    public GameObject[] AreaWasteLandTilesRare = new GameObject[1];
+    public GameObject[] AreaWastelandTilesRare = new GameObject[1];
     public GameObject[] AreaSwampTilesRare = new GameObject[1];
     public GameObject[] AreaIceTilesRare = new GameObject[1];
 
@@ -96,11 +96,13 @@ public class WorldData : MonoBehaviour
     public GameObject[] DesertAsphaltRoadTiles = new GameObject[1];
     public GameObject[] SwampDirtPathTiles = new GameObject[1];
     public GameObject[] IceAsphaltRoadTiles = new GameObject[1];
+    public GameObject[] WastelandDirtPathTiles = new GameObject[1];
 
     public GameObject[] GrassWaterTiles = new GameObject[1];
     public GameObject[] DesertWaterTiles = new GameObject[1];
     public GameObject[] SwampWaterTiles = new GameObject[1];
     public GameObject[] IceWaterTiles = new GameObject[1];
+    public GameObject[] WastelandWaterTiles = new GameObject[1];
 
     //Todo: This is replaced by deck system
     public Dictionary<BiomeType, string[]> BiomePossibleEntities = new Dictionary<BiomeType, string[]>
@@ -236,21 +238,21 @@ public class WorldData : MonoBehaviour
 
                 return biomeTiles;
             case BiomeType.Wasteland:
-                tilesToAdd = AddCommonTiles(AreaWasteLandTilesCommon);
+                tilesToAdd = AddCommonTiles(AreaWastelandTilesCommon);
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
                     biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
-                tilesToAdd = AddUnCommonTiles(AreaWasteLandTilesUnCommon);
+                tilesToAdd = AddUnCommonTiles(AreaWastelandTilesUnCommon);
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
                     biomeTiles = biomeTiles.Concat(tilesToAdd).ToDictionary(k => k.Key, v => v.Value);
                 }
 
-                tilesToAdd = AddRareTiles(AreaWasteLandTilesRare);
+                tilesToAdd = AddRareTiles(AreaWastelandTilesRare);
 
                 if (tilesToAdd != null && tilesToAdd.Count > 0)
                 {
