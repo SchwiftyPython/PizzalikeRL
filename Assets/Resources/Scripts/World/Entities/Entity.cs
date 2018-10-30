@@ -37,7 +37,7 @@ public class Entity
     private readonly bool _isPlayer;
     private bool _isDead;
     private bool _isHostile;
-    private bool _canMutate;
+    private bool _isWild;
 
     private int _coins;
 
@@ -119,7 +119,7 @@ public class Entity
             //TODO: gen coins
         }
 
-        _canMutate = template.CanMutate;
+        _isWild = template.Wild;
 
         _prefab = Resources.Load(template.SpritePath) as GameObject;
         
@@ -261,7 +261,7 @@ public class Entity
             {
                 if (Body[part.NeedsPart].ChildrenBodyParts.Count > Body[part.NeedsPart].MaxChildrenBodyParts)
                 {
-                    Debug.Log(part.Name + " missing required part " + part.NeedsPart);
+                    Debug.Log(part.NeedsPart + ": max children bodyparts reached");
                 }
                 Body.Add(part.Type, part);
             }
@@ -307,11 +307,6 @@ public class Entity
         //todo: clean up this code
         _startTile = CurrentPosition;
         _endTile = target;
-
-//        Debug.Log("entity.currentPosition before move: " + CurrentPosition.x + " " + CurrentPosition.y);
-//        Debug.Log("sprite.currentPosition before move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
-//        Debug.Log("start: " + StartTile);
-//        Debug.Log("End: " + EndTile);
 
         if (TileOutOfBounds(target))
         {

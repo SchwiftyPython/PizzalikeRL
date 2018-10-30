@@ -36,8 +36,8 @@ public class EntityTemplate {
     [XmlElement("Playable")]
     public bool Playable;
 
-    [XmlElement("CanMutate")]
-    public bool CanMutate;
+    [XmlElement("Wild")]
+    public bool Wild;
 
     [XmlElement("IsHostile")]
     public bool IsHostile;

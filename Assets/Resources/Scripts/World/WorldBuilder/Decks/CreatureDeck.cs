@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class CreatureDeck : Deck<Entity>
+public sealed class CreatureDeck : Deck<Entity>
 {
-    private List<EntityTemplate> _availableCreatures;
+    private readonly List<EntityTemplate> _availableCreatures;
 
     public int CardIndex;
 
@@ -10,7 +11,7 @@ public class CreatureDeck : Deck<Entity>
 
     public CreatureDeck(BiomeType biomeType)
     {
-        //todo get available creatures for biome
+        _availableCreatures = EntityTemplateLoader.GetWildTemplatesForBiome(biomeType);
         Size = 10;
         CardIndex = 0;
         Build();
@@ -19,7 +20,31 @@ public class CreatureDeck : Deck<Entity>
 
     public override void Build()
     {
-        //todo loop through available creatures until deck full
+        Cards = new List<Entity>();
+
+        var numCards = 0;
+        var index = 0;
+        while (numCards < Size)
+        {
+            var template = _availableCreatures[index];
+
+            var roll = Random.Range(1, 101);
+
+            if (roll < 10)
+            {
+                Cards.Add(new Entity(template));
+                numCards++;
+            }
+
+            if (index >= _availableCreatures.Count - 1)
+            {
+                index = 0;
+            }
+            else
+            {
+                index++;
+            }
+        }
     }
 
     public override Entity Draw()

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class EntityTemplateLoader : MonoBehaviour
 {
@@ -19,8 +21,6 @@ public class EntityTemplateLoader : MonoBehaviour
         foreach (var e in _ec.EntityTemplates)
         {
             _entityTemplateTypes[index] = e.Type;
-
-            //GetEntityTemplate(e.type); //testing
 
             index++;
         }
@@ -62,14 +62,11 @@ public class EntityTemplateLoader : MonoBehaviour
         }
         var index = _ec.EntityTemplates.FindIndex(item => item.Type.Equals(entityTemplateType.ToLower()));
         var et = _ec.EntityTemplates[index];
-
-        /*
-        Debug.Log("Entity Template Type: " + et.type);
-        foreach (var p in et.parts) {
-            Debug.Log("Part: " + p);
-        }
-        */
-
         return et;
+    }
+
+    public static List<EntityTemplate> GetWildTemplatesForBiome(BiomeType biomeType)
+    {
+        return _ec.EntityTemplates.Where(et => et.Biomes.Contains(biomeType) && et.Wild).ToList();
     }
 }

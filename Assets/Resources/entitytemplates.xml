@@ -13,7 +13,7 @@
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 6 </MaxIntelligence>			
 			<Playable> true </Playable>			
-			<CanMutate> true </CanMutate>
+			<Wild> false </Wild>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
@@ -51,7 +51,7 @@
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 6 </MaxIntelligence>				
 			<Playable> false </Playable>			
-			<CanMutate> false </CanMutate>
+			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
@@ -83,7 +83,7 @@
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
-			<CanMutate> false </CanMutate>
+			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
@@ -123,7 +123,7 @@
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
-			<CanMutate> false </CanMutate>
+			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
@@ -164,7 +164,7 @@
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
-			<CanMutate> false </CanMutate>
+			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
@@ -200,7 +200,7 @@
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
-			<CanMutate> false </CanMutate>
+			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
@@ -212,10 +212,10 @@
 				<Part>small mammal right front leg</Part>
 				<Part>small mammal left rear leg</Part>
 				<Part>small mammal right rear leg</Part>
-				<Part>small mammal left clawed foot</Part>
-				<Part>small mammal right clawed foot</Part>
-                <Part>small mammal left clawed foot</Part>
-				<Part>small mammal right clawed foot</Part>				
+				<Part>small mammal left front clawed foot</Part>
+				<Part>small mammal right front clawed foot</Part>
+                <Part>small mammal left rear clawed foot</Part>
+				<Part>small mammal right rear clawed foot</Part>				
 				<Part>skunk tail</Part>				
 			</BodyParts>
 			<PossibleBiomes>		   
@@ -239,7 +239,7 @@
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
-			<CanMutate> false </CanMutate>
+			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
@@ -279,7 +279,7 @@
             <MinIntelligence> 2 </MinIntelligence>	
             <MaxIntelligence> 3 </MaxIntelligence>				
 			<Playable> false </Playable>			
-			<CanMutate> false </CanMutate>
+			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>      	
 			<PossibleInventory>
 			</PossibleInventory>  
