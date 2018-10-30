@@ -178,58 +178,6 @@ public class AreaMap : MonoBehaviour
                 }
                 areaX = (int)lot.LowerLeftCorner.y;
             }
-
-
-            /*var areaX = (int) lot.UpperLeftCorner.x;
-            for (var x = 0; x < buildingBlueprint.GetLength(0); x++)
-            {
-                areaY--;
-                for (var y = 0; y < buildingBlueprint.GetLength(1); y++)
-                {
-                    var tileCode = buildingBlueprint[x, y];
-
-                    //Need to place floor tile before wall tile
-                    if (BuildingPrefabStore.WallTileKeys.ContainsKey(tileCode))
-                    {
-                        var tileType = BuildingPrefabStore.FloorTileKeys[tileCode];
-
-                        var tile = BuildingPrefabStore.WoodenFloorTiles[tileType];
-
-                        //Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
-
-                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
-                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
-                        instance.transform.SetParent(_areaMapHolderTransform);
-
-                        tileType = BuildingPrefabStore.WallTileKeys[tileCode];
-                        tile = BuildingPrefabStore.BrownStoneWallTiles[tileType];
-
-                        _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
-                        instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
-                        instance.transform.SetParent(_areaMapHolderTransform);
-                    }
-                    else
-                    {
-                        //Debug.Log($"Tile Code: {tileCode} ");
-
-                        if (tileCode != 'a')
-                        {
-                            continue;
-                        }
-
-                        var tileType = BuildingPrefabStore.FloorTileKeys[tileCode];
-
-                        var tile = BuildingPrefabStore.WoodenFloorTiles[tileType];
-
-                        //Debug.Log($"Tile Code: {tileCode}    Tile Type: {tileType}");
-
-                        _currentArea.AreaTiles[areaX, areaY].SetTileTexture(tile);
-                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
-                        instance.transform.SetParent(_areaMapHolderTransform);
-                    }
-                    areaX++;
-                }
-            }*/
         }
     }
 

@@ -100,8 +100,8 @@ public class Generator : MonoBehaviour
 		{ BiomeType.Ice, BiomeType.Wasteland, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
 		{ BiomeType.Ice, BiomeType.Wasteland, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.Wasteland,           BiomeType.Wasteland },             //DRY
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Wasteland,    BiomeType.Woodland,            BiomeType.Wasteland,           BiomeType.Wasteland },             //WET
-		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
-		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
+		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Woodland,            BiomeType.Swamp,               BiomeType.Swamp },  //WETTER
+		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.Swamp,               BiomeType.Swamp }   //WETTEST
     };
 
     private readonly IDictionary<SettlementSize, int> _settlementSizePopulationCaps = new Dictionary<SettlementSize, int>

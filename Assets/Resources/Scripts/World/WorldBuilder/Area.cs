@@ -118,6 +118,8 @@ public class Area
         {
             PlaceWaterTiles();
         }
+        
+        GenerateWildlife();
 
         if (PresentFactions == null)
         {
@@ -506,38 +508,20 @@ public class Area
         return tempMap[MathHelper.Mod((int)(t.GridPosition.x + 1), Width), (int)t.GridPosition.y];
     }
 
-    public static Tile[,] Rotate180(Tile[,] blueprint)
+    private void GenerateWildlife()
     {
+        var numWildlife = Random.Range(0, 11);
 
-        var height = blueprint.GetLength(0);
-        var width = blueprint.GetLength(1);
-        var answer = new Tile[height, width];
-
-        for (var y = 0; y < height / 2; y++)
+        if (numWildlife < 1)
         {
-            var topY = y;
-            var bottomY = height - 1 - y;
-            for (var topX = 0; topX < width; topX++)
-            {
-                var bottomX = width - topX - 1;
-                answer[topY, topX] = blueprint[bottomY, bottomX];
-                answer[bottomY, bottomX] = blueprint[topY, topX];
-            }
+            return;
         }
 
-        if (height % 2 == 0)
-        {
-            return answer;
-        }
+        var creatureDeck = new CreatureDeck(BiomeType);
 
-        var centerY = height / 2;
-        for (var leftX = 0; leftX < Mathf.CeilToInt(width / 2f); leftX++)
+        for (var i = 0; i < numWildlife; i++)
         {
-            var rightX = width - 1 - leftX;
-            answer[centerY, leftX] = blueprint[centerY, rightX];
-            answer[centerY, rightX] = blueprint[centerY, leftX];
+            PresentEntities.Add(creatureDeck.Draw());
         }
-
-        return answer;
     }
 }
