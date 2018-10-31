@@ -324,7 +324,7 @@ public class AreaMap : MonoBehaviour
         gg.width = _currentArea.Width;
         gg.depth = _currentArea.Height;
         gg.nodeSize = 1;
-        gg.center = new Vector3(gg.width / 2 , gg.depth / 2 + Offset, -0.1f);
+        gg.center = new Vector3(gg.width / 2 + Offset , gg.depth / 2, -0.1f);
         gg.SetDimensions(gg.width, gg.depth, gg.nodeSize);
         gg.collision.use2D = true;
         gg.collision.type = ColliderType.Ray;

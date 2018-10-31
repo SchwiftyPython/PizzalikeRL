@@ -10,6 +10,13 @@ public class Area
 
     private Dictionary<string, GameObject> _waterTiles;
 
+    private List<string> _waterEndTiles = new List<string>
+    {
+        "lower_right",
+        "vertical_right",
+        "upper_right"
+    };
+
     public List<Entity> PresentEntities { get; set; }
     public List<Faction> PresentFactions { get; set; }
 
@@ -266,6 +273,11 @@ public class Area
                     }
 
                     tempMap[currentColumn, currentRow] = new Tile(waterTilePrefab, new Vector2(currentColumn, currentRow), false, false);
+
+                    if (_waterEndTiles.Contains(waterTilePrefab.name))
+                    {
+                        break;
+                    }
                 }
                 currentWidth++;
             }

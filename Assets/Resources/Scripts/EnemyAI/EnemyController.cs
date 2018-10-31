@@ -2,20 +2,24 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyController : AstarAI {
+public class EnemyController : AstarAI
+{
     public static bool ActionTaken; //for basic AI pathfinding testing
-    public bool TurnStarted;	
-	
-	private void Update () {
-		if(GameManager.Instance.CurrentState == GameManager.GameState.Enemyturn) {
-            if (!TurnStarted) {
+    public bool TurnStarted;
+
+    private void Update()
+    {
+        if (GameManager.Instance.CurrentState == GameManager.GameState.Enemyturn)
+        {
+            if (!TurnStarted)
+            {
                 //Debug.Log("Enemy turn started");
                 TurnStarted = true;
                 ActionTaken = false;
                 StartCoroutine(MakeDecision());
-            }              
+            }
         }
-	}
+    }
 
     public IEnumerator MakeDecision()
     {
@@ -26,7 +30,8 @@ public class EnemyController : AstarAI {
         //Debug.Log("Present Entity: " + GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity());
         if (GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity() == null)
         {
-            var nextTilePosition = new Vector2(Path.vectorPath[1].x, Path.vectorPath[1].y); //todo figure out half values problem
+            var nextTilePosition =
+                new Vector2(Path.vectorPath[1].x, Path.vectorPath[1].y); //todo figure out half values problem
             enemy.AreaMove(nextTilePosition);
             TurnStarted = false;
             ActionTaken = true;
