@@ -221,8 +221,7 @@
 			<PossibleBiomes>		   
 			    <Biome>Swamp</Biome>
 			    <Biome>Grassland</Biome>
-			    <Biome>Woodland</Biome>			    
-                <Biome>Ice</Biome>				
+			    <Biome>Woodland</Biome>                				
 			</PossibleBiomes>
         </EntityTemplate>
 		
@@ -298,9 +297,7 @@
 			<PossibleBiomes>		   
 			    <Biome>Swamp</Biome>
 			    <Biome>Grassland</Biome>
-			    <Biome>Woodland</Biome>			    
-                <Biome>Desert</Biome>	
-                <Biome>Wasteland</Biome> 				
+			    <Biome>Woodland</Biome>	                				
 			</PossibleBiomes>
         </EntityTemplate>
 

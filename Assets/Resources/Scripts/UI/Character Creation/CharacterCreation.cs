@@ -9,7 +9,13 @@ public class CharacterCreation : MonoBehaviour
 {
     private readonly List<string> _nonPlayableSpecies = new List<string>
     {
-        "pepperoni worm"
+        "pepperoni worm",
+        "goose",
+        "skunk",
+        "spider",
+        "giant moth",
+        "beetle",
+        "turkey"
     };
 
     private const string MainMenuScene = "MainMenu";
