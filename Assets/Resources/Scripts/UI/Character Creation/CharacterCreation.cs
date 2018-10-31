@@ -10,12 +10,8 @@ public class CharacterCreation : MonoBehaviour
     private readonly List<string> _nonPlayableSpecies = new List<string>
     {
         "pepperoni worm",
-        "goose",
-        "skunk",
-        "spider",
         "giant moth",
-        "beetle",
-        "turkey"
+        "beetle"
     };
 
     private const string MainMenuScene = "MainMenu";
