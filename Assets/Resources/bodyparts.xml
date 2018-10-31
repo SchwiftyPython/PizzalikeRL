@@ -447,18 +447,18 @@
 			<MaxHP> 10 </MaxHP>
 			<CanEquipWeapon> true </CanEquipWeapon>
 			<CanEquipArmor> true </CanEquipArmor>
-			<NeedsPart>left leg</NeedsPart>
+			<NeedsPart>left front leg</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
 			<Coverage> 5 </Coverage>
             <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
 		</BodyPart>	
 		
 		<BodyPart name = "small mammal right front clawed foot">
-			<Type>front right foot</Type>
+			<Type>right front foot</Type>
 			<MaxHP> 10 </MaxHP>
 			<CanEquipWeapon> true </CanEquipWeapon>
 			<CanEquipArmor> true </CanEquipArmor>
-			<NeedsPart>right leg</NeedsPart>
+			<NeedsPart>right front leg</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
 			<Coverage> 5 </Coverage>
             <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
@@ -469,7 +469,7 @@
 			<MaxHP> 10 </MaxHP>
 			<CanEquipWeapon> true </CanEquipWeapon>
 			<CanEquipArmor> true </CanEquipArmor>
-			<NeedsPart>left leg</NeedsPart>
+			<NeedsPart>left rear leg</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
 			<Coverage> 5 </Coverage>
             <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
@@ -480,7 +480,7 @@
 			<MaxHP> 10 </MaxHP>
 			<CanEquipWeapon> true </CanEquipWeapon>
 			<CanEquipArmor> true </CanEquipArmor>
-			<NeedsPart>right leg</NeedsPart>
+			<NeedsPart>right rear leg</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
 			<Coverage> 5 </Coverage>
             <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
