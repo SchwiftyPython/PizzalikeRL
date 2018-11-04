@@ -9,10 +9,10 @@ public sealed class CreatureDeck : Deck<Entity>
 
     public override List<Entity> Cards { get; set; }
 
-    public CreatureDeck(BiomeType biomeType)
+    public CreatureDeck(BiomeType biomeType, int size)
     {
         _availableCreatures = EntityTemplateLoader.GetWildTemplatesForBiome(biomeType);
-        Size = 10;
+        Size = size;
         CardIndex = 0;
         Build();
         Shuffle();

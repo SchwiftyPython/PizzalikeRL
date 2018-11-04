@@ -12,13 +12,16 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -466,8 +469,14 @@
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
     <Compile Include="Assets\Resources\Scripts\Dice.cs" />
     <Compile Include="Assets\Resources\Scripts\DiceRoller.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\AIEvent.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Bored.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Goal.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\GoalStore.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\MoveToLocal.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Wander.cs" />
     <Compile Include="Assets\Resources\Scripts\EntityInfo.cs" />
     <Compile Include="Assets\Resources\Scripts\Fov.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />

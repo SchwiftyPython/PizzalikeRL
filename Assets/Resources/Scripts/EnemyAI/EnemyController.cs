@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : AstarAI
 {
     public static bool ActionTaken; //for basic AI pathfinding testing
     public bool TurnStarted;
+    public bool Mobile;
+
+    public Goal ParentGoal;
+    public Entity Self;
+
+    public Stack<Goal> Goals;
 
     private void Update()
     {
@@ -21,6 +28,25 @@ public class EnemyController : AstarAI
         }
     }
 
+    public void TakeAction()
+    {
+        while (Goals.Peek().Finished())
+        {
+            Goals.Pop();
+        }
+        Goals.Peek().TakeAction();
+    }
+
+    public void PushGoal(Goal goal)
+    {
+        goal.Push(this);
+    }
+
+    public bool IsMobile()
+    {
+        return Mobile;
+    }
+
     public IEnumerator MakeDecision()
     {
         var enemy = GameManager.Instance.CurrentArea.TurnOrder.Peek();
@@ -31,7 +57,7 @@ public class EnemyController : AstarAI
         if (GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity() == null)
         {
             var nextTilePosition =
-                new Vector2(Path.vectorPath[1].x, Path.vectorPath[1].y); //todo figure out half values problem
+                new Vector2(Path.vectorPath[1].x, Path.vectorPath[1].y); 
             enemy.AreaMove(nextTilePosition);
             TurnStarted = false;
             ActionTaken = true;

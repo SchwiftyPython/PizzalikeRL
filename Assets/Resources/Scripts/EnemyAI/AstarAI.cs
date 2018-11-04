@@ -25,6 +25,12 @@ public class AstarAI : MonoBehaviour
         _seeker.StartPath(currentEntity.CurrentPosition, target, OnPathComplete);
     }
 
+    public void FindPathToTarget(Vector3 currentPosition, Vector2 target)
+    {
+        PathCalculated = false;
+        _seeker.StartPath(currentPosition, target, OnPathComplete);
+    }
+
     public void OnPathComplete(Path p)
     {
         //Debug.Log("Path returned. Error? " + p.error);
