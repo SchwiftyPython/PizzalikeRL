@@ -469,6 +469,7 @@
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
     <Compile Include="Assets\Resources\Scripts\Dice.cs" />
     <Compile Include="Assets\Resources\Scripts\DiceRoller.cs" />
+    <Compile Include="Assets\Resources\Scripts\GoalDirection.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AIEvent.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
@@ -476,6 +477,7 @@
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Goal.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\GoalStore.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\MoveToLocal.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Step.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Wander.cs" />
     <Compile Include="Assets\Resources\Scripts\EntityInfo.cs" />
     <Compile Include="Assets\Resources\Scripts\Fov.cs" />
