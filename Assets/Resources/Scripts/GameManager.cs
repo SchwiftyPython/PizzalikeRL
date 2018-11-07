@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public Entity Player;
     public GameObject PlayerSpritePrefab;
 
+    public EnemyController CurrentEntityController;
+
     public Dictionary<string, PizzaOrder> ActiveOrders;
 
     public List<string> Messages;
@@ -97,7 +99,11 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case GameState.Enemyturn:
-                if (EnemyController.ActionTaken)
+                if (!CurrentEntityController.TurnStarted)
+                {
+                    CurrentEntityController.TakeAction();
+                }
+                if (CurrentEntityController.ActionTaken)
                 {
                     CurrentState = GameState.EndTurn;
                 }
@@ -138,7 +144,9 @@ public class GameManager : MonoBehaviour
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
         }
-        EnemyController.ActionTaken = false;
+        CurrentEntityController = CurrentArea.TurnOrder.Peek().GetSprite().GetComponent<EnemyController>();
+        CurrentEntityController.ActionTaken = false;
+        CurrentEntityController.TurnStarted = false;
         return GameState.Enemyturn;
     }
 

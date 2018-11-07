@@ -15,7 +15,6 @@ public class Goal
     public Goal()
     {
         GoalStore = new GoalStore();
-        GoalStore.Initialize();
     }
 
     public virtual void Create()

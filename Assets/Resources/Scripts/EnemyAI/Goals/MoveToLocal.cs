@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class MoveToLocal : Goal
 {
-    private int _x;
-    private int _y;
-    private int _maxTurns;
-    private Area _area;
+    private readonly int _x;
+    private readonly int _y;
+    private readonly int _maxTurns;
+    private readonly Area _area;
 
     public MoveToLocal(Area area, int x, int y)
     {

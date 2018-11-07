@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyController : AstarAI
 {
-    public static bool ActionTaken; //for basic AI pathfinding testing
+    public bool ActionTaken; //for basic AI pathfinding testing
     public bool TurnStarted;
     public bool Mobile;
 
@@ -14,27 +14,28 @@ public class EnemyController : AstarAI
 
     public Stack<Goal> Goals;
 
-    private void Update()
-    {
-        if (GameManager.Instance.CurrentState == GameManager.GameState.Enemyturn)
-        {
-            if (!TurnStarted)
-            {
-                //Debug.Log("Enemy turn started");
-                TurnStarted = true;
-                ActionTaken = false;
-                StartCoroutine(MakeDecision());
-            }
-        }
-    }
-
     public void TakeAction()
     {
+        TurnStarted = true;
+
+        if (Goals == null)
+        {
+            Goals = new Stack<Goal>();
+        }
+
+        if (Goals.Count == 0)
+        {
+            Debug.Log(Self + " is bored.");
+            var bored = new Bored();
+            bored.Push(this);
+        }
+
         while (Goals.Peek().Finished())
         {
             Goals.Pop();
         }
         Goals.Peek().TakeAction();
+        ActionTaken = true;
     }
 
     public void PushGoal(Goal goal)

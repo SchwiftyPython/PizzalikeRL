@@ -1,17 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Bored : Goal
 {
-    private List<string> _goals = new List<string>
+    private readonly List<string> _goals = new List<string>
     {
-        //Wander 
-        //WanderRandomly
-        //Travel
-        //Wait
-        //MoveTo
-        //Dormant
+        "wander"
     };
 
     public override bool Finished()
@@ -38,6 +32,6 @@ public class Bored : Goal
         {
             FailToParent();
         }
-        goal?.Push(ParentController);
+        goal?.PushChildGoal(goal);
     }
 }
