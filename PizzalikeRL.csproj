@@ -474,6 +474,7 @@
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\GoalStore.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\MoveToLocal.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Step.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Wait.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Wander.cs" />
     <Compile Include="Assets\Resources\Scripts\EntityInfo.cs" />
     <Compile Include="Assets\Resources\Scripts\Fov.cs" />

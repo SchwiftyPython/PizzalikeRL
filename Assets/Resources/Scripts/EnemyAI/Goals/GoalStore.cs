@@ -7,7 +7,8 @@ public class GoalStore
     private readonly Dictionary<string, Func<Goal>> _allGoals = new Dictionary<string, Func<Goal>>
     {
         {"bored", () => new Bored()},
-        {"wander", () => new Wander()}
+        {"wander", () => new Wander()},
+        {"wait", () => new Wait()}
     };
 
     public List<string> GoalKeys { get; set; }

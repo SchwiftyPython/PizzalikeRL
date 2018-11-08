@@ -54,8 +54,8 @@ public class MoveToLocal : Goal
         {
             _monoHelper = ParentController.Self.GetSprite().AddComponent<MonoHelper>();
         }
-        //ParentController.FindPathToTarget(ParentController.Self.CurrentPosition, new Vector2(_x, _y));
-        _monoHelper.StartCoroutine(GetPath());
+
+        ParentController.FindPathToTarget(ParentController.Self.CurrentPosition, new Vector2(_x, _y));
 
         if (ParentController.Path.vectorPath.Count > 1)
         {
@@ -65,7 +65,7 @@ public class MoveToLocal : Goal
             {
                 PushGoal(new Step(node));
                 numTurns++;
-                if (numTurns >= _maxTurns)
+                if (_maxTurns > -1 && numTurns >= _maxTurns)
                 {
                     break;
                 }
@@ -76,12 +76,6 @@ public class MoveToLocal : Goal
             FailToParent();
         }
 
-    }
-
-    private IEnumerator GetPath()
-    {
-        ParentController.FindPathToTarget(ParentController.Self.CurrentPosition, new Vector2(_x, _y));
-        yield return new WaitForSeconds(0.2f);
     }
 
     private IEnumerable<GoalDirection> TranslatePathToDirections()
@@ -99,7 +93,7 @@ public class MoveToLocal : Goal
 
     private GoalDirection GetDirectionFromTwoPoints(Vector2 startPoint, Vector2 endPoint)
     {
-        var difference = startPoint - endPoint;
+        var difference = endPoint - startPoint;
 
         if (difference == Vector2.up)
         {

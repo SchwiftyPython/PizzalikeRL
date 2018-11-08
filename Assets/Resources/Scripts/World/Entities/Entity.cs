@@ -347,11 +347,11 @@ public class Entity
 
                     //update tile data for start and end tiles
                     UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                        CurrentArea.AreaTiles[(int) GameManager.Instance.CurrentTile.GetGridPosition().x,
-                            (int) GameManager.Instance.CurrentTile.GetGridPosition().y]);
+                        CurrentArea.AreaTiles[(int) CurrentTile.GetGridPosition().x,
+                            (int) CurrentTile.GetGridPosition().y]);
 
-                    CurrentPosition = new Vector3((int) GameManager.Instance.CurrentTile.GetGridPosition().x,
-                        (int) GameManager.Instance.CurrentTile.GetGridPosition().y);
+                    CurrentPosition = new Vector3((int) CurrentTile.GetGridPosition().x,
+                        (int) CurrentTile.GetGridPosition().y);
 
                     if (_isPlayer)
                     {
@@ -381,11 +381,11 @@ public class Entity
                 CurrentTile = CalculateAreaEntryTile(target);
 
                 //update tile data for start and end tiles
-                CurrentPosition = new Vector3((int) GameManager.Instance.CurrentTile.GetGridPosition().x,
-                    (int) GameManager.Instance.CurrentTile.GetGridPosition().y);
+                CurrentPosition = new Vector3((int) CurrentTile.GetGridPosition().x,
+                    (int) CurrentTile.GetGridPosition().y);
                 UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                    CurrentArea.AreaTiles[(int) GameManager.Instance.CurrentTile.GetGridPosition().x,
-                        (int) GameManager.Instance.CurrentTile.GetGridPosition().y]);
+                    CurrentArea.AreaTiles[(int) CurrentTile.GetGridPosition().x,
+                        (int) CurrentTile.GetGridPosition().y]);
 
                 if (_isPlayer)
                 {
@@ -398,6 +398,7 @@ public class Entity
         else
         {
             CurrentPosition = _endTile;
+            CurrentTile = CurrentArea.AreaTiles[(int) _endTile.x, (int) _endTile.y];
             if (_isPlayer)
             {
                 GameManager.Instance.Player.CurrentPosition = CurrentPosition;
@@ -624,6 +625,16 @@ public class Entity
             return true;
         }
         Debug.Log("Cannot move. Edge of map.");
+        return false;
+    }
+
+    public bool AreaMapCanMoveLocal(Vector2 target)
+    {
+        if (!TileOutOfBounds(target))
+        {
+            return !TargetTileBlocked(target);
+        }
+        Debug.Log("Cannot move. Edge of area.");
         return false;
     }
 

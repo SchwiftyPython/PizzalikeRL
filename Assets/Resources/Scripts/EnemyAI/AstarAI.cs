@@ -28,7 +28,10 @@ public class AstarAI : MonoBehaviour
     public void FindPathToTarget(Vector3 currentPosition, Vector2 target)
     {
         PathCalculated = false;
-        _seeker.StartPath(currentPosition, target, OnPathComplete);
+        //_seeker.StartPath(currentPosition, target, OnPathComplete);
+        var p =_seeker.StartPath(currentPosition, target);
+        p.BlockUntilCalculated();
+        OnPathComplete(p);
     }
 
     public void OnPathComplete(Path p)

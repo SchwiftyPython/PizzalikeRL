@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 public class Wander : Goal
 {
-    private const int MaxWanderDistance = 25;
+    private const int MaxWanderDistance = 12;
 
     public override void Create()
     {
@@ -19,7 +19,7 @@ public class Wander : Goal
 
         const int maxTries = 40;
         var numTries = 0;
-        while (!ParentController.Self.AreaMapCanMove(new Vector2(x, y)) ||
+        while (!ParentController.Self.AreaMapCanMoveLocal(new Vector2(x, y)) ||
                DistanceToTarget(new Vector2(x, y)) > MaxWanderDistance)
         {
             numTries++;
@@ -31,7 +31,11 @@ public class Wander : Goal
             x = Random.Range(0, areaWidth);
             y = Random.Range(0, areaHeight);
         }
-        PushChildGoal(new MoveToLocal(area, x, y), ParentGoal);
+
+        PushChildGoal(
+            numTries - MaxWanderDistance < 0
+                ? new MoveToLocal(area, x, y)
+                : new MoveToLocal(area, x, y, numTries - MaxWanderDistance), ParentGoal);
     }
 
     private int DistanceToTarget(Vector2 target)

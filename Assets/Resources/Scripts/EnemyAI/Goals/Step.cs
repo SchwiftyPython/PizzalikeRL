@@ -41,7 +41,7 @@ public class Step : Goal
             (int) (currentPosition.x + DirectionDictionary[StepDirection].x),
             (int) (currentPosition.y + DirectionDictionary[StepDirection].y));
 
-        if (!ParentController.Self.AreaMapCanMove(targetposition))
+        if (!ParentController.Self.AreaMapCanMoveLocal(targetposition))
         {
             FailToParent();
             return;
