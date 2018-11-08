@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveToLocal : Goal
@@ -7,6 +8,8 @@ public class MoveToLocal : Goal
     private readonly int _y;
     private readonly int _maxTurns;
     private readonly Area _area;
+
+    private MonoHelper _monoHelper;
 
     public MoveToLocal(Area area, int x, int y)
     {
@@ -47,9 +50,14 @@ public class MoveToLocal : Goal
             Pop();
             return;
         }
-        ParentController.FindPathToTarget(ParentController.Self.CurrentPosition, new Vector2(_x, _y));
+        if (_monoHelper == null)
+        {
+            _monoHelper = ParentController.Self.GetSprite().AddComponent<MonoHelper>();
+        }
+        //ParentController.FindPathToTarget(ParentController.Self.CurrentPosition, new Vector2(_x, _y));
+        _monoHelper.StartCoroutine(GetPath());
 
-        if (ParentController.Path.vectorPath.Count < 1)
+        if (ParentController.Path.vectorPath.Count > 1)
         {
             var translatedPath = TranslatePathToDirections();
             var numTurns = 0;
@@ -68,6 +76,12 @@ public class MoveToLocal : Goal
             FailToParent();
         }
 
+    }
+
+    private IEnumerator GetPath()
+    {
+        ParentController.FindPathToTarget(ParentController.Self.CurrentPosition, new Vector2(_x, _y));
+        yield return new WaitForSeconds(0.2f);
     }
 
     private IEnumerable<GoalDirection> TranslatePathToDirections()
@@ -121,5 +135,14 @@ public class MoveToLocal : Goal
         }
         FailToParent();
         return GoalDirection.North;
+    }
+
+    internal class MonoHelper : MonoBehaviour
+    {
+        public IEnumerator DoCoroutine(IEnumerator cor)
+        {
+            while (cor.MoveNext())
+                yield return cor.Current;
+        }
     }
 }

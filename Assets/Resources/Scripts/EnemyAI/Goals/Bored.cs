@@ -32,6 +32,6 @@ public class Bored : Goal
         {
             FailToParent();
         }
-        goal?.PushChildGoal(goal);
+        PushChildGoal(goal);
     }
 }

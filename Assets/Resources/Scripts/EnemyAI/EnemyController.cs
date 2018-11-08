@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,24 +17,42 @@ public class EnemyController : AstarAI
     {
         TurnStarted = true;
 
+        if (Self == null)
+        {
+            return;
+        }
+
         if (Goals == null)
         {
-            Goals = new Stack<Goal>();
+            if (Self.Goals == null)
+            {
+                Self.Goals = new Stack<Goal>();
+            }
+            Goals = Self.Goals;
         }
 
         if (Goals.Count == 0)
         {
             Debug.Log(Self + " is bored.");
-            var bored = new Bored();
-            bored.Push(this);
+            new Bored().Push(this);
+            Goals.Peek().TakeAction();
         }
 
-        while (Goals.Peek().Finished())
+        if (Goals.Count > 0)
+        {
+            Goals.Peek().TakeAction();
+        }
+
+        while (Goals.Count > 0 && Goals.Peek().Finished())
         {
             Goals.Pop();
         }
-        Goals.Peek().TakeAction();
-        ActionTaken = true;
+
+        if (Goals.Count > 0)
+        {
+            Goals.Peek().TakeAction();
+        }
+        GameManager.Instance.CurrentState = GameManager.GameState.EndTurn;
     }
 
     public void PushGoal(Goal goal)
@@ -45,7 +62,7 @@ public class EnemyController : AstarAI
 
     public bool IsMobile()
     {
-        return Mobile;
+        return Self.Mobile;
     }
 
     public IEnumerator MakeDecision()

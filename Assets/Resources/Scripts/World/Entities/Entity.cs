@@ -78,9 +78,13 @@ public class Entity
 
     public EntityFluff Fluff { get; set; }
 
+    public Stack<Goal> Goals;
+
     public Cell CurrentCell;
     public Area CurrentArea;
     public Tile CurrentTile;
+
+    public bool Mobile;
 
     public Vector3 CurrentPosition
     {
@@ -120,6 +124,7 @@ public class Entity
         }
 
         _isWild = template.Wild;
+        Mobile = true;
 
         _prefab = Resources.Load(template.SpritePath) as GameObject;
         
