@@ -529,11 +529,13 @@ public class Area
             return;
         }
 
-        var creatureDeck = new CreatureDeck(BiomeType);
+        var creatureDeck = new CreatureDeck(BiomeType, numWildlife);
 
         for (var i = 0; i < numWildlife; i++)
         {
-            PresentEntities.Add(creatureDeck.Draw());
+            var creature = creatureDeck.Draw();
+            creature.CurrentArea = this;
+            PresentEntities.Add(creature);
         }
     }
 }

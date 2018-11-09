@@ -287,6 +287,8 @@ public class AreaMap : MonoBehaviour
                     npcSprite.AddComponent<Seeker>();
                     npcSprite.AddComponent<EntityInfo>();
 
+                    npcSprite.GetComponent<EnemyController>().Self = e;
+
                     npcSprite.transform.SetParent(NpcSpriteHolder.transform);
                     e.SetSprite(npcSprite);
                     _currentArea.AreaTiles[x, y].SetPresentEntity(e);

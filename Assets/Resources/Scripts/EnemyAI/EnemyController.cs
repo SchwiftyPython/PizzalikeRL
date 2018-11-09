@@ -1,24 +1,68 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : AstarAI
 {
-    public static bool ActionTaken; //for basic AI pathfinding testing
+    public bool ActionTaken; //for basic AI pathfinding testing
     public bool TurnStarted;
+    public bool Mobile;
 
-    private void Update()
+    public Goal ParentGoal;
+    public Entity Self;
+
+    public Stack<Goal> Goals;
+
+    public void TakeAction()
     {
-        if (GameManager.Instance.CurrentState == GameManager.GameState.Enemyturn)
+        TurnStarted = true;
+
+        if (Self == null)
         {
-            if (!TurnStarted)
-            {
-                //Debug.Log("Enemy turn started");
-                TurnStarted = true;
-                ActionTaken = false;
-                StartCoroutine(MakeDecision());
-            }
+            return;
         }
+
+        if (Goals == null)
+        {
+            if (Self.Goals == null)
+            {
+                Self.Goals = new Stack<Goal>();
+            }
+            Goals = Self.Goals;
+        }
+
+        if (Goals.Count == 0)
+        {
+            Debug.Log(Self + " is bored.");
+            new Bored().Push(this);
+            Goals.Peek().TakeAction();
+        }
+
+        if (Goals.Count > 0)
+        {
+            Goals.Peek().TakeAction();
+        }
+
+        while (Goals.Count > 0 && Goals.Peek().Finished())
+        {
+            Goals.Pop();
+        }
+
+        if (Goals.Count > 0)
+        {
+            Goals.Peek().TakeAction();
+        }
+        GameManager.Instance.CurrentState = GameManager.GameState.EndTurn;
+    }
+
+    public void PushGoal(Goal goal)
+    {
+        goal.Push(this);
+    }
+
+    public bool IsMobile()
+    {
+        return Self.Mobile;
     }
 
     public IEnumerator MakeDecision()
@@ -31,7 +75,7 @@ public class EnemyController : AstarAI
         if (GameManager.Instance.CurrentArea.GetTileAt(Path.vectorPath[1]).GetPresentEntity() == null)
         {
             var nextTilePosition =
-                new Vector2(Path.vectorPath[1].x, Path.vectorPath[1].y); //todo figure out half values problem
+                new Vector2(Path.vectorPath[1].x, Path.vectorPath[1].y); 
             enemy.AreaMove(nextTilePosition);
             TurnStarted = false;
             ActionTaken = true;
