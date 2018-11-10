@@ -40,8 +40,17 @@ public class WorldMap : MonoBehaviour
         {
             for (var y = 0; y < _mapHeight; y++)
             {
-                var instance = Instantiate(_map[x, y].WorldMapSprite, new Vector2(x, y), Quaternion.identity);
-                instance.transform.SetParent(_worldMapHolder);
+                foreach (var layer in _map[x, y].WorldMapSprite.Keys)
+                {
+                    var prefab = _map[x, y].WorldMapSprite[layer];
+
+                    if (prefab == null)
+                    {
+                        continue;
+                    }
+                    var instance = Instantiate(prefab, new Vector2(x, y), Quaternion.identity);
+                    instance.transform.SetParent(_worldMapHolder);
+                }
             }
         }
     }

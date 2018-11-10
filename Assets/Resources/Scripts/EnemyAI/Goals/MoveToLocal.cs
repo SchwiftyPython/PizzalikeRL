@@ -29,8 +29,16 @@ public class MoveToLocal : Goal
 
     public override bool Finished()
     {
-        return !ParentController.IsMobile() || (int) ParentController.Self.CurrentTile.GetGridPosition().x == _x &&
-               (int) ParentController.Self.CurrentTile.GetGridPosition().y == _y;
+        var self = ParentController.Self;
+
+        if (self.CurrentTile == null)
+        {
+            self.CurrentTile = _area.AreaTiles[(int) self.CurrentPosition.x,
+                (int) self.CurrentPosition.y];
+        }
+
+        return !ParentController.IsMobile() || (int) self.CurrentTile.GetGridPosition().x == _x &&
+               (int) self.CurrentTile.GetGridPosition().y == _y;
     }
 
     public override void TakeAction()
