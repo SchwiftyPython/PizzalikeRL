@@ -1159,7 +1159,7 @@ public class Generator : MonoBehaviour
 //            cell.Settlement = new Settlement(faction, size, cell, settlementPopulation);
 //        }
 
-        //testing
+        //testing todo change to size appropriate for population
         cell.Settlement = new Settlement(faction, SettlementSize.Outpost, cell, 5);
     }
     #endregion
