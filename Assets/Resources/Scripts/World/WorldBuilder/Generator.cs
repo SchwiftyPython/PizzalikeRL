@@ -202,20 +202,6 @@ public class Generator : MonoBehaviour
         */
     }
 
-    private void DrawMap()
-    {
-        _mapHolder = transform;
-
-        for (var x = 0; x < _width; x++)
-        {
-            for (var y = 0; y < _height; y++)
-            {
-                var instance = Instantiate(_cells[x, y].WorldMapSprite, new Vector2(x, y), Quaternion.identity);
-                instance.transform.SetParent(_mapHolder);
-            }
-        }
-    }
-
     private void GenerateBiomeMap()
     {
         for (var x = 0; x < _width; x++)
@@ -1094,18 +1080,8 @@ public class Generator : MonoBehaviour
 
     private void PlaceSettlements()
     {
-        var settlementTiles = new Dictionary<BiomeType, GameObject>
-        {
-            {BiomeType.Grassland, WorldData.Instance.GrassSettlementTile},
-            {BiomeType.SeasonalForest, WorldData.Instance.GrassSettlementTile},
-            {BiomeType.Woodland, WorldData.Instance.GrassSettlementTile},
-            {BiomeType.TropicalRainforest, WorldData.Instance.GrassSettlementTile},
-            {BiomeType.Desert, WorldData.Instance.DesertSettlementTile},
-            {BiomeType.Ice, WorldData.Instance.SnowSettlementTile},
-            {BiomeType.Wasteland, WorldData.Instance.WastelandSettlementTile},
-            {BiomeType.Swamp, WorldData.Instance.SwampSettlementTile}
-        };
-
+        var settlementFloorTiles = WorldData.Instance.SettlementFloorTiles;
+        var settlementWallTiles = WorldData.Instance.SettlementWallTiles;
 
         const float chanceToPlaceCard = 0.005f;
 
@@ -1134,7 +1110,13 @@ public class Generator : MonoBehaviour
 
                         CreateSettlement(card, currentCell);
 
-                        currentCell.WorldMapSprite = settlementTiles[currentCell.BiomeType]; 
+                        var index = Random.Range(0, settlementFloorTiles.Length);
+
+                        currentCell.WorldMapSprite[Cell.WorldSpriteLayer.SettlementFloor] = settlementFloorTiles[index];
+
+                        index = Random.Range(0, settlementWallTiles.Length);
+
+                        currentCell.WorldMapSprite[Cell.WorldSpriteLayer.SettlementWall] = settlementWallTiles[index];
                         placed = true;
                         //Debug.Log(card + " placed at " + currentX + ", " + currentY);
                     }
@@ -1177,7 +1159,7 @@ public class Generator : MonoBehaviour
 //            cell.Settlement = new Settlement(faction, size, cell, settlementPopulation);
 //        }
 
-        //testing
+        //testing todo change to size appropriate for population
         cell.Settlement = new Settlement(faction, SettlementSize.Outpost, cell, 5);
     }
     #endregion

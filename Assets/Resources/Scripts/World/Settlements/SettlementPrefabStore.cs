@@ -28,11 +28,11 @@ public class SettlementPrefabStore : MonoBehaviour
         {'5', "path_dirt_corner_lower_right" },
         {'6', "path_dirt_straight_horizontal_bottom" },
         {'7', "path_dirt_straight_horizontal_top" },
-//        {'8', "path_dirt_straight_horizontal_top" },
-//        {'9', "path_dirt_straight_horizontal_top" },
-//        {'A', "path_dirt_straight_horizontal_top" },
-//        {'B', "path_dirt_straight_horizontal_top" },
-//        {'C', "path_dirt_straight_horizontal_top" }
+        {'8', "path_dirt_intersection_3_way_bottom" },
+        {'9', "path_dirt_intersection_3_way_left" },
+        {'A', "path_dirt_intersection_3_way_right" },
+        {'B', "path_dirt_intersection_3_way_top" },
+        {'C', "path_dirt_intersection_4_way_center" }
     };
 
     public static IDictionary<char, string> DesertAsphaltRoadTileKeys = new Dictionary<char, string>
@@ -255,11 +255,11 @@ public class SettlementPrefabStore : MonoBehaviour
             { "path_dirt_corner_lower_right", null },
             { "path_dirt_straight_horizontal_bottom", null },
             { "path_dirt_straight_horizontal_top", null },
-//            { "path_dirt_straight_horizontal_top", null },
-//            { "path_dirt_straight_horizontal_top", null },
-//            { "path_dirt_straight_horizontal_top", null },
-//            { "path_dirt_straight_horizontal_top", null },
-//            { "path_dirt_straight_horizontal_top", null }
+            { "path_dirt_intersection_3_way_bottom", null },
+            { "path_dirt_intersection_3_way_left", null },
+            { "path_dirt_intersection_3_way_right", null },
+            { "path_dirt_intersection_3_way_top", null },
+            { "path_dirt_intersection_4_way_center", null }
         };
 
         SwampDirtPathTiles = new Dictionary<string, GameObject>
