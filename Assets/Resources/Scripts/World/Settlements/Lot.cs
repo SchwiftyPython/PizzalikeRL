@@ -18,9 +18,9 @@ public class Lot
         Height = height;
         Width = width;
 
-        UpperRightCorner = new Vector2(UpperLeftCorner.x, UpperLeftCorner.y + Width);
-        LowerRightCorner = new Vector2(UpperRightCorner.x + Height, UpperRightCorner.y);
-        LowerLeftCorner = new Vector2(UpperLeftCorner.x + Height, UpperLeftCorner.y);
+        UpperRightCorner = new Vector2(UpperLeftCorner.x + Width, UpperLeftCorner.y);
+        LowerRightCorner = new Vector2(UpperRightCorner.x, UpperRightCorner.y + Height);
+        LowerLeftCorner = new Vector2(UpperLeftCorner.x, UpperLeftCorner.y + Height);
 
 //        Debug.Log($"Lot upper left corner: {UpperLeftCorner}");
 //        Debug.Log($"Lot upper right corner: {UpperRightCorner}");
@@ -32,7 +32,7 @@ public class Lot
 
     public bool IsPartOfLot(Vector2 point)
     {
-        if (point.x > LowerLeftCorner.x)
+        if (point.x > LowerRightCorner.x)
         {
             return false;
         }
@@ -40,7 +40,7 @@ public class Lot
         {
             return false;
         }
-        if (point.y < LowerLeftCorner.y)
+        if (point.y < UpperLeftCorner.y)
         {
             return false;
         }

@@ -113,8 +113,8 @@ public class Area
 
                     var tile = GetTilePrefab(tileCode);
 
-                    AreaTiles[currentRow, currentColumn] =
-                        new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
+                    AreaTiles[currentColumn, currentRow] =
+                        new Tile(tile, new Vector2(currentColumn, currentRow), false, false);
                 }
             }
         }

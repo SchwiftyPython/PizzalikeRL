@@ -13,7 +13,15 @@ public class Fov : MonoBehaviour
 
     private Entity _player;
 
-    public GameObject FovTilePrefab;
+    public GameObject FovCenterPrefab;
+    public GameObject FovStraightRightPrefab;
+    public GameObject FovStraightLeftPrefab;
+    public GameObject FovStraightBottomPrefab;
+    public GameObject FovStraightTopPrefab;
+    public GameObject FovUpperRightPrefab;
+    public GameObject FovLowerRightPrefab;
+    public GameObject FovLowerLeftPrefab;
+    public GameObject FovUpperLeftPrefab;
 
     public void Init(Area area)
     {
@@ -86,33 +94,8 @@ public class Fov : MonoBehaviour
                         fullShadow = line.IsFullShadow();
                     }
                 }
-
-                /*var posDist = pos.Distance(start);
-                if (posDist > ShadowDistance)
-                {
-                    var tile = grid[pos.x, pos.y];
-                    if (tile != null)
-                    {
-                        if (posDist < ShadowDistance + 1)
-                        {
-                            if (tile.Visibility == (Tile.Visibilities) 1 && tile.Revealed)
-                            {
-                                tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.gray;
-                            }
-                            else
-                            {
-                                tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.black;
-                            }
-                        }
-                        else
-                        {
-                            tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.black;
-                        }
-                    }
-                }*/
             }
         }
-        //return line.shadows;
     }
 
     public bool InBoundsAndClose(int x, int y)

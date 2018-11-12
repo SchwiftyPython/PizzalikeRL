@@ -54,7 +54,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
         var numColumns = 0;
         
-        var x = 0;
+        var y = 0;
 
         foreach (var line in rawPrefabInfo)
         {
@@ -75,29 +75,29 @@ public class BuildingPrefabStore : MonoBehaviour
                 BuildingPrefabs.Add(trimmedLine, null);
                 currentPreFab = trimmedLine;
                 currentStep = LoadingSteps.Dimensions;
-                x = 0;
+                y = 0;
                 continue;
             }
 
             if (currentStep == LoadingSteps.Dimensions)
             {
                 var dimensions = trimmedLine.Split(' ');
-                numColumns = int.Parse(dimensions[0]);
-                var numRows = int.Parse(dimensions[1]);
-                BuildingPrefabs[currentPreFab] = new BuildingPrefab(new char[numRows, numColumns]);
+                var numRows = int.Parse(dimensions[0]);
+                numColumns = int.Parse(dimensions[1]);
+                BuildingPrefabs[currentPreFab] = new BuildingPrefab(new char[numColumns, numRows]);
                 currentStep = LoadingSteps.Template;
                 continue;
             }
 
             if (currentStep == LoadingSteps.Template)
             {
-                for (var y = 0; y < numColumns; y++)
+                for (var currentColumn = 0; currentColumn < numColumns; currentColumn++)
                 {
                     var row = BuildingPrefabs[currentPreFab].Blueprint;
 
-                    row[x, y] = trimmedLine[y];
+                    row[currentColumn, y] = trimmedLine[currentColumn];
                 }
-                x++;
+                y++;
             }
         }
     }

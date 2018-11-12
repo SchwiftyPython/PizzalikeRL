@@ -111,7 +111,7 @@ public class AreaMap : MonoBehaviour
                 tile.TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
 
-                tile.FovTile = Instantiate(Fov.FovTilePrefab, new Vector3(j, i, -4), Quaternion.identity);
+                tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(j, i, -4), Quaternion.identity);
                 tile.FovTile.transform.SetParent(FovHolder.transform);
 
                 //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[j, i].Revealed ? Color.gray : Color.black;
@@ -130,17 +130,17 @@ public class AreaMap : MonoBehaviour
 
         foreach (var lot in settlement.Lots)
         {
-            var areaY = (int)lot.LowerLeftCorner.x;
-            var areaX = (int)lot.LowerLeftCorner.y;
+            var areaY = (int)lot.LowerLeftCorner.y;
+            var areaX = (int)lot.LowerLeftCorner.x;
             var building = lot.AssignedBuilding;
             for (var currentRow = 0; currentRow < building.Height; currentRow++)
             {
-                areaY--;
+                //areaY--;
                 for (var currentColumn = 0; currentColumn < building.Width; currentColumn++)
                 {
-                    if (building.WallTiles[currentRow, currentColumn] != null)
+                    if (building.WallTiles[currentColumn, currentRow] != null)
                     {
-                        var tile = building.FloorTiles[currentRow, currentColumn];
+                        var tile = building.FloorTiles[currentColumn, currentRow];
 
                         _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
 
@@ -152,17 +152,26 @@ public class AreaMap : MonoBehaviour
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
 
-                        tile = building.WallTiles[currentRow, currentColumn];
+                        tile = building.WallTiles[currentColumn, currentRow];
 
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(true);
                         instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         _currentArea.AreaTiles[areaX, areaY].PresentWallTile = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
+
+                        _currentArea.AreaTiles[areaX, areaY].FovWallTilePrefab =
+                            GetFovTileForWall(lot, _currentArea.AreaTiles[areaX, areaY]);
+
+                        _currentArea.AreaTiles[areaX, areaY].FovWallTile = Instantiate(
+                            _currentArea.AreaTiles[areaX, areaY].FovWallTilePrefab,
+                            new Vector3(areaX, areaY, -4), Quaternion.identity);
+
+                        _currentArea.AreaTiles[areaX, areaY].FovWallTile.transform.SetParent(FovHolder.transform);
                     }
                     else
                     {
-                        var tile = building.FloorTiles[currentRow, currentColumn];
+                        var tile = building.FloorTiles[currentColumn, currentRow];
 
                         _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
 
@@ -174,9 +183,11 @@ public class AreaMap : MonoBehaviour
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
+                    _currentArea.AreaTiles[areaX, areaY].lot = lot;
                     areaX++;
                 }
-                areaX = (int)lot.LowerLeftCorner.y;
+                areaY--;
+                areaX = (int)lot.LowerLeftCorner.x;
             }
         }
     }
@@ -220,6 +231,39 @@ public class AreaMap : MonoBehaviour
         {
             Destroy(FovHolder.transform.GetChild(i).gameObject);
         }
+    }
+
+    private GameObject GetFovTileForWall(Lot lot, Tile wallTile)
+    {
+        if (lot.LowerLeftCorner.Equals(wallTile.GridPosition))
+        {
+            return Fov.FovUpperLeftPrefab;
+        }
+        if (lot.LowerRightCorner.Equals(wallTile.GridPosition))
+        {
+            return Fov.FovUpperRightPrefab;
+        }
+        if (lot.UpperLeftCorner.Equals(wallTile.GridPosition))
+        {
+            return Fov.FovLowerLeftPrefab;
+        }
+        if (lot.UpperRightCorner.Equals(wallTile.GridPosition))
+        {
+            return Fov.FovLowerRightPrefab;
+        }
+        if ((int)lot.UpperLeftCorner.x == (int)wallTile.GridPosition.x)
+        {
+            return Fov.FovStraightLeftPrefab;
+        }
+        if ((int)lot.UpperLeftCorner.y == (int)wallTile.GridPosition.y)
+        {
+            return Fov.FovStraightBottomPrefab;
+        }
+        if ((int)lot.UpperRightCorner.x == (int)wallTile.GridPosition.x)
+        {
+            return Fov.FovStraightRightPrefab;
+        }
+        return Fov.FovStraightTopPrefab;
     }
 
     private void PlacePlayer()

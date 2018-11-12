@@ -26,8 +26,11 @@ public class Tile
     public Vector2 GridPosition;
 
     public GameObject FovTile;
+    public GameObject FovWallTile;
+    public GameObject FovWallTilePrefab;
 
     public bool Revealed;
+    public Lot lot;
     public GameObject PresentWallTile { get; set; }
 
     public Visibilities Visibility
@@ -110,6 +113,11 @@ public class Tile
         return _blocksLight;
     }
 
+    public bool IsWall()
+    {
+        return PresentWallTile != null;
+    }
+
     private void SetTileVisibility(Visibilities visibility)
     {
         var visibleColor = new Color(1, 1, 1, 0);
@@ -124,31 +132,10 @@ public class Tile
 
         FovTile.GetComponent<SpriteRenderer>().color = color;
 
-//        //Hack to deal with floor tiles under walls -- doesn't work. Going to make walls take up entire tile for simplicity
-//        if (PresentWallTile != null && TextureInstance.name.IndexOf("floor", StringComparison.OrdinalIgnoreCase) != -1)
-//        {
-//            TextureInstance.GetComponent<SpriteRenderer>().color = color;
-//        }
-
-        //TextureInstance.GetComponent<SpriteRenderer>().color = color;
-
-        /*if (_presentEntity != null && !_presentEntity.IsPlayer())
+        //todo will need to refine this based on player pos vs wall. Should work for now.
+        if (IsWall())
         {
-            _presentEntity.GetSprite().GetComponent<SpriteRenderer>().color = color;
+            FovWallTilePrefab.GetComponent<SpriteRenderer>().color = invisibleColor;
         }
-        if (PresentWallTile != null)
-        {
-            PresentWallTile.GetComponent<SpriteRenderer>().color = color;
-        }
-        if (_presentItem != null)
-        {
-            //todo
-            //_presentItem.GetComponent<SpriteRenderer>().color = color;
-        }
-        if (_presentProp != null)
-        {
-            //todo
-            //_presentProp.GetComponent<SpriteRenderer>().color = color;
-        }*/
     }
 }
