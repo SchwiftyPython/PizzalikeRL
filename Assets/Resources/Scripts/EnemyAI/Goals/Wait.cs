@@ -17,7 +17,7 @@ public class Wait : Goal
 
     public override void Create()
     {
-        Debug.Log($"{Self} is going to wait {_turnsLeft} turns.");
+        //Debug.Log($"{Self} is going to wait {_turnsLeft} turns.");
     }
 
     public override void TakeAction()

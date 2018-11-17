@@ -98,6 +98,7 @@ public class WorldData : MonoBehaviour
     public GameObject[] WoodenWallTiles = new GameObject[1];
     public GameObject[] StoneWallTiles = new GameObject[1];
     public GameObject[] BrickWallTiles = new GameObject[1];
+    public GameObject[] SingleTileBrickWallTiles = new GameObject[1];
 
     public GameObject[] GrassDirtPathTiles = new GameObject[1];
     public GameObject[] DesertAsphaltRoadTiles = new GameObject[1];

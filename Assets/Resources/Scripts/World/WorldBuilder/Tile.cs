@@ -30,7 +30,7 @@ public class Tile
     public GameObject FovWallTilePrefab;
 
     public bool Revealed;
-    public Lot lot;
+    public Lot Lot;
     public GameObject PresentWallTile { get; set; }
 
     public Visibilities Visibility
@@ -41,7 +41,7 @@ public class Tile
         {
             _visibility = value;
 
-            if (TextureInstance == null)
+            if (TextureInstance == null && PresentWallTile == null)
             {
                 return;
             }
@@ -133,9 +133,9 @@ public class Tile
         FovTile.GetComponent<SpriteRenderer>().color = color;
 
         //todo will need to refine this based on player pos vs wall. Should work for now.
-        if (IsWall())
-        {
-            FovWallTilePrefab.GetComponent<SpriteRenderer>().color = invisibleColor;
-        }
+//        if (IsWall())
+//        {
+//            Debug.Log("Wall tile: " + visibility);
+//        }
     }
 }

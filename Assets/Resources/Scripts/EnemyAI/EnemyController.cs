@@ -33,7 +33,7 @@ public class EnemyController : AstarAI
 
         if (Goals.Count == 0)
         {
-            Debug.Log(Self + " is bored.");
+            //Debug.Log(Self + " is bored.");
             new Bored().Push(this);
             Goals.Peek().TakeAction();
         }

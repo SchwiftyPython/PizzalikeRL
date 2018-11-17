@@ -522,7 +522,7 @@ public class Area
 
     private void GenerateWildlife()
     {
-        var numWildlife = Random.Range(0, 11);
+        var numWildlife = Random.Range(0, 6);
 
         if (numWildlife < 1)
         {
