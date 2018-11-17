@@ -7,8 +7,8 @@
     public BuildingPrefab(char[,] blueprint)
     {
         Blueprint = blueprint;
-        Width = blueprint.GetLength(0);
-        Height = blueprint.GetLength(1);
+        Height = blueprint.GetLength(0);
+        Width = blueprint.GetLength(1);
     }
 
     public bool WillFitInLot(Lot lot)

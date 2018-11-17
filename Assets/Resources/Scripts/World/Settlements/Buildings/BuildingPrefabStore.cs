@@ -17,6 +17,8 @@ public class BuildingPrefabStore : MonoBehaviour
     public static IDictionary<string, GameObject> BrickWallTiles;
     public static IDictionary<string, GameObject> WoodenWallTiles;
 
+    public static IDictionary<string, GameObject> SingleTileBrickWallTiles;
+
     public static List<GameObject> WoodenFloorTiles;
     public static List<GameObject> StoneFloorTiles;
 
@@ -34,6 +36,18 @@ public class BuildingPrefabStore : MonoBehaviour
         {'5', "wall_lower_left_corner" },
         {'6', "wall_horizontal_straight_top" },
         {'7', "wall_horizontal_straight_bottom" }
+    };
+
+    public static IDictionary<char, string> SingleTileWallTileKeys = new Dictionary<char, string>
+    {
+        {'0', "wall_vertical" },
+        {'1', "wall_vertical" },
+        {'2', "wall_upper_left_corner" },
+        {'3', "wall_upper_right_corner" },
+        {'4', "wall_lower_right_corner" },
+        {'5', "wall_lower_left_corner" },
+        {'6', "wall_horizontal" },
+        {'7', "wall_horizontal" }
     };
 
     public TextAsset BuildingPrefabFile;
@@ -54,7 +68,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
         var numColumns = 0;
         
-        var x = 0;
+        var y = 0;
 
         foreach (var line in rawPrefabInfo)
         {
@@ -75,29 +89,29 @@ public class BuildingPrefabStore : MonoBehaviour
                 BuildingPrefabs.Add(trimmedLine, null);
                 currentPreFab = trimmedLine;
                 currentStep = LoadingSteps.Dimensions;
-                x = 0;
+                y = 0;
                 continue;
             }
 
             if (currentStep == LoadingSteps.Dimensions)
             {
                 var dimensions = trimmedLine.Split(' ');
-                numColumns = int.Parse(dimensions[0]);
-                var numRows = int.Parse(dimensions[1]);
-                BuildingPrefabs[currentPreFab] = new BuildingPrefab(new char[numRows, numColumns]);
+                var numRows = int.Parse(dimensions[0]);
+                numColumns = int.Parse(dimensions[1]);
+                BuildingPrefabs[currentPreFab] = new BuildingPrefab(new char[numColumns, numRows]);
                 currentStep = LoadingSteps.Template;
                 continue;
             }
 
             if (currentStep == LoadingSteps.Template)
             {
-                for (var y = 0; y < numColumns; y++)
+                for (var currentColumn = 0; currentColumn < numColumns; currentColumn++)
                 {
                     var row = BuildingPrefabs[currentPreFab].Blueprint;
 
-                    row[x, y] = trimmedLine[y];
+                    row[currentColumn, y] = trimmedLine[currentColumn];
                 }
-                x++;
+                y++;
             }
         }
     }
@@ -139,6 +153,23 @@ public class BuildingPrefabStore : MonoBehaviour
         foreach (var tile in BrickWallTiles.Keys.ToArray())
         {
             BrickWallTiles[tile] = WorldData.Instance.BrickWallTiles[i];
+            i++;
+        }
+
+        SingleTileBrickWallTiles = new Dictionary<string, GameObject>
+        {
+            { "wall_vertical", null},
+            { "wall_upper_left_corner", null},
+            { "wall_upper_right_corner", null},
+            { "wall_lower_right_corner", null},
+            { "wall_lower_left_corner", null},
+            { "wall_horizontal", null}
+        };
+
+        i = 0;
+        foreach (var tile in SingleTileBrickWallTiles.Keys.ToArray())
+        {
+            SingleTileBrickWallTiles[tile] = WorldData.Instance.SingleTileBrickWallTiles[i];
             i++;
         }
 
@@ -204,8 +235,11 @@ public class BuildingPrefabStore : MonoBehaviour
 
     public static IDictionary<string, GameObject> GetRandomWallTileType()
     {
-        var index = Random.Range(0, WallTileTypes.Count);
-        return WallTileTypes[index];
+        //todo commented out until all walls are single tile
+//        var index = Random.Range(0, WallTileTypes.Count);
+//        return WallTileTypes[index];
+
+        return SingleTileBrickWallTiles;
     }
 
     public static List<GameObject> GetRandomFloorTileType()

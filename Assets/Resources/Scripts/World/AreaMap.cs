@@ -111,7 +111,7 @@ public class AreaMap : MonoBehaviour
                 tile.TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
 
-                tile.FovTile = Instantiate(Fov.FovTilePrefab, new Vector3(j, i, -4), Quaternion.identity);
+                tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(j, i, -4), Quaternion.identity);
                 tile.FovTile.transform.SetParent(FovHolder.transform);
 
                 //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[j, i].Revealed ? Color.gray : Color.black;
@@ -130,17 +130,17 @@ public class AreaMap : MonoBehaviour
 
         foreach (var lot in settlement.Lots)
         {
-            var areaY = (int)lot.LowerLeftCorner.x;
-            var areaX = (int)lot.LowerLeftCorner.y;
+            var areaY = (int)lot.LowerLeftCorner.y;
+            var areaX = (int)lot.LowerLeftCorner.x;
             var building = lot.AssignedBuilding;
             for (var currentRow = 0; currentRow < building.Height; currentRow++)
             {
                 areaY--;
                 for (var currentColumn = 0; currentColumn < building.Width; currentColumn++)
                 {
-                    if (building.WallTiles[currentRow, currentColumn] != null)
+                    if (building.WallTiles[currentColumn, currentRow] != null)
                     {
-                        var tile = building.FloorTiles[currentRow, currentColumn];
+                        var tile = building.FloorTiles[currentColumn, currentRow];
 
                         _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
 
@@ -152,7 +152,7 @@ public class AreaMap : MonoBehaviour
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
 
-                        tile = building.WallTiles[currentRow, currentColumn];
+                        tile = building.WallTiles[currentColumn, currentRow];
 
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(true);
@@ -162,7 +162,7 @@ public class AreaMap : MonoBehaviour
                     }
                     else
                     {
-                        var tile = building.FloorTiles[currentRow, currentColumn];
+                        var tile = building.FloorTiles[currentColumn, currentRow];
 
                         _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
 
@@ -174,9 +174,10 @@ public class AreaMap : MonoBehaviour
                         var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
+                    _currentArea.AreaTiles[areaX, areaY].Lot = lot;
                     areaX++;
                 }
-                areaX = (int)lot.LowerLeftCorner.y;
+                areaX = (int)lot.LowerLeftCorner.x;
             }
         }
     }
@@ -220,6 +221,39 @@ public class AreaMap : MonoBehaviour
         {
             Destroy(FovHolder.transform.GetChild(i).gameObject);
         }
+    }
+
+    private GameObject GetFovTileForWall(Tile wallTile)
+    {
+        if (wallTile.PresentWallTile.name.Contains("upper_left"))
+        {
+            return Fov.FovUpperLeftPrefab;
+        }
+        if (wallTile.PresentWallTile.name.Contains("upper_right"))
+        {
+            return Fov.FovUpperRightPrefab;
+        }
+        if (wallTile.PresentWallTile.name.Contains("lower_left"))
+        {
+            return Fov.FovLowerLeftPrefab;
+        }
+        if (wallTile.PresentWallTile.name.Contains("lower_right"))
+        {
+            return Fov.FovLowerRightPrefab;
+        }
+        if (wallTile.PresentWallTile.name.Contains("left"))
+        {
+            return Fov.FovStraightLeftPrefab;
+        }
+        if (wallTile.PresentWallTile.name.Contains("bottom"))
+        {
+            return Fov.FovStraightBottomPrefab;
+        }
+        if (wallTile.PresentWallTile.name.Contains("right"))
+        {
+            return Fov.FovStraightRightPrefab;
+        }
+        return Fov.FovStraightTopPrefab;
     }
 
     private void PlacePlayer()

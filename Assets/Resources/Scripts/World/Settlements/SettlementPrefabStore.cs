@@ -109,7 +109,7 @@ public class SettlementPrefabStore : MonoBehaviour
 
         var currentPreFab = SettlementSize.Outpost;
 
-        var x = 0;
+        var currentRow = 0;
 
         foreach (var line in rawPrefabInfo)
         {
@@ -127,10 +127,10 @@ public class SettlementPrefabStore : MonoBehaviour
                 {
                     SettlementPrefabs.Add(currentPreFab, new List<SettlementPrefab>());
                 }
-                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[NumRows, NumColumns]));
+                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[NumColumns, NumRows]));
 
                 currentStep = LoadingSteps.Template;
-                x = 0;
+                currentRow = 0;
                 continue;
             }
 
@@ -140,15 +140,15 @@ public class SettlementPrefabStore : MonoBehaviour
                 Array.Reverse(charArray);
                 trimmedLine = new string(charArray);
 
-                for (var y = 0; y < NumColumns; y++)
+                for (var currentColumn = 0; currentColumn < NumColumns; currentColumn++)
                 {
                     var row = SettlementPrefabs[currentPreFab].Last().Blueprint;
 
                     //Debug.Log($"x: {x}  y: {y}");
 
-                    row[x, y] = trimmedLine[y];
+                    row[currentColumn, currentRow] = trimmedLine[currentColumn];
                 }
-                x++;
+                currentRow++;
             }
         }
         foreach (var prefabType in SettlementPrefabs.Values)
@@ -174,28 +174,28 @@ public class SettlementPrefabStore : MonoBehaviour
     {
         var blueprint = prefab.Blueprint;
 
-        for (var x = 0; x < NumRows; x++)
+        for (var currentRow = 0; currentRow < NumRows; currentRow++)
         {
-            for (var y = 0; y < NumColumns; y++)
+            for (var currentColumn = 0; currentColumn < NumColumns; currentColumn++)
             {
-                if (blueprint[x, y] != LotKey)
+                if (blueprint[currentColumn, currentRow] != LotKey)
                 {
                     continue;
                 }
 
                 if (prefab.Lots.Count == 0)
                 {
-                    var lot = GetNewLotInfo(new Vector2(x, y), blueprint);
+                    var lot = GetNewLotInfo(new Vector2(currentColumn, currentRow), blueprint);
                     prefab.Lots.Add(lot);
                 }
                 else
                 {
-                    if (IsPartOfExistingLot(new Vector2(x, y), prefab.Lots))
+                    if (IsPartOfExistingLot(new Vector2(currentColumn, currentRow), prefab.Lots))
                     {
                         continue;
                     }
 
-                    var lot = GetNewLotInfo(new Vector2(x, y), blueprint);
+                    var lot = GetNewLotInfo(new Vector2(currentColumn, currentRow), blueprint);
                     prefab.Lots.Add(lot);
                 }
             }
@@ -218,15 +218,15 @@ public class SettlementPrefabStore : MonoBehaviour
         while (blueprint[x,y] == LotKey)
         {
             width++;
-            y++;
+            x++;
         }
-
+        x--;
         y = (int)upperLeftCorner.y;
 
         while (blueprint[x, y] == LotKey)
         {
             height++;
-            x++;
+            y++;
         }
 
         return new Lot(upperLeftCorner, height, width);
@@ -345,9 +345,9 @@ public class SettlementPrefabStore : MonoBehaviour
 
     public static char[,] Rotate180(char[,] blueprint){
         
-        var height = blueprint.GetLength(0);
-        var width = blueprint.GetLength(1);
-        var answer = new char[height, width];
+        var width = blueprint.GetLength(0);
+        var height = blueprint.GetLength(1);
+        var answer = new char[width, height];
 
         for (var y = 0; y < height / 2; y++)
         {
@@ -356,8 +356,8 @@ public class SettlementPrefabStore : MonoBehaviour
             for (var topX = 0; topX < width; topX++)
             {
                 var bottomX = width - topX - 1;
-                answer[topY, topX] = blueprint[bottomY, bottomX];
-                answer[bottomY, bottomX] = blueprint[topY, topX];
+                answer[topX, topY] = blueprint[bottomX, bottomY];
+                answer[bottomX, bottomY] = blueprint[topX, topY];
             }
         }
 
@@ -370,8 +370,8 @@ public class SettlementPrefabStore : MonoBehaviour
         for (var leftX = 0; leftX < Mathf.CeilToInt(width / 2f); leftX++)
         {
             var rightX = width - 1 - leftX;
-            answer[centerY, leftX] = blueprint[centerY, rightX];
-            answer[centerY, rightX] = blueprint[centerY, leftX];
+            answer[leftX, centerY] = blueprint[rightX, centerY];
+            answer[rightX, centerY] = blueprint[leftX, centerY];
         }
         
         return answer;
