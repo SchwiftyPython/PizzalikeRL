@@ -429,11 +429,11 @@ public class Generator : MonoBehaviour
 
     private Cell GetTop(Cell t)
     {
-        return _cells[t.X, MathHelper.Mod(t.Y - 1, _height)];
+        return _cells[t.X, MathHelper.Mod(t.Y + 1, _height)];
     }
     private Cell GetBottom(Cell t)
     {
-        return _cells[t.X, MathHelper.Mod(t.Y + 1, _height)];
+        return _cells[t.X, MathHelper.Mod(t.Y - 1, _height)];
     }
     private Cell GetLeft(Cell t)
     {

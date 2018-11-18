@@ -505,11 +505,11 @@ public class Area
 
     private Tile GetTempTop(Tile t, Tile[,] tempMap)
     {
-        return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y - 1), Height)];
+        return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y + 1), Height)];
     }
     private Tile GetTempBottom(Tile t, Tile[,] tempMap)
     {
-        return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y + 1), Height)];
+        return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y - 1), Height)];
     }
     private Tile GetTempLeft(Tile t, Tile[,] tempMap)
     {

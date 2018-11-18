@@ -52,7 +52,6 @@ public class AreaMap : MonoBehaviour
         {
             _player = GameManager.Instance.Player;
             InstantiatePlayerSprite();
-            
         }
 
         _areaMapHolderTransform = AreaMapHolder.transform;

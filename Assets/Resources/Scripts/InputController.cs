@@ -221,6 +221,8 @@ public class InputController : MonoBehaviour
                 if (currentScene.Equals("WorldMap"))
                 {
                     GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
+                    GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
+                    GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                     SceneManager.LoadScene("Area");
                 }
