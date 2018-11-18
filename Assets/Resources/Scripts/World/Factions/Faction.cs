@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
+﻿using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 public class Faction
 {
+    public enum PopulationType
+    {
+        Monospecies,
+        MixedSpecies
+    }
+
     private const int MaxRelationshipLevel = 1000;
     private const int MinRelationshipLevel = MaxRelationshipLevel * -1;
+
+    private PopulationType _popType;
 
     public string Type;
 
@@ -16,6 +21,7 @@ public class Faction
 
     public string Name;
     public int Population;
+    public List<Entity> Citizens;
 
     public int ScienceLevel;
     public int FaithLevel;
@@ -25,6 +31,13 @@ public class Faction
     public List<Entity> EntitiesWithFluff;
 
     public EntityTemplate EntityType;
+
+    public Faction()
+    {
+        GeneratePopulation();
+        //pick random name for faction
+        //create leader - pick an entity from deck
+    }
 
     public Faction(FactionTemplate factionTemplate)
     {
@@ -82,5 +95,38 @@ public class Faction
         Leader = new Entity(EntityType, Name) {Fluff = new EntityFluff(EntityType.Type, Type)};
 
         EntitiesWithFluff.Add(Leader);
+    }
+
+    private void PickPopulationType()
+    {
+        var roll = Random.Range(0, 100);
+
+        _popType = roll <= 40 ? PopulationType.MixedSpecies : PopulationType.Monospecies;
+    }
+
+    private void GeneratePopulation()
+    {
+        PickPopulationType();
+        Population = Random.Range(100, 1000);
+
+        var availableEntityTypes = new List<string>();
+        if (_popType == PopulationType.MixedSpecies)
+        {
+            availableEntityTypes = new List<string>(EntityTemplateLoader.GetEntityTemplateTypes());
+        }
+        else
+        {
+            var allTypes = EntityTemplateLoader.GetEntityTemplateTypes();
+            var index = Random.Range(0, allTypes.Length);
+            availableEntityTypes.Add(allTypes[index]);
+        }
+
+        Citizens = new List<Entity>();
+
+        for (var i = 0; i < Population; i += 50)
+        {
+            var index = Random.Range(0, availableEntityTypes.Count);
+            Citizens.Add(new Entity(EntityTemplateLoader.GetEntityTemplate(availableEntityTypes[index])));
+        }
     }
 }

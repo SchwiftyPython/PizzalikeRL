@@ -1072,8 +1072,6 @@ public class Generator : MonoBehaviour
         foreach (var factionType in factionTypes)
         {
             WorldData.Instance.Factions.Add(factionType, new Faction(FactionTemplateLoader.GetFactionByName(factionType)));
-
-            WorldData.Instance.Factions[factionType].Population = Random.Range(100, 1000);
         }
     }
 
