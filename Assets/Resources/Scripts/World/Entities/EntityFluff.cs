@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EntityFluff
@@ -18,7 +17,7 @@ public class EntityFluff
     private readonly int _turnBorn;  
     private readonly string _entityType;
     private readonly string _sex;
-    private string _factionType;
+    public string FactionName { get; }
 
     public EntityFluff(string entityType)
     {
@@ -29,14 +28,14 @@ public class EntityFluff
         _turnBorn = HistoryGenerator.CurrentTurn;
     }
 
-    public EntityFluff(string entityType, string factionType)
+    public EntityFluff(string entityType, string factionName)
     {
         _sex = _sexes[Random.Range(0, _sexes.Count)];
         _entityType = entityType;
         Name = GenerateName();
         _turnBorn = HistoryGenerator.CurrentTurn;
         Background = new List<string>();
-        _factionType = factionType;
+        FactionName = factionName;
     }
 
     public void AddToBackground(string story)

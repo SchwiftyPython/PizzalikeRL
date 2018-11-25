@@ -17,7 +17,6 @@ public class SettlementPrefabStore : MonoBehaviour
 
     private static readonly IDictionary<SettlementSize, List<SettlementPrefab>> SettlementPrefabs = new Dictionary<SettlementSize, List<SettlementPrefab>>();
 
-    //todo replace with intersection pieces when available
     public static IDictionary<char, string> GrassDirtPathTileKeys = new Dictionary<char, string>
     {
         {'0', "path_dirt_vertical_straight_left" },
@@ -94,6 +93,16 @@ public class SettlementPrefabStore : MonoBehaviour
     public static IDictionary<string, GameObject> IceAsphaltRoadTiles;
 
     public TextAsset SettlementPrefabFile;
+
+    public static IDictionary<SettlementSize, int> SettlementSizePopulationCaps { get; } = new Dictionary<SettlementSize, int>
+    {
+        { SettlementSize.Outpost, 10 },
+        { SettlementSize.Hamlet, 20 },
+        { SettlementSize.Village, 50 },
+        { SettlementSize.SmallCity, 250 },
+        { SettlementSize.Fortress, 500 },
+        { SettlementSize.LargeCity, 1000 }
+    };
 
     private void Start ()
     {

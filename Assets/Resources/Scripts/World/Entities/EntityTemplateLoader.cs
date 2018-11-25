@@ -26,7 +26,7 @@ public class EntityTemplateLoader : MonoBehaviour
         }
     }
 
-    public static string[] GetEntityTemplateTypes()
+    public static string[] GetAllEntityTemplateTypes()
     {
         return _entityTemplateTypes;
     }

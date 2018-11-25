@@ -56,9 +56,9 @@ public class Area
         {
             return;
         }
-        const int maxNpcsPlacedAtOnce = 9;
+        
         PresentEntities = new List<Entity>();
-        //PresentFactions = new List<Faction>();
+        
         AreaTiles = new Tile[Width, Height];
 
         var tileDeck = new AreaTileDeck(BiomeType);
@@ -80,44 +80,7 @@ public class Area
             }
         }
 
-        if (Settlement != null)
-        {
-            var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
-
-            SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
-
-            Settlement.Lots = settlementPrefab.Lots;
-
-//        var settlementBluePrint = SettlementPrefabStore.Rotate180(settlementPrefab.Blueprint);
-
-            var settlementBluePrint = settlementPrefab.Blueprint;
-
-            for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
-            {
-                for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(0); currentColumn++)
-                {
-                    var tileCode = settlementBluePrint[currentColumn, currentRow];
-
-                    if (tileCode == 'x')
-                    {
-                        continue;
-                    }
-                    if (tileCode == SettlementPrefabStore.LotKey)
-                    {
-                        continue;
-                    }
-
-                    //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
-                    //Debug.Log($"x: {currentRow}  y: {currentColumn}");
-                    //Debug.Log($"tilecode: {tileCode}");
-
-                    var tile = GetTilePrefab(tileCode);
-
-                    AreaTiles[currentColumn, currentRow] =
-                        new Tile(tile, new Vector2(currentColumn, currentRow), false, false);
-                }
-            }
-        }
+        PrepareSettlement();
 
         UpdateNeighbors();
 
@@ -128,25 +91,7 @@ public class Area
         
         GenerateWildlife();
 
-        if (PresentFactions == null)
-        {
-            return;
-        }
-
-        foreach (var faction in PresentFactions)
-        {
-            faction.Leader.CurrentArea = this;
-            faction.Leader.CurrentCell = ParentCell;
-
-            var numNpcsToPlace = Random.Range(1, maxNpcsPlacedAtOnce + 1);
-
-            for (var k = 0; k < numNpcsToPlace; k++)
-            {
-                PresentEntities.Add(k != numNpcsToPlace - 1
-                    ? new Entity(faction.EntityType, faction.Type) {CurrentArea = this, CurrentCell = ParentCell}
-                    : faction.Leader);
-            }
-        }
+        AssignFactionCitizensToArea();
     }
 
     public bool EntitiesPresent()
@@ -162,6 +107,89 @@ public class Area
     public Tile GetTileAt(Vector3 position)
     {
         return AreaTiles[(int) position.x, (int) position.y];
+    }
+
+    private void PrepareSettlement()
+    {
+        if (Settlement == null)
+        {
+            return;
+        }
+
+        var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
+
+        SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
+
+        Settlement.Lots = settlementPrefab.Lots;
+
+        var settlementBluePrint = settlementPrefab.Blueprint;
+
+        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
+        {
+            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(0); currentColumn++)
+            {
+                var tileCode = settlementBluePrint[currentColumn, currentRow];
+
+                if (tileCode == 'x')
+                {
+                    continue;
+                }
+                if (tileCode == SettlementPrefabStore.LotKey)
+                {
+                    continue;
+                }
+
+                //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
+                //Debug.Log($"x: {currentRow}  y: {currentColumn}");
+                //Debug.Log($"tilecode: {tileCode}");
+
+                var tile = GetTilePrefab(tileCode);
+
+                AreaTiles[currentColumn, currentRow] =
+                    new Tile(tile, new Vector2(currentColumn, currentRow), false, false);
+            }
+        }
+    }
+
+    private void AssignFactionCitizensToArea()
+    {
+        if (PresentFactions == null)
+        {
+            return;
+        }
+
+        foreach (var faction in PresentFactions)
+        {
+            if (faction.RemainingCitizensToPlace.Count < 1)
+            {
+                continue;
+            }
+
+            int maxNpcs;
+
+            if (Settlement != null && Settlement.Faction.Name.Equals(faction.Name))
+            {
+                maxNpcs = Math.Min(faction.RemainingCitizensToPlace.Count,
+                              SettlementPrefabStore.SettlementSizePopulationCaps[Settlement.Size]) + 1;
+            }
+            else
+            {
+                maxNpcs = faction.RemainingCitizensToPlace.Count + 1;
+            }
+
+            var numNpcsToPlace = Random.Range(1, maxNpcs);
+
+            for (var i = 0; i < numNpcsToPlace; i++)
+            {
+                var citizenToPlace = faction.RemainingCitizensToPlace.First();
+                faction.RemainingCitizensToPlace.RemoveAt(0);
+
+                citizenToPlace.CurrentArea = this;
+                citizenToPlace.CurrentCell = ParentCell;
+
+                PresentEntities.Add(citizenToPlace);
+            }
+        }
     }
 
     private GameObject GetTilePrefab(char tileCode)

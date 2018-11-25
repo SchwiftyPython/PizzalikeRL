@@ -4,6 +4,7 @@
 
 		<EntityTemplate type = "human">      
 		<Description> A human </Description>
+		<Classification>Humanoid</Classification>
 			<MinStrength> 2 </MinStrength>
 			<MaxStrength> 4 </MaxStrength>
 			<MinAgility> 3 </MinAgility>
@@ -41,7 +42,8 @@
 		</EntityTemplate>
 		
 		<EntityTemplate type = "pepperoni worm">
-            <Description> A worm made of pepperoni</Description>		
+            <Description> A worm made of pepperoni</Description>
+            <Classification>NonHumanoid</Classification>			
 			<MinStrength> 1 </MinStrength>
 			<MaxStrength> 2 </MaxStrength>
 			<MinAgility> 2 </MinAgility>
@@ -74,6 +76,7 @@
 			A beagle-sized beetle. Powerful mandibles protrude from
 			its head. Not aggressive, but social.
 			</Description>		
+			<Classification>NonHumanoid</Classification>
 			<MinStrength> 1 </MinStrength>
 			<MaxStrength> 2 </MaxStrength>
 			<MinAgility> 2 </MinAgility>
@@ -113,7 +116,8 @@
 		<EntityTemplate type = "giant moth">
             <Description> 
 			A big-ass moth.
-			</Description>		
+			</Description>
+            <Classification>NonHumanoid</Classification>			
 			<MinStrength> 1 </MinStrength>
 			<MaxStrength> 2 </MaxStrength>
 			<MinAgility> 2 </MinAgility>
@@ -155,6 +159,7 @@
             <Description> 
 			A common waterbird identified in flight by its distinctive "V"-shaped flock formation.
 			</Description>		
+			<Classification>NonHumanoid</Classification>
 			<MinStrength> 1 </MinStrength>
 			<MaxStrength> 2 </MaxStrength>
 			<MinAgility> 2 </MinAgility>
@@ -191,6 +196,7 @@
             <Description> 
 			A mammal known for their ability to spray a liquid with a strong unpleasant smell.
 			</Description>		
+			<Classification>NonHumanoid</Classification>
 			<MinStrength> 1 </MinStrength>
 			<MaxStrength> 2 </MaxStrength>
 			<MinAgility> 3 </MinAgility>
@@ -229,6 +235,7 @@
             <Description> 
 		    Air-breathing arthropods that have eight legs and jaws with fangs able to inject venom.
 			</Description>		
+			<Classification>NonHumanoid</Classification>
 			<MinStrength> 2 </MinStrength>
 			<MaxStrength> 3 </MaxStrength>
 			<MinAgility> 4 </MinAgility>
@@ -269,6 +276,7 @@
             <Description> 
 		    A heavy, upland ground bird.
 			</Description>		
+			<Classification>NonHumanoid</Classification>
 			<MinStrength> 1 </MinStrength>
 			<MaxStrength> 3 </MaxStrength>
 			<MinAgility> 2 </MinAgility>

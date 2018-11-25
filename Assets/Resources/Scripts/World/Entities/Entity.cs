@@ -7,6 +7,12 @@ using Random = UnityEngine.Random;
 
 public class Entity
 {
+    public enum EntityClassification
+    {
+        Humanoid,
+        NonHumanoid
+    }
+
     public enum Direction
     {
         North,
@@ -43,8 +49,7 @@ public class Entity
 
     private readonly GameObject _prefab;
     private GameObject _sprite;
-
-    private readonly string _entityType;
+    
     private readonly string _factionType;
 
     private int _totalBodyPartCoverage;
@@ -74,8 +79,8 @@ public class Entity
 
     public IDictionary<string, BodyPart> Body { get; } = new Dictionary<string, BodyPart>();
 
-    //SingleNodeBlocker blocker;
-
+    public string EntityType { get; }
+    public EntityClassification Classification { get; }
     public EntityFluff Fluff { get; set; }
 
     public Stack<Goal> Goals;
@@ -100,7 +105,8 @@ public class Entity
     public Entity(EntityTemplate template, string faction = null, bool isPlayer = false)
     {
         _isPlayer = isPlayer;
-        _entityType = template.Type;
+        EntityType = template.Type;
+        Classification = template.Classification;
         _factionType = faction;
 
         if (isPlayer)
@@ -154,7 +160,12 @@ public class Entity
 
     public string GetTypeForEntityInfoWindow()
     {
-        return $"{_factionType}  {_entityType}";
+        return $"{EntityType}";
+    }
+
+    public string GetFluffForEntityInfoWindow()
+    {
+        return $"{Fluff.Name}, {Fluff.FactionName}";
     }
 
     public string GetStatsForEntityInfoWindow()
@@ -554,13 +565,13 @@ public class Entity
             {
                 return;
             }
-            var message = _entityType + " killed " + target._entityType + "!";
+            var message = EntityType + " killed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
             //AreaMap.Instance.RemoveEntity(target);
         }
         else
         {
-            var message = _entityType + " missed " + target._entityType + "!";
+            var message = EntityType + " missed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
         }
     }
@@ -683,7 +694,7 @@ public class Entity
 
     public void CreateFluff()
     {
-        Fluff = new EntityFluff(_entityType);
+        Fluff = new EntityFluff(EntityType);
     }
 
     public BodyPart BodyPartHit()
@@ -720,7 +731,7 @@ public class Entity
         else
         {
             //todo make this missed with weapon used
-            var message = _entityType + " missed " + target._entityType + " with ranged attack!";
+            var message = EntityType + " missed " + target.EntityType + " with ranged attack!";
             GameManager.Instance.Messages.Add(message);
         }
     }
@@ -773,7 +784,7 @@ public class Entity
         target.CurrentHp -= damageRoll;
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
 
-        var message = _entityType + " hits " + target._entityType + " for " + damageRoll + " hit points.";
+        var message = EntityType + " hits " + target.EntityType + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
 
         //Debug.Log("Target remaining hp: " + target.CurrentHp);
@@ -837,7 +848,7 @@ public class Entity
         target.CurrentHp -= damageRoll;
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
 
-        var message = _entityType + " hits " + target._entityType + "'s " + hitBodyPart.Name + " for " + damageRoll + " hit points.";
+        var message = EntityType + " hits " + target.EntityType + "'s " + hitBodyPart.Name + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
     }
 

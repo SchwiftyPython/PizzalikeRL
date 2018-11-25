@@ -22,6 +22,7 @@ public class Faction
     public string Name;
     public int Population;
     public List<Entity> Citizens;
+    public List<Entity> RemainingCitizensToPlace;
 
     public int ScienceLevel;
     public int FaithLevel;
@@ -34,9 +35,13 @@ public class Faction
 
     public Faction()
     {
+        Relationships = new Dictionary<string, int>();
+        Religions = new Dictionary<string, int>();
+        EntitiesWithFluff = new List<Entity>();
+
+        Name = FactionTemplateLoader.GenerateFactionName();
         GeneratePopulation();
-        //pick random name for faction
-        //create leader - pick an entity from deck
+        CreateLeader();
     }
 
     public Faction(FactionTemplate factionTemplate)
@@ -92,7 +97,14 @@ public class Faction
 
     public void CreateLeader()
     {
-        Leader = new Entity(EntityType, Name) {Fluff = new EntityFluff(EntityType.Type, Type)};
+        var index = Random.Range(0, Citizens.Count);
+
+        var chosenOne = Citizens[index];
+
+        //Leader = new Entity(EntityType, Name) {Fluff = new EntityFluff(EntityType.Type, Type)};
+
+        Leader = chosenOne;
+        //chosenOne.Fluff = new EntityFluff(chosenOne.EntityType, Name);
 
         EntitiesWithFluff.Add(Leader);
     }
@@ -106,27 +118,92 @@ public class Faction
 
     private void GeneratePopulation()
     {
+        const int humanoidChance = 96;
+
         PickPopulationType();
         Population = Random.Range(100, 1000);
-
+        
         var availableEntityTypes = new List<string>();
         if (_popType == PopulationType.MixedSpecies)
         {
-            availableEntityTypes = new List<string>(EntityTemplateLoader.GetEntityTemplateTypes());
+            availableEntityTypes = new List<string>(EntityTemplateLoader.GetAllEntityTemplateTypes());
         }
         else
         {
-            var allTypes = EntityTemplateLoader.GetEntityTemplateTypes();
+            var allTypes = EntityTemplateLoader.GetAllEntityTemplateTypes();
             var index = Random.Range(0, allTypes.Length);
+
+            var validPick = false;
+            while (!validPick)
+            {
+                var typeTemplate = EntityTemplateLoader.GetEntityTemplate(allTypes[index]);
+
+                var roll = Random.Range(0, 101);
+
+                if (roll < humanoidChance)
+                {
+                    if (typeTemplate.Classification == Entity.EntityClassification.Humanoid)
+                    {
+                        validPick = true;
+                    }
+                }
+                else
+                {
+                    if (typeTemplate.Classification == Entity.EntityClassification.NonHumanoid)
+                    {
+                        validPick = true;
+                    }
+                }
+                index = Random.Range(0, allTypes.Length);
+            }
+
             availableEntityTypes.Add(allTypes[index]);
         }
 
         Citizens = new List<Entity>();
 
+        EntityTemplate template = null;
+
         for (var i = 0; i < Population; i += 50)
         {
-            var index = Random.Range(0, availableEntityTypes.Count);
-            Citizens.Add(new Entity(EntityTemplateLoader.GetEntityTemplate(availableEntityTypes[index])));
+            if (_popType == PopulationType.MixedSpecies)
+            {
+                var index = Random.Range(0, availableEntityTypes.Count);
+                var validPick = false;
+
+                while (!validPick)
+                {
+                    template = EntityTemplateLoader.GetEntityTemplate(availableEntityTypes[index]);
+
+                    var roll = Random.Range(0, 101);
+
+                    if (roll < humanoidChance)
+                    {
+                        if (template.Classification == Entity.EntityClassification.Humanoid)
+                        {
+                            validPick = true;
+                        }
+                    }
+                    else
+                    {
+                        if (template.Classification == Entity.EntityClassification.NonHumanoid)
+                        {
+                            validPick = true;
+                        }
+                    }
+                    index = Random.Range(0, availableEntityTypes.Count);
+                }
+            }
+            else
+            {
+                template = EntityTemplateLoader.GetEntityTemplate(availableEntityTypes[0]);
+            }
+
+            var citizen = new Entity(template);
+            citizen.Fluff = new EntityFluff(citizen.EntityType, Name);
+            Citizens.Add(citizen);
         }
+
+        RemainingCitizensToPlace = new List<Entity>(Citizens);
     }
 }

@@ -187,7 +187,7 @@ public class AreaMap : MonoBehaviour
 
         _currentArea.AreaTiles[(int) entity.CurrentPosition.x, (int) entity.CurrentPosition.y].SetBlocksMovement(false);
         _currentArea.AreaTiles[(int) entity.CurrentPosition.x, (int) entity.CurrentPosition.y].SetPresentEntity(null);
-        _currentArea.PresentEntities.Remove(entity);
+        //_currentArea.PresentEntities.Remove(entity);
     }
 
     public void InstantiatePlayerSprite()

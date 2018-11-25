@@ -50,6 +50,8 @@ public class WorldData : MonoBehaviour
         set { _width = value; }
     }
 
+    public TextAsset RawFactionNamesFile;
+
     public GameObject WorldGrassLandTile;
     public GameObject WorldDesertTile;
     public GameObject WorldWasteLandTile;
