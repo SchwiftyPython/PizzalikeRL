@@ -184,10 +184,17 @@ public class InputController : MonoBehaviour
             else if (Input.GetMouseButtonDown(0))
             {
                 if (currentScene.Equals("Area") && !ActionWindow.Instance.isActiveAndEnabled &&
-                    !GameMenuWindow.Instance.MainWindow.activeSelf)
+                    !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf)
                 {
                     var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int) pos.x, (int) pos.y];
+
+                    if (pos.x < 0 || pos.y < 0 || pos.x > GameManager.Instance.CurrentArea.Width ||
+                        pos.y > GameManager.Instance.CurrentArea.Height)
+                    {
+                        return;
+                    }
+
+                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int)pos.x, (int)pos.y];
 
                     //highlight tile and path to it
                     StartCoroutine(HighlightPathToTarget(_player, selectedTile.GetGridPosition()));
@@ -221,6 +228,8 @@ public class InputController : MonoBehaviour
                 if (currentScene.Equals("WorldMap"))
                 {
                     GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
+                    GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
+                    GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                     SceneManager.LoadScene("Area");
                 }

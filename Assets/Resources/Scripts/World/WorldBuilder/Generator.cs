@@ -103,16 +103,6 @@ public class Generator : MonoBehaviour
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.Swamp,               BiomeType.Swamp }   //WETTEST
     };
 
-    private readonly IDictionary<SettlementSize, int> _settlementSizePopulationCaps = new Dictionary<SettlementSize, int>
-    {
-        { SettlementSize.Outpost, 10 },
-        { SettlementSize.Hamlet, 20 },
-        { SettlementSize.Village, 50 },
-        { SettlementSize.SmallCity, 250 },
-        { SettlementSize.Fortress, 500 },
-        { SettlementSize.LargeCity, 1000 }
-    };
-
     public Capper RarityCapper;
 
     private void Start()
@@ -429,11 +419,11 @@ public class Generator : MonoBehaviour
 
     private Cell GetTop(Cell t)
     {
-        return _cells[t.X, MathHelper.Mod(t.Y - 1, _height)];
+        return _cells[t.X, MathHelper.Mod(t.Y + 1, _height)];
     }
     private Cell GetBottom(Cell t)
     {
-        return _cells[t.X, MathHelper.Mod(t.Y + 1, _height)];
+        return _cells[t.X, MathHelper.Mod(t.Y - 1, _height)];
     }
     private Cell GetLeft(Cell t)
     {
@@ -1067,14 +1057,26 @@ public class Generator : MonoBehaviour
 
         FactionTemplateLoader.Initialize();
 
-        var factionTypes = FactionTemplateLoader.GetFactionNames();
+        var numFactions = Random.Range(4, 7);
 
-        foreach (var factionType in factionTypes)
+        for (var i = 0; i < numFactions; i++)
         {
-            WorldData.Instance.Factions.Add(factionType, new Faction(FactionTemplateLoader.GetFactionByName(factionType)));
+            var newFaction = new Faction();
 
-            WorldData.Instance.Factions[factionType].Population = Random.Range(100, 1000);
+            while (WorldData.Instance.Factions.ContainsKey(newFaction.Name))
+            {
+                newFaction = new Faction();
+            }
+
+            WorldData.Instance.Factions.Add(newFaction.Name, newFaction);
         }
+
+//        var factionTypes = FactionTemplateLoader.GetFactionTypes();
+//
+//        foreach (var factionType in factionTypes)
+//        {
+//            WorldData.Instance.Factions.Add(factionType, new Faction(FactionTemplateLoader.GetFactionByType(factionType)));
+//        }
     }
 
     private void PlaceSettlements()

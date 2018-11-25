@@ -6,6 +6,9 @@ public class EntityTemplate {
     [XmlAttribute("type")]
     public string Type;
 
+    [XmlElement("Classification")]
+    public Entity.EntityClassification Classification;
+
     [XmlElement("Description")]
     public string Description;
 

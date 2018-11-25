@@ -15,7 +15,6 @@ public class Settlement
 
     private int _population;
     private readonly Cell _cell;
-    private Faction _faction;
     private int _yearFounded;
     private string _history;
     private List<Entity> _namedNpcs;
@@ -25,10 +24,11 @@ public class Settlement
     public string Name;
     public readonly SettlementSize Size;
     public List<Lot> Lots;
+    public Faction Faction;
 
     public Settlement(Faction faction, SettlementSize size, Cell cell, int population)
     {
-        _faction = faction;
+        Faction = faction;
         Size = size;
         _cell = cell;
         _population = population;
@@ -56,6 +56,13 @@ public class Settlement
                 }
 
                 area.Settlement = this;
+
+                if (area.PresentFactions == null)
+                {
+                    area.PresentFactions = new List<Faction>();
+                }
+
+                area.PresentFactions.Add(Faction);
                 _areas.Add(area);
                 settlementPlaced = true;
             }

@@ -7,6 +7,12 @@ using Random = UnityEngine.Random;
 
 public class Entity
 {
+    public enum EntityClassification
+    {
+        Humanoid,
+        NonHumanoid
+    }
+
     public enum Direction
     {
         North,
@@ -43,8 +49,7 @@ public class Entity
 
     private readonly GameObject _prefab;
     private GameObject _sprite;
-
-    private readonly string _entityType;
+    
     private readonly string _factionType;
 
     private int _totalBodyPartCoverage;
@@ -74,8 +79,8 @@ public class Entity
 
     public IDictionary<string, BodyPart> Body { get; } = new Dictionary<string, BodyPart>();
 
-    //SingleNodeBlocker blocker;
-
+    public string EntityType { get; }
+    public EntityClassification Classification { get; }
     public EntityFluff Fluff { get; set; }
 
     public Stack<Goal> Goals;
@@ -100,7 +105,8 @@ public class Entity
     public Entity(EntityTemplate template, string faction = null, bool isPlayer = false)
     {
         _isPlayer = isPlayer;
-        _entityType = template.Type;
+        EntityType = template.Type;
+        Classification = template.Classification;
         _factionType = faction;
 
         if (isPlayer)
@@ -154,7 +160,12 @@ public class Entity
 
     public string GetTypeForEntityInfoWindow()
     {
-        return $"{_factionType}  {_entityType}";
+        return $"{EntityType}";
+    }
+
+    public string GetFluffForEntityInfoWindow()
+    {
+        return $"{Fluff.Name}, {Fluff.FactionName}";
     }
 
     public string GetStatsForEntityInfoWindow()
@@ -329,8 +340,8 @@ public class Entity
                 }
                 else
                 {
-                    CurrentCell = WorldData.Instance.Map[CurrentCell.X + (int) _directions[direction].x,
-                        CurrentCell.Y + (int) _directions[direction].y];
+                    CurrentCell = WorldData.Instance.Map[(int) nextCellPositon.x,
+                        (int) nextCellPositon.y];
 
                     CurrentArea = CalculateCellEntryArea(nextAreaPosition);
 
@@ -338,11 +349,7 @@ public class Entity
                     {
                         CurrentArea.BuildArea();
                     }
-
-                    if (IsPlayer())
-                    {
-                        GameManager.Instance.CurrentTile = CalculateAreaEntryTile(target);
-                    }
+                    
                     CurrentTile = CalculateAreaEntryTile(target);
 
                     //update tile data for start and end tiles
@@ -356,6 +363,7 @@ public class Entity
                     if (_isPlayer)
                     {
                         GameManager.Instance.Player.CurrentPosition = CurrentPosition;
+                        GameManager.Instance.CurrentTile = CurrentTile;
                         GameManager.Instance.CurrentArea = CurrentArea;
                         GameManager.Instance.CurrentCell = CurrentCell;
                         GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
@@ -365,19 +373,14 @@ public class Entity
             else
             {
                 //move to next area but not next cell
-                CurrentArea = CurrentCell.Areas[CurrentArea.X + (int) _directions[direction].x,
-                    CurrentArea.Y + (int) _directions[direction].y];
+                CurrentArea = CurrentCell.Areas[(int)nextAreaPosition.x,
+                    (int)nextAreaPosition.y];
 
                 if (!CurrentArea.AreaBuilt())
                 {
                     CurrentArea.BuildArea();
                 }
 
-                //calc area entry tile
-                if (IsPlayer())
-                {
-                    GameManager.Instance.CurrentTile = CalculateAreaEntryTile(target);
-                }
                 CurrentTile = CalculateAreaEntryTile(target);
 
                 //update tile data for start and end tiles
@@ -389,6 +392,7 @@ public class Entity
 
                 if (_isPlayer)
                 {
+                    GameManager.Instance.CurrentTile = CurrentTile;
                     GameManager.Instance.Player.CurrentPosition = CurrentPosition;
                     GameManager.Instance.CurrentArea = CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
@@ -504,9 +508,10 @@ public class Entity
         {
             yOffset = GameManager.Instance.CurrentCell.GetCellHeight();
         }
+        var targetAreaPosition = new Vector2((int)target.x + xOffset, (int)target.y + yOffset);
         Debug.Log("Original target area:" + target);
-        Debug.Log("Calculated target area:" + (int) target.x + xOffset + ", " + (int) target.y + yOffset);
-        return GameManager.Instance.CurrentCell.Areas[(int) target.x + xOffset, (int) target.y + yOffset];
+        Debug.Log("Calculated target area:" + (int)targetAreaPosition.x + ", " + (int)targetAreaPosition.y);
+        return CurrentCell.Areas[(int)targetAreaPosition.x, (int)targetAreaPosition.y];
     }
 
     public Direction AreaOutOfBoundsDirection(Vector2 target, Area area)
@@ -560,13 +565,13 @@ public class Entity
             {
                 return;
             }
-            var message = _entityType + " killed " + target._entityType + "!";
+            var message = EntityType + " killed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
             //AreaMap.Instance.RemoveEntity(target);
         }
         else
         {
-            var message = _entityType + " missed " + target._entityType + "!";
+            var message = EntityType + " missed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
         }
     }
@@ -689,7 +694,7 @@ public class Entity
 
     public void CreateFluff()
     {
-        Fluff = new EntityFluff(_entityType);
+        Fluff = new EntityFluff(EntityType);
     }
 
     public BodyPart BodyPartHit()
@@ -726,7 +731,7 @@ public class Entity
         else
         {
             //todo make this missed with weapon used
-            var message = _entityType + " missed " + target._entityType + " with ranged attack!";
+            var message = EntityType + " missed " + target.EntityType + " with ranged attack!";
             GameManager.Instance.Messages.Add(message);
         }
     }
@@ -779,7 +784,7 @@ public class Entity
         target.CurrentHp -= damageRoll;
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
 
-        var message = _entityType + " hits " + target._entityType + " for " + damageRoll + " hit points.";
+        var message = EntityType + " hits " + target.EntityType + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
 
         //Debug.Log("Target remaining hp: " + target.CurrentHp);
@@ -843,7 +848,7 @@ public class Entity
         target.CurrentHp -= damageRoll;
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
 
-        var message = _entityType + " hits " + target._entityType + "'s " + hitBodyPart.Name + " for " + damageRoll + " hit points.";
+        var message = EntityType + " hits " + target.EntityType + "'s " + hitBodyPart.Name + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
     }
 

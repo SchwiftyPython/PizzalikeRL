@@ -34,11 +34,14 @@ public class EntityInfo : MonoBehaviour
 
     public void Show(Entity clickedEntity)
     {
-        EntityName.text = clickedEntity.GetTypeForEntityInfoWindow();
+        EntityName.text = clickedEntity.Fluff != null
+            ? clickedEntity.GetFluffForEntityInfoWindow()
+            : clickedEntity.GetTypeForEntityInfoWindow();
+
         Stats.text = clickedEntity.GetStatsForEntityInfoWindow();
 
-        //todo handle entity fluff
-        
+        //todo provide option to see background info if available
+
         //todo have window popup near clicked entity
         //Need some logic to make sure window isn't cutoff by screen
         //Window.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y + 50); 
