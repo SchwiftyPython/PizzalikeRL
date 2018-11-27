@@ -6,8 +6,8 @@ public class BodyPartButton : MonoBehaviour
 {
     public void DisplayAvailableEquipmentForSelectedBodyPart()
     {
-        var bodyPartTypeClicked = transform.GetComponentsInChildren<Text>()[0].text.Remove(0, 3);
-        var bodyPart = GameManager.Instance.Player.Body[bodyPartTypeClicked];
+        var bodyPartIdClicked = Guid.Parse(transform.GetComponentsInChildren<Text>()[3].ToString());
+        var bodyPart = GameManager.Instance.Player.Body[bodyPartIdClicked];
 
         FilteredInventoryWindowPopUp.Instance.DisplayAvailableEquipmentForSelectedBodyPart(bodyPart);
     }

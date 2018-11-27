@@ -27,6 +27,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
     public GameObject ActionBar;
 
     public string BodyPartFilter;
+    public Guid BodyPartFilterId;
 
     public static FilteredInventoryWindowPopUp Instance;
 

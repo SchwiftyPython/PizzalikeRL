@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 public class BodyPart
@@ -35,4 +36,8 @@ public class BodyPart
     public List<BodyPart> ChildrenBodyParts;
 
     public int CurrentHp;
+
+    public Guid Id;
+
+    public Guid ParentId;
 }
