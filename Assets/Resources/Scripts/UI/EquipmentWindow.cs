@@ -77,8 +77,8 @@ public class EquipmentWindow : MonoBehaviour
             _bodyPartButtons.Add(_keyMapLetter, bodyPartButton);
             bodyPartButton.transform.SetParent(_parent);
 
-            var textFields = bodyPartButton.GetComponentsInChildren<Text>();
-            textFields[0].text = "-  " + bodyPart.Type;
+            var textFields = bodyPartButton.GetComponentsInChildren<Text>(true);
+            textFields[0].text = "-  " + bodyPart.Name;
             textFields[1].text = _keyMapLetter.ToString();
             textFields[2].text = string.IsNullOrEmpty(_playerEquipment[bodyPart].ItemType) ? " :   -- " 
                 : ":   " + _playerEquipment[bodyPart].ItemType; //todo make this more descriptive of weapon like inventory screen

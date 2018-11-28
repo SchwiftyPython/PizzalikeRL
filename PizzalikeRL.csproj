@@ -520,6 +520,7 @@
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\BackgroundGenerator.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\CharacterBackground.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Backgrounds\CharacterBackgroundContainer.cs" />

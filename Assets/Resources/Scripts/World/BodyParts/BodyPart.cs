@@ -1,43 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 
 public class BodyPart
 {
-    [XmlAttribute("name")]
     public string Name;
-
-    [XmlElement("Type")]
     public string Type;
-
-    [XmlElement("MaxHP")]
-    public int MaxHp;
-
-    [XmlElement("CanEquipWeapon")]
-    public bool CanEquipWeapon;
-
-    [XmlElement("CanEquipArmor")]
-    public bool CanEquipArmor;
-
-    [XmlElement("NeedsPart")]
     public string NeedsPart;
 
-    [XmlElement("AttackVerb")]
+    public bool CanEquipWeapon;
+    public bool CanEquipArmor;
+
     public string AttackVerb;
 
-    [XmlElement("Coverage")]
-    public int Coverage;
-
-    [XmlElement("MaxChildrenBodyParts")] 
+    public BodyPart ParentBodyPart;
+    public List<BodyPart> ChildrenBodyParts;
     public int MaxChildrenBodyParts;
 
-    public BodyPart ParentBodyPart;
-
-    public List<BodyPart> ChildrenBodyParts;
-
+    public int Coverage;
     public int CurrentHp;
+    public int MaxHp;
 
     public Guid Id;
-
     public Guid ParentId;
+
+    public BodyPart(BodyPartTemplate template)
+    {
+        Name = template.Name;
+        Type = template.Type;
+        NeedsPart = template.NeedsPart;
+        CanEquipWeapon = template.CanEquipWeapon;
+        CanEquipArmor = template.CanEquipArmor;
+        AttackVerb = template.AttackVerb;
+        MaxChildrenBodyParts = template.MaxChildrenBodyParts;
+        Coverage = template.Coverage;
+        CurrentHp = MaxHp = template.MaxHp;
+        ChildrenBodyParts = new List<BodyPart>();
+    }
 }

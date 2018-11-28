@@ -265,27 +265,26 @@ public class Entity
         var bodyPartNames = BodyPartLoader.BodyPartNames;
         foreach (var templateBodyPart in template.Parts)
         {
-            var part = BodyPartLoader.GetBodyPart(templateBodyPart);
+            var partTemplate = BodyPartLoader.GetBodyPartTemplate(templateBodyPart);
             if (!bodyPartNames.Contains(templateBodyPart))
             {
                 return;
             }
-            if (part.NeedsPart.Equals(""))
+            if (partTemplate.NeedsPart.Equals(""))
             {
-                AddBodyPart(part);
+                AddBodyPart(new BodyPart(partTemplate));
             }
             else
             {
-                //todo might need to grab multiple version of bodypart type depending on new structure
                 BodyPart parent = null;
                 var possibleParents = Body.Values.Where(bodyPart =>
-                    bodyPart.Type.Equals(part.NeedsPart, StringComparison.OrdinalIgnoreCase)).ToList();
+                    bodyPart.Type.Equals(partTemplate.NeedsPart, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 foreach (var possibleParent in possibleParents)
                 {
                     if (possibleParent.ChildrenBodyParts.Count >= possibleParent.MaxChildrenBodyParts)
                     {
-                        Debug.Log(part.NeedsPart + ": max children bodyparts reached");
+                        //Debug.Log(partTemplate.NeedsPart + ": max children bodyparts reached");
                     }
                     else
                     {
@@ -296,6 +295,7 @@ public class Entity
 
                 if (parent != null)
                 {
+                    var part = new BodyPart(partTemplate);
                     parent.ChildrenBodyParts.Add(part);
 
                     part.ParentId = parent.Id;
@@ -303,7 +303,7 @@ public class Entity
                 }
                 else
                 {
-                    Debug.Log(part.Name + " missing required part " + part.NeedsPart);
+                    Debug.Log(partTemplate.Name + " missing required part " + partTemplate.NeedsPart);
                 }
             }
         }
