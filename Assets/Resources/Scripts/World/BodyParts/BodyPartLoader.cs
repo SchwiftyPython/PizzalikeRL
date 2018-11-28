@@ -11,16 +11,15 @@ public class BodyPartLoader : MonoBehaviour
     {
         _bc = BodyPartContainer.Load(Path);
 
-        BodyPartNames = new string[_bc.BodyParts.Count];
-        BodyPartTypes = new string[_bc.BodyParts.Count];
+        BodyPartNames = new string[_bc.BodyPartTemplates.Count];
+        BodyPartTypes = new string[_bc.BodyPartTemplates.Count];
 
         var index = 0;
 
-        foreach (var bp in _bc.BodyParts)
+        foreach (var bp in _bc.BodyPartTemplates)
         {
             BodyPartNames[index] = bp.Name;
             BodyPartTypes[index] = bp.Type;
-            bp.CurrentHp = bp.MaxHp;
             index++;
         }
     }
@@ -45,10 +44,10 @@ public class BodyPartLoader : MonoBehaviour
         return BodyPartNames.Length;
     }
 
-    public static BodyPart GetBodyPart(string bodyPartName)
+    public static BodyPartTemplate GetBodyPartTemplate(string bodyPartName)
     {
-        var index = _bc.BodyParts.FindIndex(item => item.Name.Equals(bodyPartName.ToLower()));
-        return _bc.BodyParts[index];
+        var index = _bc.BodyPartTemplates.FindIndex(item => item.Name.Equals(bodyPartName.ToLower()));
+        return _bc.BodyPartTemplates[index];
     }
 
 }

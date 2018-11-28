@@ -77,7 +77,7 @@ public class Entity
     public IDictionary<Guid, Item> Inventory { get; }
     public IDictionary<BodyPart, Item> Equipped;
 
-    public IDictionary<string, BodyPart> Body { get; } = new Dictionary<string, BodyPart>();
+    public IDictionary<Guid, BodyPart> Body { get; private set; } = new Dictionary<Guid, BodyPart>();
 
     public string EntityType { get; }
     public EntityClassification Classification { get; }
@@ -174,7 +174,7 @@ public class Entity
             $"Current HP: {CurrentHp}\nStrength: {Strength}\nAgility: {Agility}\nConstitution: {Constitution}\nSpeed: {Speed}\nDefense: {Defense}";
     }
 
-    public void EquipItem(Item item, string bodyPartKey)
+    public void EquipItem(Item item, Guid bodyPartKey)
     {
         Inventory.Remove(item.Id);
 
@@ -192,7 +192,7 @@ public class Entity
         InventoryWindow.Instance.InventoryChanged = true;
     }
 
-    public void UnequipItem(string bodyPartKey)
+    public void UnequipItem(Guid bodyPartKey)
     {
         var bodyPart = Body[bodyPartKey];
 
@@ -261,31 +261,63 @@ public class Entity
 
     private void BuildBody(EntityTemplate template)
     {
+        Body = new Dictionary<Guid, BodyPart>();
         var bodyPartNames = BodyPartLoader.BodyPartNames;
         foreach (var templateBodyPart in template.Parts)
         {
-            var part = BodyPartLoader.GetBodyPart(templateBodyPart);
+            var partTemplate = BodyPartLoader.GetBodyPartTemplate(templateBodyPart);
             if (!bodyPartNames.Contains(templateBodyPart))
             {
                 return;
             }
-            if (part.NeedsPart.Equals(""))
+            if (partTemplate.NeedsPart.Equals(""))
             {
-                Body.Add(part.Type, part);
-            }
-            else if (Body.ContainsKey(part.NeedsPart))
-            {
-                if (Body[part.NeedsPart].ChildrenBodyParts.Count > Body[part.NeedsPart].MaxChildrenBodyParts)
-                {
-                    Debug.Log(part.NeedsPart + ": max children bodyparts reached");
-                }
-                Body.Add(part.Type, part);
+                AddBodyPart(new BodyPart(partTemplate));
             }
             else
             {
-                Debug.Log(part.Name + " missing required part " + part.NeedsPart);
+                BodyPart parent = null;
+                var possibleParents = Body.Values.Where(bodyPart =>
+                    bodyPart.Type.Equals(partTemplate.NeedsPart, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                foreach (var possibleParent in possibleParents)
+                {
+                    if (possibleParent.ChildrenBodyParts.Count >= possibleParent.MaxChildrenBodyParts)
+                    {
+                        //Debug.Log(partTemplate.NeedsPart + ": max children bodyparts reached");
+                    }
+                    else
+                    {
+                        parent = possibleParent;
+                        break;
+                    }
+                }
+
+                if (parent != null)
+                {
+                    var part = new BodyPart(partTemplate);
+                    parent.ChildrenBodyParts.Add(part);
+
+                    part.ParentId = parent.Id;
+                    AddBodyPart(part);
+                }
+                else
+                {
+                    Debug.Log(partTemplate.Name + " missing required part " + partTemplate.NeedsPart);
+                }
             }
         }
+    }
+
+    private void AddBodyPart(BodyPart part)
+    {
+        part.Id = Guid.NewGuid();
+        while (Body.ContainsKey(part.Id))
+        {
+            part.Id = Guid.NewGuid();
+        }
+
+        Body.Add(part.Id, part);
     }
 
     private void CalculateTotalBodyPartCoverage()

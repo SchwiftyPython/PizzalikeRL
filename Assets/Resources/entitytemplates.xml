@@ -22,14 +22,14 @@
 			<BodyParts>
 			    <Part>human torso</Part>
 				<Part>human head</Part>
-				<Part>human left arm</Part>
-				<Part>human right arm</Part>
-				<Part>human left hand</Part>
-				<Part>human right hand</Part>
-				<Part>human left leg</Part>
-				<Part>human right leg</Part>
-				<Part>human left foot</Part>
-				<Part>human right foot</Part>
+				<Part>human arm</Part>
+				<Part>human arm</Part>
+				<Part>human hand</Part>
+				<Part>human hand</Part>
+				<Part>human leg</Part>
+				<Part>human leg</Part>
+				<Part>human foot</Part>
+				<Part>human foot</Part>
 			</BodyParts>
 			<PossibleBiomes>
 			    <Biome>Ice</Biome>
@@ -95,14 +95,14 @@
 				<Part>insect thorax</Part>
                 <Part>insect abdomen</Part>				
 				<Part>beetle head</Part>
-				<Part>insect left front leg</Part>
-				<Part>insect right front leg</Part>
-				<Part>insect left middle leg</Part>
-				<Part>insect right middle leg</Part>
-				<Part>insect left rear leg</Part>
-				<Part>insect right rear leg</Part>
-				<Part>insect left wing</Part>
-				<Part>insect right wing</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect wing</Part>
+				<Part>insect wing</Part>
 			</BodyParts>
 			<PossibleBiomes>			    
 			    <Biome>Wasteland</Biome>
@@ -137,14 +137,14 @@
                 <Part>insect abdomen</Part>				
 				<Part>moth head</Part>
 				<Part>insect antennae</Part>
-				<Part>insect left front leg</Part>
-				<Part>insect right front leg</Part>
-				<Part>insect left middle leg</Part>
-				<Part>insect right middle leg</Part>
-				<Part>insect left rear leg</Part>
-				<Part>insect right rear leg</Part>
-				<Part>insect left wing</Part>
-				<Part>insect right wing</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect wing</Part>
+				<Part>insect wing</Part>
 			</BodyParts>
 			<PossibleBiomes>			    
 			    <Biome>Wasteland</Biome>
@@ -177,12 +177,12 @@
 			<BodyParts>				
 				<Part>large bird body</Part>                		
 				<Part>goose head</Part>				
-				<Part>large bird left leg</Part>
-				<Part>large bird right leg</Part>
-				<Part>large bird left webbed foot</Part>
-				<Part>large bird right webbed foot</Part>				
-				<Part>large bird left wing</Part>
-				<Part>large bird right wing</Part>
+				<Part>large bird leg</Part>
+				<Part>large bird leg</Part>
+				<Part>large bird webbed foot</Part>
+				<Part>large bird webbed foot</Part>				
+				<Part>large bird wing</Part>
+				<Part>large bird wing</Part>
 			</BodyParts>
 			<PossibleBiomes>		   
 			    <Biome>Swamp</Biome>
@@ -214,14 +214,14 @@
 			<BodyParts>				
 				<Part>small mammal body</Part>                		
 				<Part>skunk head</Part>				
-				<Part>small mammal left front leg</Part>
-				<Part>small mammal right front leg</Part>
-				<Part>small mammal left rear leg</Part>
-				<Part>small mammal right rear leg</Part>
-				<Part>small mammal left front clawed foot</Part>
-				<Part>small mammal right front clawed foot</Part>
-                <Part>small mammal left rear clawed foot</Part>
-				<Part>small mammal right rear clawed foot</Part>				
+				<Part>small mammal leg</Part>
+				<Part>small mammal leg</Part>
+				<Part>small mammal leg</Part>
+				<Part>small mammal leg</Part>
+				<Part>small mammal clawed foot</Part>
+				<Part>small mammal clawed foot</Part>
+                <Part>small mammal clawed foot</Part>
+				<Part>small mammal clawed foot</Part>				
 				<Part>skunk tail</Part>				
 			</BodyParts>
 			<PossibleBiomes>		   
@@ -253,14 +253,14 @@
 			<BodyParts>		
                 <Part>arachnid cephalothorax</Part>			
                 <Part>arachnid abdomen</Part> 								
-				<Part>arachnid left front leg</Part>
-				<Part>arachnid right front leg</Part>
-				<Part>arachnid left middle front leg</Part>
-				<Part>arachnid right middle front leg</Part>
-				<Part>arachnid left middle rear leg</Part>
-				<Part>arachnid right middle rear leg</Part>
-				<Part>arachnid left rear leg</Part>
-				<Part>arachnid right rear leg</Part>
+				<Part>arachnid leg</Part>
+				<Part>arachnid leg</Part>
+				<Part>arachnid leg</Part>
+				<Part>arachnid leg</Part>
+				<Part>arachnid leg</Part>
+				<Part>arachnid leg</Part>
+				<Part>arachnid leg</Part>
+				<Part>arachnid leg</Part>
 				<Part>spinneret</Part>				
 			</BodyParts>
 			<PossibleBiomes>		   
@@ -294,12 +294,12 @@
 			<BodyParts>		
                 <Part>large bird body</Part>                		
 				<Part>turkey head</Part>				
-				<Part>large bird left leg</Part>
-				<Part>large bird right leg</Part>
-				<Part>large bird left foot</Part>
-				<Part>large bird right foot</Part>				
-				<Part>large bird left wing</Part>
-				<Part>large bird right wing</Part>	
+				<Part>large bird leg</Part>
+				<Part>large bird leg</Part>
+				<Part>large bird foot</Part>
+				<Part>large bird foot</Part>				
+				<Part>large bird wing</Part>
+				<Part>large bird wing</Part>	
 				<Part>turkey tail</Part>
 			</BodyParts>
 			<PossibleBiomes>		   

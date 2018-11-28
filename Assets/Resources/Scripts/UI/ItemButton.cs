@@ -17,7 +17,7 @@ public class ItemButton : MonoBehaviour
 
             var itemToEquip = player.Inventory[itemToEquipId];
 
-            player.EquipItem(itemToEquip, FilteredInventoryWindowPopUp.Instance.BodyPartFilter);
+            player.EquipItem(itemToEquip, FilteredInventoryWindowPopUp.Instance.BodyPartFilterId);
 
             FilteredInventoryWindowPopUp.Instance.Hide();
         }

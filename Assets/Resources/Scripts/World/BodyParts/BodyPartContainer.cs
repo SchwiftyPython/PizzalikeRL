@@ -1,5 +1,4 @@
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
@@ -9,7 +8,7 @@ public class BodyPartContainer{
 
     [XmlArray("BodyParts")]
     [XmlArrayItem("BodyPart")]
-    public List<BodyPart> BodyParts = new List<BodyPart>();
+    public List<BodyPartTemplate> BodyPartTemplates = new List<BodyPartTemplate>();
 
     public static BodyPartContainer Load(string path){
         var xml = Resources.Load<TextAsset>(path);
