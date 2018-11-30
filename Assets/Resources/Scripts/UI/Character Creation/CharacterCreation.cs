@@ -128,7 +128,7 @@ public class CharacterCreation : MonoBehaviour
         _player = new Entity(_playerTemplate, null, true);
         _player.SetStats(_strength, _agility, _constitution, _intelligence);
 
-        _player.CreateFluff();
+        _player.CreateFluff(_playerTemplate);
         _player.Fluff.BackgroundType = _selectedBackground;
         _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
         _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));

@@ -1,86 +1,148 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class NameStore
+public class NameStore : MonoBehaviour
 {
     #region FileInfo
-    private const string NamesPath = "Assets\\Resources\\Scripts\\World\\Entities\\Names";
-    private const string HumanMaleFirstNamesFile = "human_male_first_names.csv";
-    private const string HumanFemaleFirstNamesFile = "human_female_first_names.csv";
-    private const string HumanLastNamesFile = "human_last_names.csv";
-    private const string DwarfMaleFirstNamesFile = "dwarf_male_first_names.csv";
-    private const string DwarfFemaleFirstNamesFile = "dwarf_female_first_names.csv";
-    private const string DwarfLastNamesFile = "dwarf_last_names.csv";
+
+    public TextAsset[] NameFiles;
+
+    private readonly Dictionary<string, TextAsset> _nameFiles = new Dictionary<string, TextAsset>
+    {
+        {"human_male_first_names", null},
+        {"human_female_first_names", null},
+        {"human_last_names", null},
+        {"bird_male_first_names", null},
+        {"bird_female_first_names", null},
+        {"bird_last_names", null},
+        {"mammal_male_first_names", null},
+        {"mammal_female_first_names", null},
+        {"mammal_last_names", null},
+        {"cow_female_first_names", null}
+    };
+
     #endregion FileInfo
 
-    private readonly List<string> _firstNames;
-    private readonly List<string> _lastNames;
+    private static List<string> _humanMaleFirstNames;
+    private static List<string> _humanFemaleFirstNames;
+    private static List<string> _humanLastNames;
+    private static List<string> _birdMaleFirstNames;
+    private static List<string> _birdFemaleFirstNames;
+    private static List<string> _birdLastNames;
+    private static List<string> _mammalMaleFirstNames;
+    private static List<string> _mammalFemaleFirstNames;
+    private static List<string> _mammalLastNames;
+    private static List<string> _cowFirstNames;
 
-    public NameStore(string entityType, string sex)
+    private readonly List<List<string>> _nameLists = new List<List<string>>
     {
-        if (entityType.Equals("human"))
+        _humanMaleFirstNames,
+        _humanFemaleFirstNames,
+        _humanLastNames,
+        _birdMaleFirstNames,
+        _birdFemaleFirstNames,
+        _birdLastNames,
+        _mammalMaleFirstNames,
+        _mammalFemaleFirstNames,
+        _mammalLastNames,
+        _cowFirstNames
+    };
+
+    private  List<string> _firstNames;
+    private  List<string> _lastNames;
+
+    public static NameStore Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
         {
-            _firstNames = LoadNamesFromFile(sex.ToLower().Equals("male") ? HumanMaleFirstNamesFile : HumanFemaleFirstNamesFile);
-            _lastNames = LoadNamesFromFile(HumanLastNamesFile);
+            Instance = this;
         }
-        if (entityType.Equals("dwarf"))
+        else if (Instance != this)
         {
-            _firstNames = LoadNamesFromFile(sex.ToLower().Equals("male") ? DwarfMaleFirstNamesFile : DwarfFemaleFirstNamesFile);
-            _lastNames = LoadNamesFromFile(DwarfLastNamesFile);
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+
+        LoadNamesFromFiles();
+    }
+
+    private  void LoadNamesFromFiles()
+    {
+        try
+        {
+            var nameFilesIndex = 0;
+            foreach (var file in _nameFiles.Keys.ToArray())
+            {
+                _nameFiles[file] = NameFiles[nameFilesIndex];
+                nameFilesIndex++;
+            }
+
+            var nameListIndex = 0;
+            foreach (var file in _nameFiles.Values)
+            {
+                _nameLists[nameListIndex] = file.text.Split("\r\n"[0]).ToList();
+                nameListIndex++;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Error processing name file" + e.Message);
+        }
+        
+    }
+
+    private void FilterPossibleNameListsBySex(List<string> nameFiles, string sex)
+    {
+        _firstNames = new List<string>();
+        _lastNames = new List<string>();
+        
+        foreach (var nameFile in nameFiles)
+        {
+            if (nameFile.Contains(sex))
+            {
+                _firstNames.AddRange(_nameFiles[nameFile].text.Split("\r\n"[0]).ToList());
+            }
+            if (nameFile.Contains("last"))
+            {
+                _lastNames.AddRange(_nameFiles[nameFile].text.Split("\r\n"[0]).ToList());
+            }
         }
     }
 
-    public string GenerateName()
+    public string GenerateFullName(List<string> nameFiles, string sex)
     {
-        var firstName = String.Empty;
-        var lastName = String.Empty;
+        string firstName;
+        string lastName;
         try
         {
+            FilterPossibleNameListsBySex(nameFiles, sex);
+
             var index = Random.Range(0, _firstNames.Count);
-            firstName = _firstNames[index];
+            firstName = _firstNames[index].Trim('\n');
 
             index = Random.Range(0, _lastNames.Count);
-            lastName = _lastNames[index];
+            lastName = _lastNames[index].Trim('\n');
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            firstName = String.Empty;
-            lastName = String.Empty;
+            firstName = string.Empty;
+            lastName = string.Empty;
         }
 
         return firstName + " " + lastName;
     }
 
-    private static List<string> LoadNamesFromFile(string filePath)
+    public  string GenerateFirstName(List<string> nameFiles, string sex)
     {
-        var basePath = Environment.CurrentDirectory;
+        FilterPossibleNameListsBySex(nameFiles, sex);
 
-        var fullPath = Path.Combine(basePath, NamesPath.TrimStart('\\', '/'), filePath);
-
-        var names = new List<string>();
-        try
-        {
-            using (var reader = new StreamReader(fullPath))
-            {
-                string line;
-                while (null != (line = reader.ReadLine()?.Trim()))
-                {
-                    var tempNames = line.Split(',');
-                    names.AddRange(from n in tempNames
-                                   where n != string.Empty
-                                   select n);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Error processing file: " + fullPath + " " + e.Message);
-        }
-        return names;
+        var index = Random.Range(0, _firstNames.Count);
+        return _firstNames[index].Trim('\n');
     }
 }

@@ -39,6 +39,11 @@
 			    <Biome>Woodland</Biome>			   
 			    <Biome>Desert</Biome>			    
 			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+			</NameFiles>
 		</EntityTemplate>
 		
 		<EntityTemplate type = "pepperoni worm">
@@ -69,6 +74,11 @@
 			    <Biome>Woodland</Biome>			   
 			    <Biome>Desert</Biome>	
 			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+			</NameFiles>
         </EntityTemplate>
 		
 		<EntityTemplate type = "beetle">
@@ -111,6 +121,11 @@
 			    <Biome>Woodland</Biome>			   
 			    <Biome>Desert</Biome>	
 			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+			</NameFiles>
         </EntityTemplate>
 		
 		<EntityTemplate type = "giant moth">
@@ -153,6 +168,11 @@
 			    <Biome>Woodland</Biome>			   
 			    <Biome>Desert</Biome>	
 			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+			</NameFiles>
         </EntityTemplate>
 		
 		<EntityTemplate type = "goose">
@@ -190,6 +210,14 @@
 			    <Biome>Woodland</Biome>			   
                 <Biome>Ice</Biome>				
 			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+				<NameFile>bird_male_first_names</NameFile>
+				<NameFile>bird_female_first_names</NameFile>
+				<NameFile>bird_last_names</NameFile>
+			</NameFiles>
         </EntityTemplate>
 		
 		<EntityTemplate type = "skunk">
@@ -229,6 +257,14 @@
 			    <Biome>Grassland</Biome>
 			    <Biome>Woodland</Biome>                				
 			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+				<NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>
+			</NameFiles>
         </EntityTemplate>
 		
 		<EntityTemplate type = "spider">
@@ -270,6 +306,11 @@
                 <Biome>Desert</Biome>	
                 <Biome>Wasteland</Biome> 				
 			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>				
+			</NameFiles>
         </EntityTemplate>
 		
 		<EntityTemplate type = "turkey">
@@ -307,6 +348,14 @@
 			    <Biome>Grassland</Biome>
 			    <Biome>Woodland</Biome>	                				
 			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+				<NameFile>bird_male_first_names</NameFile>
+				<NameFile>bird_female_first_names</NameFile>
+				<NameFile>bird_last_names</NameFile>
+			</NameFiles>
         </EntityTemplate>
 
 	</EntityTemplates>  
