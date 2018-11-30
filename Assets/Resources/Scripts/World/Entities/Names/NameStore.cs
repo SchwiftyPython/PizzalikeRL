@@ -8,29 +8,20 @@ public class NameStore : MonoBehaviour
 {
     #region FileInfo
 
-    public static TextAsset HumanMaleFirstNamesFile;
-    public static TextAsset HumanFemaleFirstNamesFile;
-    public static TextAsset HumanLastNamesFile;
-    public static TextAsset BirdMaleFirstNamesFile;
-    public static TextAsset BirdFemaleFirstNamesFile;
-    public static TextAsset BirdLastNamesFile;
-    public static TextAsset MammalMaleFirstNamesFile;
-    public static TextAsset MammalFemaleFirstNamesFile;
-    public static TextAsset MammalLastNamesFile;
-    public static TextAsset CowFirstNamesFile;
+    public TextAsset[] NameFiles;
 
-    private static readonly List<TextAsset> _nameFiles = new List<TextAsset>
+    private readonly Dictionary<string, TextAsset> _nameFiles = new Dictionary<string, TextAsset>
     {
-        HumanMaleFirstNamesFile,
-        HumanFemaleFirstNamesFile,
-        HumanLastNamesFile,
-        BirdMaleFirstNamesFile,
-        BirdFemaleFirstNamesFile,
-        BirdLastNamesFile,
-        MammalMaleFirstNamesFile,
-        MammalFemaleFirstNamesFile,
-        MammalLastNamesFile,
-        CowFirstNamesFile
+        {"human_male_first_names", null},
+        {"human_female_first_names", null},
+        {"human_last_names", null},
+        {"bird_male_first_names", null},
+        {"bird_female_first_names", null},
+        {"bird_last_names", null},
+        {"mammal_male_first_names", null},
+        {"mammal_female_first_names", null},
+        {"mammal_last_names", null},
+        {"cow_female_first_names", null}
     };
 
     #endregion FileInfo
@@ -46,7 +37,7 @@ public class NameStore : MonoBehaviour
     private static List<string> _mammalLastNames;
     private static List<string> _cowFirstNames;
 
-    private static List<List<string>> _nameLists = new List<List<string>>
+    private readonly List<List<string>> _nameLists = new List<List<string>>
     {
         _humanMaleFirstNames,
         _humanFemaleFirstNames,
@@ -60,29 +51,82 @@ public class NameStore : MonoBehaviour
         _cowFirstNames
     };
 
-    private static List<string> _firstNames;
-    private static List<string> _lastNames;
+    private  List<string> _firstNames;
+    private  List<string> _lastNames;
+
+    public static NameStore Instance;
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+
         LoadNamesFromFiles();
     }
 
-    public static string GenerateName(List<string> nameFiles)
+    private  void LoadNamesFromFiles()
+    {
+        try
+        {
+            var nameFilesIndex = 0;
+            foreach (var file in _nameFiles.Keys.ToArray())
+            {
+                _nameFiles[file] = NameFiles[nameFilesIndex];
+                nameFilesIndex++;
+            }
+
+            var nameListIndex = 0;
+            foreach (var file in _nameFiles.Values)
+            {
+                _nameLists[nameListIndex] = file.text.Split("\r\n"[0]).ToList();
+                nameListIndex++;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Error processing name file" + e.Message);
+        }
+        
+    }
+
+    private void FilterPossibleNameListsBySex(List<string> nameFiles, string sex)
+    {
+        _firstNames = new List<string>();
+        _lastNames = new List<string>();
+        
+        foreach (var nameFile in nameFiles)
+        {
+            if (nameFile.Contains(sex))
+            {
+                _firstNames.AddRange(_nameFiles[nameFile].text.Split("\r\n"[0]).ToList());
+            }
+            if (nameFile.Contains("last"))
+            {
+                _lastNames.AddRange(_nameFiles[nameFile].text.Split("\r\n"[0]).ToList());
+            }
+        }
+    }
+
+    public string GenerateFullName(List<string> nameFiles, string sex)
     {
         string firstName;
         string lastName;
         try
         {
-            _firstNames = PickFirstNameList();
+            FilterPossibleNameListsBySex(nameFiles, sex);
 
             var index = Random.Range(0, _firstNames.Count);
-            firstName = _firstNames[index];
-
-            _lastNames = PickLastNameList();
+            firstName = _firstNames[index].Trim('\n');
 
             index = Random.Range(0, _lastNames.Count);
-            lastName = _lastNames[index];
+            lastName = _lastNames[index].Trim('\n');
         }
         catch (Exception e)
         {
@@ -94,31 +138,11 @@ public class NameStore : MonoBehaviour
         return firstName + " " + lastName;
     }
 
-    private static List<string> PickFirstNameList()
+    public  string GenerateFirstName(List<string> nameFiles, string sex)
     {
-        return new List<string>();
-    }
+        FilterPossibleNameListsBySex(nameFiles, sex);
 
-    private static List<string> PickLastNameList()
-    {
-        return new List<string>();
-    }
-
-    private static void LoadNamesFromFiles()
-    {
-        try
-        {
-            var nameListIndex = 0;
-            foreach (var file in _nameFiles)
-            {
-                _nameLists[nameListIndex] = file.text.Split("\r\n"[0]).ToList();
-                nameListIndex++;
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Error processing name file" + e.Message);
-        }
-        
+        var index = Random.Range(0, _firstNames.Count);
+        return _firstNames[index].Trim('\n');
     }
 }

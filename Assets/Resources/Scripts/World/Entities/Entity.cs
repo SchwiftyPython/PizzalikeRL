@@ -50,7 +50,7 @@ public class Entity
     private readonly GameObject _prefab;
     private GameObject _sprite;
     
-    private readonly string _factionType;
+    private readonly Faction _faction;
 
     private int _totalBodyPartCoverage;
 
@@ -102,12 +102,12 @@ public class Entity
         }
     }
 
-    public Entity(EntityTemplate template, string faction = null, bool isPlayer = false)
+    public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
     {
         _isPlayer = isPlayer;
         EntityType = template.Type;
         Classification = template.Classification;
-        _factionType = faction;
+        _faction = faction;
 
         if (isPlayer)
         {
@@ -724,9 +724,14 @@ public class Entity
         return CurrentHp <= 0;
     }
 
-    public void CreateFluff()
+    public void CreateFluff(EntityTemplate template)
     {
-        Fluff = new EntityFluff(EntityType);
+        Fluff = new EntityFluff(template.Type, template.NameFiles);
+    }
+
+    public void CreateFluff(EntityTemplate template, string factionName)
+    {
+        Fluff = new EntityFluff(template.Type, factionName, template.NameFiles);
     }
 
     public BodyPart BodyPartHit()

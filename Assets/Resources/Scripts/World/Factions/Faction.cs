@@ -65,17 +65,16 @@ public class Faction
 
     public void ChangeRelationshipValue(Faction otherFaction, int relationshipChange)
     {
-        //TODO: Change Type to Name when Faction Name Gen is done
-        Relationships[otherFaction.Type] += relationshipChange;
+        Relationships[otherFaction.Name] += relationshipChange;
 
-        if (Relationships[otherFaction.Type] > MaxRelationshipLevel)
+        if (Relationships[otherFaction.Name] > MaxRelationshipLevel)
         {
-            Relationships[otherFaction.Type] = MaxRelationshipLevel;
+            Relationships[otherFaction.Name] = MaxRelationshipLevel;
             return;
         }
-        if (Relationships[otherFaction.Type] < MinRelationshipLevel)
+        if (Relationships[otherFaction.Name] < MinRelationshipLevel)
         {
-            Relationships[otherFaction.Type] = MinRelationshipLevel;
+            Relationships[otherFaction.Name] = MinRelationshipLevel;
         }
     }
 
@@ -101,10 +100,7 @@ public class Faction
 
         var chosenOne = Citizens[index];
 
-        //Leader = new Entity(EntityType, Name) {Fluff = new EntityFluff(EntityType.Type, Type)};
-
         Leader = chosenOne;
-        //chosenOne.Fluff = new EntityFluff(chosenOne.EntityType, Name);
 
         EntitiesWithFluff.Add(Leader);
     }
@@ -199,8 +195,8 @@ public class Faction
                 template = EntityTemplateLoader.GetEntityTemplate(availableEntityTypes[0]);
             }
 
-            var citizen = new Entity(template);
-            citizen.Fluff = new EntityFluff(citizen.EntityType, Name);
+            var citizen = new Entity(template, this);
+            citizen.CreateFluff(template, Name);
             Citizens.Add(citizen);
         }
 
