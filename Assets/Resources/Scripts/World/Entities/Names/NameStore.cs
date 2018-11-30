@@ -1,47 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class NameStore
+public class NameStore : MonoBehaviour
 {
     #region FileInfo
-    private const string NamesPath = "Assets\\Resources\\Scripts\\World\\Entities\\Names";
-    private const string HumanMaleFirstNamesFile = "human_male_first_names.csv";
-    private const string HumanFemaleFirstNamesFile = "human_female_first_names.csv";
-    private const string HumanLastNamesFile = "human_last_names.csv";
-    private const string DwarfMaleFirstNamesFile = "dwarf_male_first_names.csv";
-    private const string DwarfFemaleFirstNamesFile = "dwarf_female_first_names.csv";
-    private const string DwarfLastNamesFile = "dwarf_last_names.csv";
+
+    public static TextAsset HumanMaleFirstNamesFile;
+    public static TextAsset HumanFemaleFirstNamesFile;
+    public static TextAsset HumanLastNamesFile;
+    public static TextAsset BirdMaleFirstNamesFile;
+    public static TextAsset BirdFemaleFirstNamesFile;
+    public static TextAsset BirdLastNamesFile;
+    public static TextAsset MammalMaleFirstNamesFile;
+    public static TextAsset MammalFemaleFirstNamesFile;
+    public static TextAsset MammalLastNamesFile;
+    public static TextAsset CowFirstNamesFile;
+
+    private static readonly List<TextAsset> _nameFiles = new List<TextAsset>
+    {
+        HumanMaleFirstNamesFile,
+        HumanFemaleFirstNamesFile,
+        HumanLastNamesFile,
+        BirdMaleFirstNamesFile,
+        BirdFemaleFirstNamesFile,
+        BirdLastNamesFile,
+        MammalMaleFirstNamesFile,
+        MammalFemaleFirstNamesFile,
+        MammalLastNamesFile,
+        CowFirstNamesFile
+    };
+
     #endregion FileInfo
 
-    private readonly List<string> _firstNames;
-    private readonly List<string> _lastNames;
+    private static List<string> _humanMaleFirstNames;
+    private static List<string> _humanFemaleFirstNames;
+    private static List<string> _humanLastNames;
+    private static List<string> _birdMaleFirstNames;
+    private static List<string> _birdFemaleFirstNames;
+    private static List<string> _birdLastNames;
+    private static List<string> _mammalMaleFirstNames;
+    private static List<string> _mammalFemaleFirstNames;
+    private static List<string> _mammalLastNames;
+    private static List<string> _cowFirstNames;
 
-    public NameStore(string entityType, string sex)
+    private static List<List<string>> _nameLists = new List<List<string>>
     {
-        if (entityType.Equals("human"))
-        {
-            _firstNames = LoadNamesFromFile(sex.ToLower().Equals("male") ? HumanMaleFirstNamesFile : HumanFemaleFirstNamesFile);
-            _lastNames = LoadNamesFromFile(HumanLastNamesFile);
-        }
-        if (entityType.Equals("dwarf"))
-        {
-            _firstNames = LoadNamesFromFile(sex.ToLower().Equals("male") ? DwarfMaleFirstNamesFile : DwarfFemaleFirstNamesFile);
-            _lastNames = LoadNamesFromFile(DwarfLastNamesFile);
-        }
+        _humanMaleFirstNames,
+        _humanFemaleFirstNames,
+        _humanLastNames,
+        _birdMaleFirstNames,
+        _birdFemaleFirstNames,
+        _birdLastNames,
+        _mammalMaleFirstNames,
+        _mammalFemaleFirstNames,
+        _mammalLastNames,
+        _cowFirstNames
+    };
+
+    private static List<string> _firstNames;
+    private static List<string> _lastNames;
+
+    private void Awake()
+    {
+        LoadNamesFromFiles();
     }
 
-    public string GenerateName()
+    public static string GenerateName(List<string> nameFiles)
     {
-        var firstName = String.Empty;
-        var lastName = String.Empty;
+        string firstName;
+        string lastName;
         try
         {
+            _firstNames = PickFirstNameList();
+
             var index = Random.Range(0, _firstNames.Count);
             firstName = _firstNames[index];
+
+            _lastNames = PickLastNameList();
 
             index = Random.Range(0, _lastNames.Count);
             lastName = _lastNames[index];
@@ -49,38 +87,38 @@ public class NameStore
         catch (Exception e)
         {
             Console.WriteLine(e);
-            firstName = String.Empty;
-            lastName = String.Empty;
+            firstName = string.Empty;
+            lastName = string.Empty;
         }
 
         return firstName + " " + lastName;
     }
 
-    private static List<string> LoadNamesFromFile(string filePath)
+    private static List<string> PickFirstNameList()
     {
-        var basePath = Environment.CurrentDirectory;
+        return new List<string>();
+    }
 
-        var fullPath = Path.Combine(basePath, NamesPath.TrimStart('\\', '/'), filePath);
+    private static List<string> PickLastNameList()
+    {
+        return new List<string>();
+    }
 
-        var names = new List<string>();
+    private static void LoadNamesFromFiles()
+    {
         try
         {
-            using (var reader = new StreamReader(fullPath))
+            var nameListIndex = 0;
+            foreach (var file in _nameFiles)
             {
-                string line;
-                while (null != (line = reader.ReadLine()?.Trim()))
-                {
-                    var tempNames = line.Split(',');
-                    names.AddRange(from n in tempNames
-                                   where n != string.Empty
-                                   select n);
-                }
+                _nameLists[nameListIndex] = file.text.Split("\r\n"[0]).ToList();
+                nameListIndex++;
             }
         }
         catch (Exception e)
         {
-            Debug.Log("Error processing file: " + fullPath + " " + e.Message);
+            Debug.Log("Error processing name file" + e.Message);
         }
-        return names;
+        
     }
 }

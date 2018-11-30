@@ -353,6 +353,15 @@
     <None Include="Assets\PixelPerfectCamera\README.txt" />
     <None Include="Assets\PixelPerfectCamera\background_art_license.txt" />
     <None Include="Assets\Resources\Scripts\World\Entities\Backgrounds\characterbackgrounds.xml" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\bird_first_names_female.txt" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\bird_first_names_male.txt" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\bird_last_names.txt" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\bird_nicknames.txt" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\cow_first_names.txt" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\last_names_funny.txt" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\mammal_first_names_female.txt" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\mammal_first_names_male.txt" />
+    <None Include="Assets\Resources\Scripts\World\Entities\Names\mammal_last_names.txt" />
     <None Include="Assets\Resources\Scripts\World\Factions\raw_faction_names.txt" />
     <None Include="Assets\Resources\Scripts\World\Items\itemtemplates.xml" />
     <None Include="Assets\Resources\Scripts\World\Settlements\Buildings\building_prefabs.txt" />
