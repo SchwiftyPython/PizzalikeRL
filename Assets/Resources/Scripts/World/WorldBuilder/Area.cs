@@ -206,6 +206,8 @@ public class Area
                 return SettlementPrefabStore.IceAsphaltRoadTiles[tileType];
             case BiomeType.Swamp:
                 return SettlementPrefabStore.SwampDirtPathTiles[tileType];
+            case BiomeType.Wasteland:
+                return SettlementPrefabStore.WastelandDirtPathTiles[tileType];
             default:
                 return SettlementPrefabStore.GrassDirtPathTiles[tileType];
         }
@@ -223,6 +225,8 @@ public class Area
                 return SettlementPrefabStore.IceAsphaltRoadTileKeys[tileCode];
             case BiomeType.Swamp:
                 return SettlementPrefabStore.SwampDirtPathTileKeys[tileCode];
+            case BiomeType.Wasteland:
+                return SettlementPrefabStore.WastelandDirtPathTileKeys[tileCode];
             default:
                 return SettlementPrefabStore.GrassDirtPathTileKeys[tileCode];
         }

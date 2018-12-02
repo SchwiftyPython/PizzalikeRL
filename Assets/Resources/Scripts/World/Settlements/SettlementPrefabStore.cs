@@ -68,6 +68,23 @@ public class SettlementPrefabStore : MonoBehaviour
         {'C', "path_dirt_4_way-center" }
     };
 
+    public static IDictionary<char, string> WastelandDirtPathTileKeys = new Dictionary<char, string>
+    {
+        {'0', "path_dirt_vertical_straight_left" },
+        {'1', "path_dirt_vertical_straight_right" },
+        {'2', "path_dirt_corner_upper_left" },
+        {'3', "path_dirt_corner_upper_right" },
+        {'4', "path_dirt_corner_lower_left" },
+        {'5', "path_dirt_corner_lower_right" },
+        {'6', "path_dirt_straight_horizontal_bottom" },
+        {'7', "path_dirt_straight_horizontal_top" },
+        {'8', "path_dirt_3_way-bottom" },
+        {'9', "path_dirt_3_way-left" },
+        {'A', "path_dirt_3_way-right" },
+        {'B', "path_dirt_3_way-top" },
+        {'C', "path_dirt_4_way-center" }
+    };
+
     public static IDictionary<char, string> IceAsphaltRoadTileKeys = new Dictionary<char, string>
     {
         {'0', "road_snow_straight_vertical_left" },
@@ -91,6 +108,7 @@ public class SettlementPrefabStore : MonoBehaviour
     public static IDictionary<string, GameObject> DesertAsphaltRoadTiles;
     public static IDictionary<string, GameObject> SwampDirtPathTiles;
     public static IDictionary<string, GameObject> IceAsphaltRoadTiles;
+    public static IDictionary<string, GameObject> WastelandDirtPathTiles;
 
     public TextAsset SettlementPrefabFile;
 
@@ -288,6 +306,23 @@ public class SettlementPrefabStore : MonoBehaviour
             { "path_dirt_4_way-center", null }
         };
 
+        WastelandDirtPathTiles = new Dictionary<string, GameObject>
+        {
+            { "path_dirt_vertical_straight_left", null },
+            { "path_dirt_vertical_straight_right", null },
+            { "path_dirt_corner_upper_left", null },
+            { "path_dirt_corner_upper_right", null },
+            { "path_dirt_corner_lower_left", null },
+            { "path_dirt_corner_lower_right", null },
+            { "path_dirt_straight_horizontal_bottom", null },
+            { "path_dirt_straight_horizontal_top", null },
+            { "path_dirt_3_way-bottom", null },
+            { "path_dirt_3_way-left", null },
+            { "path_dirt_3_way-right", null },
+            { "path_dirt_3_way-top", null },
+            { "path_dirt_4_way-center", null }
+        };
+
         DesertAsphaltRoadTiles = new Dictionary<string, GameObject>
         {
             { "road_desert_straight_vertical_left", null },
@@ -323,7 +358,7 @@ public class SettlementPrefabStore : MonoBehaviour
             { "road_snow_intersection_4_way_center", null }
         };
 
-    var i = 0;
+        var i = 0;
         foreach (var tile in GrassDirtPathTiles.Keys.ToArray())
         {
             GrassDirtPathTiles[tile] = WorldData.Instance.GrassDirtPathTiles[i];
@@ -341,6 +376,13 @@ public class SettlementPrefabStore : MonoBehaviour
         foreach (var tile in SwampDirtPathTiles.Keys.ToArray())
         {
             SwampDirtPathTiles[tile] = WorldData.Instance.SwampDirtPathTiles[i];
+            i++;
+        }
+
+        i = 0;
+        foreach (var tile in WastelandDirtPathTiles.Keys.ToArray())
+        {
+            WastelandDirtPathTiles[tile] = WorldData.Instance.WastelandDirtPathTiles[i];
             i++;
         }
 
