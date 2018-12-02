@@ -604,6 +604,7 @@
     <None Include="Assets\Resources\Scripts\World\Factions\raw_faction_names.txt" />
     <None Include="Assets\Resources\Scripts\World\Items\itemtemplates.xml" />
     <None Include="Assets\Resources\Scripts\World\Settlements\Buildings\building_prefabs.txt" />
+    <None Include="Assets\Resources\Scripts\World\Settlements\settlement_names_raw.txt" />
     <None Include="Assets\Resources\Scripts\World\Settlements\settlement_prefabs.txt" />
     <None Include="Assets\Resources\bodyparts.xml" />
     <None Include="Assets\Resources\entitytemplates.xml" />
