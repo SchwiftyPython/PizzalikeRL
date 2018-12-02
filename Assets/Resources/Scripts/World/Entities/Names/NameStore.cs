@@ -96,7 +96,7 @@ public class NameStore : MonoBehaviour
         
     }
 
-    private void FilterPossibleNameListsBySex(List<string> nameFiles, string sex)
+    private void FilterPossibleNameListsBySex(IEnumerable<string> nameFiles, string sex)
     {
         _firstNames = new List<string>();
         _lastNames = new List<string>();

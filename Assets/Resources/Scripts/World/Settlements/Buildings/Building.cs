@@ -28,13 +28,13 @@ public class Building
             {
                 var tileCode = prefab.Blueprint[currentColumn, currentRow];
 
-                if (BuildingPrefabStore.SingleTileWallTileKeys.ContainsKey(tileCode))
+                if (BuildingPrefabStore.WallTileKeys.ContainsKey(tileCode))
                 {
                     var tile = GetRandomFloorTilePrefab();
 
                     FloorTiles[currentColumn, currentRow] = tile;
 
-                    var tileType = BuildingPrefabStore.SingleTileWallTileKeys[tileCode];
+                    var tileType = BuildingPrefabStore.WallTileKeys[tileCode];
                     tile = WallTilePrefabs[tileType];
 
                     WallTiles[currentColumn, currentRow] = tile;

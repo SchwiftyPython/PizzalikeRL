@@ -17,8 +17,6 @@ public class BuildingPrefabStore : MonoBehaviour
     public static IDictionary<string, GameObject> BrickWallTiles;
     public static IDictionary<string, GameObject> WoodenWallTiles;
 
-    public static IDictionary<string, GameObject> SingleTileBrickWallTiles;
-
     public static List<GameObject> WoodenFloorTiles;
     public static List<GameObject> StoneFloorTiles;
 
@@ -36,18 +34,6 @@ public class BuildingPrefabStore : MonoBehaviour
         {'5', "wall_lower_left_corner" },
         {'6', "wall_horizontal_straight_top" },
         {'7', "wall_horizontal_straight_bottom" }
-    };
-
-    public static IDictionary<char, string> SingleTileWallTileKeys = new Dictionary<char, string>
-    {
-        {'0', "wall_vertical" },
-        {'1', "wall_vertical" },
-        {'2', "wall_upper_left_corner" },
-        {'3', "wall_upper_right_corner" },
-        {'4', "wall_lower_right_corner" },
-        {'5', "wall_lower_left_corner" },
-        {'6', "wall_horizontal" },
-        {'7', "wall_horizontal" }
     };
 
     public TextAsset BuildingPrefabFile;
@@ -156,23 +142,6 @@ public class BuildingPrefabStore : MonoBehaviour
             i++;
         }
 
-        SingleTileBrickWallTiles = new Dictionary<string, GameObject>
-        {
-            { "wall_vertical", null},
-            { "wall_upper_left_corner", null},
-            { "wall_upper_right_corner", null},
-            { "wall_lower_right_corner", null},
-            { "wall_lower_left_corner", null},
-            { "wall_horizontal", null}
-        };
-
-        i = 0;
-        foreach (var tile in SingleTileBrickWallTiles.Keys.ToArray())
-        {
-            SingleTileBrickWallTiles[tile] = WorldData.Instance.SingleTileBrickWallTiles[i];
-            i++;
-        }
-
         WoodenWallTiles = new Dictionary<string, GameObject>
         {
             { "wall_vertical_straight_right", null},
@@ -235,11 +204,8 @@ public class BuildingPrefabStore : MonoBehaviour
 
     public static IDictionary<string, GameObject> GetRandomWallTileType()
     {
-        //todo commented out until all walls are single tile
-//        var index = Random.Range(0, WallTileTypes.Count);
-//        return WallTileTypes[index];
-
-        return SingleTileBrickWallTiles;
+        var index = Random.Range(0, WallTileTypes.Count);
+        return WallTileTypes[index];
     }
 
     public static List<GameObject> GetRandomFloorTileType()
