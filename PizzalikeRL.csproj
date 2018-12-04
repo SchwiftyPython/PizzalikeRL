@@ -514,6 +514,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderJournalWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PopUpWindow.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\SettlementInfoWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\SystemWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\UnequipButton.cs" />
     <Compile Include="Assets\Resources\Scripts\World\AreaMap.cs" />
@@ -571,6 +572,7 @@
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\WorldGenData.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\WorldGenerationSetupMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldMap.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\WorldTileInfo.cs" />
     <Compile Include="Assets\Resources\Scripts\WorldManager.cs" />
   </ItemGroup>
   <ItemGroup>

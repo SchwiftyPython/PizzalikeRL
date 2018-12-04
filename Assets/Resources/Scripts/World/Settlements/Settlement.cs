@@ -30,6 +30,7 @@ public class Settlement
     {
         Faction = faction;
         Size = size;
+        Name = SettlementPrefabStore.GenerateName();
         _cell = cell;
         _population = population;
 

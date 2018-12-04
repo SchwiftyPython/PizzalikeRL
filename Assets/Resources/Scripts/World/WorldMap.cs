@@ -11,6 +11,7 @@ public class WorldMap : MonoBehaviour
     private GameObject _playerSprite;
 
     public GameObject Camera;
+    public GameObject CellInfoWindow;
 
     public static WorldMap Instance;
 
@@ -50,6 +51,8 @@ public class WorldMap : MonoBehaviour
                     }
                     var instance = Instantiate(prefab, new Vector2(x, y), Quaternion.identity);
                     instance.transform.SetParent(_worldMapHolder);
+                    instance.AddComponent<WorldTileInfo>();
+                    instance.AddComponent<BoxCollider2D>();
                 }
             }
         }

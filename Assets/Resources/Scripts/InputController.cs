@@ -215,6 +215,16 @@ public class InputController : MonoBehaviour
                         hit.collider.GetComponent<EntityInfo>()?.OnRightClick();
                     }
                 }
+                if (currentScene.Equals("WorldMap"))
+                {
+                    var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
+                        Vector2.positiveInfinity);
+
+                    if (hit && !_popupWindowOpen)
+                    {
+                        hit.collider.GetComponent<WorldTileInfo>()?.OnRightClick();
+                    }
+                }
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
