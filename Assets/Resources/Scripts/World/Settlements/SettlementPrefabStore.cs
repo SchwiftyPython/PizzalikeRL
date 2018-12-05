@@ -17,6 +17,8 @@ public class SettlementPrefabStore : MonoBehaviour
 
     private static readonly IDictionary<SettlementSize, List<SettlementPrefab>> SettlementPrefabs = new Dictionary<SettlementSize, List<SettlementPrefab>>();
 
+    private static List<string> _rawNames;
+
     public static IDictionary<char, string> GrassDirtPathTileKeys = new Dictionary<char, string>
     {
         {'0', "path_dirt_vertical_straight_left" },
@@ -111,6 +113,7 @@ public class SettlementPrefabStore : MonoBehaviour
     public static IDictionary<string, GameObject> WastelandDirtPathTiles;
 
     public TextAsset SettlementPrefabFile;
+    public TextAsset SettlementNames;
 
     public static IDictionary<SettlementSize, int> SettlementSizePopulationCaps { get; } = new Dictionary<SettlementSize, int>
     {
@@ -125,8 +128,22 @@ public class SettlementPrefabStore : MonoBehaviour
     private void Start ()
     {
 		LoadPrefabsFromFile();
+        LoadNamesFromFile();
         PopulateTileDictionaries();
 	}
+
+    private void LoadNamesFromFile()
+    {
+        _rawNames = new List<string>();
+
+        var nameFile = SettlementNames.text.Split("\r\n"[0]).ToList();
+
+        foreach (var line in nameFile)
+        {
+            var trimmedLine = line.Trim('\n');
+            _rawNames.Add(trimmedLine);
+        }
+    }
 
     private void LoadPrefabsFromFile()
     {
@@ -394,6 +411,13 @@ public class SettlementPrefabStore : MonoBehaviour
         }
     }
 
+    public static string GenerateName()
+    {
+        //todo generate name based on location name or landmark
+        var index = Random.Range(0, _rawNames.Count);
+        return _rawNames[index];
+    }
+
     public static char[,] Rotate180(char[,] blueprint){
         
         var width = blueprint.GetLength(0);
@@ -427,7 +451,6 @@ public class SettlementPrefabStore : MonoBehaviour
         
         return answer;
     }
-
 
     public static SettlementPrefab GetSettlementPrefab(SettlementSize size)
     {

@@ -6,6 +6,7 @@ Arnold
 Arvid
 Barnaby
 Benson
+Blast
 Boyd
 Brady
 Bran
@@ -28,6 +29,7 @@ Griffon
 Harrison
 Heron
 Horus
+Huge
 Hula
 Inca
 Jamocha
