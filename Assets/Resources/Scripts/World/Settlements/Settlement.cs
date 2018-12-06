@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Settlement
 {
@@ -36,6 +36,24 @@ public class Settlement
 
         PickAreas();
         BuildAreas();
+    }
+
+    public SettlementSdo GetSettlementSdo(CellSdo parentCellSdo)
+    {
+        var sdo = new SettlementSdo
+        {
+            Population = _population,
+            AreaSdos = CellSdo.ConvertAreasForSaving(_areas, parentCellSdo),
+            Buildings = _buildings,
+            CellSdo = parentCellSdo,
+            FactionSdo = FactionSdo.ConvertToFactionSdo(Faction),
+            History = _history,
+            Lots = Lots,
+            Name = Name, 
+            NamedNpcs = _namedNpcs,
+            Size = Size
+        };
+        return sdo;
     }
 
     private void PickAreas()

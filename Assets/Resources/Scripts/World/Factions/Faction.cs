@@ -12,7 +12,7 @@ public class Faction
     private const int MaxRelationshipLevel = 1000;
     private const int MinRelationshipLevel = MaxRelationshipLevel * -1;
 
-    private PopulationType _popType;
+    public PopulationType PopType;
 
     public string Type;
 
@@ -109,7 +109,7 @@ public class Faction
     {
         var roll = Random.Range(0, 100);
 
-        _popType = roll <= 40 ? PopulationType.MixedSpecies : PopulationType.Monospecies;
+        PopType = roll <= 40 ? PopulationType.MixedSpecies : PopulationType.Monospecies;
     }
 
     private void GeneratePopulation()
@@ -120,7 +120,7 @@ public class Faction
         Population = Random.Range(100, 1000);
         
         var availableEntityTypes = new List<string>();
-        if (_popType == PopulationType.MixedSpecies)
+        if (PopType == PopulationType.MixedSpecies)
         {
             availableEntityTypes = new List<string>(EntityTemplateLoader.GetAllEntityTemplateTypes());
         }
@@ -162,7 +162,7 @@ public class Faction
 
         for (var i = 0; i < Population; i += 50)
         {
-            if (_popType == PopulationType.MixedSpecies)
+            if (PopType == PopulationType.MixedSpecies)
             {
                 var index = Random.Range(0, availableEntityTypes.Count);
                 var validPick = false;

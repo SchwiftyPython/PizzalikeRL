@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour
 {
-    [SerializeField]
-    private LayerMask _clickable;
+    private string _areaMapSceneName;
+    private string _worldMapSceneName;
 
     private bool _popupWindowOpen;
 
@@ -37,15 +37,8 @@ public class InputController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        /*
-        BUG: NOT GETTING REFERENCE TO PLAYER IN START
-
-        //while (WorldManager.instance.player == null) {}
-        player = WorldManager.instance.player;
-
-        Debug.Log ("player reference in start: " + player);
-
-        */
+        _areaMapSceneName = GameManager.AreaMapSceneName;
+        _worldMapSceneName = GameManager.WorldMapSceneName;
     }
 
     private void Update()
@@ -183,7 +176,7 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                if (currentScene.Equals("Area") && !ActionWindow.Instance.isActiveAndEnabled &&
+                if (currentScene.Equals(_areaMapSceneName) && !ActionWindow.Instance.isActiveAndEnabled &&
                     !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf)
                 {
                     var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -205,7 +198,7 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(1))
             {
-                if (currentScene.Equals("Area"))
+                if (currentScene.Equals(_areaMapSceneName))
                 {
                     var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
                         Vector2.positiveInfinity);
@@ -215,7 +208,7 @@ public class InputController : MonoBehaviour
                         hit.collider.GetComponent<EntityInfo>()?.OnRightClick();
                     }
                 }
-                if (currentScene.Equals("WorldMap"))
+                if (currentScene.Equals(_worldMapSceneName))
                 {
                     var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
                         Vector2.positiveInfinity);
@@ -228,20 +221,20 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                if (currentScene.Equals("Area"))
+                if (currentScene.Equals(_areaMapSceneName))
                 {
-                    SceneManager.LoadScene("WorldMap");
+                    SceneManager.LoadScene(_worldMapSceneName);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.KeypadPlus))
             {
-                if (currentScene.Equals("WorldMap"))
+                if (currentScene.Equals(_worldMapSceneName))
                 {
                     GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
                     GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
                     GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
-                    SceneManager.LoadScene("Area");
+                    SceneManager.LoadScene(_areaMapSceneName);
                 }
             }
         }

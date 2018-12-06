@@ -1103,11 +1103,11 @@ public class Generator : MonoBehaviour
                     var roll = Random.Range(0.000f, 1.000f);
                     if (roll <= chanceToPlaceCard)
                     {
-                        if (currentCell.PresentFaction == null)
+                        if (currentCell.PresentFactions == null)
                         {
-                            currentCell.PresentFaction = new List<Faction>();
+                            currentCell.PresentFactions = new List<Faction>();
                         }
-                        currentCell.PresentFaction.Add(card);
+                        currentCell.PresentFactions.Add(card);
 
                         CreateSettlement(card, currentCell);
 

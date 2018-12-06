@@ -276,6 +276,11 @@
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Pizza.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\PizzaOrder.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\AreaSdo.cs" />
+    <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\CellSdo.cs" />
+    <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\FactionSdo.cs" />
+    <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\SettlementSdo.cs" />
+    <Compile Include="Assets\Resources\Scripts\Saving and Loading\SaveGameData.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\BodyPartButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterBackgroundOptionButton.cs" />
@@ -383,6 +388,9 @@
     <None Include="Assets\BayatGames\SaveGameFree\Plugins\FullSerializer.xml" />
     <None Include="Assets\Resources\situations.xml" />
     <None Include="Assets\AstarPathfindingProject\link.xml" />
+    <Reference Include="UnityEditor.StandardEvents">
+      <HintPath>C:/Users/Earl of HappyPants/Documents/PizzaLikeRL/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Earl of HappyPants/Documents/PizzaLikeRL/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -391,9 +399,6 @@
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:/Users/Earl of HappyPants/Documents/PizzaLikeRL/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/Earl of HappyPants/Documents/PizzaLikeRL/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity2018/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -596,6 +601,9 @@
     <Reference Include="Pathfinding.Ionic.Zip.Reduced">
       <HintPath>C:/Users/Earl of HappyPants/Documents/PizzaLikeRL/Assets/AstarPathfindingProject/Plugins/DotNetZip/Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
+    <Reference Include="FullSerializer">
+      <HintPath>C:/Users/Earl of HappyPants/Documents/PizzaLikeRL/Assets/BayatGames/SaveGameFree/Plugins/FullSerializer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/Earl of HappyPants/Documents/PizzaLikeRL/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -604,9 +612,6 @@
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/Earl of HappyPants/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="FullSerializer">
-      <HintPath>C:/Users/Earl of HappyPants/Documents/PizzaLikeRL/Assets/BayatGames/SaveGameFree/Plugins/FullSerializer.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity2018/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

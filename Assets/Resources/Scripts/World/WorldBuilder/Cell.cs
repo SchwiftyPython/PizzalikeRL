@@ -46,12 +46,11 @@ public enum BiomeType {
     Water
 }
 
+[Serializable]
 public class Cell
 {
     private const int CellWidth = 3;
     private const int CellHeight = 3;
-
-    private Area _currentArea;
 
     public enum WorldSpriteLayer
     {
@@ -87,8 +86,6 @@ public class Cell
     public bool Collidable;
     public bool FloodFilled;
 
-    public Color Color = Color.black;
-
     public List<River> Rivers = new List<River>();
     public Area[,] Areas = new Area[CellHeight, CellWidth];
 
@@ -96,7 +93,7 @@ public class Cell
 
     public Dictionary<WorldSpriteLayer, GameObject> WorldMapSprite { get; private set; }
 
-    public List<Faction> PresentFaction;
+    public List<Faction> PresentFactions;
 
     public Settlement Settlement;
 
@@ -127,16 +124,6 @@ public class Cell
                     }
                 }
             }
-        }
-    }
-
-    public Area CurrentArea {
-        get {
-            return _currentArea;
-        }
-
-        set {
-            _currentArea = value;
         }
     }
 

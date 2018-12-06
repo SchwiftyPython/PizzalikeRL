@@ -126,7 +126,7 @@ public class WorldData : MonoBehaviour
         {BiomeType.Swamp, new[] {"pepperoni worm"}},
         {BiomeType.Wasteland, new[] {"pepperoni worm"}}
     };
-
+    
     public static WorldData Instance;
 
     private void Awake()
