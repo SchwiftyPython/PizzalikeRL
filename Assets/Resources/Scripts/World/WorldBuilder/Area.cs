@@ -32,6 +32,8 @@ public class Area
 
     public Settlement Settlement;
 
+    public string Id;
+
     private int _x;
 
     public int X
@@ -76,7 +78,7 @@ public class Area
                 {
                     AreaTiles[column , row] = new Tile(texture, new Vector2(column, row), false, false);
                 }
-                AreaTiles[column, row].Visibility = Tile.Visibilities.Invisible;
+                AreaTiles[column, row].Visibility = Visibilities.Invisible;
             }
         }
 

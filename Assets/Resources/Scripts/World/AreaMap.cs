@@ -293,7 +293,7 @@ public class AreaMap : MonoBehaviour
         {
             _player.CurrentCell = _currentArea.ParentCell;
             _currentArea.AreaTiles[(int) _playerSprite.transform.position.x, (int) _playerSprite.transform.position.y]
-                .Visibility = Tile.Visibilities.Visible;
+                .Visibility = Visibilities.Visible;
         }
     }
 

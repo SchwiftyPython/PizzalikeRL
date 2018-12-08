@@ -1,20 +1,23 @@
 ﻿using System;
 using UnityEngine;
 
+public enum Visibilities
+{
+    Invisible,
+    Visible
+}
+
 [Serializable]
 public class Tile
 {
-    public enum Visibilities
-    {
-        Invisible,
-        Visible
-    }
-
     private Visibilities _visibility;
 
     private Entity _presentEntity;
     private Prop _presentProp;
     private Item _presentItem;
+
+    private Rarities _rarity;
+    private int _prefabIndex;
     private GameObject _prefabTexture;
 
     private bool _blocksMovement;
@@ -26,6 +29,7 @@ public class Tile
     public Tile Bottom;
 
     public Vector2 GridPosition;
+    public string Id;
 
     public GameObject FovTile;
     public GameObject FovWallTile;
@@ -52,6 +56,36 @@ public class Tile
         }
     }
 
+    public Item PresentItem {
+        get {
+            return _presentItem;
+        }
+
+        set {
+            _presentItem = value;
+        }
+    }
+
+    public Rarities Rarity {
+        get {
+            return _rarity;
+        }
+
+        set {
+            _rarity = value;
+        }
+    }
+
+    public int PrefabIndex {
+        get {
+            return _prefabIndex;
+        }
+
+        set {
+            _prefabIndex = value;
+        }
+    }
+
     public GameObject TextureInstance;
 
     public Tile()
@@ -63,6 +97,7 @@ public class Tile
         GridPosition = position;
         _blocksMovement = blocksMovement;
         _blocksLight = blocksLight;
+        Id = (int)GridPosition.x + " " + (int)GridPosition.y;
     }
 
     public void SetPresentEntity(Entity entity)

@@ -46,7 +46,7 @@ public class SaveGameData : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        Serializer = new SaveGameBinarySerializer(); 
+        Serializer = new SaveGameXmlSerializer(); 
 
         //todo load game files
     }
@@ -101,26 +101,13 @@ public class SaveGameData : MonoBehaviour
             {
                 var currentCell = map[currentColumn, currentRow];
 
-                var tempSdo = new CellSdo
-                {
-                    BiomeType = currentCell.BiomeType,
-                    X = currentCell.X,
-                    Y = currentCell.Y,
-                    Rivers = currentCell.Rivers,
-                    WorldMapSprite = currentCell.WorldMapSprite,
-                    PresentFactionSdos = currentCell.PresentFactions == null
-                        ? null
-                        : FactionSdo.ConvertToFactionSdos(currentCell.PresentFactions),
-                    
-                };
-
-                tempSdo.AreaSdos = CellSdo.ConvertAreasForSaving(currentCell.Areas, tempSdo);
-                tempSdo.SettlementSdo = currentCell.Settlement?.GetSettlementSdo(tempSdo);
+                var tempSdo = CellSdo.ConvertToCellSdo(currentCell);
 
                 convertedCells[currentColumn, currentRow] = tempSdo;
             }
         }
 
+        Debug.Log("Map cells converted to cellSdos.");
 
         var index = 0;
         var single = new CellSdo[width * height];

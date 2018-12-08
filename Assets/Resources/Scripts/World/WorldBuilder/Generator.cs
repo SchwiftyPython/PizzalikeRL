@@ -303,7 +303,8 @@ public class Generator : MonoBehaviour
                 var c = new Cell
                 {
                     X = x,
-                    Y = y
+                    Y = y,
+                    Id = x + " " + y
                 };
 
                 var heightValue = _heightData.Data[x, y];
@@ -726,7 +727,7 @@ public class Generator : MonoBehaviour
                             for (var j = 0; j < _riverGroups[i].Rivers.Count; j++)
                             {
                                 var river = _riverGroups[i].Rivers[j];
-                                if (river.ID == tileriver.ID)
+                                if (river.Id == tileriver.Id)
                                 {
                                     group = _riverGroups[i];
                                 }
@@ -1113,11 +1114,15 @@ public class Generator : MonoBehaviour
 
                         var index = Random.Range(0, settlementFloorTiles.Length);
 
-                        currentCell.WorldMapSprite[Cell.WorldSpriteLayer.SettlementFloor] = settlementFloorTiles[index];
+                        currentCell.WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementFloor] = index;
+
+                        currentCell.WorldMapSprite.Layers[WorldSpriteLayer.SettlementFloor] = settlementFloorTiles[index];
 
                         index = Random.Range(0, settlementWallTiles.Length);
 
-                        currentCell.WorldMapSprite[Cell.WorldSpriteLayer.SettlementWall] = settlementWallTiles[index];
+                        currentCell.WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementWall] = index;
+
+                        currentCell.WorldMapSprite.Layers[WorldSpriteLayer.SettlementWall] = settlementWallTiles[index];
                         placed = true;
                         //Debug.Log(card + " placed at " + currentX + ", " + currentY);
                     }

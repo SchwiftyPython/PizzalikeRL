@@ -4,17 +4,17 @@ using System.Collections.Generic;
 [Serializable]
 public class SettlementSdo
 {
-    public int Population;
-
     public CellSdo CellSdo;
+
+    public List<AreaSdo> AreaSdos;
+
+    public int Population;
 
     public int YearFounded;
 
     public string History;
 
-    public List<Entity> NamedNpcs;
-
-    public List<AreaSdo> AreaSdos;
+    public List<EntitySdo> CitizenSdos;
 
     public List<Building> Buildings;
 

@@ -42,15 +42,15 @@ public class Settlement
     {
         var sdo = new SettlementSdo
         {
-            Population = _population,
-            AreaSdos = CellSdo.ConvertAreasForSaving(_areas, parentCellSdo),
-            Buildings = _buildings,
             CellSdo = parentCellSdo,
+            AreaSdos = AreaSdo.ConvertAreasForSaving(_areas),
+            Population = _population,
+            Buildings = _buildings,
             FactionSdo = FactionSdo.ConvertToFactionSdo(Faction),
             History = _history,
             Lots = Lots,
             Name = Name, 
-            NamedNpcs = _namedNpcs,
+            CitizenSdos = EntitySdo.ConvertToEntitySdos(_namedNpcs),
             Size = Size
         };
         return sdo;

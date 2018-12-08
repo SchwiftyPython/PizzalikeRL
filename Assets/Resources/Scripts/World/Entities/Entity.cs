@@ -50,12 +50,16 @@ public class Entity
 
     private readonly GameObject _prefab;
     private GameObject _sprite;
-    
-    private readonly Faction _faction;
 
-    private int _totalBodyPartCoverage;
+    public readonly Faction Faction;
+
+    public int TotalBodyPartCoverage { get; private set; }
 
     private Vector3 _currentPosition;
+
+    public string PrefabPath;
+
+    public Guid Id;
 
     //Base stats
 
@@ -105,10 +109,12 @@ public class Entity
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
     {
+        Id = Guid.NewGuid();
+
         _isPlayer = isPlayer;
         EntityType = template.Type;
         Classification = template.Classification;
-        _faction = faction;
+        Faction = faction;
 
         if (isPlayer)
         {
@@ -133,6 +139,7 @@ public class Entity
         _isWild = template.Wild;
         Mobile = true;
 
+        PrefabPath = template.SpritePath;
         _prefab = Resources.Load(template.SpritePath) as GameObject;
         
         Inventory = new Dictionary<Guid, Item>();
@@ -323,7 +330,12 @@ public class Entity
 
     private void CalculateTotalBodyPartCoverage()
     {
-        _totalBodyPartCoverage = (from bp in Body.Values select bp.Coverage).Sum();
+        TotalBodyPartCoverage = (from bp in Body.Values select bp.Coverage).Sum();
+    }
+
+    public EntitySdo ConvertToEntitySdo()
+    {
+        return EntitySdo.ConvertToEntitySdo(this);
     }
 
     public bool IsPlayer()
@@ -750,7 +762,7 @@ public class Entity
 
             var roll = DiceRoller.Instance.RollDice(dice);
 
-            var chanceToHit = (float)part.Coverage / (float)_totalBodyPartCoverage * 100;
+            var chanceToHit = (float)part.Coverage / (float)TotalBodyPartCoverage * 100;
 
             partHit = roll <= chanceToHit;
 

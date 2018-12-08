@@ -41,9 +41,9 @@ public class WorldMap : MonoBehaviour
         {
             for (var y = 0; y < _mapHeight; y++)
             {
-                foreach (var layer in _map[x, y].WorldMapSprite.Keys)
+                foreach (var layer in _map[x, y].WorldMapSprite.Layers.Keys)
                 {
-                    var prefab = _map[x, y].WorldMapSprite[layer];
+                    var prefab = _map[x, y].WorldMapSprite.Layers[layer];
 
                     if (prefab == null)
                     {

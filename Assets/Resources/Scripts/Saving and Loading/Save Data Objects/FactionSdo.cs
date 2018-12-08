@@ -13,7 +13,7 @@ public class FactionSdo
 
     public int Population;
 
-    public List<Entity> Citizens;
+    public List<EntitySdo> CitizenSdos;
 
     public Entity Leader;
 
@@ -21,34 +21,20 @@ public class FactionSdo
 
     public static List<FactionSdo> ConvertToFactionSdos(List<Faction> factions)
     {
-        List<FactionSdo> list = new List<FactionSdo>();
-        foreach (var faction in factions)
-        {
-            var sdo = new FactionSdo();
-            sdo.PopType = faction.PopType;
-            sdo.Relationships = faction.Relationships;
-            sdo.Citizens = faction.Citizens;
-            sdo.EntitiesWithFluff = faction.EntitiesWithFluff;
-            sdo.Leader = faction.Leader;
-            sdo.Name = faction.Name;
-            sdo.Population = faction.Population;
-            list.Add(sdo);
-        }
-
-        return list;
+        return factions.Select(ConvertToFactionSdo).ToList();
     }
 
     public static FactionSdo ConvertToFactionSdo(Faction faction)
     {
-        var sdo = new FactionSdo();
-        sdo.PopType = faction.PopType;
-        sdo.Relationships = faction.Relationships;
-        sdo.Citizens = faction.Citizens;
-        sdo.EntitiesWithFluff = faction.EntitiesWithFluff;
-        sdo.Leader = faction.Leader;
-        sdo.Name = faction.Name;
-        sdo.Population = faction.Population;
-
-        return sdo;
+        return new FactionSdo
+        {
+            PopType = faction.PopType,
+            Relationships = faction.Relationships,
+            CitizenSdos = EntitySdo.ConvertToEntitySdos(faction.Citizens),
+            EntitiesWithFluff = faction.EntitiesWithFluff,
+            Leader = faction.Leader,
+            Name = faction.Name,
+            Population = faction.Population
+        };
     }
 }

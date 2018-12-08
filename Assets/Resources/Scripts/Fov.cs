@@ -66,7 +66,7 @@ public class Fov : MonoBehaviour
                 if (fullShadow)
                 {
                     var tile = _grid[pos.X, pos.Y];
-                    tile.Visibility = Tile.Visibilities.Invisible;
+                    tile.Visibility = Visibilities.Invisible;
                 }
                 else
                 {
@@ -80,11 +80,11 @@ public class Fov : MonoBehaviour
 
                     if (!visible)
                     {
-                        tile.Visibility = Tile.Visibilities.Invisible;
+                        tile.Visibility = Visibilities.Invisible;
                     }
                     else
                     {
-                        tile.Visibility = Tile.Visibilities.Visible;
+                        tile.Visibility = Visibilities.Visible;
                         tile.Revealed = true;
                     }
 

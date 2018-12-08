@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-public class EntityTemplate {
-
+public class EntityTemplate
+{
     [XmlAttribute("type")]
     public string Type;
 
