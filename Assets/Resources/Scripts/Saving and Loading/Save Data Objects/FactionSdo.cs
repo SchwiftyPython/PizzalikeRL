@@ -7,7 +7,7 @@ public class FactionSdo
 {
     public Faction.PopulationType PopType;
 
-    public Dictionary<string, int> Relationships; //<Faction Name, Affection Level>
+    public Faction.RelationshipDictionary Relationships; 
 
     public string Name;
 

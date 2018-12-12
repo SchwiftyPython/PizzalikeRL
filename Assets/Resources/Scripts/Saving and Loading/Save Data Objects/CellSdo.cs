@@ -25,18 +25,18 @@ public class CellSdo
         var sdo = new CellSdo
         {
             BiomeType = cell.BiomeType,
-            X = cell.X,
-            Y = cell.Y,
-            Id = cell.Id,
-            RiverSdos = RiverSdo.ConvertToRiverSdos(cell.Rivers),
-            WorldMapSpriteData = cell.WorldMapSprite.LayerPrefabIndexes,
-            PresentFactionSdos = cell.PresentFactions == null
-                ? null
-                : FactionSdo.ConvertToFactionSdos(cell.PresentFactions)
+//            X = cell.X,
+//            Y = cell.Y,
+//            Id = cell.Id,
+//            RiverSdos = RiverSdo.ConvertToRiverSdos(cell.Rivers),
+//            WorldMapSpriteData = cell.WorldMapSprite.LayerPrefabIndexes,
+//            PresentFactionSdos = cell.PresentFactions == null
+//                ? null
+//                : FactionSdo.ConvertToFactionSdos(cell.PresentFactions)
         };
 
-        sdo.AreaSdos = AreaSdo.ConvertAreasForSaving(cell.Areas, sdo);
-        sdo.SettlementSdo = cell.Settlement?.GetSettlementSdo(sdo);
+//        sdo.AreaSdos = AreaSdo.ConvertAreasForSaving(cell.Areas, sdo);
+//        sdo.SettlementSdo = cell.Settlement?.GetSettlementSdo(sdo);
 
         return sdo;
     }
