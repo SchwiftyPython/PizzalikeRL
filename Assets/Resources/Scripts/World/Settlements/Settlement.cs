@@ -42,8 +42,7 @@ public class Settlement
     {
         var sdo = new SettlementSdo
         {
-            CellSdo = parentCellSdo,
-            AreaSdos = AreaSdo.ConvertAreasForSaving(_areas),
+            CellId = parentCellSdo.Id,
             Population = _population,
             Buildings = _buildings,
             FactionSdo = FactionSdo.ConvertToFactionSdo(Faction),

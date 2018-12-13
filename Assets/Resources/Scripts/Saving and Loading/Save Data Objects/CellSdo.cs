@@ -14,7 +14,7 @@ public class CellSdo
 
     public AreaSdo[] AreaSdos;
 
-    public Dictionary<WorldSpriteLayer, int> WorldMapSpriteData { get; set; }
+    public WorldTile.LayerPrefabIndexDictionary WorldMapSpriteData { get; set; }
 
     public List<FactionSdo> PresentFactionSdos;
 

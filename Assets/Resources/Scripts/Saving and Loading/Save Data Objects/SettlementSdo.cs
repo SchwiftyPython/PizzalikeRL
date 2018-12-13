@@ -4,10 +4,10 @@ using System.Collections.Generic;
 [Serializable]
 public class SettlementSdo
 {
-    public CellSdo CellSdo;
+    public string CellId;
 
-    public List<AreaSdo> AreaSdos;
-
+    public List<string> AreaIds;
+ 
     public int Population;
 
     public int YearFounded;

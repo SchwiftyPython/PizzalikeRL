@@ -12,7 +12,7 @@ public class EntitySdo
 
     public string PrefabPath;
 
-    public FactionSdo FactionSdo;
+    public string FactionName;
 
     public int TotalBodyPartCoverage;
 
@@ -37,12 +37,12 @@ public class EntitySdo
     public int Speed { get;  set; }
 
     public int Defense { get;  set; }
+   
+    public Entity.InventoryDictionary Inventory { get; set; }
 
-    public IDictionary<Guid, Item> Inventory { get; set; }
+    public Entity.EquippedDictionary Equipped;
 
-    public IDictionary<BodyPart, Item> Equipped;
-
-    public IDictionary<Guid, BodyPart> Body { get; set; } = new Dictionary<Guid, BodyPart>();
+    public Entity.BodyDictionary Body { get; set; } 
 
     public string EntityType { get; set; }
 
@@ -52,11 +52,11 @@ public class EntitySdo
 
     public Stack<Goal> Goals;
 
-    public CellSdo CurrentCellSdo;
+    public string CurrentCellId;
 
-    public AreaSdo CurrentAreaSdo;
+    public string CurrentAreaId;
 
-    public TileSdo CurrentTileSdo;
+    public string CurrentTileId;
 
     public bool Mobile;
 
@@ -72,7 +72,7 @@ public class EntitySdo
             Id = entity.Id,
             IsPlayer = entity.IsPlayer(),
             PrefabPath = entity.PrefabPath,
-            FactionSdo = FactionSdo.ConvertToFactionSdo(entity.Faction),
+            FactionName = entity.Faction.Name,
             TotalBodyPartCoverage = entity.TotalBodyPartCoverage,
             CurrentPosition = entity.CurrentPosition,
             Level = entity.Level,
@@ -92,9 +92,9 @@ public class EntitySdo
             Classification = entity.Classification,
             Fluff = entity.Fluff,
             Goals = entity.Goals,
-            CurrentCellSdo = CellSdo.ConvertToCellSdo(entity.CurrentCell),
-            CurrentAreaSdo = AreaSdo.ConvertAreaForSaving(entity.CurrentArea),
-            CurrentTileSdo = TileSdo.ConvertToTileSdo(entity.CurrentTile),
+            CurrentCellId = entity.CurrentCell.Id,
+            CurrentAreaId = entity.CurrentArea.Id,
+            CurrentTileId = entity.CurrentTile.Id,
             Mobile = entity.Mobile
         };
     }

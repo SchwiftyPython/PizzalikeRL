@@ -15,7 +15,7 @@ public class FactionSdo
 
     public List<EntitySdo> CitizenSdos;
 
-    public Entity Leader;
+    public EntitySdo Leader;
 
     public List<Entity> EntitiesWithFluff;
 
@@ -32,7 +32,7 @@ public class FactionSdo
             Relationships = faction.Relationships,
             CitizenSdos = EntitySdo.ConvertToEntitySdos(faction.Citizens),
             EntitiesWithFluff = faction.EntitiesWithFluff,
-            Leader = faction.Leader,
+            Leader = EntitySdo.ConvertToEntitySdo(faction.Leader),
             Name = faction.Name,
             Population = faction.Population
         };

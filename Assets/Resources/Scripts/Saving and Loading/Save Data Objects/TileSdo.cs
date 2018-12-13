@@ -4,7 +4,7 @@ public class TileSdo
 {
     public Visibilities Visibility;
 
-    public Entity PresentEntity;
+    public EntitySdo PresentEntitySdo;
 
     //public Prop PresentProp;
 
@@ -50,7 +50,7 @@ public class TileSdo
         return new TileSdo
         {
             Visibility = tile.Visibility,
-            PresentEntity = tile.GetPresentEntity(),
+            PresentEntitySdo = EntitySdo.ConvertToEntitySdo(tile.GetPresentEntity()),
             PresentItem = tile.PresentItem,
             Rarity = tile.Rarity,
             PrefabIndex = tile.PrefabIndex,

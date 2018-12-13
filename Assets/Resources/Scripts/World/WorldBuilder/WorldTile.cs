@@ -15,13 +15,16 @@ public enum WorldSpriteLayer
 
 public class WorldTile
 {
-    public Dictionary<WorldSpriteLayer, int> LayerPrefabIndexes;
+    [Serializable]
+    public class LayerPrefabIndexDictionary : SerializableDictionary<WorldSpriteLayer, int> { }
+
+    public LayerPrefabIndexDictionary LayerPrefabIndexes;
 
     public Dictionary<WorldSpriteLayer, GameObject> Layers;
 
     public WorldTile()
     {
-        LayerPrefabIndexes = new Dictionary<WorldSpriteLayer, int>();
+        LayerPrefabIndexes = new LayerPrefabIndexDictionary();
         Layers = new Dictionary<WorldSpriteLayer, GameObject>();
 
         var layers = (WorldSpriteLayer[])Enum.GetValues(typeof(WorldSpriteLayer));

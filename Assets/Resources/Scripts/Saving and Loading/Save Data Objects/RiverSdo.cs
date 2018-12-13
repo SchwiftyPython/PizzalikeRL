@@ -6,7 +6,7 @@ using System.Linq;
 public class RiverSdo
 {
     public int Length;
-    public int Id; //todo could probably rebuild cell list based on id. May not matter
+    public int Id; 
 
     public static List<RiverSdo> ConvertToRiverSdos(List<River> rivers)
     {
