@@ -46,7 +46,7 @@ public class SaveGameData : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        Serializer = new SaveGameXmlSerializer(); 
+        Serializer = new SaveGameBinarySerializer(); 
 
         //todo load game files
     }

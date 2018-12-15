@@ -16,7 +16,7 @@ public class CellSdo
 
     public WorldTile.LayerPrefabIndexDictionary WorldMapSpriteData { get; set; }
 
-    public List<FactionSdo> PresentFactionSdos;
+    public List<string> PresentFactionNames;
 
     public SettlementSdo SettlementSdo;
 
@@ -25,18 +25,35 @@ public class CellSdo
         var sdo = new CellSdo
         {
             BiomeType = cell.BiomeType,
-//            X = cell.X,
-//            Y = cell.Y,
-//            Id = cell.Id,
-//            RiverSdos = RiverSdo.ConvertToRiverSdos(cell.Rivers),
-//            WorldMapSpriteData = cell.WorldMapSprite.LayerPrefabIndexes,
-//            PresentFactionSdos = cell.PresentFactions == null
-//                ? null
-//                : FactionSdo.ConvertToFactionSdos(cell.PresentFactions)
+            X = cell.X,
+            Y = cell.Y,
+            Id = cell.Id,
+            RiverSdos = RiverSdo.ConvertToRiverSdos(cell.Rivers),
+            WorldMapSpriteData = cell.WorldMapSprite.LayerPrefabIndexes,
+            PresentFactionNames = new List<string>()
         };
 
-//        sdo.AreaSdos = AreaSdo.ConvertAreasForSaving(cell.Areas, sdo);
-//        sdo.SettlementSdo = cell.Settlement?.GetSettlementSdo(sdo);
+        if (cell.PresentFactions != null)
+        {
+            foreach (var faction in cell.PresentFactions)
+            {
+                sdo.PresentFactionNames.Add(faction.Name);
+            }
+        }
+        
+        sdo.AreaSdos = AreaSdo.ConvertAreasForSaving(cell.Areas);
+        sdo.SettlementSdo = cell.Settlement?.GetSettlementSdo();
+
+        if (sdo.SettlementSdo != null)
+        {
+            foreach (var areaSdo in sdo.AreaSdos)
+            {
+                if (cell.Areas[areaSdo.X, areaSdo.Y].Settlement != null)
+                {
+                    areaSdo.SettlementSdo = sdo.SettlementSdo;
+                }
+            }
+        }
 
         return sdo;
     }

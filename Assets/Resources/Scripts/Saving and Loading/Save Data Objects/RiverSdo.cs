@@ -6,14 +6,27 @@ using System.Linq;
 public class RiverSdo
 {
     public int Length;
-    public int Id; 
+    public int Id;
+
+    public List<string> CellIds;
 
     public static List<RiverSdo> ConvertToRiverSdos(List<River> rivers)
     {
-        return rivers.Select(river => new RiverSdo
+        return rivers.Select(river =>
             {
-                Length = river.Length,
-                Id = river.Id
+                var sdo = new RiverSdo
+                {
+                    Length = river.Length,
+                    Id = river.Id,
+                    CellIds = new List<string>()
+                };
+
+                foreach (var cell in river.Cells)
+                {
+                    sdo.CellIds.Add(cell.Id);
+                }
+
+                return sdo;
             })
             .ToList();
     }

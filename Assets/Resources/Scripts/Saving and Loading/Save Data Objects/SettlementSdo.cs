@@ -14,7 +14,7 @@ public class SettlementSdo
 
     public string History;
 
-    public List<EntitySdo> CitizenSdos;
+    public List<Guid> CitizenIds;
 
     public List<Building> Buildings;
 
@@ -24,5 +24,5 @@ public class SettlementSdo
 
     public List<Lot> Lots;
 
-    public FactionSdo FactionSdo;
+    public string FactionName;
 }

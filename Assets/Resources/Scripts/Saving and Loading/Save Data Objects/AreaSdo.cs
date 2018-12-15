@@ -4,23 +4,25 @@ using System.Collections.Generic;
 [Serializable]
 public class AreaSdo
 {
-    public List<Entity> PresentEntities { get; set; }
+    public List<Guid> PresentEntityIds { get; set; }
 
-    public List<FactionSdo> PresentFactions { get; set; }
-    
+    public List<string> PresentFactionNames;
+
     public BiomeType BiomeType { get; set; }
 
-    public Tile[] AreaTiles { get; set; }
+    public TileSdo[] AreaTiles { get; set; }
 
-    public Queue<Entity> TurnOrder { get; set; }
+    public Queue<Guid> TurnOrderIds { get; set; }
 
     public SettlementSdo SettlementSdo;
+
+    public string ParentCellId;
 
     public int X;
 
     public int Y;
 
-    public static AreaSdo[] ConvertAreasForSaving(Area[,] areas, CellSdo parentCellSdo)
+    public static AreaSdo[] ConvertAreasForSaving(Area[,] areas)
     {
         var width = areas.GetLength(0);
         var height = areas.GetLength(1);
@@ -62,24 +64,30 @@ public class AreaSdo
         return sdos;
     }
 
-    public static AreaSdo ConvertAreaForSaving(Area areas)
+    public static AreaSdo ConvertAreaForSaving(Area area)
     {
         var tempSdo = new AreaSdo
         {
-            //PresentEntities = currentArea.PresentEntities,
-            /*AreaTiles = currentArea.AreaBuilt()
-                ? AreaSdo.ConvertAreaTilesForSaving(currentArea.AreaTiles)
+            PresentEntityIds = new List<Guid>(),
+            AreaTiles = area.AreaBuilt()
+                ? TileSdo.ConvertAreaTilesForSaving(area.AreaTiles)
                 : null,
-            BiomeType = currentArea.BiomeType,
-            PresentFactions = currentArea.PresentFactions == null
-                ? null
-                : FactionSdo.ConvertToFactionSdos(currentArea.PresentFactions),
-            
-            Settlement = currentArea.Settlement,
-            TurnOrder = currentArea.TurnOrder,
-            X = currentArea.X,
-            Y = currentArea.Y*/
+            BiomeType = area.BiomeType,
+            PresentFactionNames = new List<string>(),
+            TurnOrderIds = new Queue<Guid>(),
+            X = area.X,
+            Y = area.Y,
+            ParentCellId = area.ParentCell.Id
         };
+
+        if (area.TurnOrder != null)
+        {
+            foreach (var entity in area.TurnOrder)
+            {
+                tempSdo.TurnOrderIds.Enqueue(entity.Id);
+            }
+        }
+
         return tempSdo;
     }
 }

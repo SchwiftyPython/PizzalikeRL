@@ -6,7 +6,10 @@ public class Building
     public GameObject[,] FloorTiles;
     public GameObject[,] WallTiles;
 
+    public int WallTypeIndex;
     public IDictionary<string, GameObject> WallTilePrefabs;
+
+    public int FloorTypeIndex;
     public List<GameObject> FloorTilePrefabs;
 
     public int Width;
@@ -56,8 +59,11 @@ public class Building
 
     private void PickTilePrefabs()
     {
-        WallTilePrefabs = BuildingPrefabStore.GetRandomWallTileType();
-        FloorTilePrefabs = BuildingPrefabStore.GetRandomFloorTileType();
+        WallTypeIndex = BuildingPrefabStore.GetRandomWallTypeIndex();
+        WallTilePrefabs = BuildingPrefabStore.GetWallTileTypeAt(WallTypeIndex);
+
+        FloorTypeIndex = BuildingPrefabStore.GetRandomFloorTypeIndex();
+        FloorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
     }
 
     private GameObject GetRandomFloorTilePrefab()

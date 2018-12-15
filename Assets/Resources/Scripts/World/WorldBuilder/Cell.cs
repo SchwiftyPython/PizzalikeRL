@@ -203,7 +203,7 @@ public class Cell
         HeightValue = 0;
         Collidable = false;
 
-        Debug.Log($"River exists in Cell {X}, {Y}");
+        //Debug.Log($"River exists in Cell {X}, {Y}");
     }
 
     public void DigRiver(River river, int size) {

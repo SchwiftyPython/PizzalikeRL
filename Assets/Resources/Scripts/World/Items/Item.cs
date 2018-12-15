@@ -6,7 +6,7 @@ public class Item
     protected GameObject Prefab;
     protected GameObject Sprite;
 
-    protected ItemRarity Rarity;
+    public ItemRarity Rarity;
 
     public string BodyPartCategory;
     public string ItemType;

@@ -13,11 +13,11 @@ public class FactionSdo
 
     public int Population;
 
-    public List<EntitySdo> CitizenSdos;
+    public List<Guid> CitizenIds;
 
-    public EntitySdo Leader;
+    public Guid LeaderId;
 
-    public List<Entity> EntitiesWithFluff;
+    public List<Guid> EntitiesWithFluffIds;
 
     public static List<FactionSdo> ConvertToFactionSdos(List<Faction> factions)
     {
@@ -26,15 +26,27 @@ public class FactionSdo
 
     public static FactionSdo ConvertToFactionSdo(Faction faction)
     {
-        return new FactionSdo
+        var sdo = new FactionSdo
         {
             PopType = faction.PopType,
             Relationships = faction.Relationships,
-            CitizenSdos = EntitySdo.ConvertToEntitySdos(faction.Citizens),
-            EntitiesWithFluff = faction.EntitiesWithFluff,
-            Leader = EntitySdo.ConvertToEntitySdo(faction.Leader),
+            CitizenIds = new List<Guid>(),
+            EntitiesWithFluffIds = new List<Guid>(),
+            LeaderId = faction.Leader.Id,
             Name = faction.Name,
             Population = faction.Population
         };
+
+        foreach (var citizen in faction.Citizens)
+        {
+            sdo.CitizenIds.Add(citizen.Id);
+        }
+
+        foreach (var entity in faction.EntitiesWithFluff)
+        {
+            sdo.EntitiesWithFluffIds.Add(entity.Id);
+        }
+
+        return sdo;
     }
 }

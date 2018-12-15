@@ -72,7 +72,7 @@ public class EntitySdo
             Id = entity.Id,
             IsPlayer = entity.IsPlayer(),
             PrefabPath = entity.PrefabPath,
-            FactionName = entity.Faction.Name,
+            FactionName = entity.Faction?.Name,
             TotalBodyPartCoverage = entity.TotalBodyPartCoverage,
             CurrentPosition = entity.CurrentPosition,
             Level = entity.Level,
@@ -92,9 +92,9 @@ public class EntitySdo
             Classification = entity.Classification,
             Fluff = entity.Fluff,
             Goals = entity.Goals,
-            CurrentCellId = entity.CurrentCell.Id,
-            CurrentAreaId = entity.CurrentArea.Id,
-            CurrentTileId = entity.CurrentTile.Id,
+            CurrentCellId = entity.CurrentCell?.Id,
+            CurrentAreaId = entity.CurrentArea?.Id,
+            CurrentTileId = entity.CurrentTile?.Id,
             Mobile = entity.Mobile
         };
     }

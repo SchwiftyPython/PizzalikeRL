@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 public class Settlement
@@ -17,7 +18,7 @@ public class Settlement
     private readonly Cell _cell;
     private int _yearFounded;
     private string _history;
-    private List<Entity> _namedNpcs;
+    private List<Entity> _citizens;
     private List<Area> _areas;
     private List<Building> _buildings;
 
@@ -38,20 +39,29 @@ public class Settlement
         BuildAreas();
     }
 
-    public SettlementSdo GetSettlementSdo(CellSdo parentCellSdo)
+    public SettlementSdo GetSettlementSdo()
     {
         var sdo = new SettlementSdo
         {
-            CellId = parentCellSdo.Id,
+            CellId = _cell.Id,
             Population = _population,
             Buildings = _buildings,
-            FactionSdo = FactionSdo.ConvertToFactionSdo(Faction),
+            FactionName = Faction.Name,
             History = _history,
             Lots = Lots,
             Name = Name, 
-            CitizenSdos = EntitySdo.ConvertToEntitySdos(_namedNpcs),
+            CitizenIds = new List<Guid>(),
             Size = Size
         };
+
+        if (_citizens != null)
+        {
+            foreach (var citizen in _citizens)
+            {
+                sdo.CitizenIds.Add(citizen.Id);
+            }
+        }
+
         return sdo;
     }
 

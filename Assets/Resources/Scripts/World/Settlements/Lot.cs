@@ -21,13 +21,6 @@ public class Lot
         UpperRightCorner = new Vector2(UpperLeftCorner.x + Width, UpperLeftCorner.y);
         LowerRightCorner = new Vector2(UpperRightCorner.x, UpperRightCorner.y + Height);
         LowerLeftCorner = new Vector2(UpperLeftCorner.x, UpperLeftCorner.y + Height);
-
-//        Debug.Log($"Lot upper left corner: {UpperLeftCorner}");
-//        Debug.Log($"Lot upper right corner: {UpperRightCorner}");
-//        Debug.Log($"Lot lower right corner: {LowerRightCorner}");
-//        Debug.Log($"Lot lower left corner: {LowerLeftCorner}");
-//        Debug.Log($"Lot height: {Height}");
-//        Debug.Log($"Lot width: {Width}");
     }
 
     public bool IsPartOfLot(Vector2 point)

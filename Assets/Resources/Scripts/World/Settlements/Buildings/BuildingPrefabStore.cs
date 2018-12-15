@@ -202,15 +202,23 @@ public class BuildingPrefabStore : MonoBehaviour
         return buildingsThatWillFit[Random.Range(0, buildingsThatWillFit.Count)];
     }
 
-    public static IDictionary<string, GameObject> GetRandomWallTileType()
+    public static int GetRandomWallTypeIndex()
     {
-        var index = Random.Range(0, WallTileTypes.Count);
+        return Random.Range(0, WallTileTypes.Count);
+    }
+
+    public static IDictionary<string, GameObject> GetWallTileTypeAt(int index)
+    {
         return WallTileTypes[index];
     }
 
-    public static List<GameObject> GetRandomFloorTileType()
+    public static int GetRandomFloorTypeIndex()
     {
-        var index = Random.Range(0, FloorTileTypes.Count);
+        return Random.Range(0, FloorTileTypes.Count);
+    }
+
+    public static List<GameObject> GetFloorTileTypeAt(int index)
+    {
         return FloorTileTypes[index];
     }
 }

@@ -1,4 +1,7 @@
-﻿public class Dice
+﻿using System;
+
+[Serializable]
+public class Dice
 {
     public int NumDice { get; set; }
     public int NumSides { get; set; }

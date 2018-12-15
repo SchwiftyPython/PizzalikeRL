@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+[Serializable]
 public class TileSdo
 {
     public Visibilities Visibility;
 
-    public EntitySdo PresentEntitySdo;
+    public Guid PresentEntityId;
 
     //public Prop PresentProp;
 
@@ -24,10 +26,8 @@ public class TileSdo
 
     public bool Revealed;
 
-    public Lot Lot;
-
-    //public GameObject PresentWallTile { get; set; } //todo WallTile object with type and index
-
+    public LotSdo LotSdo;
+    
     public static TileSdo[] ConvertAreaTilesForSaving(Tile[,] map)
     {
         var index = 0;
@@ -50,7 +50,9 @@ public class TileSdo
         return new TileSdo
         {
             Visibility = tile.Visibility,
-            PresentEntitySdo = EntitySdo.ConvertToEntitySdo(tile.GetPresentEntity()),
+            PresentEntityId = tile.GetPresentEntity() != null
+                ? tile.GetPresentEntity().Id
+                : Guid.Empty,
             PresentItem = tile.PresentItem,
             Rarity = tile.Rarity,
             PrefabIndex = tile.PrefabIndex,
@@ -59,7 +61,7 @@ public class TileSdo
             GridPosition = tile.GridPosition,
             Id = tile.Id,
             Revealed = tile.Revealed,
-            Lot = tile.Lot
+            LotSdo = LotSdo.ConvertToLotSdo(tile.Lot)
         };
     }
 }
