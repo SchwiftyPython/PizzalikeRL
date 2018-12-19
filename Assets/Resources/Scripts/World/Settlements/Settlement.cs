@@ -45,10 +45,10 @@ public class Settlement
         {
             CellId = _cell.Id,
             Population = _population,
-            Buildings = _buildings,
+            BuildingSdos = BuildingSdo.ConverToBuildingSdos(_buildings),
             FactionName = Faction.Name,
             History = _history,
-            Lots = Lots,
+            LotSdos = LotSdo.ConverToLotSdos(Lots),
             Name = Name, 
             CitizenIds = new List<Guid>(),
             Size = Size

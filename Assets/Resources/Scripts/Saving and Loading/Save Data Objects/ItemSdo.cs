@@ -14,4 +14,17 @@ public class ItemSdo
     public Guid Id;
 
     public Dice ItemDice;
+
+    public static ItemSdo ConvertToItemSdo(Item item)
+    {
+        return new ItemSdo
+        {
+            Rarity = item.Rarity,
+            BodyPartCategory = item.BodyPartCategory,
+            ItemType = item.ItemType,
+            ItemCategory = item.ItemCategory,
+            Id = item.Id,
+            ItemDice = item.ItemDice
+        };
+    }
 }

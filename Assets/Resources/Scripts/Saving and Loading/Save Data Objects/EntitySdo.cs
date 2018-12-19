@@ -38,9 +38,9 @@ public class EntitySdo
 
     public int Defense { get;  set; }
    
-    public Entity.InventoryDictionary Inventory { get; set; }
+    public List<Guid> InventoryItemIds { get; set; }
 
-    public Entity.EquippedDictionary Equipped;
+    public IDictionary<BodyPart, Guid> EquippedIds;
 
     public Entity.BodyDictionary Body { get; set; } 
 
@@ -67,7 +67,7 @@ public class EntitySdo
 
     public static EntitySdo ConvertToEntitySdo(Entity entity)
     {
-        return new EntitySdo
+        var sdo =  new EntitySdo
         {
             Id = entity.Id,
             IsPlayer = entity.IsPlayer(),
@@ -85,8 +85,8 @@ public class EntitySdo
             CurrentHp = entity.CurrentHp,
             Speed = entity.Speed,
             Defense = entity.Defense,
-            Inventory = entity.Inventory,
-            Equipped = entity.Equipped,
+            InventoryItemIds = new List<Guid>(),
+            EquippedIds = new Dictionary<BodyPart, Guid>(),
             Body = entity.Body,
             EntityType = entity.EntityType,
             Classification = entity.Classification,
@@ -97,5 +97,47 @@ public class EntitySdo
             CurrentTileId = entity.CurrentTile?.Id,
             Mobile = entity.Mobile
         };
+
+        foreach (var itemId in entity.Inventory.Keys)
+        {
+            sdo.InventoryItemIds.Add(itemId);
+        }
+
+        foreach (var part in entity.Equipped.Keys)
+        {
+           sdo.EquippedIds.Add(new KeyValuePair<BodyPart, Guid>(part, entity.Equipped[part].Id));
+        }
+
+        return sdo;
     }
+
+   /* private void ConverItemsToItemSdos()
+    {
+        foreach (var itemKey in entity.Inventory.Keys)
+        {
+            if (sdo.InventoryItemIds.ContainsKey(itemKey))
+            {
+                continue;
+            }
+
+            var item = entity.Inventory[itemKey];
+
+            ItemSdo itemSdo;
+            if (item is Weapon)
+            {
+                itemSdo = WeaponSdo.ConvertToWeaponSdo((Weapon)item);
+            }
+            else if (item is Armor)
+            {
+                itemSdo = ArmorSdo.ConvertToArmorSdo((Armor)item);
+            }
+            else
+            {
+                itemSdo = ItemSdo.ConvertToItemSdo(item);
+            }
+
+            sdo.InventoryItemIds.Add(itemKey, itemSdo);
+        }
+    }
+}*/
 }

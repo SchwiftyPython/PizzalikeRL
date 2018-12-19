@@ -78,13 +78,11 @@ public class Entity
     public int CurrentHp { get; private set; }
     public int Speed { get; private set; }
     public int Defense { get; private set; }
-
-    public class InventoryDictionary : SerializableDictionary<Guid, Item> { }
-    public class EquippedDictionary : SerializableDictionary<BodyPart, Item> { }
+    
     public class BodyDictionary : SerializableDictionary<Guid, BodyPart> { }
 
-    public InventoryDictionary Inventory { get; }
-    public EquippedDictionary Equipped;
+    public IDictionary<Guid, Item> Inventory { get; }
+    public IDictionary<BodyPart, Item> Equipped;
 
     public BodyDictionary Body { get; private set; }
 
@@ -146,7 +144,7 @@ public class Entity
         PrefabPath = template.SpritePath;
         _prefab = Resources.Load(template.SpritePath) as GameObject;
         
-        Inventory = new InventoryDictionary();
+        Inventory = new Dictionary<Guid, Item>();
         BuildBody(template);
         CalculateTotalBodyPartCoverage();
         PopulateEquipped();
@@ -222,7 +220,7 @@ public class Entity
 
     private void PopulateEquipped()
     {
-        Equipped = new EquippedDictionary();
+        Equipped = new Dictionary<BodyPart, Item>();
 
         foreach (var bodyPart in Body.Values)
         {

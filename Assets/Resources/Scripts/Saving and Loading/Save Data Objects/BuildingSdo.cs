@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class BuildingSdo
@@ -10,6 +12,11 @@ public class BuildingSdo
     public int Width;
 
     public int Height;
+
+    public static List<BuildingSdo> ConverToBuildingSdos(List<Building> buildings)
+    {
+        return buildings?.Select(ConvertToBuildingSdo).ToList();
+    }
 
     public static BuildingSdo ConvertToBuildingSdo(Building building)
     {

@@ -1,5 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
+[Serializable]
 public class LotSdo 
 {
     public int Height;
@@ -11,6 +15,11 @@ public class LotSdo
     public Vector2 LowerLeftCorner;
 
     public BuildingSdo AssignedBuildingSdo;
+
+    public static List<LotSdo> ConverToLotSdos(List<Lot> lots)
+    {
+        return lots.Select(ConvertToLotSdo).ToList();
+    }
 
     public static LotSdo ConvertToLotSdo(Lot lot)
     {

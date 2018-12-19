@@ -14,11 +14,11 @@ public class SaveGameData : MonoBehaviour
         public Random.State SeedState;
 
         public CellSdo[] Map;
-        public Entity Player;
+        public Guid PlayerId;
 
-        public CellSdo CurrentCell;
-        public AreaSdo CurrentArea;
-        public Tile CurrentTile;
+        public string CurrentCellId;
+        public string CurrentAreaId;
+        public string CurrentTileId;
 
         public GameManager.GameState CurrentState;
         public string CurrentSceneName;
@@ -46,22 +46,13 @@ public class SaveGameData : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        Serializer = new SaveGameBinarySerializer(); 
+        Serializer = new SaveGameJsonSerializer(); 
 
         //todo load game files
     }
 
     public void Save()
     {
-        //        var tempMap = new Cell[WorldData.Instance.Width * WorldData.Instance.Height];
-        //
-        //        for (var row = 0; row < WorldData.Instance.Height; row++)
-        //        {
-        //            for (var column = 0; column < WorldData.Instance.Width; column++)
-        //            {
-        //                
-        //            }
-        //        }
         try
         {
             Data = new SaveData
@@ -69,12 +60,12 @@ public class SaveGameData : MonoBehaviour
                 StartingSeed = WorldData.Instance.Seed,
                 SeedState = Random.state,
                 Map = ConvertMapForSaving(WorldData.Instance.Map),
-                //Player = GameManager.Instance.Player,
-                //CurrentCell = GameManager.Instance.CurrentCell,
-                //CurrentArea = GameManager.Instance.CurrentArea,
-                //CurrentTile = GameManager.Instance.CurrentTile,
-                //CurrentState = GameManager.Instance.CurrentState,
-                //CurrentSceneName = GameManager.Instance.CurrentScene.ToString(),
+                PlayerId = GameManager.Instance.Player.Id,
+                CurrentCellId = GameManager.Instance.CurrentCell.Id,
+                CurrentAreaId = GameManager.Instance.CurrentArea.Id,
+                CurrentTileId = GameManager.Instance.CurrentTile.Id,
+                CurrentState = GameManager.Instance.CurrentState,
+                CurrentSceneName = GameManager.Instance.CurrentScene.ToString(),
                 //Messages = GameManager.Instance.Messages,
                 //ActiveOrders = GameManager.Instance.ActiveOrders
             };

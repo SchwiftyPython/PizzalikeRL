@@ -10,7 +10,7 @@ public class TileSdo
 
     //public Prop PresentProp;
 
-    public Item PresentItem;
+    public Guid PresentItemId;
 
     public Rarities Rarity;
 
@@ -53,7 +53,7 @@ public class TileSdo
             PresentEntityId = tile.GetPresentEntity() != null
                 ? tile.GetPresentEntity().Id
                 : Guid.Empty,
-            PresentItem = tile.PresentItem,
+            PresentItemId = tile.PresentItem?.Id ?? Guid.Empty,
             Rarity = tile.Rarity,
             PrefabIndex = tile.PrefabIndex,
             BlocksMovement = tile.GetBlocksMovement(),
