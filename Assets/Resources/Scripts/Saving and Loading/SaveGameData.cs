@@ -13,7 +13,9 @@ public class SaveGameData : MonoBehaviour
         public string StartingSeed;
         public Random.State SeedState;
 
-        public CellSdo[] Map;
+        public class SerializableMapDictionary : SerializableDictionary<string, CellSdo> { }
+
+        public SerializableMapDictionary Map;
         public Guid PlayerId;
 
         public string CurrentCellId;
@@ -79,12 +81,12 @@ public class SaveGameData : MonoBehaviour
         }
     }
 
-    private static CellSdo[] ConvertMapForSaving(Cell[,] map)
+    private static SaveData.SerializableMapDictionary ConvertMapForSaving(Cell[,] map)
     {
         var width = map.GetLength(0);
         var height = map.GetLength(1);
 
-        var convertedCells = new CellSdo[width, height];
+        var convertedCells = new SaveData.SerializableMapDictionary();
 
         for (var currentRow = 0; currentRow < height; currentRow++)
         {
@@ -94,22 +96,10 @@ public class SaveGameData : MonoBehaviour
 
                 var tempSdo = CellSdo.ConvertToCellSdo(currentCell);
 
-                convertedCells[currentColumn, currentRow] = tempSdo;
+                convertedCells.Add(currentCell.Id, tempSdo); 
             }
         }
 
-        Debug.Log("Map cells converted to cellSdos.");
-
-        var index = 0;
-        var single = new CellSdo[width * height];
-        for (var y = 0; y < height; y++)
-        {
-            for (var x = 0; x < width; x++)
-            {
-                single[index] = convertedCells[x, y];
-                index++;
-            }
-        }
-        return single;
+        return convertedCells;
     }
 }
