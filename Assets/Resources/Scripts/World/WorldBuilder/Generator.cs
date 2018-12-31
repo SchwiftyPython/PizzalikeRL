@@ -160,6 +160,8 @@ public class Generator : MonoBehaviour
     #region Private Methods
     private void Generate()
     {
+        Debug.Log("World Generation Started");
+
         // Build the maps
         GetData();
         // Build our final objects based on our data
@@ -179,6 +181,8 @@ public class Generator : MonoBehaviour
 
         CreateFactions();
         PlaceSettlements();
+
+        Debug.Log("World Generation Complete");
 
         //RarityCapper = new Capper();
 

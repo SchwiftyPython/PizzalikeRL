@@ -110,34 +110,4 @@ public class EntitySdo
 
         return sdo;
     }
-
-   /* private void ConverItemsToItemSdos()
-    {
-        foreach (var itemKey in entity.Inventory.Keys)
-        {
-            if (sdo.InventoryItemIds.ContainsKey(itemKey))
-            {
-                continue;
-            }
-
-            var item = entity.Inventory[itemKey];
-
-            ItemSdo itemSdo;
-            if (item is Weapon)
-            {
-                itemSdo = WeaponSdo.ConvertToWeaponSdo((Weapon)item);
-            }
-            else if (item is Armor)
-            {
-                itemSdo = ArmorSdo.ConvertToArmorSdo((Armor)item);
-            }
-            else
-            {
-                itemSdo = ItemSdo.ConvertToItemSdo(item);
-            }
-
-            sdo.InventoryItemIds.Add(itemKey, itemSdo);
-        }
-    }
-}*/
 }

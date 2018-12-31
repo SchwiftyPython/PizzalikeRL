@@ -27,7 +27,9 @@ public class SaveGameData : MonoBehaviour
 
         public List<string> Messages;
 
-        public Dictionary<string, PizzaOrder> ActiveOrders;
+        public class SerializableOrdersDictionary : SerializableDictionary<string, PizzaOrderSdo> { }
+
+        public SerializableOrdersDictionary ActiveOrders;
     }
 
     public SaveData Data;
@@ -68,8 +70,8 @@ public class SaveGameData : MonoBehaviour
                 CurrentTileId = GameManager.Instance.CurrentTile.Id,
                 CurrentState = GameManager.Instance.CurrentState,
                 CurrentSceneName = GameManager.Instance.CurrentScene.ToString(),
-                //Messages = GameManager.Instance.Messages,
-                //ActiveOrders = GameManager.Instance.ActiveOrders
+                Messages = GameManager.Instance.Messages,
+                ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders)
             };
 
             SaveGame.Save(Identifier, Data, Serializer);
@@ -101,5 +103,24 @@ public class SaveGameData : MonoBehaviour
         }
 
         return convertedCells;
+    }
+
+    private static SaveData.SerializableOrdersDictionary ConvertActiveOrdersForSaving(
+        Dictionary<string, PizzaOrder> activeOrders)
+    {
+        var convertedOrders = new SaveData.SerializableOrdersDictionary();
+
+        foreach (var order in activeOrders.Keys)
+        {
+            if (convertedOrders.ContainsKey(order))
+            {
+                Debug.Log("Order " + order + " already exists in converted orders!");
+                continue;
+            }
+
+            convertedOrders.Add(order, PizzaOrderSdo.ConvertToPizzaOrderSdo(activeOrders[order]));
+        }
+
+        return convertedOrders;
     }
 }

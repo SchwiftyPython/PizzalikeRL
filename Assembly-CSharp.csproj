@@ -284,6 +284,7 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\FactionSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\ItemSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\LotSdo.cs" />
+    <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\PizzaOrderSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\RiverSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\SettlementSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\TileSdo.cs" />

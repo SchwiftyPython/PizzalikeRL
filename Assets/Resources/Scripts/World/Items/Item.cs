@@ -16,8 +16,7 @@ public class Item
 
     public Dice ItemDice;
 
-    public Item()
-    { }
+    public Item(){ }
 
     public Item(ItemTemplate template, ItemRarity rarity)
     {
