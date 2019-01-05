@@ -6,11 +6,12 @@ using Random = UnityEngine.Random;
 
 public class WorldData : MonoBehaviour
 {
-    private int _height;
-    private int _width;
     private Cell[,] _map;
     private string _seed;
 
+    public Dictionary<string, Cell> MapDictionary { get; private set; }
+    public Dictionary<Guid, Entity> Entities { get; set; }
+    public Dictionary<Guid, Item> Items { get; set; }
     public Dictionary<string, Faction> Factions { get; set; }
     public List<Entity> FactionLeaders { get; set; }
     public List<Entity> OtherNamedNpcs { get; set; }
@@ -33,22 +34,15 @@ public class WorldData : MonoBehaviour
             _map = value;
             Height = value.GetLength(0);
             Width = value.GetLength(1);
+            CreateMapDictionary();
         }
     }
 
-    public int Height
-    {
-        get { return _height; }
+    public int Height { get; set; }
 
-        set { _height = value; }
-    }
+    public int Width { get; set; }
 
-    public int Width
-    {
-        get { return _width; }
-
-        set { _width = value; }
-    }
+    public Guid SaveGameId { get; set; }
 
     public TextAsset RawFactionNamesFile;
 
@@ -143,6 +137,21 @@ public class WorldData : MonoBehaviour
         Factions = new Dictionary<string, Faction>();
         FactionLeaders = new List<Entity>();
         OtherNamedNpcs = new List<Entity>();
+    }
+
+    public void CreateMapDictionary()
+    {
+        MapDictionary = new Dictionary<string, Cell>();
+
+        for (var row = 0; row < Height; row++)
+        {
+            for (var column = 0; column < Width; column++)
+            {
+                var currentCell = _map[column, row];
+
+                MapDictionary.Add(currentCell.Id, currentCell);
+            }
+        }
     }
 
     public Dictionary<GameObject, Rarities> GetBiomeTiles(BiomeType biomeType)

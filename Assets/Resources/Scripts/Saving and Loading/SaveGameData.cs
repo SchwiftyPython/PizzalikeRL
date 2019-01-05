@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using BayatGames.SaveGameFree;
 using BayatGames.SaveGameFree.Serializers;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class SaveGameData : MonoBehaviour
@@ -16,7 +18,15 @@ public class SaveGameData : MonoBehaviour
         public class SerializableMapDictionary : SerializableDictionary<string, CellSdo> { }
 
         public SerializableMapDictionary Map;
+
+        public class SerializableEntitiesDictionary : SerializableDictionary<Guid, EntitySdo> { }
+
+        public SerializableEntitiesDictionary Entities;
         public Guid PlayerId;
+
+        public class SerializableItemDictionary : SerializableDictionary<Guid, ItemSdo> { }
+
+        public SerializableItemDictionary Items;
 
         public string CurrentCellId;
         public string CurrentAreaId;
@@ -32,9 +42,17 @@ public class SaveGameData : MonoBehaviour
         public SerializableOrdersDictionary ActiveOrders;
     }
 
-    public SaveData Data;
-    public string Identifier = "savedata";
+    [Serializable]
+    public class SaveGameFileNames
+    {
+        public Dictionary<string, string> FileNames;
+    }
+    
+    public Dictionary<string, string> SaveFileNames;
+    public string FileNamesIdentifier = "savedatafiles";
     public ISaveGameSerializer Serializer;
+
+    public GameObject LoadGameButton;
 
     public static SaveGameData Instance;
 
@@ -52,14 +70,14 @@ public class SaveGameData : MonoBehaviour
 
         Serializer = new SaveGameJsonSerializer(); 
 
-        //todo load game files
+        LoadSavedGamesFileInfo();
     }
 
     public void Save()
     {
         try
         {
-            Data = new SaveData
+            var data = new SaveData
             {
                 StartingSeed = WorldData.Instance.Seed,
                 SeedState = Random.state,
@@ -74,13 +92,41 @@ public class SaveGameData : MonoBehaviour
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders)
             };
 
-            SaveGame.Save(Identifier, Data, Serializer);
+            var saveGameFileNames = new SaveGameFileNames();
+
+            var fileName = $@"{WorldData.Instance.SaveGameId}";
+
+            SaveFileNames.Add(fileName, GameManager.Instance.Player.Fluff.Name);
+
+            saveGameFileNames.FileNames = SaveFileNames;
+
+            SaveGame.Save(FileNamesIdentifier, saveGameFileNames, Serializer);
+
+            SaveGame.Save(fileName, data, Serializer);
         }
         catch (Exception e)
         {
             Debug.Log("Error saving! " + e.Message);
             throw;
         }
+    }
+
+    private void LoadSavedGamesFileInfo()
+    {
+        if (SaveFileNames == null)
+        {
+            SaveFileNames = new Dictionary<string, string>();
+        }
+
+        var fileNames = SaveGame.Load<SaveGameFileNames>(FileNamesIdentifier, Serializer);
+
+        if (fileNames == null || fileNames.FileNames.Count < 1)
+        {
+            LoadGameButton.GetComponent<Button>().interactable = false;
+            return;
+        }
+
+        LoadGameButton.GetComponent<Button>().interactable = true;
     }
 
     private static SaveData.SerializableMapDictionary ConvertMapForSaving(Cell[,] map)

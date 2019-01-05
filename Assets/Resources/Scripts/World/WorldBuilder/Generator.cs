@@ -110,6 +110,8 @@ public class Generator : MonoBehaviour
         Seed = WorldData.Instance.Seed;
         SeedHashCode = Seed.GetHashCode();
 
+        WorldData.Instance.SaveGameId = Guid.NewGuid();
+
         // Get the mesh we are rendering our output to        
         //_heightMapRenderer = GameObject.Find("HeightTexture").GetComponentInChildren<MeshRenderer>();
         //_heatMapRenderer = GameObject.Find("HeatTexture").GetComponentInChildren<MeshRenderer>();
@@ -133,7 +135,6 @@ public class Generator : MonoBehaviour
 
             GameManager.Instance.CurrentCell = _cells[x, y];
         }
-
 
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
