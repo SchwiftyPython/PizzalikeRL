@@ -13,9 +13,9 @@ public class SaveGameData : MonoBehaviour
     {
         public string StartingSeed;
         public Random.State SeedState;
-
         public class SerializableMapDictionary : SerializableDictionary<string, CellSdo> { }
 
+       
         public SerializableMapDictionary Map;
 
         public class SerializableEntitiesDictionary : SerializableDictionary<Guid, EntitySdo> { }
@@ -44,7 +44,9 @@ public class SaveGameData : MonoBehaviour
     [Serializable]
     public class SaveGameFileNames
     {
-        public Dictionary<string, string> FileNames;
+        public class SerializableFileNamesDictionary : SerializableDictionary<string, string> { }
+
+        public SerializableFileNamesDictionary FileNames;
     }
     
     public Dictionary<string, string> SaveFileNames;
@@ -67,7 +69,7 @@ public class SaveGameData : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        Serializer = new SaveGameJsonSerializer(); 
+        Serializer = new SaveGameXmlSerializer(); 
 
         LoadSavedGamesFileInfo();
     }
@@ -91,13 +93,17 @@ public class SaveGameData : MonoBehaviour
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders)
             };
 
-            var saveGameFileNames = new SaveGameFileNames();
+            var saveGameFileNames =
+                new SaveGameFileNames {FileNames = new SaveGameFileNames.SerializableFileNamesDictionary()};
 
             var fileName = $@"{WorldData.Instance.SaveGameId}";
 
             SaveFileNames.Add(fileName, GameManager.Instance.Player.Fluff.Name);
 
-            saveGameFileNames.FileNames = SaveFileNames;
+            foreach (var saveFileName in SaveFileNames.Keys)
+            {
+                saveGameFileNames.FileNames.Add(saveFileName, SaveFileNames[saveFileName]);
+            }
 
             SaveGame.Save(FileNamesIdentifier, saveGameFileNames, Serializer);
 
@@ -123,6 +129,11 @@ public class SaveGameData : MonoBehaviour
         {
             LoadGameButton.GetComponent<Button>().interactable = false;
             return;
+        }
+
+        foreach (var fileName in fileNames.FileNames.Keys)
+        {
+            SaveFileNames.Add(fileName, fileNames.FileNames[fileName]);
         }
 
         LoadGameButton.GetComponent<Button>().interactable = true;
