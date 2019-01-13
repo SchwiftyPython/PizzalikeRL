@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -93,7 +92,6 @@ public class Cell
         set
         {
             BiomeType = value;
-            SetCellSprite(value);
             for (var i = 0; i < CellHeight; i++)
             {
                 for (var j = 0; j < CellWidth; j++)
@@ -266,14 +264,46 @@ public class Cell
         }
     }
 
-    private void SetCellSprite(BiomeType biome)
+    public void LoadCellSprite(WorldTile.LayerPrefabIndexDictionary layerPrefabIndexes)
+    {
+        if (WorldMapSprite == null)
+        {
+            WorldMapSprite = new WorldTile();
+        }
+        WorldMapSprite.LayerPrefabIndexes = layerPrefabIndexes;
+
+        PickBaseLayer();
+        LoadDetailLayer();
+        LoadSettlementMarkerLayers();
+    }
+
+    public void SetCellSprite()
     {
         if (WorldMapSprite == null)
         {
             WorldMapSprite = new WorldTile();
         }
 
-        switch (biome)
+        PickBaseLayer();
+
+        if (biomeType != BiomeType.Mountain && biomeType != BiomeType.Water)
+        {
+            var detailData = PickDetailLayer(biomeType);
+
+            if (detailData == null)
+            {
+                return;
+            }
+
+            WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.Detail] = detailData.First().Key;
+
+            WorldMapSprite.Layers[WorldSpriteLayer.Detail] = detailData.First().Value;
+        }
+    }
+
+    private void PickBaseLayer()
+    {
+        switch (biomeType)
         {
             case BiomeType.Mountain:
                 PickMountainTile();
@@ -303,20 +333,6 @@ public class Cell
             case BiomeType.Woodland:
                 WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
                 break;
-        }
-
-        if (biome != BiomeType.Mountain && biome != BiomeType.Water)
-        {
-            var detailData = PickDetailLayer(biome);
-
-            if (detailData == null)
-            {
-                return;
-            }
-
-            WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.Detail] = detailData.First().Key;
-
-            WorldMapSprite.Layers[WorldSpriteLayer.Detail] = detailData.First().Value;
         }
     }
 
@@ -369,6 +385,56 @@ public class Cell
             }
         }
         return null;
+    }
+
+    private void LoadDetailLayer()
+    {
+        var index = WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.Detail];
+
+        GameObject detail = null;
+        switch (biomeType)
+        {
+            case BiomeType.Desert:
+                detail = WorldData.Instance.WorldDesertDetailTiles[index];
+                break;
+            case BiomeType.Grassland:
+                detail = WorldData.Instance.WorldGrassLandDetailTiles[index];
+                break;
+            case BiomeType.Ice:
+                detail = WorldData.Instance.WorldIceDetailTiles[index];
+                break;
+            case BiomeType.Swamp:
+                detail = WorldData.Instance.WorldSwampDetailTiles[index];
+                break;
+            case BiomeType.Wasteland:
+                detail = WorldData.Instance.WorldWasteLandDetailTiles[index];
+                break;
+            case BiomeType.SeasonalForest:
+            case BiomeType.TropicalRainforest:
+            case BiomeType.Woodland:
+                detail = WorldData.Instance.WorldWoodLandDetailTiles[index];
+                break;
+        }
+
+        WorldMapSprite.Layers[WorldSpriteLayer.Detail] = detail;
+    }
+
+    private void LoadSettlementMarkerLayers()
+    {
+        if (Settlement == null)
+        {
+            return;
+        }
+
+        var floorIndex = WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementFloor];
+
+        WorldMapSprite.Layers[WorldSpriteLayer.SettlementFloor] =
+            WorldData.Instance.SettlementFloorTiles[floorIndex];
+
+        var wallIndex = WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementWall];
+
+        WorldMapSprite.Layers[WorldSpriteLayer.SettlementWall] =
+            WorldData.Instance.SettlementWallTiles[wallIndex];
     }
 
     private void PickMountainTile()

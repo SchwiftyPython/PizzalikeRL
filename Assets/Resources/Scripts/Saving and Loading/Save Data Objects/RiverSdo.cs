@@ -30,4 +30,33 @@ public class RiverSdo
             })
             .ToList();
     }
+
+    public static List<River> ConvertToRivers(List<RiverSdo> riverSdos)
+    {
+        var rivers = new List<River>();
+
+        foreach (var sdo in riverSdos)
+        {
+            River river;
+            if (WorldData.Instance.Rivers.ContainsKey(sdo.Id))
+            {
+                river = WorldData.Instance.Rivers[sdo.Id];
+            }
+            else
+            {
+                river = new River(sdo.Id);
+                river.Length = sdo.Length;
+
+                foreach (var id in sdo.CellIds)
+                {
+                    river.Cells.Add(WorldData.Instance.MapDictionary[id]);
+                }
+
+                WorldData.Instance.Rivers.Add(sdo.Id, river);
+            }
+            rivers.Add(river);
+        }
+
+        return rivers;
+    }
 }

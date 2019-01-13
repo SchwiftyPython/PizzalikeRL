@@ -110,4 +110,38 @@ public class EntitySdo
 
         return sdo;
     }
+
+    public static Dictionary<Guid, Entity> ConvertToEntities(
+        SaveGameData.SaveData.SerializableEntitiesDictionary entitySdos)
+    {
+        foreach (var entitySdo in entitySdos)
+        {
+            var entity = new Entity(entitySdo.Key, entitySdo.Value.IsPlayer);
+            entity.PrefabPath = entitySdo.Value.PrefabPath;
+            //todo get faction by name or add to worldata dict
+            entity.TotalBodyPartCoverage = entitySdo.Value.TotalBodyPartCoverage;
+            entity.CurrentPosition = entitySdo.Value.CurrentPosition;
+            entity.Level = entitySdo.Value.Level;
+            entity.Xp = entitySdo.Value.Xp;
+            entity.Strength = entitySdo.Value.Strength;
+            entity.Agility = entitySdo.Value.Agility;
+            entity.Constitution = entitySdo.Value.Constitution;
+            entity.Intelligence = entitySdo.Value.Intelligence;
+            entity.MaxHp = entitySdo.Value.MaxHp;
+            entity.CurrentHp = entitySdo.Value.CurrentHp;
+            entity.Speed = entitySdo.Value.Speed;
+            entity.Defense = entitySdo.Value.Defense;
+            entity.Body = entitySdo.Value.Body;
+            entity.EntityType = entitySdo.Value.EntityType;
+            entity.Classification = entitySdo.Value.Classification;
+            entity.Fluff = entitySdo.Value.Fluff;
+            entity.Goals = entitySdo.Value.Goals;
+            entity.Mobile = entitySdo.Value.Mobile;
+            //todo get cell by id
+            //todo get area by id
+            //todo get tile by id
+            //todo get inventory items by id
+            //todo get equipment by id
+        }
+    }
 }

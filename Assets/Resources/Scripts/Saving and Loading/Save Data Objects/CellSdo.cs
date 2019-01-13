@@ -22,6 +22,11 @@ public class CellSdo
 
     public static CellSdo ConvertToCellSdo(Cell cell)
     {
+        if (cell == null)
+        {
+            return null;
+        }
+
         var sdo = new CellSdo
         {
             BiomeType = cell.BiomeType,
@@ -56,5 +61,45 @@ public class CellSdo
         }
 
         return sdo;
+    }
+
+
+    //<Summary>
+    // Converts to cell without any entity info
+    //</Summary>
+    public static Cell ConvertToBaseCell(CellSdo cellSdo)
+    {
+        if (cellSdo == null)
+        {
+            return null;
+        }
+
+        var cell = new Cell
+        {
+            biomeType = cellSdo.BiomeType,
+            X = cellSdo.X,
+            Y = cellSdo.Y,
+            Id = cellSdo.Id,
+            Rivers = RiverSdo.ConvertToRivers(cellSdo.RiverSdos)
+        };
+        return cell;
+    }
+
+    //<Summary>
+    // Loads cell details that are not included when converting to base cell
+    //</Summary>
+    public static void LoadCellDetails(CellSdo cellSdo)
+    {
+        if (cellSdo == null)
+        {
+            return;
+        }
+
+        var cell = WorldData.Instance.MapDictionary[cellSdo.Id];
+
+        //todo convert settlements
+        cell.LoadCellSprite(cellSdo.WorldMapSpriteData);
+        //todo get reference to present factions
+        //todo convert areas
     }
 }

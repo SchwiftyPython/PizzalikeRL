@@ -203,6 +203,7 @@ public class Generator : MonoBehaviour
             for (var y = 0; y < _height; y++)
             {
                 _cells[x, y].biomeType = GetBiomeType(_cells[x, y]);
+                _cells[x, y].SetCellSprite();
             }
         }
     }

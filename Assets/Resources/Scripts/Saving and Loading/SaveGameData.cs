@@ -13,8 +13,8 @@ public class SaveGameData : MonoBehaviour
     {
         public string StartingSeed;
         public Random.State SeedState;
-        public class SerializableMapDictionary : SerializableDictionary<string, CellSdo> { }
 
+        public class SerializableMapDictionary : SerializableDictionary<string, CellSdo> { }
        
         public SerializableMapDictionary Map;
 
@@ -69,7 +69,7 @@ public class SaveGameData : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        Serializer = new SaveGameXmlSerializer(); 
+        Serializer = new SaveGameJsonSerializer(); 
 
         LoadSavedGamesFileInfo();
     }
@@ -116,6 +116,34 @@ public class SaveGameData : MonoBehaviour
         }
     }
 
+    public void Load(string fileName)
+    {
+        var saveData = SaveGame.Load<SaveData>(fileName, Serializer);
+        
+        WorldData.Instance.Map = ConvertMapForPlaying(saveData.Map);
+
+        //convert all entities for playing
+
+        WorldData.Instance.Seed = saveData.StartingSeed;
+        Random.state = saveData.SeedState;
+
+        //get player by id
+
+        //get current cell by id
+
+        //get current area by id
+
+        //get current tile by id
+
+        GameManager.Instance.CurrentState = saveData.CurrentState;
+
+        GameManager.Instance.Messages = saveData.Messages;
+
+        //convert active orders for playing
+
+        //load current scene by scene name
+    }
+
     private void LoadSavedGamesFileInfo()
     {
         if (SaveFileNames == null)
@@ -137,6 +165,23 @@ public class SaveGameData : MonoBehaviour
         }
 
         LoadGameButton.GetComponent<Button>().interactable = true;
+    }
+
+    private static Cell[,] ConvertMapForPlaying(SaveData.SerializableMapDictionary savedMap)
+    {
+        var tempMap = new Cell[WorldData.Instance.Width, WorldData.Instance.Height];
+
+        foreach (var cellSdo in savedMap)
+        {
+            var x = cellSdo.Value.X;
+            var y = cellSdo.Value.Y;
+
+            tempMap[x, y] = CellSdo.ConvertToBaseCell(cellSdo.Value);
+            
+            WorldData.Instance.MapDictionary.Add(cellSdo.Key, tempMap[x, y]);
+        }
+
+        return tempMap;
     }
 
     private static SaveData.SerializableMapDictionary ConvertMapForSaving(Cell[,] map)
@@ -178,5 +223,10 @@ public class SaveGameData : MonoBehaviour
         }
 
         return convertedOrders;
+    }
+
+    private Dictionary<Guid, Entity> ConvertEntitiesForPlaying(SaveData.SerializableEntitiesDictionary entities)
+    {
+        
     }
 }

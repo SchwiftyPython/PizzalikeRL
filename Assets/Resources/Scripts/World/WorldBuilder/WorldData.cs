@@ -15,6 +15,7 @@ public class WorldData : MonoBehaviour
     public Dictionary<string, Faction> Factions { get; set; }
     public List<Entity> FactionLeaders { get; set; }
     public List<Entity> OtherNamedNpcs { get; set; }
+    public Dictionary<int, River> Rivers { get; set; }
 
     public string Seed
     {

@@ -53,7 +53,7 @@ public class Entity
 
     public readonly Faction Faction;
 
-    public int TotalBodyPartCoverage { get; private set; }
+    public int TotalBodyPartCoverage { get; set; }
 
     private Vector3 _currentPosition;
 
@@ -63,31 +63,31 @@ public class Entity
 
     //Base stats
 
-    public int Level { get; private set; }
-    public int Xp { get; private set; }
+    public int Level { get; set; }
+    public int Xp { get; set; }
 
-    public int Strength { get; private set; }
-    public int Agility { get; private set; }
-    public int Constitution { get; private set; }
-    public int Intelligence { get; private set; }
+    public int Strength { get; set; }
+    public int Agility { get; set; }
+    public int Constitution { get; set; }
+    public int Intelligence { get; set; }
 
 
     //Stats dependent on base stat values
 
-    public int MaxHp { get; private set; }
-    public int CurrentHp { get; private set; }
-    public int Speed { get; private set; }
-    public int Defense { get; private set; }
+    public int MaxHp { get; set; }
+    public int CurrentHp { get; set; }
+    public int Speed { get; set; }
+    public int Defense { get; set; }
     
     public class BodyDictionary : SerializableDictionary<Guid, BodyPart> { }
 
     public IDictionary<Guid, Item> Inventory { get; }
     public IDictionary<BodyPart, Item> Equipped;
 
-    public BodyDictionary Body { get; private set; }
+    public BodyDictionary Body { get; set; }
 
-    public string EntityType { get; }
-    public EntityClassification Classification { get; }
+    public string EntityType { get; set; }
+    public EntityClassification Classification { get; set; }
     public EntityFluff Fluff { get; set; }
 
     public Stack<Goal> Goals;
@@ -107,6 +107,12 @@ public class Entity
             _currentPosition = value;
             SetSpritePosition(value);
         }
+    }
+
+    public Entity(Guid id, bool isPlayer = false)
+    {
+        Id = id;
+        _isPlayer = isPlayer;
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
