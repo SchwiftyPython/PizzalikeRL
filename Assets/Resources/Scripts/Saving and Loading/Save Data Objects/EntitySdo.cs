@@ -114,34 +114,72 @@ public class EntitySdo
     public static Dictionary<Guid, Entity> ConvertToEntities(
         SaveGameData.SaveData.SerializableEntitiesDictionary entitySdos)
     {
+        var entities = new Dictionary<Guid, Entity>();
+
         foreach (var entitySdo in entitySdos)
         {
-            var entity = new Entity(entitySdo.Key, entitySdo.Value.IsPlayer);
-            entity.PrefabPath = entitySdo.Value.PrefabPath;
-            //todo get faction by name or add to worldata dict
-            entity.TotalBodyPartCoverage = entitySdo.Value.TotalBodyPartCoverage;
-            entity.CurrentPosition = entitySdo.Value.CurrentPosition;
-            entity.Level = entitySdo.Value.Level;
-            entity.Xp = entitySdo.Value.Xp;
-            entity.Strength = entitySdo.Value.Strength;
-            entity.Agility = entitySdo.Value.Agility;
-            entity.Constitution = entitySdo.Value.Constitution;
-            entity.Intelligence = entitySdo.Value.Intelligence;
-            entity.MaxHp = entitySdo.Value.MaxHp;
-            entity.CurrentHp = entitySdo.Value.CurrentHp;
-            entity.Speed = entitySdo.Value.Speed;
-            entity.Defense = entitySdo.Value.Defense;
-            entity.Body = entitySdo.Value.Body;
-            entity.EntityType = entitySdo.Value.EntityType;
-            entity.Classification = entitySdo.Value.Classification;
-            entity.Fluff = entitySdo.Value.Fluff;
-            entity.Goals = entitySdo.Value.Goals;
-            entity.Mobile = entitySdo.Value.Mobile;
-            //todo get cell by id
-            //todo get area by id
-            //todo get tile by id
-            //todo get inventory items by id
-            //todo get equipment by id
+            var entity = new Entity(entitySdo.Key, entitySdo.Value.IsPlayer)
+            {
+                PrefabPath = entitySdo.Value.PrefabPath,
+                TotalBodyPartCoverage = entitySdo.Value.TotalBodyPartCoverage,
+                CurrentPosition = entitySdo.Value.CurrentPosition,
+                Level = entitySdo.Value.Level,
+                Xp = entitySdo.Value.Xp,
+                Strength = entitySdo.Value.Strength,
+                Agility = entitySdo.Value.Agility,
+                Constitution = entitySdo.Value.Constitution,
+                Intelligence = entitySdo.Value.Intelligence,
+                MaxHp = entitySdo.Value.MaxHp,
+                CurrentHp = entitySdo.Value.CurrentHp,
+                Speed = entitySdo.Value.Speed,
+                Defense = entitySdo.Value.Defense,
+                Body = entitySdo.Value.Body,
+                EntityType = entitySdo.Value.EntityType,
+                Classification = entitySdo.Value.Classification,
+                Fluff = entitySdo.Value.Fluff,
+                Goals = entitySdo.Value.Goals,
+                Mobile = entitySdo.Value.Mobile,
+                CurrentCell = WorldData.Instance.MapDictionary[entitySdo.Value.CurrentCellId]
+            };
+            //todo get faction by name
+
+            var areaId = entitySdo.Value.CurrentAreaId.Split(' ');
+
+            var areaX = Convert.ToInt32(areaId[0]);
+            var areaY = Convert.ToInt32(areaId[1]);
+
+            entity.CurrentArea = entity.CurrentCell.Areas[areaX, areaY];
+
+            var tileId = entitySdo.Value.CurrentTileId.Split(' ');
+
+            var tileX = Convert.ToInt32(tileId[0]);
+            var tileY = Convert.ToInt32(tileId[1]);
+
+            entity.CurrentTile = entity.CurrentArea.AreaTiles[tileX, tileY];
+
+            foreach (var itemId in entitySdo.Value.InventoryItemIds)
+            {
+                var item = WorldData.Instance.Items[itemId];
+                entity.Inventory.Add(item.Id, item);
+            }
+
+            foreach (var equipped in entitySdo.Value.EquippedIds)
+            {
+                var item = entity.Inventory[equipped.Value];
+
+                if (entity.Equipped.ContainsKey(equipped.Key))
+                {
+                    entity.Equipped[equipped.Key] = item;
+                }
+                else
+                {
+                   entity.Equipped.Add(equipped.Key, item);
+                }
+            }
+
+            entities.Add(entity.Id, entity);
         }
+
+        return entities;
     }
 }

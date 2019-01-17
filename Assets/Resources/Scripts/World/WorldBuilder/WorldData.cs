@@ -148,7 +148,7 @@ public class WorldData : MonoBehaviour
         {
             for (var column = 0; column < Width; column++)
             {
-                var currentCell = _map[column, row];
+                var currentCell = _map[row, column];
 
                 MapDictionary.Add(currentCell.Id, currentCell);
             }

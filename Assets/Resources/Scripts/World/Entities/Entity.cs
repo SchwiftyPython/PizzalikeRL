@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -113,6 +114,8 @@ public class Entity
     {
         Id = id;
         _isPlayer = isPlayer;
+        Inventory = new Dictionary<Guid, Item>();
+        Equipped = new Dictionary<BodyPart, Item>();
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)

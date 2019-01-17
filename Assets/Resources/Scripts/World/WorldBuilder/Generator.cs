@@ -302,18 +302,18 @@ public class Generator : MonoBehaviour
     {
         _cells = new Cell[_width, _height];
 
-        for (var x = 0; x < _width; x++)
+        for (var currentRow = 0; currentRow < _width; currentRow++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var currentColumn = 0; currentColumn < _height; currentColumn++)
             {
                 var c = new Cell
                 {
-                    X = x,
-                    Y = y,
-                    Id = x + " " + y
+                    X = currentRow,
+                    Y = currentColumn,
+                    Id = currentRow + " " + currentColumn
                 };
 
-                var heightValue = _heightData.Data[x, y];
+                var heightValue = _heightData.Data[currentRow, currentColumn];
                 heightValue = (heightValue - _heightData.Min) / (_heightData.Max - _heightData.Min);
                 c.HeightValue = heightValue;
 
@@ -372,7 +372,7 @@ public class Generator : MonoBehaviour
                 }
 
                 // Set heat value
-                var heatValue = _heatData.Data[x, y];
+                var heatValue = _heatData.Data[currentRow, currentColumn];
                 heatValue = (heatValue - _heatData.Min) / (_heatData.Max - _heatData.Min);
                 c.HeatValue = heatValue;
 
@@ -407,7 +407,7 @@ public class Generator : MonoBehaviour
                 }
 
                 //Moisture Map Analyze  
-                var moistureValue = _moistureData.Data[x, y];
+                var moistureValue = _moistureData.Data[currentRow, currentColumn];
                 moistureValue = (moistureValue - _moistureData.Min) / (_moistureData.Max - _moistureData.Min);
                 c.MoistureValue = moistureValue;
 
@@ -419,7 +419,7 @@ public class Generator : MonoBehaviour
                 else if (moistureValue < _wettestValue) c.MoistureType = MoistureType.Wetter;
                 else c.MoistureType = MoistureType.Wettest;
 
-                _cells[x, y] = c;
+                _cells[currentRow, currentColumn] = c;
             }
         }
     }

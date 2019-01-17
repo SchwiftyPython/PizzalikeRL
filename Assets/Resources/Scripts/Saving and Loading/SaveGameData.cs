@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BayatGames.SaveGameFree;
 using BayatGames.SaveGameFree.Serializers;
 using UnityEngine;
@@ -119,21 +120,27 @@ public class SaveGameData : MonoBehaviour
     public void Load(string fileName)
     {
         var saveData = SaveGame.Load<SaveData>(fileName, Serializer);
+
+        InitializeMap();
+
+        WorldData.Instance.Items = ConvertItemsForPlaying(saveData.Items);
+
+        WorldData.Instance.Entities = ConvertEntitiesForPlaying(saveData.Entities);
+
+        //load factions
         
         WorldData.Instance.Map = ConvertMapForPlaying(saveData.Map);
-
-        //convert all entities for playing
 
         WorldData.Instance.Seed = saveData.StartingSeed;
         Random.state = saveData.SeedState;
 
-        //get player by id
+        GameManager.Instance.Player = WorldData.Instance.Entities[saveData.PlayerId];
 
-        //get current cell by id
+        GameManager.Instance.CurrentCell = GameManager.Instance.Player.CurrentCell;
 
-        //get current area by id
+        GameManager.Instance.CurrentArea = GameManager.Instance.Player.CurrentArea;
 
-        //get current tile by id
+        GameManager.Instance.CurrentTile = GameManager.Instance.Player.CurrentTile;
 
         GameManager.Instance.CurrentState = saveData.CurrentState;
 
@@ -167,9 +174,30 @@ public class SaveGameData : MonoBehaviour
         LoadGameButton.GetComponent<Button>().interactable = true;
     }
 
+    private static void InitializeMap()
+    {
+        WorldData.Instance.Map = new Cell[WorldData.Instance.Width, WorldData.Instance.Height];
+
+        for (var currentRow = 0; currentRow < WorldData.Instance.Height; currentRow++)
+        {
+            for (var currentColumn = 0; currentColumn < WorldData.Instance.Width; currentColumn++)
+            {
+                WorldData.Instance.Map[currentRow, currentColumn] = new Cell
+                {
+                    X = currentRow,
+                    Y = currentColumn,
+                    Id = currentRow + " " + currentColumn
+                };
+
+                WorldData.Instance.MapDictionary.Add(WorldData.Instance.Map[currentRow, currentColumn].Id,
+                    WorldData.Instance.Map[currentRow, currentColumn]);
+            }
+        }
+    }
+
     private static Cell[,] ConvertMapForPlaying(SaveData.SerializableMapDictionary savedMap)
     {
-        var tempMap = new Cell[WorldData.Instance.Width, WorldData.Instance.Height];
+        var tempMap = WorldData.Instance.Map;
 
         foreach (var cellSdo in savedMap)
         {
@@ -195,7 +223,7 @@ public class SaveGameData : MonoBehaviour
         {
             for (var currentColumn = 0; currentColumn < width; currentColumn++)
             {
-                var currentCell = map[currentColumn, currentRow];
+                var currentCell = map[currentRow, currentColumn];
 
                 var tempSdo = CellSdo.ConvertToCellSdo(currentCell);
 
@@ -225,8 +253,13 @@ public class SaveGameData : MonoBehaviour
         return convertedOrders;
     }
 
-    private Dictionary<Guid, Entity> ConvertEntitiesForPlaying(SaveData.SerializableEntitiesDictionary entities)
+    private Dictionary<Guid, Entity> ConvertEntitiesForPlaying(SaveData.SerializableEntitiesDictionary entitySdos)
     {
-        
+        return EntitySdo.ConvertToEntities(entitySdos);
+    }
+
+    private static Dictionary<Guid, Item> ConvertItemsForPlaying(SaveData.SerializableItemDictionary itemSdos)
+    {
+        return itemSdos.Select(sdo => ItemSdo.ConvertToItem(sdo.Value)).ToDictionary(item => item.Id);
     }
 }

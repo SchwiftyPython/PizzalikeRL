@@ -27,4 +27,18 @@ public class ItemSdo
             ItemDice = item.ItemDice
         };
     }
+
+    public static Item ConvertToItem(ItemSdo sdo)
+    {
+        var item = new Item
+        {
+            Rarity = sdo.Rarity,
+            BodyPartCategory = sdo.BodyPartCategory,
+            ItemType = sdo.ItemType,
+            ItemCategory = sdo.ItemCategory,
+            Id = sdo.Id,
+            ItemDice = sdo.ItemDice
+        };
+        return item;
+    }
 }

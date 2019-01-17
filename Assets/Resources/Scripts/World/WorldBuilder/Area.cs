@@ -61,7 +61,7 @@ public class Area
         
         PresentEntities = new List<Entity>();
         
-        AreaTiles = new Tile[Width, Height];
+        AreaTiles = new Tile[Height, Width];
 
         var tileDeck = new AreaTileDeck(BiomeType);
 
@@ -72,13 +72,13 @@ public class Area
                 var texture = tileDeck.Draw();
                 if (texture.layer == LayerMask.NameToLayer("Obstacle"))
                 {
-                    AreaTiles[column, row] = new Tile(texture, new Vector2(column, row), true, true);
+                    AreaTiles[row, column] = new Tile(texture, new Vector2(row, column), true, true);
                 }
                 else
                 {
-                    AreaTiles[column , row] = new Tile(texture, new Vector2(column, row), false, false);
+                    AreaTiles[row, column] = new Tile(texture, new Vector2(row, column), false, false);
                 }
-                AreaTiles[column, row].Visibility = Visibilities.Invisible;
+                AreaTiles[row, column].Visibility = Visibilities.Invisible;
             }
         }
 
@@ -126,11 +126,11 @@ public class Area
 
         var settlementBluePrint = settlementPrefab.Blueprint;
 
-        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
+        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(0); currentRow++)
         {
-            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(0); currentColumn++)
+            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(1); currentColumn++)
             {
-                var tileCode = settlementBluePrint[currentColumn, currentRow];
+                var tileCode = settlementBluePrint[currentRow, currentColumn];
 
                 if (tileCode == 'x')
                 {
@@ -147,8 +147,8 @@ public class Area
 
                 var tile = GetTilePrefab(tileCode);
 
-                AreaTiles[currentColumn, currentRow] =
-                    new Tile(tile, new Vector2(currentColumn, currentRow), false, false);
+                AreaTiles[currentRow, currentColumn] =
+                    new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
             }
         }
     }
@@ -282,14 +282,14 @@ public class Area
                     break;
                 }
 
-                var currentTile = AreaTiles[currentColumn, currentRow];
+                var currentTile = AreaTiles[currentRow, currentColumn];
 
                 if (CanPlaceWaterTile(currentTile))
                 {
                     GameObject waterTilePrefab;
                     try
                     {
-                        var tempTile = tempMap[currentColumn, currentRow] ?? new Tile(null, new Vector2(currentColumn, currentRow), false, false);
+                        var tempTile = tempMap[currentRow, currentColumn] ?? new Tile(null, new Vector2(currentRow, currentColumn), false, false);
 
                         UpdateNeighborsForTempTile(tempTile, tempMap);
 
@@ -306,7 +306,7 @@ public class Area
                         return;
                     }
 
-                    tempMap[currentColumn, currentRow] = new Tile(waterTilePrefab, new Vector2(currentColumn, currentRow), false, false);
+                    tempMap[currentRow, currentColumn] = new Tile(waterTilePrefab, new Vector2(currentRow, currentColumn), false, false);
 
                     if (_waterEndTiles.Contains(waterTilePrefab.name))
                     {
@@ -326,12 +326,12 @@ public class Area
         {
             for (var currentColumn = 0; currentColumn < Width; currentColumn++)
             {
-                if (tempMap[currentColumn, currentRow] == null)
+                if (tempMap[currentRow, currentColumn] == null)
                 {
                     continue;
                 }
 
-                AreaTiles[currentColumn, currentRow] = tempMap[currentColumn, currentRow];
+                AreaTiles[currentRow, currentColumn] = tempMap[currentRow, currentColumn];
             }
         }
 
