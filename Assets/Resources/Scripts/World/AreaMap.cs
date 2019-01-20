@@ -106,11 +106,11 @@ public class AreaMap : MonoBehaviour
                 var tile = _currentArea.AreaTiles[currentRow, currentColumn];
 
                 var texture = tile.GetPrefabTileTexture();
-                var instance = Instantiate(texture, new Vector2(currentRow, currentColumn), Quaternion.identity);
+                var instance = Instantiate(texture, new Vector2(currentColumn, currentRow), Quaternion.identity);
                 tile.TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
 
-                tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(currentRow, currentColumn, -4), Quaternion.identity);
+                tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(currentColumn, currentRow, -4), Quaternion.identity);
                 tile.FovTile.transform.SetParent(FovHolder.transform);
 
                 //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[j, i].Revealed ? Color.gray : Color.black;
@@ -185,8 +185,8 @@ public class AreaMap : MonoBehaviour
     {
         Destroy(entity.GetSprite());
 
-        _currentArea.AreaTiles[(int) entity.CurrentPosition.x, (int) entity.CurrentPosition.y].SetBlocksMovement(false);
-        _currentArea.AreaTiles[(int) entity.CurrentPosition.x, (int) entity.CurrentPosition.y].SetPresentEntity(null);
+        entity.CurrentTile.SetBlocksMovement(false);
+        entity.CurrentTile.SetPresentEntity(null);
         //_currentArea.PresentEntities.Remove(entity);
     }
 
@@ -270,7 +270,7 @@ public class AreaMap : MonoBehaviour
                 {
                     if (!_currentArea.AreaTiles[x, y].GetBlocksMovement())
                     {
-                        _playerSprite.transform.position = new Vector3(x, y);
+                        //_playerSprite.transform.position = new Vector3(x, y);
                         _player.CurrentPosition = new Vector3(x, y);
                         //Debug.Log(("current area: " + _currentArea.AreaTiles[x, y]));
                         _currentArea.AreaTiles[x, y].SetPresentEntity(_player);
@@ -292,7 +292,7 @@ public class AreaMap : MonoBehaviour
         if (_currentArea != null)
         {
             _player.CurrentCell = _currentArea.ParentCell;
-            _currentArea.AreaTiles[(int) _playerSprite.transform.position.x, (int) _playerSprite.transform.position.y]
+            _currentArea.AreaTiles[_player.CurrentTile.X, _player.CurrentTile.Y]
                 .Visibility = Visibilities.Visible;
         }
     }
@@ -308,13 +308,13 @@ public class AreaMap : MonoBehaviour
             }
 
             var placed = false;
-            var y = Random.Range(0, _currentArea.Height);
-            var x = Random.Range(0, _currentArea.Width);
+            var row = Random.Range(0, _currentArea.Height);
+            var column = Random.Range(0, _currentArea.Width);
             while (!placed)
             {
-                if (!_currentArea.AreaTiles[x, y].GetBlocksMovement())
+                if (!_currentArea.AreaTiles[row, column].GetBlocksMovement())
                 {
-                    var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector3(x, y, 0f), Quaternion.identity);
+                    var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector2(column, row), Quaternion.identity);
 
                     npcSprite.AddComponent<EnemyController>();
                     npcSprite.AddComponent<Seeker>();
@@ -323,15 +323,19 @@ public class AreaMap : MonoBehaviour
                     npcSprite.GetComponent<EnemyController>().Self = e;
 
                     npcSprite.transform.SetParent(NpcSpriteHolder.transform);
+
                     e.SetSprite(npcSprite);
-                    _currentArea.AreaTiles[x, y].SetPresentEntity(e);
-                    _currentArea.AreaTiles[x, y].SetBlocksMovement(true);
-                    e.CurrentPosition = new Vector3(x, y, 0f);
+
+                    e.CurrentTile = _currentArea.AreaTiles[row, column];
+                    e.CurrentTile.SetPresentEntity(e);
+                    e.CurrentTile.SetBlocksMovement(true);
+                    e.CurrentPosition = new Vector3(row, column, 0f);
+
                     _currentArea.TurnOrder.Enqueue(e);
                     placed = true;
                 }
-                y = Random.Range(0, _currentArea.Height);
-                x = Random.Range(0, _currentArea.Width);
+                row = Random.Range(0, _currentArea.Height);
+                column = Random.Range(0, _currentArea.Width);
             }
             e.CurrentArea = _currentArea;
             e.CurrentCell = _currentArea.ParentCell;

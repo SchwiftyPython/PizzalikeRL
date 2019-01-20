@@ -14,8 +14,8 @@ public class Wander : Goal
         var areaWidth = area.Width;
         var areaHeight = area.Height;
 
-        var x = Random.Range(0, areaWidth);
-        var y = Random.Range(0, areaHeight);
+        var x = Random.Range(0, areaHeight);
+        var y = Random.Range(0, areaWidth);
 
         const int maxTries = 40;
         var numTries = 0;
@@ -28,8 +28,8 @@ public class Wander : Goal
                 FailToParent();
                 return;
             }
-            x = Random.Range(0, areaWidth);
-            y = Random.Range(0, areaHeight);
+            x = Random.Range(0, areaHeight);
+            y = Random.Range(0, areaWidth);
         }
 
         PushChildGoal(
@@ -40,8 +40,8 @@ public class Wander : Goal
 
     private int DistanceToTarget(Vector2 target)
     {
-        var a = target.x - ParentController.Self.CurrentPosition.x;
-        var b = target.y - ParentController.Self.CurrentPosition.y;
+        var a = target.x - ParentController.Self.CurrentTile.X;
+        var b = target.y - ParentController.Self.CurrentTile.Y;
 
         return (int)Math.Sqrt(a * a + b * b);
     }

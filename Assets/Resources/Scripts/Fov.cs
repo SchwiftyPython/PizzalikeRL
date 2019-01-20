@@ -100,12 +100,12 @@ public class Fov : MonoBehaviour
 
     public bool InBoundsAndClose(int x, int y)
     {
-        var inBounds = !(x < 0 || y < 0 || x > _gridWidth - 1 || y > _gridHeight - 1);
+        var inBounds = !(x < 0 || y < 0 || x > _gridHeight - 1 || y > _gridWidth - 1);
 
         if (inBounds)
         {
-            if (Mathf.Abs(x - _player.CurrentPosition.x) > ViewDistance ||
-                Mathf.Abs(y - _player.CurrentPosition.y) > ViewDistance)
+            if (Mathf.Abs(x - _player.CurrentTile.X) > ViewDistance ||
+                Mathf.Abs(y - _player.CurrentTile.Y) > ViewDistance)
             {
                 inBounds = false;
             }

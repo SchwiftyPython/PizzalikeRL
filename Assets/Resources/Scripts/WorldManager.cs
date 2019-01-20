@@ -95,19 +95,19 @@ public class WorldManager : MonoBehaviour {
 	void PlacePlayer(){			
 
 		var placed = false;
-		var y = Rows / 2;
-		var x = Columns / 2;
+		var row = Rows / 2;
+		var column = Columns / 2;
 		while (!placed) {
-			if (!_board [x, y].GetBlocksMovement()) {
-				var playerPawn = Instantiate (PlayerSprite, new Vector3(x, y, 0f), Quaternion.identity);
+			if (!_board [row, column].GetBlocksMovement()) {
+				var playerPawn = Instantiate (PlayerSprite, new Vector3(column, row, 0f), Quaternion.identity);
                 //playerPawn.GetComponent<SingleNodeBlocker>().manager = blockManager.GetComponent<BlockManager>();
 //				Player = new Entity (true, playerPawn);
-				_board [x, y].SetPresentEntity (Player);					
-				Player.CurrentPosition = new  Vector3 (x, y, 0f);
+				_board [row, column].SetPresentEntity (Player);					
+				Player.CurrentPosition = new  Vector3 (row, column, 0f);
 				placed = true;
 			}
-			y++;
-			x++;
+			row++;
+			column++;
 		}
 	}
 
@@ -139,7 +139,7 @@ public class WorldManager : MonoBehaviour {
             //GameManager.Instance.CurrentState = GameManager.GameState.End;
         } else {
             //remove entity and replace with some or all of inventory
-            var tileToUpdate = Instance.GetTileAt(corpse.CurrentPosition);
+            var tileToUpdate = corpse.CurrentTile;
             tileToUpdate.SetBlocksMovement(false);
             tileToUpdate.SetPresentEntity(null);
 

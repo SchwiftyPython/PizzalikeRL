@@ -33,12 +33,12 @@ public class MoveToLocal : Goal
 
         if (self.CurrentTile == null)
         {
-            self.CurrentTile = _area.AreaTiles[(int) self.CurrentPosition.x,
-                (int) self.CurrentPosition.y];
+            self.CurrentTile = _area.AreaTiles[(int) self.CurrentPosition.y,
+                (int) self.CurrentPosition.x];
         }
 
-        return !ParentController.IsMobile() || (int) self.CurrentTile.GetGridPosition().x == _x &&
-               (int) self.CurrentTile.GetGridPosition().y == _y;
+        return !ParentController.IsMobile() || self.CurrentTile.X == _x &&
+               self.CurrentTile.Y == _y;
     }
 
     public override void TakeAction()
@@ -63,7 +63,8 @@ public class MoveToLocal : Goal
             _monoHelper = ParentController.Self.GetSprite().AddComponent<MonoHelper>();
         }
 
-        ParentController.FindPathToTarget(ParentController.Self.CurrentPosition, new Vector2(_x, _y));
+        ParentController.FindPathToTarget(
+            new Vector2(ParentController.Self.CurrentTile.X, ParentController.Self.CurrentTile.Y), new Vector2(_x, _y));
 
         if (ParentController.Path.vectorPath.Count > 1)
         {

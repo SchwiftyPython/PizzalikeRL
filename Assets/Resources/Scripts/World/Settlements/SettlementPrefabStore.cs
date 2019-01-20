@@ -171,7 +171,7 @@ public class SettlementPrefabStore : MonoBehaviour
                 {
                     SettlementPrefabs.Add(currentPreFab, new List<SettlementPrefab>());
                 }
-                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[NumColumns, NumRows]));
+                SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[NumRows, NumColumns]));
 
                 currentStep = LoadingSteps.Template;
                 currentRow = 0;
@@ -190,7 +190,7 @@ public class SettlementPrefabStore : MonoBehaviour
 
                     //Debug.Log($"x: {x}  y: {y}");
 
-                    row[currentColumn, currentRow] = trimmedLine[currentColumn];
+                    row[currentRow, currentColumn] = trimmedLine[currentColumn];
                 }
                 currentRow++;
             }
@@ -222,24 +222,24 @@ public class SettlementPrefabStore : MonoBehaviour
         {
             for (var currentColumn = 0; currentColumn < NumColumns; currentColumn++)
             {
-                if (blueprint[currentColumn, currentRow] != LotKey)
+                if (blueprint[currentRow, currentColumn] != LotKey)
                 {
                     continue;
                 }
 
                 if (prefab.Lots.Count == 0)
                 {
-                    var lot = GetNewLotInfo(new Vector2(currentColumn, currentRow), blueprint);
+                    var lot = GetNewLotInfo(new Vector2(currentRow, currentColumn), blueprint);
                     prefab.Lots.Add(lot);
                 }
                 else
                 {
-                    if (IsPartOfExistingLot(new Vector2(currentColumn, currentRow), prefab.Lots))
+                    if (IsPartOfExistingLot(new Vector2(currentRow, currentColumn), prefab.Lots))
                     {
                         continue;
                     }
 
-                    var lot = GetNewLotInfo(new Vector2(currentColumn, currentRow), blueprint);
+                    var lot = GetNewLotInfo(new Vector2(currentRow, currentColumn), blueprint);
                     prefab.Lots.Add(lot);
                 }
             }

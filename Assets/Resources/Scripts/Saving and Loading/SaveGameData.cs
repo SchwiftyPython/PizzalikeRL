@@ -4,6 +4,7 @@ using System.Linq;
 using BayatGames.SaveGameFree;
 using BayatGames.SaveGameFree.Serializers;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -27,6 +28,8 @@ public class SaveGameData : MonoBehaviour
         public class SerializableItemDictionary : SerializableDictionary<Guid, ItemSdo> { }
 
         public SerializableItemDictionary Items;
+
+        public List<FactionSdo> FactionSdos;
 
         public string CurrentCellId;
         public string CurrentAreaId;
@@ -91,7 +94,8 @@ public class SaveGameData : MonoBehaviour
                 CurrentState = GameManager.Instance.CurrentState,
                 CurrentSceneName = GameManager.Instance.CurrentScene.ToString(),
                 Messages = GameManager.Instance.Messages,
-                ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders)
+                ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders),
+                FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList())
             };
 
             var saveGameFileNames =
@@ -127,7 +131,7 @@ public class SaveGameData : MonoBehaviour
 
         WorldData.Instance.Entities = ConvertEntitiesForPlaying(saveData.Entities);
 
-        //load factions
+        WorldData.Instance.Factions = ConvertFactionsForPlaying(saveData.FactionSdos);
         
         WorldData.Instance.Map = ConvertMapForPlaying(saveData.Map);
 
@@ -146,9 +150,9 @@ public class SaveGameData : MonoBehaviour
 
         GameManager.Instance.Messages = saveData.Messages;
 
-        //convert active orders for playing
+        GameManager.Instance.ActiveOrders = ConvertActiveOrdersForPlaying(saveData.ActiveOrders);
 
-        //load current scene by scene name
+        SceneManager.LoadScene(saveData.CurrentSceneName);
     }
 
     private void LoadSavedGamesFileInfo()
@@ -253,7 +257,27 @@ public class SaveGameData : MonoBehaviour
         return convertedOrders;
     }
 
-    private Dictionary<Guid, Entity> ConvertEntitiesForPlaying(SaveData.SerializableEntitiesDictionary entitySdos)
+    private static Dictionary<string, PizzaOrder> ConvertActiveOrdersForPlaying(
+        SaveData.SerializableOrdersDictionary orderSdos)
+    {
+        var activeOrders = new Dictionary<string, PizzaOrder>();
+
+        foreach (var sdo in orderSdos)
+        {
+            if (activeOrders.ContainsKey(sdo.Key))
+            {
+                continue;
+            }
+
+            var order = PizzaOrderSdo.ConvertToPizzaOrder(sdo.Value);
+
+            activeOrders.Add(sdo.Key, order);
+        }
+
+        return activeOrders;
+    }
+
+    private static Dictionary<Guid, Entity> ConvertEntitiesForPlaying(SaveData.SerializableEntitiesDictionary entitySdos)
     {
         return EntitySdo.ConvertToEntities(entitySdos);
     }
@@ -261,5 +285,24 @@ public class SaveGameData : MonoBehaviour
     private static Dictionary<Guid, Item> ConvertItemsForPlaying(SaveData.SerializableItemDictionary itemSdos)
     {
         return itemSdos.Select(sdo => ItemSdo.ConvertToItem(sdo.Value)).ToDictionary(item => item.Id);
+    }
+
+    private Dictionary<string, Faction> ConvertFactionsForPlaying(IEnumerable<FactionSdo> factionSdos)
+    {
+        var factions = new Dictionary<string, Faction>();
+
+        foreach (var sdo in factionSdos)
+        {
+            if (factions.ContainsKey(sdo.Name))
+            {
+                continue;
+            }
+
+            var faction  = new Faction(sdo);
+
+            factions.Add(faction.Name, faction);
+        }
+
+        return factions;
     }
 }

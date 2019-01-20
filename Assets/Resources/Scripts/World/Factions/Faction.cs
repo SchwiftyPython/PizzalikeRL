@@ -48,6 +48,34 @@ public class Faction
         CreateLeader();
     }
 
+    public Faction(FactionSdo sdo)
+    {
+        Relationships = new RelationshipDictionary();
+        Religions = new Dictionary<string, int>();
+        EntitiesWithFluff = new List<Entity>();
+
+        PopType = sdo.PopType;
+        Relationships = sdo.Relationships;
+        Citizens = new List<Entity>();
+        EntitiesWithFluff = new List<Entity>();
+        Leader = WorldData.Instance.Entities[sdo.LeaderId];
+        Name = sdo.Name;
+        Population = sdo.Population;
+
+        foreach (var id in sdo.CitizenIds)
+        {
+            var citizen = WorldData.Instance.Entities[id];
+            citizen.Faction = this;
+            Citizens.Add(citizen);
+        }
+
+        foreach (var id in sdo.EntitiesWithFluffIds)
+        {
+            var entity = WorldData.Instance.Entities[id];
+            EntitiesWithFluff.Add(entity);
+        }
+    }
+
     public Faction(FactionTemplate factionTemplate)
     {
         Relationships = new RelationshipDictionary();

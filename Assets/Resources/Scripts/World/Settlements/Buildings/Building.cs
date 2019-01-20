@@ -20,8 +20,8 @@ public class Building
         Width = prefab.Width;
         Height = prefab.Height;
 
-        FloorTiles = new GameObject[prefab.Width, prefab.Height];
-        WallTiles = new GameObject[prefab.Width, prefab.Height];
+        FloorTiles = new GameObject[prefab.Height, prefab.Width];
+        WallTiles = new GameObject[prefab.Height, prefab.Width];
 
         PickTilePrefabs();
 
@@ -29,18 +29,18 @@ public class Building
         {
             for (var currentColumn = 0; currentColumn < prefab.Width; currentColumn++)
             {
-                var tileCode = prefab.Blueprint[currentColumn, currentRow];
+                var tileCode = prefab.Blueprint[currentRow, currentColumn];
 
                 if (BuildingPrefabStore.WallTileKeys.ContainsKey(tileCode))
                 {
                     var tile = GetRandomFloorTilePrefab();
 
-                    FloorTiles[currentColumn, currentRow] = tile;
+                    FloorTiles[currentRow, currentColumn] = tile;
 
                     var tileType = BuildingPrefabStore.WallTileKeys[tileCode];
                     tile = WallTilePrefabs[tileType];
 
-                    WallTiles[currentColumn, currentRow] = tile;
+                    WallTiles[currentRow, currentColumn] = tile;
                 }
                 else
                 {
@@ -51,7 +51,7 @@ public class Building
 
                     var tile = GetRandomFloorTilePrefab();
 
-                    FloorTiles[currentColumn, currentRow] = tile;
+                    FloorTiles[currentRow, currentColumn] = tile;
                 }
             }
         }

@@ -426,28 +426,28 @@ public class Generator : MonoBehaviour
 
     private Cell GetTop(Cell t)
     {
-        return _cells[t.X, MathHelper.Mod(t.Y + 1, _height)];
+        return _cells[MathHelper.Mod(t.X + 1, _height), t.Y];
     }
     private Cell GetBottom(Cell t)
     {
-        return _cells[t.X, MathHelper.Mod(t.Y - 1, _height)];
+        return _cells[MathHelper.Mod(t.X - 1, _height), t.Y];
     }
     private Cell GetLeft(Cell t)
     {
-        return _cells[MathHelper.Mod(t.X - 1, _width), t.Y];
+        return _cells[t.X, MathHelper.Mod(t.Y - 1, _width)];
     }
     private Cell GetRight(Cell t)
     {
-        return _cells[MathHelper.Mod(t.X + 1, _width), t.Y];
+        return _cells[t.X, MathHelper.Mod(t.Y + 1, _width)];
     }
 
     private void UpdateNeighbors()
     {
-        for (var x = 0; x < _width; x++)
+        for (var currentRow = 0; currentRow < _height; currentRow++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var currentColumn = 0; currentColumn < _width; currentColumn++)
             {
-                var c = _cells[x, y];
+                var c = _cells[currentRow, currentColumn];
 
                 c.Top = GetTop(c);
                 c.Bottom = GetBottom(c);
@@ -459,9 +459,9 @@ public class Generator : MonoBehaviour
 
     private void UpdateBitmasks()
     {
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
                 _cells[x, y].UpdateBitmask();
             }
@@ -473,9 +473,9 @@ public class Generator : MonoBehaviour
         // Use a stack instead of recursion
         var stack = new Stack<Cell>();
 
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
 
                 var c = _cells[x, y];
@@ -557,8 +557,8 @@ public class Generator : MonoBehaviour
         {
 
             // Get a random tile
-            var x = Random.Range(0, _width);
-            var y = Random.Range(0, _height);
+            var x = Random.Range(0, _height);
+            var y = Random.Range(0, _width);
             var cell = _cells[x, y];
 
             // validate the tile
@@ -713,9 +713,9 @@ public class Generator : MonoBehaviour
     private void BuildRiverGroups()
     {
         //loop each tile, checking if it belongs to multiple rivers
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
                 var c = _cells[x, y];
 
@@ -825,7 +825,7 @@ public class Generator : MonoBehaviour
 
         var counter = 0;
         var intersectionCount = river.Cells.Count - intersectionId;
-        var size = UnityEngine.Random.Range(intersectionSize, 5);
+        var size = Random.Range(intersectionSize, 5);
         river.Length = river.Cells.Count;
 
         // randomize size change
@@ -840,25 +840,25 @@ public class Generator : MonoBehaviour
         var fivemin = five / 3;
 
         // randomize length of each size
-        var count1 = UnityEngine.Random.Range(fivemin, five);
+        var count1 = Random.Range(fivemin, five);
         if (size < 4)
         {
             count1 = 0;
         }
-        var count2 = count1 + UnityEngine.Random.Range(fourmin, four);
+        var count2 = count1 + Random.Range(fourmin, four);
         if (size < 3)
         {
             count2 = 0;
             count1 = 0;
         }
-        var count3 = count2 + UnityEngine.Random.Range(threemin, three);
+        var count3 = count2 + Random.Range(threemin, three);
         if (size < 2)
         {
             count3 = 0;
             count2 = 0;
             count1 = 0;
         }
-        var count4 = count3 + UnityEngine.Random.Range(twomin, two);
+        var count4 = count3 + Random.Range(twomin, two);
 
         // Make sure we are not digging past the river path
         if (count4 > river.Length)
@@ -949,7 +949,7 @@ public class Generator : MonoBehaviour
         var counter = 0;
 
         // How wide are we digging this river?
-        var size = UnityEngine.Random.Range(1, 5);
+        var size = Random.Range(1, 5);
         river.Length = river.Cells.Count;
 
         // randomize size change
@@ -964,25 +964,25 @@ public class Generator : MonoBehaviour
         var fivemin = five / 3;
 
         // randomize lenght of each size
-        var count1 = UnityEngine.Random.Range(fivemin, five);
+        var count1 = Random.Range(fivemin, five);
         if (size < 4)
         {
             count1 = 0;
         }
-        var count2 = count1 + UnityEngine.Random.Range(fourmin, four);
+        var count2 = count1 + Random.Range(fourmin, four);
         if (size < 3)
         {
             count2 = 0;
             count1 = 0;
         }
-        var count3 = count2 + UnityEngine.Random.Range(threemin, three);
+        var count3 = count2 + Random.Range(threemin, three);
         if (size < 2)
         {
             count3 = 0;
             count2 = 0;
             count1 = 0;
         }
-        var count4 = count3 + UnityEngine.Random.Range(twomin, two);
+        var count4 = count3 + Random.Range(twomin, two);
 
         // Make sure we are not digging past the river path
         if (count4 > river.Length)
@@ -1041,9 +1041,9 @@ public class Generator : MonoBehaviour
 
     private void AdjustMoistureMap()
     {
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
 
                 var c = _cells[x, y];
@@ -1096,9 +1096,9 @@ public class Generator : MonoBehaviour
         var deck = new FactionDeck();
         const int numCellsTilNextDraw = 25;
 
-        var currentX = 0;
-        var currentY = 0;
-        var currentCell = _cells[currentX, currentY];
+        var currentRow = 0;
+        var currentColumn = 0;
+        var currentCell = _cells[currentRow, currentColumn];
 
         foreach (var card in deck.Cards)
         {
@@ -1133,25 +1133,25 @@ public class Generator : MonoBehaviour
                         //Debug.Log(card + " placed at " + currentX + ", " + currentY);
                     }
                 }
-                if (currentX + numCellsTilNextDraw >= _width)
+                if (currentRow + numCellsTilNextDraw >= _height)
                 {
-                    currentX += numCellsTilNextDraw - _width;
+                    currentRow += numCellsTilNextDraw - _height;
                     
-                    if (currentY + 1 >= _height)
+                    if (currentColumn + 1 >= _width)
                     {
-                        currentY = 0;
+                        currentColumn = 0;
                     }
                     else
                     {
-                        currentY ++;
+                        currentColumn ++;
                     }
 
                 }
                 else
                 {
-                    currentX += numCellsTilNextDraw;
+                    currentRow += numCellsTilNextDraw;
                 }
-                currentCell = _cells[currentX, currentY];
+                currentCell = _cells[currentRow, currentColumn];
             }
         }
     }

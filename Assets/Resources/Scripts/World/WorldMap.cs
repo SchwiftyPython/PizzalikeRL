@@ -61,10 +61,10 @@ public class WorldMap : MonoBehaviour
     private void PlacePlayer()
     {
         _playerSprite = GameManager.Instance.Player.GetSprite();
-        _playerSprite.transform.position = new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
-        GameManager.Instance.Player.CurrentPosition = _playerSprite.transform.position;
-//        Camera.transform.SetParent(_playerSprite.transform);
-//        Camera.SetActive(true);
-//        Camera.transform.localPosition = new Vector3(0, 0, -10);
+
+        GameManager.Instance.Player.CurrentPosition =
+            new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
+
+        _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
     }
 }

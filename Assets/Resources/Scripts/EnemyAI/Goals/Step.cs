@@ -36,7 +36,7 @@ public class Step : Goal
             return;
         }
 
-        var currentPosition = ParentController.Self.CurrentPosition;
+        var currentPosition = new Vector2(ParentController.Self.CurrentTile.X, ParentController.Self.CurrentTile.Y);
         var targetposition = new Vector2(
             (int) (currentPosition.x + DirectionDictionary[StepDirection].x),
             (int) (currentPosition.y + DirectionDictionary[StepDirection].y));

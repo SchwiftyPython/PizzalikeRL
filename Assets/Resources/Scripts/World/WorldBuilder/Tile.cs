@@ -28,7 +28,8 @@ public class Tile
     public Tile Top;
     public Tile Bottom;
 
-    public Vector2 GridPosition;
+    public int X, Y;             //array positions     
+    public Vector2 GridPosition; //on screen position
     public string Id;
 
     public GameObject FovTile;
@@ -94,10 +95,12 @@ public class Tile
     public Tile(GameObject texture, Vector2 position, bool blocksMovement, bool blocksLight)
     {
         _prefabTexture = texture;
-        GridPosition = position;
+        X = (int) position.x;
+        Y = (int) position.y;
+        GridPosition = new Vector2(Y, X);
         _blocksMovement = blocksMovement;
         _blocksLight = blocksLight;
-        Id = (int)GridPosition.x + " " + (int)GridPosition.y;
+        Id = X + " " + Y;
     }
 
     public void SetPresentEntity(Entity entity)

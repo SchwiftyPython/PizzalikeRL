@@ -245,10 +245,10 @@ public class Area
         Tile startTile = null;
         while (!foundStartingPoint && numTries < maxTries)
         {
-            var x = Random.Range(0, Width);
-            var y = Random.Range(0, Height);
+            var row = Random.Range(0, Height);
+            var column = Random.Range(0, Width);
             
-            startTile = AreaTiles[x, y];
+            startTile = AreaTiles[row, column];
 
             if (CanPlaceWaterTile(startTile))
             {
@@ -268,13 +268,13 @@ public class Area
         var maxWaterHeight = BiomeType == BiomeType.Swamp ? Random.Range(Height / 6, Height - 5) : Random.Range(3, Height / 2);
         var maxWaterWidth = BiomeType == BiomeType.Swamp ? Random.Range(Width / 6, Width - 5) : Random.Range(3, Width / 2);
 
-        var tempMap = new Tile[Width, Height];
+        var tempMap = new Tile[Height, Width];
         var currentHeight = 0;
         var success = true;
-        for (var currentRow = (int) startTile.GridPosition.y; currentHeight < maxWaterHeight; currentRow++)
+        for (var currentRow = (int) startTile.GridPosition.x; currentHeight < maxWaterHeight; currentRow++)
         {
             var currentWidth = 0;
-            for (var currentColumn = (int) startTile.GridPosition.x; currentWidth < maxWaterWidth; currentColumn++)
+            for (var currentColumn = (int) startTile.GridPosition.y; currentWidth < maxWaterWidth; currentColumn++)
             {
                 if (currentRow >= Height || currentColumn >= Width)
                 {
@@ -498,28 +498,28 @@ public class Area
 
     private Tile GetTop(Tile t)
     {
-        return AreaTiles[(int) t.GridPosition.x, MathHelper.Mod((int) (t.GridPosition.y - 1), Height)];
+        return AreaTiles[MathHelper.Mod(t.X + 1, Height), t.Y];
     }
     private Tile GetBottom(Tile t)
     {
-        return AreaTiles[(int) t.GridPosition.x, MathHelper.Mod((int) (t.GridPosition.y + 1), Height)];
+        return AreaTiles[MathHelper.Mod(t.X - 1, Height), t.Y];
     }
     private Tile GetLeft(Tile t)
     {
-        return AreaTiles[MathHelper.Mod((int) (t.GridPosition.x - 1), Width), (int) t.GridPosition.y];
+        return AreaTiles[t.X, MathHelper.Mod(t.Y - 1, Width)];
     }
     private Tile GetRight(Tile t)
     {
-        return AreaTiles[MathHelper.Mod((int) (t.GridPosition.x + 1), Width), (int) t.GridPosition.y];
+        return AreaTiles[t.X, MathHelper.Mod(t.Y + 1, Width)];
     }
 
     private void UpdateNeighbors()
     {
-        for (var x = 0; x < Width; x++)
+        for (var row = 0; row < Height; row++)
         {
-            for (var y = 0; y < Height; y++)
+            for (var column = 0; column < Width; column++)
             {
-                var t = AreaTiles[x, y];
+                var t = AreaTiles[row, column];
 
                 t.Top = GetTop(t);
                 t.Bottom = GetBottom(t);

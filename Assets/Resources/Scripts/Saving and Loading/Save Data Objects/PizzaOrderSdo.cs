@@ -21,4 +21,16 @@ public class PizzaOrderSdo
 
         return tempSdo;
     }
+
+    public static PizzaOrder ConvertToPizzaOrder(PizzaOrderSdo sdo)
+    {
+        var order = new PizzaOrder
+        {
+            Customer = WorldData.Instance.Entities[sdo.CustomerId],
+            CustomerLocation = WorldData.Instance.MapDictionary[sdo.CustomerLocationId],
+            Pizzas = sdo.Pizzas
+        };
+
+        return order;
+    }
 }

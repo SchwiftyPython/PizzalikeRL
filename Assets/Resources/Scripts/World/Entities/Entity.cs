@@ -27,6 +27,7 @@ public class Entity
         NorthWest
     }
 
+    //todo directions need fixing either here or deciding movement direction
     private readonly IDictionary<Direction, Vector2> _directions = new Dictionary<Direction, Vector2>
     {
         {Direction.North, Vector2.up},
@@ -52,11 +53,11 @@ public class Entity
     private readonly GameObject _prefab;
     private GameObject _sprite;
 
-    public readonly Faction Faction;
+    public Faction Faction;
 
     public int TotalBodyPartCoverage { get; set; }
 
-    private Vector3 _currentPosition;
+    private Vector3 _currentPosition; //on screen position
 
     public string PrefabPath;
 
@@ -105,8 +106,8 @@ public class Entity
 
         set
         {
-            _currentPosition = value;
-            SetSpritePosition(value);
+            _currentPosition = new Vector2(value.y, value.x);
+            SetSpritePosition(_currentPosition);
         }
     }
 
@@ -377,7 +378,7 @@ public class Entity
     public void AreaMove(Vector2 target)
     {
         //todo: clean up this code
-        _startTile = CurrentPosition;
+        _startTile = new Vector2(CurrentTile.X, CurrentTile.Y);
         _endTile = target;
 
         if (TileOutOfBounds(target))
@@ -410,11 +411,9 @@ public class Entity
 
                     //update tile data for start and end tiles
                     UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                        CurrentArea.AreaTiles[(int) CurrentTile.GetGridPosition().x,
-                            (int) CurrentTile.GetGridPosition().y]);
+                        CurrentArea.AreaTiles[CurrentTile.X, CurrentTile.Y]);
 
-                    CurrentPosition = new Vector3((int) CurrentTile.GetGridPosition().x,
-                        (int) CurrentTile.GetGridPosition().y);
+                    CurrentPosition = new Vector3(CurrentTile.X, CurrentTile.Y);
 
                     if (_isPlayer)
                     {
@@ -440,11 +439,9 @@ public class Entity
                 CurrentTile = CalculateAreaEntryTile(target);
 
                 //update tile data for start and end tiles
-                CurrentPosition = new Vector3((int) CurrentTile.GetGridPosition().x,
-                    (int) CurrentTile.GetGridPosition().y);
+                CurrentPosition = new Vector3(CurrentTile.X, CurrentTile.Y);
                 UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                    CurrentArea.AreaTiles[(int) CurrentTile.GetGridPosition().x,
-                        (int) CurrentTile.GetGridPosition().y]);
+                    CurrentArea.AreaTiles[CurrentTile.X, CurrentTile.Y]);
 
                 if (_isPlayer)
                 {
@@ -461,6 +458,7 @@ public class Entity
             CurrentTile = CurrentArea.AreaTiles[(int) _endTile.x, (int) _endTile.y];
             if (_isPlayer)
             {
+                //todo probably don't need this
                 GameManager.Instance.Player.CurrentPosition = CurrentPosition;
             }
             //SetSpritePosition(EndTile);
@@ -484,6 +482,7 @@ public class Entity
         {
             CurrentPosition = new Vector3((int) targetCell.x, (int) targetCell.y);
 
+            //todo probably don't need
             GameManager.Instance.Player.CurrentPosition = CurrentPosition;
 
             GameManager.Instance.CurrentCell = WorldData.Instance.Map[(int) targetCell.x, (int) targetCell.y];
@@ -506,19 +505,19 @@ public class Entity
 
     public bool TileOutOfBounds(Vector2 target)
     {
-        return target.x >= CurrentArea.Width || target.x < 0 || target.y >= CurrentArea.Height || target.y < 0;
+        return target.y >= CurrentArea.Width || target.y < 0 || target.x >= CurrentArea.Height || target.x < 0;
     }
 
     public bool AreaOutOfBounds(Vector2 target)
     {
-        return target.x >= CurrentCell.GetCellWidth() || target.x < 0 || target.y >= CurrentCell.GetCellHeight() ||
-               target.y < 0;
+        return target.y >= CurrentCell.GetCellWidth() || target.y < 0 || target.x >= CurrentCell.GetCellHeight() ||
+               target.x < 0;
     }
 
     public bool CellOutOfBounds(Vector2 target)
     {
-        return target.x >= WorldData.Instance.Width || target.x < 0 || target.y >= WorldData.Instance.Height ||
-               target.y < 0;
+        return target.y >= WorldData.Instance.Width || target.y < 0 || target.x >= WorldData.Instance.Height ||
+               target.x < 0;
     }
 
     public Tile CalculateAreaEntryTile(Vector2 target)
@@ -886,8 +885,8 @@ public class Entity
 
     public int CalculateDistanceToTarget(Entity target)
     {
-        var a = target.CurrentPosition.x - CurrentPosition.x;
-        var b = target.CurrentPosition.y - CurrentPosition.y;
+        var a = target.CurrentTile.X - CurrentTile.X;
+        var b = target.CurrentTile.Y - CurrentTile.Y;
 
         return (int) Math.Sqrt(a * a + b * b);
     }
