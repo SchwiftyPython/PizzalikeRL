@@ -116,7 +116,7 @@ public class Fov : MonoBehaviour
 
     private static Vinteger TransformOctant(int row, int col, int octant)
     {
-        switch (octant)
+        /*switch (octant)
         {
             case 0:
                 return new Vinteger(col, -row);
@@ -136,15 +136,37 @@ public class Fov : MonoBehaviour
                 return new Vinteger(-col, -row);
             default:
                 return new Vinteger(0, 0);
+        }*/
+
+        switch (octant)
+        {
+            case 0:
+                return new Vinteger(row, -col);
+            case 1:
+                return new Vinteger(col, -row);
+            case 2:
+                return new Vinteger(col, row);
+            case 3:
+                return new Vinteger(row, col);
+            case 4:
+                return new Vinteger(-row, col);
+            case 5:
+                return new Vinteger(-col, row);
+            case 6:
+                return new Vinteger(-col, -row);
+            case 7:
+                return new Vinteger(-row, -col);
+            default:
+                return new Vinteger(0, 0);
         }
     }
 
     private static Shadow ProjectTile(int row, int col)
     {
-        var topLeft = (float) col / (row + 2);
-        var bottomRight = (float) (col + 1) / (row + 1);
+        var topLeft = (float) row / (col + 2);
+        var bottomRight = (float) (row + 1) / (col + 1);
 
-        return new Shadow(topLeft, bottomRight, new Vinteger(col, row + 2), new Vinteger(col + 1, row + 1));
+        return new Shadow(topLeft, bottomRight, new Vinteger(row, col + 2), new Vinteger(row + 1, col + 1));
     }
 }
 

@@ -104,23 +104,23 @@ public class MoveToLocal : Goal
     {
         var difference = endPoint - startPoint;
 
-        if (difference == Vector2.up)
+        if (difference == new Vector2(0, 1))
         {
-            return GoalDirection.North;
+            return GoalDirection.East;
         }
         if (difference == new Vector2(1, 1))
         {
             return GoalDirection.NorthEast;
         }
-        if (difference == Vector2.right)
+        if (difference == new Vector2(0, 1))
         {
             return GoalDirection.East;
         }
-        if (difference == new Vector2(1, -1))
+        if (difference == new Vector2(-1, 1))
         {
             return GoalDirection.SouthEast;
         }
-        if (difference == Vector2.down)
+        if (difference == new Vector2(-1, 0))
         {
             return GoalDirection.South;
         }
@@ -128,11 +128,11 @@ public class MoveToLocal : Goal
         {
             return GoalDirection.SouthWest;
         }
-        if (difference == Vector2.left)
+        if (difference == new Vector2(0, -1))
         {
             return GoalDirection.West;
         }
-        if (difference == new Vector2(-1, 1))
+        if (difference == new Vector2(1, -1))
         {
             return GoalDirection.NorthWest;
         }

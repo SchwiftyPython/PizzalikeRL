@@ -81,7 +81,7 @@ public class AreaMap : MonoBehaviour
         //fieldOfView = AreaMapHolder.AddComponent<Fov>();
 
         Fov.Init(_currentArea);
-        var v = new Vinteger((int) _player.GetSprite().transform.position.x, (int)_player.GetSprite().transform.position.y);
+        var v = new Vinteger(_player.CurrentTile.X, _player.CurrentTile.Y);
         Fov.Refresh(v);
 
         AreaReady = true;
@@ -264,7 +264,7 @@ public class AreaMap : MonoBehaviour
             if (_currentArea != null)
             {
                 var placed = false;
-                var y = 2;
+                var y = _currentArea.Width - 5;
                 var x = _currentArea.Height - 20;
                 while (!placed)
                 {
@@ -272,6 +272,7 @@ public class AreaMap : MonoBehaviour
                     {
                         //_playerSprite.transform.position = new Vector3(x, y);
                         _player.CurrentPosition = new Vector3(x, y);
+                        _player.CurrentTile = _currentArea.AreaTiles[x, y];
                         //Debug.Log(("current area: " + _currentArea.AreaTiles[x, y]));
                         _currentArea.AreaTiles[x, y].SetPresentEntity(_player);
                         placed = true;

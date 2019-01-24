@@ -141,7 +141,6 @@ public class EntitySdo
                 Mobile = entitySdo.Value.Mobile,
                 CurrentCell = WorldData.Instance.MapDictionary[entitySdo.Value.CurrentCellId]
             };
-            //todo get faction by name
 
             var areaId = entitySdo.Value.CurrentAreaId.Split(' ');
 

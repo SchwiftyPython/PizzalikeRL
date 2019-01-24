@@ -26,18 +26,17 @@ public class Entity
         West,
         NorthWest
     }
-
-    //todo directions need fixing either here or deciding movement direction
+    
     private readonly IDictionary<Direction, Vector2> _directions = new Dictionary<Direction, Vector2>
     {
-        {Direction.North, Vector2.up},
-        {Direction.NorthEast, Vector2.one},
-        {Direction.East, Vector2.right},
-        {Direction.SouthEast, new Vector2(1, -1)},
-        {Direction.South, Vector2.down},
+        {Direction.North, new Vector2(1, 0)},
+        {Direction.NorthEast, new Vector2(1, 1)},
+        {Direction.East, new Vector2(0, 1)},
+        {Direction.SouthEast, new Vector2(-1, 1)},
+        {Direction.South, new Vector2(-1, 0)},
         {Direction.SouthWest, new Vector2(-1, -1)},
-        {Direction.West, Vector2.left},
-        {Direction.NorthWest, new Vector2(-1, 1)}
+        {Direction.West,new Vector2(0, -1)},
+        {Direction.NorthWest, new Vector2(1, -1)}
     };
 
     private Vector2 _startTile;
@@ -456,12 +455,6 @@ public class Entity
         {
             CurrentPosition = _endTile;
             CurrentTile = CurrentArea.AreaTiles[(int) _endTile.x, (int) _endTile.y];
-            if (_isPlayer)
-            {
-                //todo probably don't need this
-                GameManager.Instance.Player.CurrentPosition = CurrentPosition;
-            }
-            //SetSpritePosition(EndTile);
 
             //update tile data for start and end tiles
             UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
@@ -481,9 +474,6 @@ public class Entity
         else
         {
             CurrentPosition = new Vector3((int) targetCell.x, (int) targetCell.y);
-
-            //todo probably don't need
-            GameManager.Instance.Player.CurrentPosition = CurrentPosition;
 
             GameManager.Instance.CurrentCell = WorldData.Instance.Map[(int) targetCell.x, (int) targetCell.y];
             CurrentCell = GameManager.Instance.CurrentCell;
@@ -524,21 +514,21 @@ public class Entity
     {
         var xOffset = 0;
         var yOffset = 0;
-        if (target.x >= GameManager.Instance.CurrentArea.Width)
+        if (target.x >= GameManager.Instance.CurrentArea.Height)
         {
-            xOffset = -GameManager.Instance.CurrentArea.Width;
+            xOffset = -GameManager.Instance.CurrentArea.Height;
         }
         else if (target.x < 0)
         {
-            xOffset = GameManager.Instance.CurrentArea.Width;
+            xOffset = GameManager.Instance.CurrentArea.Height;
         }
-        if (target.y >= GameManager.Instance.CurrentArea.Height)
+        if (target.y >= GameManager.Instance.CurrentArea.Width)
         {
-            yOffset = -GameManager.Instance.CurrentArea.Height;
+            yOffset = -GameManager.Instance.CurrentArea.Width;
         }
         else if (target.y < 0)
         {
-            yOffset = GameManager.Instance.CurrentArea.Height;
+            yOffset = GameManager.Instance.CurrentArea.Width;
         }
         return GameManager.Instance.CurrentArea.AreaTiles[(int) target.x + xOffset, (int) target.y + yOffset];
     }
@@ -547,21 +537,21 @@ public class Entity
     {
         var xOffset = 0;
         var yOffset = 0;
-        if (target.x >= GameManager.Instance.CurrentCell.GetCellWidth())
+        if (target.x >= GameManager.Instance.CurrentCell.GetCellHeight())
         {
-            xOffset = -GameManager.Instance.CurrentCell.GetCellWidth();
+            xOffset = -GameManager.Instance.CurrentCell.GetCellHeight();
         }
         else if (target.x < 0)
         {
-            xOffset = GameManager.Instance.CurrentCell.GetCellWidth();
+            xOffset = GameManager.Instance.CurrentCell.GetCellHeight();
         }
-        if (target.y >= GameManager.Instance.CurrentCell.GetCellHeight())
+        if (target.y >= GameManager.Instance.CurrentCell.GetCellWidth())
         {
-            yOffset = -GameManager.Instance.CurrentCell.GetCellHeight();
+            yOffset = -GameManager.Instance.CurrentCell.GetCellWidth();
         }
         else if (target.y < 0)
         {
-            yOffset = GameManager.Instance.CurrentCell.GetCellHeight();
+            yOffset = GameManager.Instance.CurrentCell.GetCellWidth();
         }
         var targetAreaPosition = new Vector2((int)target.x + xOffset, (int)target.y + yOffset);
         Debug.Log("Original target area:" + target);
@@ -571,44 +561,44 @@ public class Entity
 
     public Direction AreaOutOfBoundsDirection(Vector2 target, Area area)
     {
-        if (target.x >= area.Width)
+        if (target.x >= area.Height)
         {
-            if (target.y >= area.Height)
+            if (target.y >= area.Width)
             {
                 return Direction.NorthEast;
             }
-            return target.y < 0 ? Direction.SouthEast : Direction.East;
+            return target.y < 0 ? Direction.NorthWest : Direction.North;
         }
-        if (!(target.x < 0))
+        if (target.x < 0)
         {
-            return target.y < 0 ? Direction.South : Direction.North;
+            if (target.y >= area.Width)
+            {
+                return Direction.SouthEast;
+            }
+            return target.y < 0 ? Direction.SouthWest : Direction.South;
         }
-        if (target.y >= area.Height)
-        {
-            return Direction.NorthWest;
-        }
-        return target.y < 0 ? Direction.SouthWest : Direction.West;
+        return target.y >= area.Width ? Direction.East : Direction.West;
     }
 
     public Direction CellOutOfBoundsDirection(Vector2 target, Cell cell)
     {
-        if (target.x >= cell.GetCellWidth())
+        if (target.x >= cell.GetCellHeight())
         {
-            if (target.y >= cell.GetCellHeight())
+            if (target.y >= cell.GetCellWidth())
             {
                 return Direction.NorthEast;
             }
-            return target.y < 0 ? Direction.SouthEast : Direction.East;
+            return target.y < 0 ? Direction.NorthWest : Direction.North;
         }
-        if (!(target.x < 0))
+        if (target.x < 0)
         {
-            return target.y < 0 ? Direction.South : Direction.North;
+            if (target.y >= cell.GetCellWidth())
+            {
+                return Direction.SouthEast;
+            }
+            return target.y < 0 ? Direction.SouthWest : Direction.South;
         }
-        if (target.y >= cell.GetCellHeight())
-        {
-            return Direction.NorthWest;
-        }
-        return target.y < 0 ? Direction.SouthWest : Direction.West;
+        return target.y >= cell.GetCellWidth() ? Direction.East : Direction.West;
     }
 
     public void MeleeAttack(Entity target)
@@ -640,7 +630,7 @@ public class Entity
             if (AreaMapCanMove(target))
             {
                 AreaMove(target);
-                var v = new Vinteger((int)_sprite.transform.position.x, (int)_sprite.transform.position.y);
+                var v = new Vinteger(CurrentTile.X, CurrentTile.Y);
                 AreaMap.Instance.Fov.Refresh(v);
                 return true;
             }
