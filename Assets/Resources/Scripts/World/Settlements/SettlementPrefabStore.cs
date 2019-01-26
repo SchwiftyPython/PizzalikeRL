@@ -262,15 +262,15 @@ public class SettlementPrefabStore : MonoBehaviour
         while (blueprint[x,y] == LotKey)
         {
             width++;
-            x++;
+            y++;
         }
-        x--;
-        y = (int)upperLeftCorner.y;
+        y--;
+        x = (int)upperLeftCorner.x;
 
         while (blueprint[x, y] == LotKey)
         {
             height++;
-            y++;
+            x++;
         }
 
         return new Lot(upperLeftCorner, height, width);
@@ -420,17 +420,17 @@ public class SettlementPrefabStore : MonoBehaviour
 
     public static char[,] Rotate180(char[,] blueprint){
         
-        var width = blueprint.GetLength(0);
-        var height = blueprint.GetLength(1);
-        var answer = new char[width, height];
+        var height = blueprint.GetLength(0);
+        var width = blueprint.GetLength(1);
+        var answer = new char[height, width];
 
-        for (var y = 0; y < height / 2; y++)
+        for (var row = 0; row < height / 2; row++)
         {
-            var topY = y;
-            var bottomY = height - 1 - y;
-            for (var topX = 0; topX < width; topX++)
+            var topX = row;
+            var bottomX = height - 1 - row;
+            for (var topY = 0; topY < width; topY++)
             {
-                var bottomX = width - topX - 1;
+                var bottomY = width - topY - 1;
                 answer[topX, topY] = blueprint[bottomX, bottomY];
                 answer[bottomX, bottomY] = blueprint[topX, topY];
             }
@@ -441,12 +441,12 @@ public class SettlementPrefabStore : MonoBehaviour
             return answer;
         }
 
-        var centerY = height / 2;
-        for (var leftX = 0; leftX < Mathf.CeilToInt(width / 2f); leftX++)
+        var centerX = height / 2;
+        for (var leftY = 0; leftY < Mathf.CeilToInt(width / 2f); leftY++)
         {
-            var rightX = width - 1 - leftX;
-            answer[leftX, centerY] = blueprint[rightX, centerY];
-            answer[rightX, centerY] = blueprint[leftX, centerY];
+            var rightY = width - 1 - leftY;
+            answer[centerX, leftY] = blueprint[centerX, rightY];
+            answer[centerX, rightY] = blueprint[centerX, leftY];
         }
         
         return answer;

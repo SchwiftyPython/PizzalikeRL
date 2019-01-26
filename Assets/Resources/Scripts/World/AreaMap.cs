@@ -134,7 +134,6 @@ public class AreaMap : MonoBehaviour
             var building = lot.AssignedBuilding;
             for (var currentRow = 0; currentRow < building.Height; currentRow++)
             {
-                areaY--;
                 for (var currentColumn = 0; currentColumn < building.Width; currentColumn++)
                 {
                     if (building.WallTiles[currentRow, currentColumn] != null)
@@ -148,14 +147,14 @@ public class AreaMap : MonoBehaviour
                             Destroy(_currentArea.AreaTiles[areaX, areaY].TextureInstance);
                         }
 
-                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
 
-                        tile = building.WallTiles[currentRow, currentRow];
+                        tile = building.WallTiles[currentRow, currentColumn];
 
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(true);
-                        instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         _currentArea.AreaTiles[areaX, areaY].PresentWallTile = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
@@ -170,13 +169,14 @@ public class AreaMap : MonoBehaviour
                             Destroy(_currentArea.AreaTiles[areaX, areaY].TextureInstance);
                         }
 
-                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
                     _currentArea.AreaTiles[areaX, areaY].Lot = lot;
-                    areaX++;
+                    areaY++;
                 }
-                areaX = (int)lot.LowerLeftCorner.x;
+                areaX--;
+                areaY = (int)lot.LowerLeftCorner.y;
             }
         }
     }
@@ -187,7 +187,6 @@ public class AreaMap : MonoBehaviour
 
         entity.CurrentTile.SetBlocksMovement(false);
         entity.CurrentTile.SetPresentEntity(null);
-        //_currentArea.PresentEntities.Remove(entity);
     }
 
     public void InstantiatePlayerSprite()

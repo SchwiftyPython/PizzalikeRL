@@ -73,8 +73,8 @@ public class Settlement
             var settlementPlaced = false;
             while (!settlementPlaced)
             {
-                var x = Random.Range(0, _cell.GetCellWidth());
-                var y = Random.Range(0, _cell.GetCellHeight());
+                var x = Random.Range(0, _cell.GetCellHeight());
+                var y = Random.Range(0, _cell.GetCellWidth());
 
                 var area = _cell.Areas[x, y];
 

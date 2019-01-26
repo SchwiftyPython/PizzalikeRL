@@ -37,19 +37,19 @@ public class WorldMap : MonoBehaviour
         _mapHeight = WorldData.Instance.Height;
         _mapWidth = WorldData.Instance.Width;
 
-        for (var x = 0; x < _mapWidth; x++)
+        for (var row = 0; row < _mapHeight; row++)
         {
-            for (var y = 0; y < _mapHeight; y++)
+            for (var column = 0; column < _mapWidth; column++)
             {
-                foreach (var layer in _map[x, y].WorldMapSprite.Layers.Keys)
+                foreach (var layer in _map[row, column].WorldMapSprite.Layers.Keys)
                 {
-                    var prefab = _map[x, y].WorldMapSprite.Layers[layer];
+                    var prefab = _map[row, column].WorldMapSprite.Layers[layer];
 
                     if (prefab == null)
                     {
                         continue;
                     }
-                    var instance = Instantiate(prefab, new Vector2(x, y), Quaternion.identity);
+                    var instance = Instantiate(prefab, new Vector2(column, row), Quaternion.identity);
                     instance.transform.SetParent(_worldMapHolder);
                     instance.AddComponent<WorldTileInfo>();
                     instance.AddComponent<BoxCollider2D>();
@@ -65,6 +65,6 @@ public class WorldMap : MonoBehaviour
         GameManager.Instance.Player.CurrentPosition =
             new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
 
-        _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
+        //_playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
     }
 }

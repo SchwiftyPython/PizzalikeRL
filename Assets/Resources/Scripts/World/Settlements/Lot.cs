@@ -18,18 +18,18 @@ public class Lot
         Height = height;
         Width = width;
 
-        UpperRightCorner = new Vector2(UpperLeftCorner.x + Width, UpperLeftCorner.y);
-        LowerRightCorner = new Vector2(UpperRightCorner.x, UpperRightCorner.y + Height);
-        LowerLeftCorner = new Vector2(UpperLeftCorner.x, UpperLeftCorner.y + Height);
+        UpperRightCorner = new Vector2(UpperLeftCorner.x, UpperLeftCorner.y + Width - 1);
+        LowerRightCorner = new Vector2(UpperRightCorner.x + Height - 1, UpperRightCorner.y);
+        LowerLeftCorner = new Vector2(UpperLeftCorner.x + Height - 1, UpperLeftCorner.y);
     }
 
     public bool IsPartOfLot(Vector2 point)
     {
-        if (point.x > LowerRightCorner.x)
+        if (point.x < UpperRightCorner.x)
         {
             return false;
         }
-        if (point.x < UpperLeftCorner.x)
+        if (point.x > LowerLeftCorner.x)
         {
             return false;
         }

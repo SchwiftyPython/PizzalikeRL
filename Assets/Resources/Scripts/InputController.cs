@@ -60,8 +60,12 @@ public class InputController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Keypad8))
             {
-                //Attempt move up                
-                var target = new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y);
+                //Attempt move up
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y)
+                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y);
+
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -69,8 +73,12 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.Keypad7))
             {
-                //Attempt move diagonal up and left                
-                var target = new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y - 1);
+                //Attempt move diagonal up and left
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y - 1)
+                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y - 1);
+
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -79,7 +87,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad4))
             {
                 //Attempt move left
-                var target = new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y - 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y - 1)
+                    : new Vector2(_player.CurrentCell.X, _player.CurrentCell.Y - 1);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -88,7 +100,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad1))
             {
                 //Attempt move diagonal down and left                
-                var target = new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y - 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y - 1)
+                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y - 1);
+               
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -97,7 +113,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad2))
             {
                 //Attempt move down
-                var target = new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y)
+                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -106,7 +126,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad3))
             {
                 //Attempt move diagonal down and right
-                var target = new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y + 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y + 1)
+                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y + 1);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -115,7 +139,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad6))
             {
                 //Attempt move right
-                var target = new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y + 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y + 1)
+                    : new Vector2(_player.CurrentCell.X, _player.CurrentCell.Y + 1);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -124,7 +152,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad9))
             {
                 //Attempt move diagonal up and right
-                var target = new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y + 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y + 1)
+                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y + 1);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;

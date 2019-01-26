@@ -416,7 +416,6 @@ public class Entity
 
                     if (_isPlayer)
                     {
-                        GameManager.Instance.Player.CurrentPosition = CurrentPosition;
                         GameManager.Instance.CurrentTile = CurrentTile;
                         GameManager.Instance.CurrentArea = CurrentArea;
                         GameManager.Instance.CurrentCell = CurrentCell;
@@ -445,7 +444,6 @@ public class Entity
                 if (_isPlayer)
                 {
                     GameManager.Instance.CurrentTile = CurrentTile;
-                    GameManager.Instance.Player.CurrentPosition = CurrentPosition;
                     GameManager.Instance.CurrentArea = CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                 }
