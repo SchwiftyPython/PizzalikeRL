@@ -17,7 +17,7 @@ public class Tile
     private Item _presentItem;
 
     private Rarities _rarity;
-    private int _prefabIndex;
+    private string _prefabName;
     private GameObject _prefabTexture;
 
     private bool _blocksMovement;
@@ -77,14 +77,11 @@ public class Tile
         }
     }
 
-    public int PrefabIndex {
-        get {
-            return _prefabIndex;
-        }
+    public string PrefabName
+    {
+        get { return _prefabName; }
 
-        set {
-            _prefabIndex = value;
-        }
+        set { _prefabName = value; }
     }
 
     public GameObject TextureInstance;
@@ -95,6 +92,7 @@ public class Tile
     public Tile(GameObject texture, Vector2 position, bool blocksMovement, bool blocksLight)
     {
         _prefabTexture = texture;
+        _prefabName = texture.name;
         X = (int) position.x;
         Y = (int) position.y;
         GridPosition = new Vector2(Y, X);

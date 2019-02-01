@@ -39,20 +39,35 @@ public class Settlement
         BuildAreas();
     }
 
+    public Settlement(SettlementSdo sdo)
+    {
+        Faction = WorldData.Instance.Factions[sdo.FactionName];
+        Size = sdo.Size;
+        Name = sdo.Name;
+        _cell = WorldData.Instance.MapDictionary[sdo.CellId];
+        _population = sdo.Population;
+        _history = sdo.History;
+    }
+
     public SettlementSdo GetSettlementSdo()
     {
         var sdo = new SettlementSdo
         {
             CellId = _cell.Id,
             Population = _population,
-            BuildingSdos = BuildingSdo.ConverToBuildingSdos(_buildings),
             FactionName = Faction.Name,
             History = _history,
-            LotSdos = LotSdo.ConverToLotSdos(Lots),
+            LotSdos = LotSdo.ConvertToLotSdos(Lots),
+            BuildingSdos = new List<BuildingSdo>(),
             Name = Name, 
             CitizenIds = new List<Guid>(),
             Size = Size
         };
+
+        foreach (var lotSdo in sdo.LotSdos)
+        {
+            sdo.BuildingSdos.Add(lotSdo.AssignedBuildingSdo);
+        }
 
         if (_citizens != null)
         {
@@ -101,7 +116,7 @@ public class Settlement
     {
         foreach (var area in _areas)
         {
-            area.BuildArea();
+            area.Build();
         }
     }
 }

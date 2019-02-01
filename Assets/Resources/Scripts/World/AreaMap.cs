@@ -59,7 +59,7 @@ public class AreaMap : MonoBehaviour
         _currentArea = GameManager.Instance.CurrentArea;
         _currentArea.TurnOrder = new Queue<Entity>();
         _currentArea.TurnOrder.Enqueue(_player);
-        _currentArea.BuildArea();
+        _currentArea.Build();
 
 //        if (_currentArea.ParentCell.Rivers.Count > 0)
 //        {

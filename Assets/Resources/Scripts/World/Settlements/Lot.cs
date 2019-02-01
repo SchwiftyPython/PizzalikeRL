@@ -23,6 +23,17 @@ public class Lot
         LowerLeftCorner = new Vector2(UpperLeftCorner.x + Height - 1, UpperLeftCorner.y);
     }
 
+    public Lot(LotSdo sdo)
+    {
+        Height = sdo.Height;
+        Width = sdo.Width;
+        UpperLeftCorner = sdo.UpperLeftCorner;
+        UpperRightCorner = sdo.UpperRightCorner;
+        LowerRightCorner = sdo.LowerRightCorner;
+        LowerLeftCorner = sdo.LowerLeftCorner;
+        AssignedBuilding = BuildingSdo.ConvertToBuilding(sdo.AssignedBuildingSdo);
+    }
+
     public bool IsPartOfLot(Vector2 point)
     {
         if (point.x < UpperRightCorner.x)

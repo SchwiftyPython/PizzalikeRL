@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class LotSdo 
+public class LotSdo
 {
     public int Height;
     public int Width;
@@ -16,7 +16,7 @@ public class LotSdo
 
     public BuildingSdo AssignedBuildingSdo;
 
-    public static List<LotSdo> ConverToLotSdos(List<Lot> lots)
+    public static List<LotSdo> ConvertToLotSdos(List<Lot> lots)
     {
         return lots.Select(ConvertToLotSdo).ToList();
     }
@@ -38,5 +38,15 @@ public class LotSdo
             LowerLeftCorner = lot.LowerLeftCorner,
             AssignedBuildingSdo = BuildingSdo.ConvertToBuildingSdo(lot.AssignedBuilding)
         };
+    }
+
+    public static List<Lot> ConvertToLots(List<LotSdo> sdos)
+    {
+        return sdos.Select(ConvertToLot).ToList();
+    }
+
+    public static Lot ConvertToLot(LotSdo sdo)
+    {
+        return sdo == null ? null : new Lot(sdo);
     }
 }

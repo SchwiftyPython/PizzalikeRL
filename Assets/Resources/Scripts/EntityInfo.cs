@@ -22,7 +22,7 @@ public class EntityInfo : MonoBehaviour
             Init();
         }
         var position = GetComponent<Transform>().position;
-        var clickedEntity = GameManager.Instance.CurrentArea.AreaTiles[(int)position.x, (int)position.y].GetPresentEntity();
+        var clickedEntity = GameManager.Instance.CurrentArea.AreaTiles[(int)position.y, (int)position.x].GetPresentEntity();
 
 //        var entityName = clickedEntity.GetTypeForEntityInfoWindow();
 //        var entityStats = clickedEntity.GetStatsForEntityInfoWindow();

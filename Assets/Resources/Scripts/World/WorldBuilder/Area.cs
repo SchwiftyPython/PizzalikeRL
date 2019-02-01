@@ -52,7 +52,7 @@ public class Area
         set { _y = value; }
     }
 
-    public void BuildArea()
+    public void Build()
     {
         if (AreaTiles != null)
         {

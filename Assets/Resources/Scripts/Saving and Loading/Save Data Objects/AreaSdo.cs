@@ -24,29 +24,29 @@ public class AreaSdo
 
     public static AreaSdo[] ConvertAreasForSaving(Area[,] areas)
     {
-        var width = areas.GetLength(0);
-        var height = areas.GetLength(1);
+        var height = areas.GetLength(0);
+        var width = areas.GetLength(1);
 
-        var convertedAreas = new AreaSdo[width, height];
+        var convertedAreas = new AreaSdo[height, width];
 
         for (var currentRow = 0; currentRow < height; currentRow++)
         {
             for (var currentColumn = 0; currentColumn < width; currentColumn++)
             {
-                var currentArea = areas[currentColumn, currentRow];
+                var currentArea = areas[currentRow, currentColumn];
 
                 var tempSdo = ConvertAreaForSaving(currentArea);
-                convertedAreas[currentColumn, currentRow] = tempSdo;
+                convertedAreas[currentRow, currentColumn] = tempSdo;
             }
         }
 
         var index = 0;
-        var single = new AreaSdo[width * height];
-        for (var y = 0; y < height; y++)
+        var single = new AreaSdo[height * width];
+        for (var row = 0; row < height; row++)
         {
-            for (var x = 0; x < width; x++)
+            for (var column = 0; column < width; column++)
             {
-                single[index] = convertedAreas[x, y];
+                single[index] = convertedAreas[row, column];
                 index++;
             }
         }
@@ -89,5 +89,40 @@ public class AreaSdo
         }
 
         return tempSdo;
+    }
+
+    public static Area[,] ConvertAreasForPlaying(AreaSdo[] sdos)
+    {
+        var areas = new Area[3, 3];
+
+        foreach (var sdo in sdos)
+        {
+            var area = new Area();
+            area.X = sdo.X;
+            area.Y = sdo.Y;
+            area.PresentEntities = new List<Entity>();
+            area.AreaTiles = sdo.AreaTiles != null
+                ? TileSdo.ConvertToAreaTiles(sdo.AreaTiles, area.Height, area.Width)
+                : null;
+            area.BiomeType = sdo.BiomeType;
+            area.PresentFactions = new List<Faction>();
+            area.TurnOrder = new Queue<Entity>();
+            area.ParentCell = WorldData.Instance.MapDictionary[sdo.ParentCellId];
+
+            if (sdo.PresentEntityIds.Count > 0)
+            {
+                foreach (var id in sdo.PresentEntityIds)
+                {
+                    area.PresentEntities.Add(WorldData.Instance.Entities[id]);
+                }
+
+                foreach (var id in sdo.TurnOrderIds)
+                {
+                    area.TurnOrder.Enqueue(WorldData.Instance.Entities[id]);
+                }
+            }
+            areas[area.X, area.Y] = area;
+        }
+        return areas;
     }
 }

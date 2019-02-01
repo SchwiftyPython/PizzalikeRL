@@ -218,8 +218,7 @@ public class InputController : MonoBehaviour
                     {
                         return;
                     }
-
-                    //todo check this works properly                              
+                                                  
                     var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int)pos.y, (int)pos.x];
 
                     //highlight tile and path to it
@@ -304,7 +303,7 @@ public class InputController : MonoBehaviour
         _highlightedTiles = new List<Tile>();
         foreach (var tilePosition in Path.vectorPath)
         {
-            var tile = currentArea.AreaTiles[(int) tilePosition.x, (int) tilePosition.y];
+            var tile = currentArea.AreaTiles[(int) tilePosition.y, (int) tilePosition.x];
             tile.TextureInstance.GetComponent<SpriteRenderer>().color = HighlightedColor;
             _highlightedTiles.Add(tile);
         }

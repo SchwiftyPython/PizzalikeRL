@@ -403,7 +403,7 @@ public class Entity
 
                     if (!CurrentArea.AreaBuilt())
                     {
-                        CurrentArea.BuildArea();
+                        CurrentArea.Build();
                     }
                     
                     CurrentTile = CalculateAreaEntryTile(target);
@@ -431,7 +431,7 @@ public class Entity
 
                 if (!CurrentArea.AreaBuilt())
                 {
-                    CurrentArea.BuildArea();
+                    CurrentArea.Build();
                 }
 
                 CurrentTile = CalculateAreaEntryTile(target);

@@ -163,10 +163,10 @@ public class Fov : MonoBehaviour
 
     private static Shadow ProjectTile(int row, int col)
     {
-        var topLeft = (float) row / (col + 2);
-        var bottomRight = (float) (row + 1) / (col + 1);
+        var topLeft = (float)col / (row + 2);
+        var bottomRight = (float)(col + 1) / (row + 1);
 
-        return new Shadow(topLeft, bottomRight, new Vinteger(row, col + 2), new Vinteger(row + 1, col + 1));
+        return new Shadow(topLeft, bottomRight, new Vinteger(col, row + 2), new Vinteger(col + 1, row + 1));
     }
 }
 

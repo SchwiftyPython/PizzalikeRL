@@ -123,6 +123,8 @@ public class SaveGameData : MonoBehaviour
 
     public void Load(string fileName)
     {
+        Debug.Log("Loading...");
+
         var saveData = SaveGame.Load<SaveData>(fileName, Serializer);
 
         InitializeMap();
@@ -208,7 +210,7 @@ public class SaveGameData : MonoBehaviour
             var x = cellSdo.Value.X;
             var y = cellSdo.Value.Y;
 
-            tempMap[x, y] = CellSdo.ConvertToBaseCell(cellSdo.Value);
+            tempMap[x, y] = CellSdo.ConvertToCell(cellSdo.Value);
             
             WorldData.Instance.MapDictionary.Add(cellSdo.Key, tempMap[x, y]);
         }

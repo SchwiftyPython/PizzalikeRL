@@ -56,6 +56,11 @@ public class LoadWindowPopup : MonoBehaviour
         _selectedSaveGameId = string.Copy(id);
     }
 
+    public void LoadGame()
+    {
+        SaveGameData.Instance.Load(_selectedSaveGameId);
+    }
+
     private void Populate()
     {
         _saveGameFileInfo = SaveGameData.Instance.SaveFileNames;

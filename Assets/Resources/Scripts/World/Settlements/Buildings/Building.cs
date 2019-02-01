@@ -15,21 +15,48 @@ public class Building
     public int Width;
     public int Height;
 
+    public char[,] Blueprint;
+
     public Building(BuildingPrefab prefab)
     {
         Width = prefab.Width;
         Height = prefab.Height;
 
-        FloorTiles = new GameObject[prefab.Height, prefab.Width];
-        WallTiles = new GameObject[prefab.Height, prefab.Width];
+        FloorTiles = new GameObject[Height, Width];
+        WallTiles = new GameObject[Height, Width];
 
         PickTilePrefabs();
 
-        for (var currentRow = 0; currentRow < prefab.Height; currentRow++)
+        Blueprint = prefab.Blueprint;
+
+        Build();
+    }
+
+    public Building(BuildingSdo sdo)
+    {
+        Width = sdo.Width;
+        Height = sdo.Height;
+        
+        FloorTiles = new GameObject[Height, Width];
+        WallTiles = new GameObject[Height, Width];
+        WallTypeIndex = sdo.WallTypeIndex;
+        FloorTypeIndex = sdo.FloorTypeIndex;
+
+        WallTilePrefabs = BuildingPrefabStore.GetWallTileTypeAt(WallTypeIndex);
+        FloorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
+
+        Blueprint = BuildingSdo.ConvertBlueprintForLoading(sdo.Blueprint);
+
+        Build();
+    }
+
+    private void Build()
+    {
+        for (var currentRow = 0; currentRow < Height; currentRow++)
         {
-            for (var currentColumn = 0; currentColumn < prefab.Width; currentColumn++)
+            for (var currentColumn = 0; currentColumn < Width; currentColumn++)
             {
-                var tileCode = prefab.Blueprint[currentRow, currentColumn];
+                var tileCode = Blueprint[currentRow, currentColumn];
 
                 if (BuildingPrefabStore.WallTileKeys.ContainsKey(tileCode))
                 {
