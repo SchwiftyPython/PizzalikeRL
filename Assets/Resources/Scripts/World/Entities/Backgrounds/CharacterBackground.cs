@@ -1,5 +1,7 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
+[Serializable]
 public class CharacterBackground
 {
     [XmlAttribute("name")]

@@ -80,9 +80,10 @@ public class Entity
     public int Speed { get; set; }
     public int Defense { get; set; }
     
+    [Serializable]
     public class BodyDictionary : SerializableDictionary<Guid, BodyPart> { }
 
-    public IDictionary<Guid, Item> Inventory { get; }
+    public IDictionary<Guid, Item> Inventory { get; } //todo create method for adding items to inventory
     public IDictionary<BodyPart, Item> Equipped;
 
     public BodyDictionary Body { get; set; }
@@ -160,6 +161,8 @@ public class Entity
 
         //Testing ranged attack////////////////////////
         var testBow = new Weapon(ItemTemplateLoader.GetEntityTemplate("bow"), ItemRarity.Common);
+
+        WorldData.Instance.Items.Add(testBow.Id, testBow);
 
         if (isPlayer) Inventory.Add(testBow.Id, testBow );
         ////////////////////////////////////////
@@ -371,6 +374,11 @@ public class Entity
 
     public void SetSpritePosition(Vector3 newPosition)
     {
+        if (_sprite == null)
+        {
+            return;
+        }
+
         _sprite.transform.position = newPosition;
     }
 

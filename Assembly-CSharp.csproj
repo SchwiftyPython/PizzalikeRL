@@ -291,6 +291,7 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\WeaponSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SaveGameData.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableDictionary.cs" />
+    <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableVector3.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\BodyPartButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterBackgroundOptionButton.cs" />

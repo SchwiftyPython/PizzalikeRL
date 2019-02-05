@@ -16,7 +16,7 @@ public class EntitySdo
 
     public int TotalBodyPartCoverage;
 
-    public Vector3 CurrentPosition;
+    public SerializableVector3 CurrentPosition;
    
     public int Level { get; set; }
 
@@ -60,9 +60,17 @@ public class EntitySdo
 
     public bool Mobile;
 
-    public static List<EntitySdo> ConvertToEntitySdos(List<Entity> entities)
+    public static SaveGameData.SaveData.SerializableEntitiesDictionary ConvertToEntitySdos(List<Entity> entities)
     {
-        return entities.Select(ConvertToEntitySdo).ToList();
+        var sdos = new SaveGameData.SaveData.SerializableEntitiesDictionary();
+
+        foreach (var entity in entities)
+        {
+            var sdo = ConvertToEntitySdo(entity);
+            sdos.Add(sdo.Id, sdo);
+        }
+
+        return sdos;
     }
 
     public static EntitySdo ConvertToEntitySdo(Entity entity)
@@ -142,7 +150,7 @@ public class EntitySdo
                 CurrentCell = WorldData.Instance.MapDictionary[entitySdo.Value.CurrentCellId]
             };
 
-            var areaId = entitySdo.Value.CurrentAreaId.Split(' ');
+           /* var areaId = entitySdo.Value.CurrentAreaId.Split(' ');
 
             var areaX = Convert.ToInt32(areaId[0]);
             var areaY = Convert.ToInt32(areaId[1]);
@@ -154,7 +162,7 @@ public class EntitySdo
             var tileX = Convert.ToInt32(tileId[0]);
             var tileY = Convert.ToInt32(tileId[1]);
 
-            entity.CurrentTile = entity.CurrentArea.AreaTiles[tileX, tileY];
+            entity.CurrentTile = entity.CurrentArea.AreaTiles[tileX, tileY];*/
 
             foreach (var itemId in entitySdo.Value.InventoryItemIds)
             {
@@ -164,6 +172,11 @@ public class EntitySdo
 
             foreach (var equipped in entitySdo.Value.EquippedIds)
             {
+                if (equipped.Value == Guid.Empty)
+                {
+                    continue;
+                }
+
                 var item = entity.Inventory[equipped.Value];
 
                 if (entity.Equipped.ContainsKey(equipped.Key))

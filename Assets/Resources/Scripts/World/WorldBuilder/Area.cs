@@ -569,7 +569,9 @@ public class Area
         {
             var creature = creatureDeck.Draw();
             creature.CurrentArea = this;
+            creature.CurrentCell = ParentCell;
             PresentEntities.Add(creature);
+            WorldData.Instance.Entities.Add(creature.Id, creature);
         }
     }
 }

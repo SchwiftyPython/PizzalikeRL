@@ -20,7 +20,7 @@ public class TileSdo
 
     public bool BlocksLight;
 
-    public Vector2 GridPosition;
+    public SerializableVector3 GridPosition;
 
     public string Id;
 

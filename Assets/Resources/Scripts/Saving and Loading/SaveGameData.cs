@@ -16,15 +16,18 @@ public class SaveGameData : MonoBehaviour
         public string StartingSeed;
         public Random.State SeedState;
 
+        [Serializable]
         public class SerializableMapDictionary : SerializableDictionary<string, CellSdo> { }
        
         public SerializableMapDictionary Map;
 
+        [Serializable]
         public class SerializableEntitiesDictionary : SerializableDictionary<Guid, EntitySdo> { }
 
-        public SerializableEntitiesDictionary Entities;
+        public SerializableEntitiesDictionary EntitySdos;
         public Guid PlayerId;
 
+        [Serializable]
         public class SerializableItemDictionary : SerializableDictionary<Guid, ItemSdo> { }
 
         public SerializableItemDictionary Items;
@@ -40,6 +43,7 @@ public class SaveGameData : MonoBehaviour
 
         public List<string> Messages;
 
+        [Serializable]
         public class SerializableOrdersDictionary : SerializableDictionary<string, PizzaOrderSdo> { }
 
         public SerializableOrdersDictionary ActiveOrders;
@@ -48,6 +52,7 @@ public class SaveGameData : MonoBehaviour
     [Serializable]
     public class SaveGameFileNames
     {
+        [Serializable]
         public class SerializableFileNamesDictionary : SerializableDictionary<string, string> { }
 
         public SerializableFileNamesDictionary FileNames;
@@ -73,13 +78,15 @@ public class SaveGameData : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        Serializer = new SaveGameJsonSerializer(); 
+        Serializer = new SaveGameBinarySerializer(); 
 
         LoadSavedGamesFileInfo();
     }
 
     public void Save()
     {
+        Debug.Log("Saving...");
+
         try
         {
             var data = new SaveData
@@ -95,7 +102,9 @@ public class SaveGameData : MonoBehaviour
                 CurrentSceneName = GameManager.Instance.CurrentScene.ToString(),
                 Messages = GameManager.Instance.Messages,
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders),
-                FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList())
+                FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
+                EntitySdos = EntitySdo.ConvertToEntitySdos(WorldData.Instance.Entities.Values.ToList()),
+                Items = ConvertItemsForSaving(WorldData.Instance.Items)
             };
 
             var saveGameFileNames =
@@ -131,7 +140,7 @@ public class SaveGameData : MonoBehaviour
 
         WorldData.Instance.Items = ConvertItemsForPlaying(saveData.Items);
 
-        WorldData.Instance.Entities = ConvertEntitiesForPlaying(saveData.Entities);
+        WorldData.Instance.Entities = ConvertEntitiesForPlaying(saveData.EntitySdos);
 
         WorldData.Instance.Factions = ConvertFactionsForPlaying(saveData.FactionSdos);
         
@@ -139,6 +148,8 @@ public class SaveGameData : MonoBehaviour
 
         WorldData.Instance.Seed = saveData.StartingSeed;
         Random.state = saveData.SeedState;
+
+        WorldData.Instance.SaveGameId = fileName;
 
         GameManager.Instance.Player = WorldData.Instance.Entities[saveData.PlayerId];
 
@@ -180,25 +191,27 @@ public class SaveGameData : MonoBehaviour
         LoadGameButton.GetComponent<Button>().interactable = true;
     }
 
-    private static void InitializeMap()
+    public static void InitializeMap()
     {
-        WorldData.Instance.Map = new Cell[WorldData.Instance.Width, WorldData.Instance.Height];
+        var map = new Cell[WorldData.Instance.Height, WorldData.Instance.Width];
 
         for (var currentRow = 0; currentRow < WorldData.Instance.Height; currentRow++)
         {
             for (var currentColumn = 0; currentColumn < WorldData.Instance.Width; currentColumn++)
             {
-                WorldData.Instance.Map[currentRow, currentColumn] = new Cell
+                map[currentRow, currentColumn] = new Cell
                 {
                     X = currentRow,
                     Y = currentColumn,
                     Id = currentRow + " " + currentColumn
                 };
 
-                WorldData.Instance.MapDictionary.Add(WorldData.Instance.Map[currentRow, currentColumn].Id,
-                    WorldData.Instance.Map[currentRow, currentColumn]);
+//                WorldData.Instance.MapDictionary.Add(WorldData.Instance.Map[currentRow, currentColumn].Id,
+//                    WorldData.Instance.Map[currentRow, currentColumn]);
             }
         }
+
+        WorldData.Instance.Map = map;
     }
 
     private static Cell[,] ConvertMapForPlaying(SaveData.SerializableMapDictionary savedMap)
@@ -286,7 +299,25 @@ public class SaveGameData : MonoBehaviour
 
     private static Dictionary<Guid, Item> ConvertItemsForPlaying(SaveData.SerializableItemDictionary itemSdos)
     {
-        return itemSdos.Select(sdo => ItemSdo.ConvertToItem(sdo.Value)).ToDictionary(item => item.Id);
+        return itemSdos?.Select(sdo => ItemSdo.ConvertToItem(sdo.Value)).ToDictionary(item => item.Id);
+    }
+
+    private static SaveData.SerializableItemDictionary ConvertItemsForSaving(Dictionary<Guid, Item> items)
+    {
+        if (items == null)
+        {
+            return null;
+        }
+
+        var sdos = new SaveData.SerializableItemDictionary();
+
+        foreach (var item in items)
+        {
+            var sdo = ItemSdo.ConvertToItemSdo(item.Value);
+            sdos.Add(sdo.Id, sdo);
+        }
+
+        return sdos;
     }
 
     private Dictionary<string, Faction> ConvertFactionsForPlaying(IEnumerable<FactionSdo> factionSdos)

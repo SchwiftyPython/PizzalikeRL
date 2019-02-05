@@ -110,7 +110,7 @@ public class Generator : MonoBehaviour
         Seed = WorldData.Instance.Seed;
         SeedHashCode = Seed.GetHashCode();
 
-        WorldData.Instance.SaveGameId = Guid.NewGuid();
+        WorldData.Instance.SaveGameId = Math.Abs(DateTime.Now.GetHashCode()).ToString();
 
         // Get the mesh we are rendering our output to        
         //_heightMapRenderer = GameObject.Find("HeightTexture").GetComponentInChildren<MeshRenderer>();

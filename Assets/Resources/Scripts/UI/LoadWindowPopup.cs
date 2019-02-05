@@ -58,6 +58,11 @@ public class LoadWindowPopup : MonoBehaviour
 
     public void LoadGame()
     {
+        if (string.IsNullOrEmpty(_selectedSaveGameId))
+        {
+            return;
+        }
+
         SaveGameData.Instance.Load(_selectedSaveGameId);
     }
 

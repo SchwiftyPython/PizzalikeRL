@@ -39,11 +39,10 @@ public class WorldData : MonoBehaviour
         }
     }
 
-    public int Height { get; set; }
+    public int Height = 75;
+    public int Width = 270;
 
-    public int Width { get; set; }
-
-    public Guid SaveGameId { get; set; }
+    public string SaveGameId { get; set; }
 
     public TextAsset RawFactionNamesFile;
 
@@ -138,6 +137,8 @@ public class WorldData : MonoBehaviour
         Factions = new Dictionary<string, Faction>();
         FactionLeaders = new List<Entity>();
         OtherNamedNpcs = new List<Entity>();
+        Entities = new Dictionary<Guid, Entity>();
+        Items = new Dictionary<Guid, Item>();
     }
 
     public void CreateMapDictionary()

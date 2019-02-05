@@ -9,10 +9,10 @@ public class LotSdo
     public int Height;
     public int Width;
 
-    public Vector2 UpperLeftCorner;
-    public Vector2 UpperRightCorner;
-    public Vector2 LowerRightCorner;
-    public Vector2 LowerLeftCorner;
+    public SerializableVector3 UpperLeftCorner;
+    public SerializableVector3 UpperRightCorner;
+    public SerializableVector3 LowerRightCorner;
+    public SerializableVector3 LowerLeftCorner;
 
     public BuildingSdo AssignedBuildingSdo;
 

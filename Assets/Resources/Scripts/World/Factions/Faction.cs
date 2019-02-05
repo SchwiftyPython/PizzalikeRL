@@ -230,6 +230,7 @@ public class Faction
             var citizen = new Entity(template, this);
             citizen.CreateFluff(template, Name);
             Citizens.Add(citizen);
+            WorldData.Instance.Entities.Add(citizen.Id, citizen);
         }
 
         RemainingCitizensToPlace = new List<Entity>(Citizens);

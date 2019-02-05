@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
+[Serializable]
 public class EntityFluff
 {
     private readonly List<string> _sexes = new List<string>

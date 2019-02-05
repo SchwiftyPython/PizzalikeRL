@@ -113,7 +113,10 @@ public class AreaSdo
             {
                 foreach (var id in sdo.PresentEntityIds)
                 {
-                    area.PresentEntities.Add(WorldData.Instance.Entities[id]);
+                    var entity = WorldData.Instance.Entities[id];
+                    area.PresentEntities.Add(entity);
+                    entity.CurrentArea = area;
+                    entity.CurrentCell = area.ParentCell;
                 }
 
                 foreach (var id in sdo.TurnOrderIds)
