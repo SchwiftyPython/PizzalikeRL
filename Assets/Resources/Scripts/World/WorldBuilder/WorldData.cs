@@ -39,8 +39,8 @@ public class WorldData : MonoBehaviour
         }
     }
 
-    public int Height = 75;
-    public int Width = 270;
+    public int Height = 30;
+    public int Width = 60;
 
     public string SaveGameId { get; set; }
 
@@ -139,6 +139,7 @@ public class WorldData : MonoBehaviour
         OtherNamedNpcs = new List<Entity>();
         Entities = new Dictionary<Guid, Entity>();
         Items = new Dictionary<Guid, Item>();
+        Rivers = new Dictionary<int, River>();
     }
 
     public void CreateMapDictionary()

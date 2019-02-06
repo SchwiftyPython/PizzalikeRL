@@ -66,6 +66,11 @@ public class EntitySdo
 
         foreach (var entity in entities)
         {
+            if (entity.CurrentCell == null)
+            {
+                continue;
+            }
+
             var sdo = ConvertToEntitySdo(entity);
             sdos.Add(sdo.Id, sdo);
         }
@@ -126,7 +131,10 @@ public class EntitySdo
 
         foreach (var entitySdo in entitySdos)
         {
-            var entity = new Entity(entitySdo.Key, entitySdo.Value.IsPlayer)
+            try
+            { 
+
+            var entity = new Entity(entitySdo.Key, entitySdo.Value.PrefabPath, entitySdo.Value.IsPlayer)
             {
                 PrefabPath = entitySdo.Value.PrefabPath,
                 TotalBodyPartCoverage = entitySdo.Value.TotalBodyPartCoverage,
@@ -150,19 +158,21 @@ public class EntitySdo
                 CurrentCell = WorldData.Instance.MapDictionary[entitySdo.Value.CurrentCellId]
             };
 
-           /* var areaId = entitySdo.Value.CurrentAreaId.Split(' ');
+            
 
-            var areaX = Convert.ToInt32(areaId[0]);
-            var areaY = Convert.ToInt32(areaId[1]);
+            /* var areaId = entitySdo.Value.CurrentAreaId.Split(' ');
 
-            entity.CurrentArea = entity.CurrentCell.Areas[areaX, areaY];
+             var areaX = Convert.ToInt32(areaId[0]);
+             var areaY = Convert.ToInt32(areaId[1]);
 
-            var tileId = entitySdo.Value.CurrentTileId.Split(' ');
+             entity.CurrentArea = entity.CurrentCell.Areas[areaX, areaY];
 
-            var tileX = Convert.ToInt32(tileId[0]);
-            var tileY = Convert.ToInt32(tileId[1]);
+             var tileId = entitySdo.Value.CurrentTileId.Split(' ');
 
-            entity.CurrentTile = entity.CurrentArea.AreaTiles[tileX, tileY];*/
+             var tileX = Convert.ToInt32(tileId[0]);
+             var tileY = Convert.ToInt32(tileId[1]);
+
+             entity.CurrentTile = entity.CurrentArea.AreaTiles[tileX, tileY];*/
 
             foreach (var itemId in entitySdo.Value.InventoryItemIds)
             {
@@ -190,7 +200,14 @@ public class EntitySdo
             }
 
             entities.Add(entity.Id, entity);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
+
 
         return entities;
     }

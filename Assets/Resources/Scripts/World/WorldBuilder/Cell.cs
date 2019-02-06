@@ -272,6 +272,11 @@ public class Cell
         }
         WorldMapSprite.LayerPrefabIndexes = layerPrefabIndexes;
 
+        if (WorldMapSprite.LayerPrefabIndexes.Count < 1)
+        {
+            return;
+        }
+
         PickBaseLayer();
         LoadDetailLayer();
         LoadSettlementMarkerLayers();
@@ -389,6 +394,12 @@ public class Cell
 
     private void LoadDetailLayer()
     {
+        if (WorldMapSprite.LayerPrefabIndexes.Count < 1 ||
+            !WorldMapSprite.LayerPrefabIndexes.ContainsKey(WorldSpriteLayer.Detail))
+        {
+            return;
+        }
+
         var index = WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.Detail];
 
         GameObject detail = null;
@@ -422,6 +433,13 @@ public class Cell
     private void LoadSettlementMarkerLayers()
     {
         if (Settlement == null)
+        {
+            return;
+        }
+
+        if (WorldMapSprite.LayerPrefabIndexes.Count < 1 ||
+            !WorldMapSprite.LayerPrefabIndexes.ContainsKey(WorldSpriteLayer.SettlementFloor) ||
+            !WorldMapSprite.LayerPrefabIndexes.ContainsKey(WorldSpriteLayer.SettlementWall))
         {
             return;
         }

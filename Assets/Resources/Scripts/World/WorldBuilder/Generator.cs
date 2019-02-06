@@ -11,8 +11,8 @@ public class Generator : MonoBehaviour
     private int SeedHashCode { set; get; }
 
     // Adjustable variables for Unity Inspector
-    [SerializeField] private int _width = 270;
-    [SerializeField] private int _height = 75;
+    [SerializeField] private int _height = 30; //75
+    [SerializeField] private int _width = 60; //270
 
     [Header("Height Map")]
     [SerializeField]
@@ -130,8 +130,8 @@ public class Generator : MonoBehaviour
         //testing
         while(GameManager.Instance.CurrentCell.BiomeType == BiomeType.Water || GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain)
         {
-            var x = Random.Range(0, _width);
-            var y = Random.Range(0, _height);
+            var x = Random.Range(0, _height);
+            var y = Random.Range(0, _width);
 
             GameManager.Instance.CurrentCell = _cells[x, y];
         }
@@ -198,9 +198,9 @@ public class Generator : MonoBehaviour
 
     private void GenerateBiomeMap()
     {
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
                 _cells[x, y].biomeType = GetBiomeType(_cells[x, y]);
                 _cells[x, y].SetCellSprite();
@@ -210,9 +210,9 @@ public class Generator : MonoBehaviour
 
     private void UpdateBiomeBitmask()
     {
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
                 _cells[x, y].UpdateBiomeBitmask();
             }
@@ -248,14 +248,14 @@ public class Generator : MonoBehaviour
     // Extract data from a noise module
     private void GetData()
     {
-        _heightData = new MapData(_width, _height);
-        _heatData = new MapData(_width, _height);
-        _moistureData = new MapData(_width, _height);
+        _heightData = new MapData(_height, _width);
+        _heatData = new MapData(_height, _width);
+        _moistureData = new MapData(_height, _width);
 
         // loop through each x,y point - get height value
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
 
                 // WRAP ON BOTH AXIS
@@ -266,8 +266,8 @@ public class Generator : MonoBehaviour
                 var dy = y2 - y1;
 
                 // Sample noise at smaller intervals
-                var s = x / (float)_width;
-                var t = y / (float)_height;
+                var s = x / (float)_height;
+                var t = y / (float)_width;
 
                 // Calculate our 4D coordinates
                 var nx = x1 + Mathf.Cos(s * 2 * Mathf.PI) * dx / (2 * Mathf.PI);
@@ -300,11 +300,11 @@ public class Generator : MonoBehaviour
     // Build a Cell array from our data
     private void LoadCells()
     {
-        _cells = new Cell[_width, _height];
+        _cells = new Cell[_height, _width];
 
-        for (var currentRow = 0; currentRow < _width; currentRow++)
+        for (var currentRow = 0; currentRow < _height; currentRow++)
         {
-            for (var currentColumn = 0; currentColumn < _height; currentColumn++)
+            for (var currentColumn = 0; currentColumn < _width; currentColumn++)
             {
                 var c = new Cell
                 {

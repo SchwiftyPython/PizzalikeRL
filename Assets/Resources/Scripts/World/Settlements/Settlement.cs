@@ -41,6 +41,11 @@ public class Settlement
 
     public Settlement(SettlementSdo sdo)
     {
+        if (sdo == null)
+        {
+            return;
+        }
+
         Faction = WorldData.Instance.Factions[sdo.FactionName];
         Size = sdo.Size;
         Name = sdo.Name;

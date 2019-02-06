@@ -99,7 +99,7 @@ public class SaveGameData : MonoBehaviour
                 CurrentAreaId = GameManager.Instance.CurrentArea.Id,
                 CurrentTileId = GameManager.Instance.CurrentTile.Id,
                 CurrentState = GameManager.Instance.CurrentState,
-                CurrentSceneName = GameManager.Instance.CurrentScene.ToString(),
+                CurrentSceneName = GameManager.Instance.CurrentScene.name,
                 Messages = GameManager.Instance.Messages,
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders),
                 FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
@@ -136,6 +136,8 @@ public class SaveGameData : MonoBehaviour
 
         var saveData = SaveGame.Load<SaveData>(fileName, Serializer);
 
+        SceneManager.LoadScene(saveData.CurrentSceneName);
+
         InitializeMap();
 
         WorldData.Instance.Items = ConvertItemsForPlaying(saveData.Items);
@@ -159,13 +161,13 @@ public class SaveGameData : MonoBehaviour
 
         GameManager.Instance.CurrentTile = GameManager.Instance.Player.CurrentTile;
 
-        GameManager.Instance.CurrentState = saveData.CurrentState;
-
         GameManager.Instance.Messages = saveData.Messages;
 
         GameManager.Instance.ActiveOrders = ConvertActiveOrdersForPlaying(saveData.ActiveOrders);
 
-        SceneManager.LoadScene(saveData.CurrentSceneName);
+        GameManager.Instance.CurrentState = saveData.CurrentSceneName == GameManager.AreaMapSceneName
+            ? GameManager.GameState.EnterArea
+            : saveData.CurrentState;
     }
 
     private void LoadSavedGamesFileInfo()
@@ -224,8 +226,15 @@ public class SaveGameData : MonoBehaviour
             var y = cellSdo.Value.Y;
 
             tempMap[x, y] = CellSdo.ConvertToCell(cellSdo.Value);
-            
-            WorldData.Instance.MapDictionary.Add(cellSdo.Key, tempMap[x, y]);
+
+            if (WorldData.Instance.MapDictionary.ContainsKey(cellSdo.Key))
+            {
+                WorldData.Instance.MapDictionary[cellSdo.Key] = tempMap[x, y];
+            }
+            else
+            {
+                WorldData.Instance.MapDictionary.Add(cellSdo.Key, tempMap[x, y]);
+            }
         }
 
         return tempMap;
@@ -233,8 +242,8 @@ public class SaveGameData : MonoBehaviour
 
     private static SaveData.SerializableMapDictionary ConvertMapForSaving(Cell[,] map)
     {
-        var width = map.GetLength(0);
-        var height = map.GetLength(1);
+        var height = map.GetLength(0);
+        var width = map.GetLength(1);
 
         var convertedCells = new SaveData.SerializableMapDictionary();
 

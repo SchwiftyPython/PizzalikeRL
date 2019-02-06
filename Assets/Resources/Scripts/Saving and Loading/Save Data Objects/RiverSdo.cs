@@ -33,6 +33,11 @@ public class RiverSdo
 
     public static List<River> ConvertToRivers(List<RiverSdo> riverSdos)
     {
+        if (riverSdos == null || riverSdos.Count < 1)
+        {
+            return null;
+        }
+
         var rivers = new List<River>();
 
         foreach (var sdo in riverSdos)

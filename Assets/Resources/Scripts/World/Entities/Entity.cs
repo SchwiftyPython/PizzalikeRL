@@ -49,7 +49,7 @@ public class Entity
 
     private int _coins;
 
-    private readonly GameObject _prefab;
+    public  GameObject Prefab;
     private GameObject _sprite;
 
     public Faction Faction;
@@ -111,12 +111,14 @@ public class Entity
         }
     }
 
-    public Entity(Guid id, bool isPlayer = false)
+    public Entity(Guid id, string prefabPath ,bool isPlayer = false)
     {
         Id = id;
         _isPlayer = isPlayer;
         Inventory = new Dictionary<Guid, Item>();
         Equipped = new Dictionary<BodyPart, Item>();
+
+        Prefab = Resources.Load(prefabPath) as GameObject;
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
@@ -152,7 +154,7 @@ public class Entity
         Mobile = true;
 
         PrefabPath = template.SpritePath;
-        _prefab = Resources.Load(template.SpritePath) as GameObject;
+        Prefab = Resources.Load(template.SpritePath) as GameObject;
         
         Inventory = new Dictionary<Guid, Item>();
         BuildBody(template);
@@ -359,7 +361,7 @@ public class Entity
 
     public GameObject GetSpritePrefab()
     {
-        return _prefab;
+        return Prefab;
     }
 
     public GameObject GetSprite()

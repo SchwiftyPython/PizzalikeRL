@@ -64,6 +64,11 @@ public class Faction
 
         foreach (var id in sdo.CitizenIds)
         {
+            if (!WorldData.Instance.Entities.ContainsKey(id))
+            {
+                continue;
+            }
+
             var citizen = WorldData.Instance.Entities[id];
             citizen.Faction = this;
             Citizens.Add(citizen);
@@ -71,6 +76,11 @@ public class Faction
 
         foreach (var id in sdo.EntitiesWithFluffIds)
         {
+            if (!WorldData.Instance.Entities.ContainsKey(id))
+            {
+                continue;
+            }
+
             var entity = WorldData.Instance.Entities[id];
             EntitiesWithFluff.Add(entity);
         }

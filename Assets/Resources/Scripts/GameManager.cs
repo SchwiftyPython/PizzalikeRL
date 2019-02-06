@@ -84,6 +84,11 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case GameState.EnterArea:
+                if (AreaMap.Instance == null)
+                {
+                    break;
+                }
+
                 AreaMap.Instance.EnterArea();
                 if (AreaMap.Instance.AreaReady)
                 {
