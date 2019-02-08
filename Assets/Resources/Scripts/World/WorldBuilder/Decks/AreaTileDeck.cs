@@ -13,7 +13,7 @@ public sealed class AreaTileDeck : Deck<GameObject>
 
     public AreaTileDeck(BiomeType biomeType)
     {
-        _cardRarityReference = WorldData.Instance.GetBiomeTiles(biomeType);
+        _cardRarityReference = WorldData.Instance.GetBiomeTilesForAreaTileDeck(biomeType);
         CardIndex = 0;
         Build();
         Shuffle();

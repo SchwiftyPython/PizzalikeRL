@@ -80,6 +80,14 @@ public class AreaSdo
             ParentCellId = area.ParentCell.Id
         };
 
+        if (area.PresentEntities != null)
+        {
+            foreach (var entity in area.PresentEntities)
+            {
+                tempSdo.PresentEntityIds.Add(entity.Id);
+            }
+        }
+
         if (area.TurnOrder != null)
         {
             foreach (var entity in area.TurnOrder)
@@ -102,7 +110,7 @@ public class AreaSdo
             area.Y = sdo.Y;
             area.PresentEntities = new List<Entity>();
             area.AreaTiles = sdo.AreaTiles != null
-                ? TileSdo.ConvertToAreaTiles(sdo.AreaTiles, area.Height, area.Width)
+                ? TileSdo.ConvertToAreaTiles(sdo.AreaTiles, area.Height, area.Width, area.BiomeType)
                 : null;
             area.BiomeType = sdo.BiomeType;
             area.PresentFactions = new List<Faction>();

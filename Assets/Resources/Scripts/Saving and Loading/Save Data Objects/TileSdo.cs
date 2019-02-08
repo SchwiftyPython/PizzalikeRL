@@ -65,13 +65,13 @@ public class TileSdo
         };
     }
 
-    public static Tile[,] ConvertToAreaTiles(TileSdo[] sdos, int height, int width)
+    public static Tile[,] ConvertToAreaTiles(TileSdo[] sdos, int height, int width, BiomeType biomeType)
     {
         var areaTiles = new Tile[height, width];
 
         foreach (var sdo in sdos)
         {
-            var tile = ConvertToAreaTile(sdo);
+            var tile = ConvertToAreaTile(sdo, biomeType);
 
             areaTiles[tile.X, tile.Y] = tile;
         }
@@ -79,7 +79,7 @@ public class TileSdo
         return areaTiles;
     }
 
-    public static Tile ConvertToAreaTile(TileSdo sdo)
+    public static Tile ConvertToAreaTile(TileSdo sdo, BiomeType biomeType)
     {
         var tile = new Tile();
         var id = sdo.Id.Split(' ');
@@ -87,11 +87,15 @@ public class TileSdo
         tile.X = Convert.ToInt32(id[0]);
         tile.Y = Convert.ToInt32(id[1]);
         tile.PrefabName = sdo.PrefabName;
-        tile.SetPrefabTileTexture(Resources.Load<GameObject>($"/Prefabs/{tile.PrefabName}"));
+        tile.SetPrefabTileTexture(WorldData.Instance.GetTileTextureByNameRarityAndBiome(sdo.PrefabName, biomeType));
         tile.Visibility = sdo.Visibility;
-        tile.SetPresentEntity(sdo.PresentEntityId != Guid.Empty
-            ? WorldData.Instance.Entities[sdo.PresentEntityId]
-            : null);
+
+        if (sdo.PresentEntityId != Guid.Empty)
+        {
+            tile.SetPresentEntity(WorldData.Instance.Entities[sdo.PresentEntityId]);
+            tile.GetPresentEntity().CurrentTile = tile;
+        }
+
         tile.PresentItem = sdo.PresentItemId != Guid.Empty ? WorldData.Instance.Items[sdo.PresentItemId] : null;
         tile.Rarity = sdo.Rarity;
         tile.SetBlocksMovement(sdo.BlocksMovement);

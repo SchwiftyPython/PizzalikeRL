@@ -157,7 +157,106 @@ public class WorldData : MonoBehaviour
         }
     }
 
-    public Dictionary<GameObject, Rarities> GetBiomeTiles(BiomeType biomeType)
+    public GameObject GetTileTextureByNameRarityAndBiome(string prefabName, BiomeType biomeType)
+    {
+        var biomeTiles = new Dictionary<string, GameObject>();
+
+        foreach (var tile in AreaDesertTilesCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaDesertTilesUnCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaDesertTilesRare)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in DesertAsphaltRoadTiles)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+
+        foreach (var tile in AreaGrassLandTilesCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaGrassLandTilesUnCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaGrassLandTilesRare)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in GrassDirtPathTiles)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+
+        foreach (var tile in AreaIceTilesCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaIceTilesUnCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaIceTilesRare)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in IceAsphaltRoadTiles)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+
+        foreach (var tile in AreaSwampTilesCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaSwampTilesUnCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaSwampTilesRare)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in SwampDirtPathTiles)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+
+        foreach (var tile in AreaWastelandTilesCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaWastelandTilesUnCommon)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in AreaWastelandTilesRare)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+        foreach (var tile in WastelandDirtPathTiles)
+        {
+            biomeTiles.Add(tile.name, tile);
+        }
+
+        if (!biomeTiles.ContainsKey(prefabName))
+        {
+            return biomeTiles.Values.ToArray()[Random.Range(0, biomeTiles.Count)];
+        }
+
+        var texture = biomeTiles[prefabName];
+
+        return texture;
+    }
+
+    public Dictionary<GameObject, Rarities> GetBiomeTilesForAreaTileDeck(BiomeType biomeType)
     {
         var biomeTiles = new Dictionary<GameObject, Rarities>();
         Dictionary<GameObject, Rarities> tilesToAdd;
@@ -285,6 +384,11 @@ public class WorldData : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException(nameof(biomeType), biomeType, null);
         }
+    }
+
+    private Dictionary<string, GameObject> GetTileTextureDictionaryForLoading(List<GameObject> tiles)
+    {
+        return tiles.ToDictionary(tile => tile.name);
     }
 
     private static Dictionary<GameObject, Rarities> AddCommonTiles(IEnumerable<GameObject> tiles)
