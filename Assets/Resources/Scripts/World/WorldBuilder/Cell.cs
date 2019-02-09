@@ -272,12 +272,13 @@ public class Cell
         }
         WorldMapSprite.LayerPrefabIndexes = layerPrefabIndexes;
 
+        PickBaseLayer();
+
         if (WorldMapSprite.LayerPrefabIndexes.Count < 1)
         {
             return;
         }
-
-        PickBaseLayer();
+        
         LoadDetailLayer();
         LoadSettlementMarkerLayers();
     }

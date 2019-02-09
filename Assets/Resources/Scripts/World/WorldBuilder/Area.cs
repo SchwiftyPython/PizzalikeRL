@@ -86,7 +86,7 @@ public class Area
 
         UpdateNeighbors();
 
-        if (ParentCell.Rivers.Count > 0 || BiomeType == BiomeType.Swamp)
+        if (ParentCell.Rivers?.Count > 0 || BiomeType == BiomeType.Swamp)
         {
             PlaceWaterTiles();
         }
