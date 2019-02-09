@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 public class Faction
 {
+    [Serializable]
+    public class RelationshipDictionary : SerializableDictionary<string, int> { }
+
     public enum PopulationType
     {
         Monospecies,
@@ -12,11 +16,11 @@ public class Faction
     private const int MaxRelationshipLevel = 1000;
     private const int MinRelationshipLevel = MaxRelationshipLevel * -1;
 
-    private PopulationType _popType;
+    public PopulationType PopType;
 
     public string Type;
 
-    public Dictionary<string, int> Relationships; //<Faction Name, Affection Level>
+    public RelationshipDictionary Relationships; //<Faction Name, Affection Level>
     public Dictionary<string, int> Religions;     //<Religion Name, Number of Believers>
 
     public string Name;
@@ -35,7 +39,7 @@ public class Faction
 
     public Faction()
     {
-        Relationships = new Dictionary<string, int>();
+        Relationships = new RelationshipDictionary();
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
@@ -44,9 +48,47 @@ public class Faction
         CreateLeader();
     }
 
+    public Faction(FactionSdo sdo)
+    {
+        Relationships = new RelationshipDictionary();
+        Religions = new Dictionary<string, int>();
+        EntitiesWithFluff = new List<Entity>();
+
+        PopType = sdo.PopType;
+        Relationships = sdo.Relationships;
+        Citizens = new List<Entity>();
+        EntitiesWithFluff = new List<Entity>();
+        Leader = WorldData.Instance.Entities[sdo.LeaderId];
+        Name = sdo.Name;
+        Population = sdo.Population;
+
+        foreach (var id in sdo.CitizenIds)
+        {
+            if (!WorldData.Instance.Entities.ContainsKey(id))
+            {
+                continue;
+            }
+
+            var citizen = WorldData.Instance.Entities[id];
+            citizen.Faction = this;
+            Citizens.Add(citizen);
+        }
+
+        foreach (var id in sdo.EntitiesWithFluffIds)
+        {
+            if (!WorldData.Instance.Entities.ContainsKey(id))
+            {
+                continue;
+            }
+
+            var entity = WorldData.Instance.Entities[id];
+            EntitiesWithFluff.Add(entity);
+        }
+    }
+
     public Faction(FactionTemplate factionTemplate)
     {
-        Relationships = new Dictionary<string, int>();
+        Relationships = new RelationshipDictionary();
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
@@ -109,7 +151,7 @@ public class Faction
     {
         var roll = Random.Range(0, 100);
 
-        _popType = roll <= 40 ? PopulationType.MixedSpecies : PopulationType.Monospecies;
+        PopType = roll <= 40 ? PopulationType.MixedSpecies : PopulationType.Monospecies;
     }
 
     private void GeneratePopulation()
@@ -120,7 +162,7 @@ public class Faction
         Population = Random.Range(100, 1000);
         
         var availableEntityTypes = new List<string>();
-        if (_popType == PopulationType.MixedSpecies)
+        if (PopType == PopulationType.MixedSpecies)
         {
             availableEntityTypes = new List<string>(EntityTemplateLoader.GetAllEntityTemplateTypes());
         }
@@ -162,7 +204,7 @@ public class Faction
 
         for (var i = 0; i < Population; i += 50)
         {
-            if (_popType == PopulationType.MixedSpecies)
+            if (PopType == PopulationType.MixedSpecies)
             {
                 var index = Random.Range(0, availableEntityTypes.Count);
                 var validPick = false;
@@ -198,6 +240,7 @@ public class Faction
             var citizen = new Entity(template, this);
             citizen.CreateFluff(template, Name);
             Citizens.Add(citizen);
+            WorldData.Instance.Entities.Add(citizen.Id, citizen);
         }
 
         RemainingCitizensToPlace = new List<Entity>(Citizens);

@@ -54,7 +54,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
         var numColumns = 0;
         
-        var y = 0;
+        var x = 0;
 
         foreach (var line in rawPrefabInfo)
         {
@@ -75,7 +75,7 @@ public class BuildingPrefabStore : MonoBehaviour
                 BuildingPrefabs.Add(trimmedLine, null);
                 currentPreFab = trimmedLine;
                 currentStep = LoadingSteps.Dimensions;
-                y = 0;
+                x = 0;
                 continue;
             }
 
@@ -84,7 +84,7 @@ public class BuildingPrefabStore : MonoBehaviour
                 var dimensions = trimmedLine.Split(' ');
                 var numRows = int.Parse(dimensions[0]);
                 numColumns = int.Parse(dimensions[1]);
-                BuildingPrefabs[currentPreFab] = new BuildingPrefab(new char[numColumns, numRows]);
+                BuildingPrefabs[currentPreFab] = new BuildingPrefab(new char[numRows, numColumns]);
                 currentStep = LoadingSteps.Template;
                 continue;
             }
@@ -95,9 +95,9 @@ public class BuildingPrefabStore : MonoBehaviour
                 {
                     var row = BuildingPrefabs[currentPreFab].Blueprint;
 
-                    row[currentColumn, y] = trimmedLine[currentColumn];
+                    row[x, currentColumn] = trimmedLine[currentColumn];
                 }
-                y++;
+                x++;
             }
         }
     }
@@ -202,15 +202,23 @@ public class BuildingPrefabStore : MonoBehaviour
         return buildingsThatWillFit[Random.Range(0, buildingsThatWillFit.Count)];
     }
 
-    public static IDictionary<string, GameObject> GetRandomWallTileType()
+    public static int GetRandomWallTypeIndex()
     {
-        var index = Random.Range(0, WallTileTypes.Count);
+        return Random.Range(0, WallTileTypes.Count);
+    }
+
+    public static IDictionary<string, GameObject> GetWallTileTypeAt(int index)
+    {
         return WallTileTypes[index];
     }
 
-    public static List<GameObject> GetRandomFloorTileType()
+    public static int GetRandomFloorTypeIndex()
     {
-        var index = Random.Range(0, FloorTileTypes.Count);
+        return Random.Range(0, FloorTileTypes.Count);
+    }
+
+    public static List<GameObject> GetFloorTileTypeAt(int index)
+    {
         return FloorTileTypes[index];
     }
 }

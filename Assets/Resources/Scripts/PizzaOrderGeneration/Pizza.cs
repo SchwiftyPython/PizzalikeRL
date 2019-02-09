@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
+[Serializable]
 public class Pizza
 {
     #region Enums

@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour
 {
-    [SerializeField]
-    private LayerMask _clickable;
+    private string _areaMapSceneName;
+    private string _worldMapSceneName;
 
     private bool _popupWindowOpen;
 
@@ -37,15 +37,8 @@ public class InputController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        /*
-        BUG: NOT GETTING REFERENCE TO PLAYER IN START
-
-        //while (WorldManager.instance.player == null) {}
-        player = WorldManager.instance.player;
-
-        Debug.Log ("player reference in start: " + player);
-
-        */
+        _areaMapSceneName = GameManager.AreaMapSceneName;
+        _worldMapSceneName = GameManager.WorldMapSceneName;
     }
 
     private void Update()
@@ -67,8 +60,12 @@ public class InputController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Keypad8))
             {
-                //Attempt move up                
-                var target = new Vector2(_player.CurrentPosition.x, _player.CurrentPosition.y + 1);
+                //Attempt move up
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y)
+                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y);
+
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -76,8 +73,12 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.Keypad7))
             {
-                //Attempt move diagonal up and left                
-                var target = new Vector2(_player.CurrentPosition.x - 1, _player.CurrentPosition.y + 1);
+                //Attempt move diagonal up and left
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y - 1)
+                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y - 1);
+
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -86,7 +87,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad4))
             {
                 //Attempt move left
-                var target = new Vector2(_player.CurrentPosition.x - 1, _player.CurrentPosition.y);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y - 1)
+                    : new Vector2(_player.CurrentCell.X, _player.CurrentCell.Y - 1);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -95,7 +100,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad1))
             {
                 //Attempt move diagonal down and left                
-                var target = new Vector2(_player.CurrentPosition.x - 1, _player.CurrentPosition.y - 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y - 1)
+                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y - 1);
+               
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -104,7 +113,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad2))
             {
                 //Attempt move down
-                var target = new Vector2(_player.CurrentPosition.x, _player.CurrentPosition.y - 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y)
+                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -113,7 +126,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad3))
             {
                 //Attempt move diagonal down and right
-                var target = new Vector2(_player.CurrentPosition.x + 1, _player.CurrentPosition.y - 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y + 1)
+                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y + 1);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -122,7 +139,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad6))
             {
                 //Attempt move right
-                var target = new Vector2(_player.CurrentPosition.x + 1, _player.CurrentPosition.y);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y + 1)
+                    : new Vector2(_player.CurrentCell.X, _player.CurrentCell.Y + 1);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -131,7 +152,11 @@ public class InputController : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Keypad9))
             {
                 //Attempt move diagonal up and right
-                var target = new Vector2(_player.CurrentPosition.x + 1, _player.CurrentPosition.y + 1);
+                Vector2 target;
+                target = currentScene == _areaMapSceneName
+                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y + 1)
+                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y + 1);
+                
                 if (_player.MoveOrAttackSuccessful(target))
                 {
                     ActionTaken = true;
@@ -183,7 +208,7 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                if (currentScene.Equals("Area") && !ActionWindow.Instance.isActiveAndEnabled &&
+                if (currentScene.Equals(_areaMapSceneName) && !ActionWindow.Instance.isActiveAndEnabled &&
                     !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf)
                 {
                     var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -193,8 +218,8 @@ public class InputController : MonoBehaviour
                     {
                         return;
                     }
-
-                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int)pos.x, (int)pos.y];
+                                                  
+                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int)pos.y, (int)pos.x];
 
                     //highlight tile and path to it
                     StartCoroutine(HighlightPathToTarget(_player, selectedTile.GetGridPosition()));
@@ -205,7 +230,7 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(1))
             {
-                if (currentScene.Equals("Area"))
+                if (currentScene.Equals(_areaMapSceneName))
                 {
                     var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
                         Vector2.positiveInfinity);
@@ -215,7 +240,7 @@ public class InputController : MonoBehaviour
                         hit.collider.GetComponent<EntityInfo>()?.OnRightClick();
                     }
                 }
-                if (currentScene.Equals("WorldMap"))
+                if (currentScene.Equals(_worldMapSceneName))
                 {
                     var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
                         Vector2.positiveInfinity);
@@ -228,20 +253,20 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                if (currentScene.Equals("Area"))
+                if (currentScene.Equals(_areaMapSceneName))
                 {
-                    SceneManager.LoadScene("WorldMap");
+                    SceneManager.LoadScene(_worldMapSceneName);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.KeypadPlus))
             {
-                if (currentScene.Equals("WorldMap"))
+                if (currentScene.Equals(_worldMapSceneName))
                 {
                     GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
                     GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
                     GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
-                    SceneManager.LoadScene("Area");
+                    SceneManager.LoadScene(_areaMapSceneName);
                 }
             }
         }
@@ -278,7 +303,7 @@ public class InputController : MonoBehaviour
         _highlightedTiles = new List<Tile>();
         foreach (var tilePosition in Path.vectorPath)
         {
-            var tile = currentArea.AreaTiles[(int) tilePosition.x, (int) tilePosition.y];
+            var tile = currentArea.AreaTiles[(int) tilePosition.y, (int) tilePosition.x];
             tile.TextureInstance.GetComponent<SpriteRenderer>().color = HighlightedColor;
             _highlightedTiles.Add(tile);
         }

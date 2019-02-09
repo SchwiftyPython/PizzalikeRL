@@ -23,7 +23,7 @@ public class SystemWindow : MonoBehaviour
 
     public void SaveAndQuitToMenu()
     {
-        //todo: save
+        SaveGameData.Instance.Save();
 
         GameManager.Instance.WorldMapGenComplete = false;
 
@@ -41,7 +41,7 @@ public class SystemWindow : MonoBehaviour
 
     public void SaveAndQuitToOs()
     {
-        //todo: save
+        SaveGameData.Instance.Save();
         Application.Quit();
     }
 }

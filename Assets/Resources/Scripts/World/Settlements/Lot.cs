@@ -18,25 +18,29 @@ public class Lot
         Height = height;
         Width = width;
 
-        UpperRightCorner = new Vector2(UpperLeftCorner.x + Width, UpperLeftCorner.y);
-        LowerRightCorner = new Vector2(UpperRightCorner.x, UpperRightCorner.y + Height);
-        LowerLeftCorner = new Vector2(UpperLeftCorner.x, UpperLeftCorner.y + Height);
+        UpperRightCorner = new Vector2(UpperLeftCorner.x, UpperLeftCorner.y + Width - 1);
+        LowerRightCorner = new Vector2(UpperRightCorner.x + Height - 1, UpperRightCorner.y);
+        LowerLeftCorner = new Vector2(UpperLeftCorner.x + Height - 1, UpperLeftCorner.y);
+    }
 
-//        Debug.Log($"Lot upper left corner: {UpperLeftCorner}");
-//        Debug.Log($"Lot upper right corner: {UpperRightCorner}");
-//        Debug.Log($"Lot lower right corner: {LowerRightCorner}");
-//        Debug.Log($"Lot lower left corner: {LowerLeftCorner}");
-//        Debug.Log($"Lot height: {Height}");
-//        Debug.Log($"Lot width: {Width}");
+    public Lot(LotSdo sdo)
+    {
+        Height = sdo.Height;
+        Width = sdo.Width;
+        UpperLeftCorner = sdo.UpperLeftCorner;
+        UpperRightCorner = sdo.UpperRightCorner;
+        LowerRightCorner = sdo.LowerRightCorner;
+        LowerLeftCorner = sdo.LowerLeftCorner;
+        AssignedBuilding = BuildingSdo.ConvertToBuilding(sdo.AssignedBuildingSdo);
     }
 
     public bool IsPartOfLot(Vector2 point)
     {
-        if (point.x > LowerRightCorner.x)
+        if (point.x < UpperRightCorner.x)
         {
             return false;
         }
-        if (point.x < UpperLeftCorner.x)
+        if (point.x > LowerLeftCorner.x)
         {
             return false;
         }

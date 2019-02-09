@@ -13,7 +13,7 @@ building_small
 5777777774
 
 building_medium
-30 20
+20 30
 266666666666666666666666666663
 1aaaaaaaaaaaaaaaaaaaaaaaaaaaa0
 1aaaaaaaaaaaaaaaaaaaaaaaaaaaa0

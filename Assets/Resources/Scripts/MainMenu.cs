@@ -30,6 +30,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(CharacterCreationScene);
     }
 
+    public void ShowLoadWindowPopup()
+    {
+        LoadWindowPopup.Instance.Show();
+    }
+
     public void QuitToDesktop()
     {
         Application.Quit();

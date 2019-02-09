@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="3">
+            <Title>Setting Sketch</Title>
+            <Text>Name of Setting
+
+		Role in Story:	
+
+		Related Characters:	
+
+		Season:	
+
+		Unique Features:	
+
+		Description:	
+
+		Sights:	
+		Sounds:	
+		Smells:	
+
+		Notes:	</Text>
+        </Document>
+        <Document ID="4">
+            <Title>Character Sketch</Title>
+            <Text>Character Name
+
+		Role in Story:	
+
+		Occupation:	
+     	
+
+		Physical Description:	
+
+		Personality:	
+
+		Habits/Mannerisms:	
+      	
+
+		Background:	
+
+		Internal Conflicts:	
+
+		External Conflicts:	 
+      	
+
+		Notes:	</Text>
+        </Document>
+        <Document ID="5">
+            <Title>Sample Story MS</Title>
+        </Document>
+        <Document ID="6">
+            <Title>Scene</Title>
+        </Document>
+        <Document ID="7">
+            <Title>Setting Sketch</Title>
+            <Text>Name of Setting
+
+		Role in Story:	
+
+		Related Characters:	
+
+		Season:	
+
+		Unique Features:	
+
+		Description:	
+
+		Sights:	
+		Sounds:	
+		Smells:	
+
+		Notes:	</Text>
+        </Document>
+        <Document ID="8">
+            <Title>Character Sketch</Title>
+            <Text>Character Name
+
+		Role in Story:	
+
+		Occupation:	
+     	
+
+		Physical Description:	
+
+		Personality:	
+
+		Habits/Mannerisms:	
+      	
+
+		Background:	
+
+		Internal Conflicts:	
+
+		External Conflicts:	 
+      	
+
+		Notes:	</Text>
+        </Document>
+        <Document ID="11">
+            <Title>First Page Header</Title>
+            <Synopsis>Title page to the manuscript.</Synopsis>
+            <Text>
+Your name
+Your address
+Your phone number
+Your e-mail address
+
+
+&lt;$wc100&gt; words
+
+
+
+
+
+
+
+
+
+
+
+&lt;$PROJECTTITLE&gt;
+by &lt;$fullname&gt;</Text>
+            <Notes>The text from this document will appear at the top of the first page of the compiled story. Note that “Compile As-Is” is ticked - this ensures that the title page’s formatting doesn’t get changed during the Compile process, even though the formatting of other text documents will be overridden to use a standard 12-point manuscript font.
+
+The &lt;$PROJECTTITLE&gt; and &lt;$fullname&gt; tags get replaced with the information set in Project &gt; Meta-Data Settings… &gt; Project Properties. You can edit those settings or just replace this text altogether.</Notes>
+        </Document>
+        <Document ID="19">
+            <Title>Story</Title>
+        </Document>
+        <Document ID="23">
+            <Title>Characters</Title>
+        </Document>
+        <Document ID="24">
+            <Title>Places</Title>
+        </Document>
+        <Document ID="25">
+            <Title>Template Sheets</Title>
+        </Document>
+        <Document ID="28">
+            <Title>Short Story Format</Title>
+            <Text>SHORT STORY MANUSCRIPT FORMAT
+
+About This Template
+When compiled (File &gt; Compile), this project will generate a document in the standard manuscript format for short story submissions.
+
+How To Use This Template
+Edit the First Page Header document to ensure it contains the correct information. The text in this document will appear at the top of the first page of the compiled story manuscript.
+Create a new text document for each scene inside the Story folder. (Upon export, scenes will automatically be separated by the “#” character.) Alternatively, you can write your entire story in a single text document if you prefer (in which case you will need to add the “#” character between the scenes in your document yourself).
+Information about characters can be placed in the “Characters” folder, and information about locations can be placed in the “Places” folder. (These are just regular folders that have had custom icons assigned to them using the Documents &gt; Change Icon feature.)
+Character and setting sketch sheets have been provided which can be used for filling out information about the people and places in your novel. These are located in the “Template Sheets” folder. You should not edit the documents in the “Template Sheets” folder directly unless you wish to change the templates (which you are free to do—you may wish to customise the sketch sheets or get rid of them entirely). Instead, to create a new character sheet, click on the Characters folder (or wherever you want to create your new character sheet) and from the Project menu, select New From Template &gt; Character Sketch. This creates a new character sketch document for you to edit and fill in with your character details. You can create setting sketch sheets in the same way.
+Compile your manuscript into standard short story manuscript format by selecting File &gt; Compile.
+
+Making Changes
+You may wish to change the following:
+Page header: You can edit the page header in the “Page Settings” pane of the Compile sheet.
+Project and author name: The default story title and author name used in headers and elsewhere can be customised by going to Project &gt; Meta-Data Settings… and choosing the “Project Properties” tab.
+Font: You can use the “Formatting” pane in Compile to change the font used in the final document by selecting a row in the elements table, then clicking into the preview text to select it and clicking the “A” button in the format bar to change the font settings. Note that fonts are not included in e-books, however—e-readers choose their own fonts (and you would need to pay a hefty fee for a licence to embed a particular font in an e-book).
+Making your own special folders: The “Characters” and “Places” folders are really just regular folders that have been set up in a particular way, and you are free to create other folders that work in a similar manner.
+To create a folder with a custom icon, add a new folder, place it where you want it, ensure it is selected, and then go to Documents &gt; Change Icon to choose a different icon.
+To create your own template sheets, simply create a new document inside the “Template Sheets” folder and set it up however you want (whether by adding text, changing the title, setting default meta-data, or whatever). Now this document will be available as the basis of new documents from the New From Template menu. (You can add a custom icon to this if you so wish, too.)
+
+Sample Document
+See the “Sample Story MS” PDF file in the Research folder for an example of a document that has been created using this template.
+
+Final Note
+Scrivener project templates are flexible and are not intended to restrict you to a particular workflow. You can change, delete or move the files and folders contained in the template, and you can create your own templates by setting up a skeletal project with the files, folders and settings you would like to use for new projects and using File &gt; Save As Template.</Text>
+        </Document>
+    </Documents>
+</SearchIndexes>

@@ -37,19 +37,19 @@ public class WorldMap : MonoBehaviour
         _mapHeight = WorldData.Instance.Height;
         _mapWidth = WorldData.Instance.Width;
 
-        for (var x = 0; x < _mapWidth; x++)
+        for (var row = 0; row < _mapHeight; row++)
         {
-            for (var y = 0; y < _mapHeight; y++)
+            for (var column = 0; column < _mapWidth; column++)
             {
-                foreach (var layer in _map[x, y].WorldMapSprite.Keys)
+                foreach (var layer in _map[row, column].WorldMapSprite.Layers.Keys)
                 {
-                    var prefab = _map[x, y].WorldMapSprite[layer];
+                    var prefab = _map[row, column].WorldMapSprite.Layers[layer];
 
                     if (prefab == null)
                     {
                         continue;
                     }
-                    var instance = Instantiate(prefab, new Vector2(x, y), Quaternion.identity);
+                    var instance = Instantiate(prefab, new Vector2(column, row), Quaternion.identity);
                     instance.transform.SetParent(_worldMapHolder);
                     instance.AddComponent<WorldTileInfo>();
                     instance.AddComponent<BoxCollider2D>();
@@ -61,10 +61,10 @@ public class WorldMap : MonoBehaviour
     private void PlacePlayer()
     {
         _playerSprite = GameManager.Instance.Player.GetSprite();
-        _playerSprite.transform.position = new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
-        GameManager.Instance.Player.CurrentPosition = _playerSprite.transform.position;
-//        Camera.transform.SetParent(_playerSprite.transform);
-//        Camera.SetActive(true);
-//        Camera.transform.localPosition = new Vector3(0, 0, -10);
+
+        GameManager.Instance.Player.CurrentPosition =
+            new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
+
+        //_playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
     }
 }

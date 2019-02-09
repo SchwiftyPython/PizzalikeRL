@@ -8,8 +8,8 @@ public class MapData {
     public float Min { get; set; }
     public float Max { get; set; }
 
-    public MapData(int width, int height) {
-        Data = new float[width, height];
+    public MapData(int height, int width) {
+        Data = new float[height, width];
         Min = float.MaxValue;
         Max = float.MinValue;
     }

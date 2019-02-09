@@ -32,6 +32,8 @@ public class Area
 
     public Settlement Settlement;
 
+    public string Id;
+
     private int _x;
 
     public int X
@@ -50,7 +52,7 @@ public class Area
         set { _y = value; }
     }
 
-    public void BuildArea()
+    public void Build()
     {
         if (AreaTiles != null)
         {
@@ -59,7 +61,7 @@ public class Area
         
         PresentEntities = new List<Entity>();
         
-        AreaTiles = new Tile[Width, Height];
+        AreaTiles = new Tile[Height, Width];
 
         var tileDeck = new AreaTileDeck(BiomeType);
 
@@ -70,13 +72,13 @@ public class Area
                 var texture = tileDeck.Draw();
                 if (texture.layer == LayerMask.NameToLayer("Obstacle"))
                 {
-                    AreaTiles[column, row] = new Tile(texture, new Vector2(column, row), true, true);
+                    AreaTiles[row, column] = new Tile(texture, new Vector2(row, column), true, true);
                 }
                 else
                 {
-                    AreaTiles[column , row] = new Tile(texture, new Vector2(column, row), false, false);
+                    AreaTiles[row, column] = new Tile(texture, new Vector2(row, column), false, false);
                 }
-                AreaTiles[column, row].Visibility = Tile.Visibilities.Invisible;
+                AreaTiles[row, column].Visibility = Visibilities.Invisible;
             }
         }
 
@@ -84,7 +86,7 @@ public class Area
 
         UpdateNeighbors();
 
-        if (ParentCell.Rivers.Count > 0 || BiomeType == BiomeType.Swamp)
+        if (ParentCell.Rivers?.Count > 0 || BiomeType == BiomeType.Swamp)
         {
             PlaceWaterTiles();
         }
@@ -124,11 +126,11 @@ public class Area
 
         var settlementBluePrint = settlementPrefab.Blueprint;
 
-        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(1); currentRow++)
+        for (var currentRow = 0; currentRow < settlementBluePrint.GetLength(0); currentRow++)
         {
-            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(0); currentColumn++)
+            for (var currentColumn = 0; currentColumn < settlementBluePrint.GetLength(1); currentColumn++)
             {
-                var tileCode = settlementBluePrint[currentColumn, currentRow];
+                var tileCode = settlementBluePrint[currentRow, currentColumn];
 
                 if (tileCode == 'x')
                 {
@@ -145,8 +147,8 @@ public class Area
 
                 var tile = GetTilePrefab(tileCode);
 
-                AreaTiles[currentColumn, currentRow] =
-                    new Tile(tile, new Vector2(currentColumn, currentRow), false, false);
+                AreaTiles[currentRow, currentColumn] =
+                    new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
             }
         }
     }
@@ -243,10 +245,10 @@ public class Area
         Tile startTile = null;
         while (!foundStartingPoint && numTries < maxTries)
         {
-            var x = Random.Range(0, Width);
-            var y = Random.Range(0, Height);
+            var row = Random.Range(0, Height);
+            var column = Random.Range(0, Width);
             
-            startTile = AreaTiles[x, y];
+            startTile = AreaTiles[row, column];
 
             if (CanPlaceWaterTile(startTile))
             {
@@ -266,13 +268,13 @@ public class Area
         var maxWaterHeight = BiomeType == BiomeType.Swamp ? Random.Range(Height / 6, Height - 5) : Random.Range(3, Height / 2);
         var maxWaterWidth = BiomeType == BiomeType.Swamp ? Random.Range(Width / 6, Width - 5) : Random.Range(3, Width / 2);
 
-        var tempMap = new Tile[Width, Height];
+        var tempMap = new Tile[Height, Width];
         var currentHeight = 0;
         var success = true;
-        for (var currentRow = (int) startTile.GridPosition.y; currentHeight < maxWaterHeight; currentRow++)
+        for (var currentRow = (int) startTile.GridPosition.x; currentHeight < maxWaterHeight; currentRow++)
         {
             var currentWidth = 0;
-            for (var currentColumn = (int) startTile.GridPosition.x; currentWidth < maxWaterWidth; currentColumn++)
+            for (var currentColumn = (int) startTile.GridPosition.y; currentWidth < maxWaterWidth; currentColumn++)
             {
                 if (currentRow >= Height || currentColumn >= Width)
                 {
@@ -280,14 +282,14 @@ public class Area
                     break;
                 }
 
-                var currentTile = AreaTiles[currentColumn, currentRow];
+                var currentTile = AreaTiles[currentRow, currentColumn];
 
                 if (CanPlaceWaterTile(currentTile))
                 {
                     GameObject waterTilePrefab;
                     try
                     {
-                        var tempTile = tempMap[currentColumn, currentRow] ?? new Tile(null, new Vector2(currentColumn, currentRow), false, false);
+                        var tempTile = tempMap[currentRow, currentColumn] ?? new Tile(null, new Vector2(currentRow, currentColumn), false, false);
 
                         UpdateNeighborsForTempTile(tempTile, tempMap);
 
@@ -304,7 +306,7 @@ public class Area
                         return;
                     }
 
-                    tempMap[currentColumn, currentRow] = new Tile(waterTilePrefab, new Vector2(currentColumn, currentRow), false, false);
+                    tempMap[currentRow, currentColumn] = new Tile(waterTilePrefab, new Vector2(currentRow, currentColumn), false, false);
 
                     if (_waterEndTiles.Contains(waterTilePrefab.name))
                     {
@@ -324,12 +326,12 @@ public class Area
         {
             for (var currentColumn = 0; currentColumn < Width; currentColumn++)
             {
-                if (tempMap[currentColumn, currentRow] == null)
+                if (tempMap[currentRow, currentColumn] == null)
                 {
                     continue;
                 }
 
-                AreaTiles[currentColumn, currentRow] = tempMap[currentColumn, currentRow];
+                AreaTiles[currentRow, currentColumn] = tempMap[currentRow, currentColumn];
             }
         }
 
@@ -496,28 +498,28 @@ public class Area
 
     private Tile GetTop(Tile t)
     {
-        return AreaTiles[(int) t.GridPosition.x, MathHelper.Mod((int) (t.GridPosition.y - 1), Height)];
+        return AreaTiles[MathHelper.Mod(t.X + 1, Height), t.Y];
     }
     private Tile GetBottom(Tile t)
     {
-        return AreaTiles[(int) t.GridPosition.x, MathHelper.Mod((int) (t.GridPosition.y + 1), Height)];
+        return AreaTiles[MathHelper.Mod(t.X - 1, Height), t.Y];
     }
     private Tile GetLeft(Tile t)
     {
-        return AreaTiles[MathHelper.Mod((int) (t.GridPosition.x - 1), Width), (int) t.GridPosition.y];
+        return AreaTiles[t.X, MathHelper.Mod(t.Y - 1, Width)];
     }
     private Tile GetRight(Tile t)
     {
-        return AreaTiles[MathHelper.Mod((int) (t.GridPosition.x + 1), Width), (int) t.GridPosition.y];
+        return AreaTiles[t.X, MathHelper.Mod(t.Y + 1, Width)];
     }
 
     private void UpdateNeighbors()
     {
-        for (var x = 0; x < Width; x++)
+        for (var row = 0; row < Height; row++)
         {
-            for (var y = 0; y < Height; y++)
+            for (var column = 0; column < Width; column++)
             {
-                var t = AreaTiles[x, y];
+                var t = AreaTiles[row, column];
 
                 t.Top = GetTop(t);
                 t.Bottom = GetBottom(t);
@@ -567,7 +569,9 @@ public class Area
         {
             var creature = creatureDeck.Draw();
             creature.CurrentArea = this;
+            creature.CurrentCell = ParentCell;
             PresentEntities.Add(creature);
+            WorldData.Instance.Entities.Add(creature.Id, creature);
         }
     }
 }

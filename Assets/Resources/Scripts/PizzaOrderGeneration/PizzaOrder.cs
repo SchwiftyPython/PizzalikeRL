@@ -15,6 +15,8 @@ public class PizzaOrder
     
     public Cell CustomerLocation;
 
+    public PizzaOrder() { }
+
     public PizzaOrder(OrderDifficulty difficulty = OrderDifficulty.Easy)
     {
         Pizzas = new List<Pizza>();

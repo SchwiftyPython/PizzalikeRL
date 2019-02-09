@@ -59,6 +59,12 @@ public class FactionTemplateLoader : MonoBehaviour
     public static string GenerateFactionName()
     {
         //todo create actual generation instead of picking from premade list
+
+        if (_rawFactionNames == null)
+        {
+            return string.Empty;
+        }
+
         var index = Random.Range(0, _rawFactionNames.Count);
         return _rawFactionNames[index].Trim('\n');
     }

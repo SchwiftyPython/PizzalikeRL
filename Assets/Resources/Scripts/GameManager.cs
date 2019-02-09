@@ -4,6 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public const string WorldMapSceneName = "WorldMap";
+    public const string AreaMapSceneName = "Area";
+
     public bool WorldMapGenComplete;
     public bool PlayerInStartingArea;
     public bool PlayerEnteringAreaFromWorldMap;
@@ -81,6 +84,11 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case GameState.EnterArea:
+                if (AreaMap.Instance == null)
+                {
+                    break;
+                }
+
                 AreaMap.Instance.EnterArea();
                 if (AreaMap.Instance.AreaReady)
                 {
@@ -109,7 +117,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case GameState.EndTurn:
-                if (CurrentScene.name.Equals("WorldMap"))
+                if (CurrentScene.name.Equals(WorldMapSceneName))
                 {
                     InputController.Instance.ActionTaken = false;
                     CurrentState = GameState.Playerturn;
@@ -126,7 +134,7 @@ public class GameManager : MonoBehaviour
 
     private GameState WhoseTurn()
     {
-        if (CurrentScene.name.Equals("WorldMap") || !CurrentArea.EntitiesPresent())
+        if (CurrentScene.name.Equals(WorldMapSceneName) || !CurrentArea.EntitiesPresent())
         {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;

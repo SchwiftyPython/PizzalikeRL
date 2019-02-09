@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -51,19 +51,6 @@ public class Cell
     private const int CellWidth = 3;
     private const int CellHeight = 3;
 
-    private Area _currentArea;
-
-    public enum WorldSpriteLayer
-    {
-        Base,
-        Detail,
-        Mountain,
-        River,
-        Road,
-        SettlementFloor,
-        SettlementWall
-    }
-
     public bool HasNPCs;
 
     public HeightType HeightType;
@@ -75,6 +62,7 @@ public class Cell
     public float HeatValue { get; set; }
     public float MoistureValue { get; set; }
     public int X, Y;
+    public string Id;
 
     public Cell Left;
     public Cell Right;
@@ -87,16 +75,14 @@ public class Cell
     public bool Collidable;
     public bool FloodFilled;
 
-    public Color Color = Color.black;
-
     public List<River> Rivers = new List<River>();
     public Area[,] Areas = new Area[CellHeight, CellWidth];
 
     public int RiverSize { get; set; }
 
-    public Dictionary<WorldSpriteLayer, GameObject> WorldMapSprite { get; private set; }
+    public WorldTile WorldMapSprite { get; private set; }
 
-    public List<Faction> PresentFaction;
+    public List<Faction> PresentFactions;
 
     public Settlement Settlement;
 
@@ -106,7 +92,6 @@ public class Cell
         set
         {
             BiomeType = value;
-            SetCellSprite(value);
             for (var i = 0; i < CellHeight; i++)
             {
                 for (var j = 0; j < CellWidth; j++)
@@ -122,7 +107,8 @@ public class Cell
                             ParentCell = this,
                             BiomeType = value,
                             X = i,
-                            Y = j
+                            Y = j,
+                            Id = i + " " + j
                         };
                     }
                 }
@@ -130,14 +116,9 @@ public class Cell
         }
     }
 
-    public Area CurrentArea {
-        get {
-            return _currentArea;
-        }
-
-        set {
-            _currentArea = value;
-        }
+    public CellSdo ConvertToCellSdo()
+    {
+        return CellSdo.ConvertToCellSdo(this);
     }
 
     public int GetCellWidth() {
@@ -220,7 +201,7 @@ public class Cell
         HeightValue = 0;
         Collidable = false;
 
-        Debug.Log($"River exists in Cell {X}, {Y}");
+        //Debug.Log($"River exists in Cell {X}, {Y}");
     }
 
     public void DigRiver(River river, int size) {
@@ -283,52 +264,85 @@ public class Cell
         }
     }
 
-    private void SetCellSprite(BiomeType biome)
+    public void LoadCellSprite(WorldTile.LayerPrefabIndexDictionary layerPrefabIndexes)
     {
         if (WorldMapSprite == null)
         {
-            InitializeWorldSpriteDictionary();
+            WorldMapSprite = new WorldTile();
+        }
+        WorldMapSprite.LayerPrefabIndexes = layerPrefabIndexes;
+
+        PickBaseLayer();
+
+        if (WorldMapSprite.LayerPrefabIndexes.Count < 1)
+        {
+            return;
+        }
+        
+        LoadDetailLayer();
+        LoadSettlementMarkerLayers();
+    }
+
+    public void SetCellSprite()
+    {
+        if (WorldMapSprite == null)
+        {
+            WorldMapSprite = new WorldTile();
         }
 
-        switch (biome)
+        PickBaseLayer();
+
+        if (biomeType != BiomeType.Mountain && biomeType != BiomeType.Water)
+        {
+            var detailData = PickDetailLayer(biomeType);
+
+            if (detailData == null)
+            {
+                return;
+            }
+
+            WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.Detail] = detailData.First().Key;
+
+            WorldMapSprite.Layers[WorldSpriteLayer.Detail] = detailData.First().Value;
+        }
+    }
+
+    private void PickBaseLayer()
+    {
+        switch (biomeType)
         {
             case BiomeType.Mountain:
                 PickMountainTile();
                 break;
             case BiomeType.Desert:
-                WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldDesertTile;
+                WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldDesertTile;
                 //assign river layer
                 //If connecting cell between settlements or just have road set road layer
                 break;
             case BiomeType.Grassland:
-                WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
+                WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
                 break;
             case BiomeType.Ice:
-                WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldIceTile;
+                WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldIceTile;
                 break;
             case BiomeType.Swamp:
-                WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldSwampTile;
+                WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldSwampTile;
                 break;
             case BiomeType.Wasteland:
-                WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldWasteLandTile;
+                WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldWasteLandTile;
                 break;
             case BiomeType.Water:
-                WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldWaterTile;
+                WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldWaterTile;
                 break;
             case BiomeType.SeasonalForest:
             case BiomeType.TropicalRainforest:
             case BiomeType.Woodland:
-                WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
+                WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
                 break;
-        }
-
-        if (biome != BiomeType.Mountain && biome != BiomeType.Water)
-        {
-            WorldMapSprite[WorldSpriteLayer.Detail] = PickDetailLayer(biome);
         }
     }
 
-    private static GameObject PickDetailLayer(BiomeType biome)
+    private static Dictionary<int, GameObject> PickDetailLayer(BiomeType biome)
     {
         var detailChance = new Dictionary<BiomeType, int>
         {
@@ -344,31 +358,102 @@ public class Cell
 
         if (roll <= detailChance[biome])
         {
+            int index;
+            GameObject detail;
             switch (biome)
             {
                 case BiomeType.Desert:
-                    return WorldData.Instance.WorldDesertDetailTiles[
-                        roll % WorldData.Instance.WorldDesertDetailTiles.Length];
+                    index = roll % WorldData.Instance.WorldDesertDetailTiles.Length;
+                    detail = WorldData.Instance.WorldDesertDetailTiles[index];
+                    return new Dictionary<int, GameObject>{{index, detail}};
                 case BiomeType.Grassland:
-                    return WorldData.Instance.WorldGrassLandDetailTiles[
-                        roll % WorldData.Instance.WorldGrassLandDetailTiles.Length];
+                    index = roll % WorldData.Instance.WorldGrassLandDetailTiles.Length;
+                    detail = WorldData.Instance.WorldGrassLandDetailTiles[index];
+                    return new Dictionary<int, GameObject> { { index, detail } };
                 case BiomeType.Ice:
-                    return WorldData.Instance.WorldIceDetailTiles[
-                        roll % WorldData.Instance.WorldIceDetailTiles.Length];
+                    index = roll % WorldData.Instance.WorldIceDetailTiles.Length;
+                    detail = WorldData.Instance.WorldIceDetailTiles[index];
+                    return new Dictionary<int, GameObject> { { index, detail } };
                 case BiomeType.Swamp:
-                    return WorldData.Instance.WorldSwampDetailTiles[
-                        roll % WorldData.Instance.WorldSwampDetailTiles.Length];
+                    index = roll % WorldData.Instance.WorldSwampDetailTiles.Length;
+                    detail = WorldData.Instance.WorldSwampDetailTiles[index];
+                    return new Dictionary<int, GameObject> { { index, detail } };
                 case BiomeType.Wasteland:
-                    return WorldData.Instance.WorldWasteLandDetailTiles[
-                        roll % WorldData.Instance.WorldWasteLandDetailTiles.Length];
+                    index = roll % WorldData.Instance.WorldWasteLandDetailTiles.Length;
+                    detail = WorldData.Instance.WorldWasteLandDetailTiles[index];
+                    return new Dictionary<int, GameObject> { { index, detail } };
                 case BiomeType.SeasonalForest:
                 case BiomeType.TropicalRainforest:
                 case BiomeType.Woodland:
-                    return WorldData.Instance.WorldWoodLandDetailTiles[
-                        roll % WorldData.Instance.WorldWoodLandDetailTiles.Length];
+                    index = roll % WorldData.Instance.WorldWoodLandDetailTiles.Length;
+                    detail = WorldData.Instance.WorldWoodLandDetailTiles[index];
+                    return new Dictionary<int, GameObject> { { index, detail } };
             }
         }
         return null;
+    }
+
+    private void LoadDetailLayer()
+    {
+        if (WorldMapSprite.LayerPrefabIndexes.Count < 1 ||
+            !WorldMapSprite.LayerPrefabIndexes.ContainsKey(WorldSpriteLayer.Detail))
+        {
+            return;
+        }
+
+        var index = WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.Detail];
+
+        GameObject detail = null;
+        switch (biomeType)
+        {
+            case BiomeType.Desert:
+                detail = WorldData.Instance.WorldDesertDetailTiles[index];
+                break;
+            case BiomeType.Grassland:
+                detail = WorldData.Instance.WorldGrassLandDetailTiles[index];
+                break;
+            case BiomeType.Ice:
+                detail = WorldData.Instance.WorldIceDetailTiles[index];
+                break;
+            case BiomeType.Swamp:
+                detail = WorldData.Instance.WorldSwampDetailTiles[index];
+                break;
+            case BiomeType.Wasteland:
+                detail = WorldData.Instance.WorldWasteLandDetailTiles[index];
+                break;
+            case BiomeType.SeasonalForest:
+            case BiomeType.TropicalRainforest:
+            case BiomeType.Woodland:
+                detail = WorldData.Instance.WorldWoodLandDetailTiles[index];
+                break;
+        }
+
+        WorldMapSprite.Layers[WorldSpriteLayer.Detail] = detail;
+    }
+
+    private void LoadSettlementMarkerLayers()
+    {
+        if (Settlement == null)
+        {
+            return;
+        }
+
+        if (WorldMapSprite.LayerPrefabIndexes.Count < 1 ||
+            !WorldMapSprite.LayerPrefabIndexes.ContainsKey(WorldSpriteLayer.SettlementFloor) ||
+            !WorldMapSprite.LayerPrefabIndexes.ContainsKey(WorldSpriteLayer.SettlementWall))
+        {
+            return;
+        }
+
+        var floorIndex = WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementFloor];
+
+        WorldMapSprite.Layers[WorldSpriteLayer.SettlementFloor] =
+            WorldData.Instance.SettlementFloorTiles[floorIndex];
+
+        var wallIndex = WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementWall];
+
+        WorldMapSprite.Layers[WorldSpriteLayer.SettlementWall] =
+            WorldData.Instance.SettlementWallTiles[wallIndex];
     }
 
     private void PickMountainTile()
@@ -414,8 +499,8 @@ public class Cell
 
         if (maxTries <= 0 && neighbor == null)
         {
-            WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
-            WorldMapSprite[WorldSpriteLayer.Mountain] = mountainTiles[BiomeType.Grassland];
+            WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
+            WorldMapSprite.Layers[WorldSpriteLayer.Mountain] = mountainTiles[BiomeType.Grassland];
         }
         else
         {
@@ -427,44 +512,32 @@ public class Cell
             switch (neighbor.biomeType)
             {
                 case BiomeType.Mountain:
-                    WorldMapSprite[WorldSpriteLayer.Base] = neighbor.WorldMapSprite[WorldSpriteLayer.Base];
-                    WorldMapSprite[WorldSpriteLayer.Mountain] = neighbor.WorldMapSprite[WorldSpriteLayer.Mountain];
+                    WorldMapSprite.Layers[WorldSpriteLayer.Base] = neighbor.WorldMapSprite.Layers[WorldSpriteLayer.Base];
+                    WorldMapSprite.Layers[WorldSpriteLayer.Mountain] = neighbor.WorldMapSprite.Layers[WorldSpriteLayer.Mountain];
                     break;
                 case BiomeType.Desert:
-                    WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldDesertTile;
+                    WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldDesertTile;
                     break;
                 case BiomeType.Ice:
-                    WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldIceTile;
+                    WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldIceTile;
                     break;
                 case BiomeType.Swamp:
-                    WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldSwampTile;
+                    WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldSwampTile;
                     break;
                 case BiomeType.Wasteland:
-                    WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldWasteLandTile;
+                    WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldWasteLandTile;
                     break;
                 case BiomeType.Grassland:
                 case BiomeType.SeasonalForest:
                 case BiomeType.TropicalRainforest:
                 case BiomeType.Woodland:
-                    WorldMapSprite[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
+                    WorldMapSprite.Layers[WorldSpriteLayer.Base] = WorldData.Instance.WorldGrassLandTile;
                     break;
             }
             if (neighbor.biomeType != BiomeType.Mountain)
             {
-                WorldMapSprite[WorldSpriteLayer.Mountain] = mountainTiles[neighbor.biomeType];
+                WorldMapSprite.Layers[WorldSpriteLayer.Mountain] = mountainTiles[neighbor.biomeType];
             }
-        }
-    }
-
-    private void InitializeWorldSpriteDictionary()
-    {
-        WorldMapSprite = new Dictionary<WorldSpriteLayer, GameObject>();
-
-        var layers = (WorldSpriteLayer[]) Enum.GetValues(typeof(WorldSpriteLayer));
-
-        foreach (var layer in layers)
-        {
-            WorldMapSprite.Add(layer, null);
         }
     }
 }

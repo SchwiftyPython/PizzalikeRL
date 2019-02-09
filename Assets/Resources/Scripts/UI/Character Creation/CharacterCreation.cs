@@ -135,6 +135,8 @@ public class CharacterCreation : MonoBehaviour
 
         GameManager.Instance.Player = _player;
 
+        WorldData.Instance.Entities.Add(_player.Id, _player);
+
         SceneManager.LoadScene(WorldGenerationSetupScene);
     }
 

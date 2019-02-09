@@ -59,7 +59,7 @@ public class AreaMap : MonoBehaviour
         _currentArea = GameManager.Instance.CurrentArea;
         _currentArea.TurnOrder = new Queue<Entity>();
         _currentArea.TurnOrder.Enqueue(_player);
-        _currentArea.BuildArea();
+        _currentArea.Build();
 
 //        if (_currentArea.ParentCell.Rivers.Count > 0)
 //        {
@@ -81,7 +81,7 @@ public class AreaMap : MonoBehaviour
         //fieldOfView = AreaMapHolder.AddComponent<Fov>();
 
         Fov.Init(_currentArea);
-        var v = new Vinteger((int) _player.GetSprite().transform.position.x, (int)_player.GetSprite().transform.position.y);
+        var v = new Vinteger(_player.CurrentTile.X, _player.CurrentTile.Y);
         Fov.Refresh(v);
 
         AreaReady = true;
@@ -99,18 +99,18 @@ public class AreaMap : MonoBehaviour
 
     public void DrawArea()
     {
-        for (var i = 0; i < _currentArea.Height; i++)
+        for (var currentRow = 0; currentRow < _currentArea.Height; currentRow++)
         {
-            for (var j = 0; j < _currentArea.Width; j++)
+            for (var currentColumn = 0; currentColumn < _currentArea.Width; currentColumn++)
             {
-                var tile = _currentArea.AreaTiles[j, i];
+                var tile = _currentArea.AreaTiles[currentRow, currentColumn];
 
                 var texture = tile.GetPrefabTileTexture();
-                var instance = Instantiate(texture, new Vector2(j, i), Quaternion.identity);
+                var instance = Instantiate(texture, new Vector2(currentColumn, currentRow), Quaternion.identity);
                 tile.TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
 
-                tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(j, i, -4), Quaternion.identity);
+                tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(currentColumn, currentRow, -4), Quaternion.identity);
                 tile.FovTile.transform.SetParent(FovHolder.transform);
 
                 //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[j, i].Revealed ? Color.gray : Color.black;
@@ -134,12 +134,11 @@ public class AreaMap : MonoBehaviour
             var building = lot.AssignedBuilding;
             for (var currentRow = 0; currentRow < building.Height; currentRow++)
             {
-                areaY--;
                 for (var currentColumn = 0; currentColumn < building.Width; currentColumn++)
                 {
-                    if (building.WallTiles[currentColumn, currentRow] != null)
+                    if (building.WallTiles[currentRow, currentColumn] != null)
                     {
-                        var tile = building.FloorTiles[currentColumn, currentRow];
+                        var tile = building.FloorTiles[currentRow, currentColumn];
 
                         _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
 
@@ -148,20 +147,20 @@ public class AreaMap : MonoBehaviour
                             Destroy(_currentArea.AreaTiles[areaX, areaY].TextureInstance);
                         }
 
-                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
 
-                        tile = building.WallTiles[currentColumn, currentRow];
+                        tile = building.WallTiles[currentRow, currentColumn];
 
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(true);
-                        instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         _currentArea.AreaTiles[areaX, areaY].PresentWallTile = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
                     else
                     {
-                        var tile = building.FloorTiles[currentColumn, currentRow];
+                        var tile = building.FloorTiles[currentRow, currentColumn];
 
                         _currentArea.AreaTiles[areaX, areaY].SetPrefabTileTexture(tile);
 
@@ -170,13 +169,14 @@ public class AreaMap : MonoBehaviour
                             Destroy(_currentArea.AreaTiles[areaX, areaY].TextureInstance);
                         }
 
-                        var instance = Instantiate(tile, new Vector2(areaX, areaY), Quaternion.identity);
+                        var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
                     _currentArea.AreaTiles[areaX, areaY].Lot = lot;
-                    areaX++;
+                    areaY++;
                 }
-                areaX = (int)lot.LowerLeftCorner.x;
+                areaX--;
+                areaY = (int)lot.LowerLeftCorner.y;
             }
         }
     }
@@ -185,9 +185,8 @@ public class AreaMap : MonoBehaviour
     {
         Destroy(entity.GetSprite());
 
-        _currentArea.AreaTiles[(int) entity.CurrentPosition.x, (int) entity.CurrentPosition.y].SetBlocksMovement(false);
-        _currentArea.AreaTiles[(int) entity.CurrentPosition.x, (int) entity.CurrentPosition.y].SetPresentEntity(null);
-        //_currentArea.PresentEntities.Remove(entity);
+        entity.CurrentTile.SetBlocksMovement(false);
+        entity.CurrentTile.SetPresentEntity(null);
     }
 
     public void InstantiatePlayerSprite()
@@ -264,20 +263,21 @@ public class AreaMap : MonoBehaviour
             if (_currentArea != null)
             {
                 var placed = false;
-                var y = 2;
-                var x = _currentArea.Width - 20;
+                var y = _currentArea.Width - 5;
+                var x = _currentArea.Height - 20;
                 while (!placed)
                 {
                     if (!_currentArea.AreaTiles[x, y].GetBlocksMovement())
                     {
-                        _playerSprite.transform.position = new Vector3(x, y);
+                        //_playerSprite.transform.position = new Vector3(x, y);
                         _player.CurrentPosition = new Vector3(x, y);
+                        _player.CurrentTile = _currentArea.AreaTiles[x, y];
                         //Debug.Log(("current area: " + _currentArea.AreaTiles[x, y]));
                         _currentArea.AreaTiles[x, y].SetPresentEntity(_player);
                         placed = true;
                     }
                     y = Random.Range(0, 10);
-                    x = Random.Range(_currentArea.Width - 25, _currentArea.Width);
+                    x = Random.Range(_currentArea.Height - 25, _currentArea.Height);
                 }
             }
         }
@@ -292,8 +292,8 @@ public class AreaMap : MonoBehaviour
         if (_currentArea != null)
         {
             _player.CurrentCell = _currentArea.ParentCell;
-            _currentArea.AreaTiles[(int) _playerSprite.transform.position.x, (int) _playerSprite.transform.position.y]
-                .Visibility = Tile.Visibilities.Visible;
+            _currentArea.AreaTiles[_player.CurrentTile.X, _player.CurrentTile.Y]
+                .Visibility = Visibilities.Visible;
         }
     }
 
@@ -308,13 +308,13 @@ public class AreaMap : MonoBehaviour
             }
 
             var placed = false;
-            var y = Random.Range(0, _currentArea.Height);
-            var x = Random.Range(0, _currentArea.Width);
+            var row = Random.Range(0, _currentArea.Height);
+            var column = Random.Range(0, _currentArea.Width);
             while (!placed)
             {
-                if (!_currentArea.AreaTiles[x, y].GetBlocksMovement())
+                if (!_currentArea.AreaTiles[row, column].GetBlocksMovement())
                 {
-                    var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector3(x, y, 0f), Quaternion.identity);
+                    var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector2(column, row), Quaternion.identity);
 
                     npcSprite.AddComponent<EnemyController>();
                     npcSprite.AddComponent<Seeker>();
@@ -323,15 +323,19 @@ public class AreaMap : MonoBehaviour
                     npcSprite.GetComponent<EnemyController>().Self = e;
 
                     npcSprite.transform.SetParent(NpcSpriteHolder.transform);
+
                     e.SetSprite(npcSprite);
-                    _currentArea.AreaTiles[x, y].SetPresentEntity(e);
-                    _currentArea.AreaTiles[x, y].SetBlocksMovement(true);
-                    e.CurrentPosition = new Vector3(x, y, 0f);
+
+                    e.CurrentTile = _currentArea.AreaTiles[row, column];
+                    e.CurrentTile.SetPresentEntity(e);
+                    e.CurrentTile.SetBlocksMovement(true);
+                    e.CurrentPosition = new Vector3(row, column, 0f);
+
                     _currentArea.TurnOrder.Enqueue(e);
                     placed = true;
                 }
-                y = Random.Range(0, _currentArea.Height);
-                x = Random.Range(0, _currentArea.Width);
+                row = Random.Range(0, _currentArea.Height);
+                column = Random.Range(0, _currentArea.Width);
             }
             e.CurrentArea = _currentArea;
             e.CurrentCell = _currentArea.ParentCell;
@@ -405,7 +409,7 @@ public class AreaMap : MonoBehaviour
         var maxWaterHeight = maxWidthAndHeight;
         var maxWaterWidth = maxWidthAndHeight;
 
-        var tempMap = new Tile[_currentArea.Width, _currentArea.Height];
+        var tempMap = new Tile[_currentArea.Height, _currentArea.Width];
         var currentWidth = 0;
         var success = true;
         for (var currentRow = (int)startTile.GridPosition.y; currentWidth < maxWaterWidth; currentRow++)
@@ -419,7 +423,7 @@ public class AreaMap : MonoBehaviour
                     break;
                 }
 
-                var currentTile = tempMap[currentColumn, currentRow] ?? new Tile(null, new Vector2(currentColumn, currentRow), false, false);
+                var currentTile = tempMap[currentRow, currentRow] ?? new Tile(null, new Vector2(currentRow, currentColumn), false, false);
 
                 UpdateNeighborsForTempTile(currentTile, tempMap);
 
@@ -427,7 +431,7 @@ public class AreaMap : MonoBehaviour
                 {
                     var waterTilePrefab = GetCorrectWaterTilePrefab(currentTile, currentWidth, currentHeight, maxWaterWidth, maxWaterHeight);
 
-                    tempMap[currentColumn, currentRow] = new Tile(waterTilePrefab, new Vector2(currentColumn, currentRow), false, false);
+                    tempMap[currentRow, currentColumn] = new Tile(waterTilePrefab, new Vector2(currentRow, currentColumn), false, false);
                 }
                 else
                 {
@@ -443,14 +447,14 @@ public class AreaMap : MonoBehaviour
         {
             return;
         }
-
+        //todo fix this
         currentWidth = 0;
-        for (var currentRow = (int)startTile.GridPosition.y; currentWidth < maxWaterWidth; currentRow++)
+        for (var currentRow = (int)startTile.GridPosition.x; currentWidth < maxWaterWidth; currentRow++)
         {
             var currentHeight = 0;
-            for (var currentColumn = (int)startTile.GridPosition.x; currentHeight < maxWaterHeight; currentColumn++)
+            for (var currentColumn = (int)startTile.GridPosition.y; currentWidth < maxWaterHeight; currentColumn++)
             {
-                _currentArea.AreaTiles[currentColumn, currentRow] = tempMap[currentColumn, currentRow];
+                _currentArea.AreaTiles[currentRow, currentColumn] = tempMap[currentRow, currentColumn];
                 currentHeight++;
             }
             currentWidth++;

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
+[Serializable]
 public class Entity
 {
     public enum EntityClassification
@@ -24,17 +26,17 @@ public class Entity
         West,
         NorthWest
     }
-
+    
     private readonly IDictionary<Direction, Vector2> _directions = new Dictionary<Direction, Vector2>
     {
-        {Direction.North, Vector2.up},
-        {Direction.NorthEast, Vector2.one},
-        {Direction.East, Vector2.right},
-        {Direction.SouthEast, new Vector2(1, -1)},
-        {Direction.South, Vector2.down},
+        {Direction.North, new Vector2(1, 0)},
+        {Direction.NorthEast, new Vector2(1, 1)},
+        {Direction.East, new Vector2(0, 1)},
+        {Direction.SouthEast, new Vector2(-1, 1)},
+        {Direction.South, new Vector2(-1, 0)},
         {Direction.SouthWest, new Vector2(-1, -1)},
-        {Direction.West, Vector2.left},
-        {Direction.NorthWest, new Vector2(-1, 1)}
+        {Direction.West,new Vector2(0, -1)},
+        {Direction.NorthWest, new Vector2(1, -1)}
     };
 
     private Vector2 _startTile;
@@ -47,40 +49,47 @@ public class Entity
 
     private int _coins;
 
-    private readonly GameObject _prefab;
+    public  GameObject Prefab;
     private GameObject _sprite;
-    
-    private readonly Faction _faction;
 
-    private int _totalBodyPartCoverage;
+    public Faction Faction;
 
-    private Vector3 _currentPosition;
+    public int TotalBodyPartCoverage { get; set; }
+
+    private Vector3 _currentPosition; //on screen position
+
+    public string PrefabPath;
+
+    public Guid Id;
 
     //Base stats
 
-    public int Level { get; private set; }
-    public int Xp { get; private set; }
+    public int Level { get; set; }
+    public int Xp { get; set; }
 
-    public int Strength { get; private set; }
-    public int Agility { get; private set; }
-    public int Constitution { get; private set; }
-    public int Intelligence { get; private set; }
+    public int Strength { get; set; }
+    public int Agility { get; set; }
+    public int Constitution { get; set; }
+    public int Intelligence { get; set; }
 
 
     //Stats dependent on base stat values
 
-    public int MaxHp { get; private set; }
-    public int CurrentHp { get; private set; }
-    public int Speed { get; private set; }
-    public int Defense { get; private set; }
+    public int MaxHp { get; set; }
+    public int CurrentHp { get; set; }
+    public int Speed { get; set; }
+    public int Defense { get; set; }
+    
+    [Serializable]
+    public class BodyDictionary : SerializableDictionary<Guid, BodyPart> { }
 
-    public IDictionary<Guid, Item> Inventory { get; }
+    public IDictionary<Guid, Item> Inventory { get; } //todo create method for adding items to inventory
     public IDictionary<BodyPart, Item> Equipped;
 
-    public IDictionary<Guid, BodyPart> Body { get; private set; } = new Dictionary<Guid, BodyPart>();
+    public BodyDictionary Body { get; set; }
 
-    public string EntityType { get; }
-    public EntityClassification Classification { get; }
+    public string EntityType { get; set; }
+    public EntityClassification Classification { get; set; }
     public EntityFluff Fluff { get; set; }
 
     public Stack<Goal> Goals;
@@ -97,17 +106,29 @@ public class Entity
 
         set
         {
-            _currentPosition = value;
-            SetSpritePosition(value);
+            _currentPosition = new Vector2(value.y, value.x);
+            SetSpritePosition(_currentPosition);
         }
+    }
+
+    public Entity(Guid id, string prefabPath ,bool isPlayer = false)
+    {
+        Id = id;
+        _isPlayer = isPlayer;
+        Inventory = new Dictionary<Guid, Item>();
+        Equipped = new Dictionary<BodyPart, Item>();
+
+        Prefab = Resources.Load(prefabPath) as GameObject;
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
     {
+        Id = Guid.NewGuid();
+
         _isPlayer = isPlayer;
         EntityType = template.Type;
         Classification = template.Classification;
-        _faction = faction;
+        Faction = faction;
 
         if (isPlayer)
         {
@@ -132,7 +153,8 @@ public class Entity
         _isWild = template.Wild;
         Mobile = true;
 
-        _prefab = Resources.Load(template.SpritePath) as GameObject;
+        PrefabPath = template.SpritePath;
+        Prefab = Resources.Load(template.SpritePath) as GameObject;
         
         Inventory = new Dictionary<Guid, Item>();
         BuildBody(template);
@@ -141,6 +163,8 @@ public class Entity
 
         //Testing ranged attack////////////////////////
         var testBow = new Weapon(ItemTemplateLoader.GetEntityTemplate("bow"), ItemRarity.Common);
+
+        WorldData.Instance.Items.Add(testBow.Id, testBow);
 
         if (isPlayer) Inventory.Add(testBow.Id, testBow );
         ////////////////////////////////////////
@@ -261,7 +285,7 @@ public class Entity
 
     private void BuildBody(EntityTemplate template)
     {
-        Body = new Dictionary<Guid, BodyPart>();
+        Body = new BodyDictionary();
         var bodyPartNames = BodyPartLoader.BodyPartNames;
         foreach (var templateBodyPart in template.Parts)
         {
@@ -322,7 +346,12 @@ public class Entity
 
     private void CalculateTotalBodyPartCoverage()
     {
-        _totalBodyPartCoverage = (from bp in Body.Values select bp.Coverage).Sum();
+        TotalBodyPartCoverage = (from bp in Body.Values select bp.Coverage).Sum();
+    }
+
+    public EntitySdo ConvertToEntitySdo()
+    {
+        return EntitySdo.ConvertToEntitySdo(this);
     }
 
     public bool IsPlayer()
@@ -332,7 +361,7 @@ public class Entity
 
     public GameObject GetSpritePrefab()
     {
-        return _prefab;
+        return Prefab;
     }
 
     public GameObject GetSprite()
@@ -347,13 +376,18 @@ public class Entity
 
     public void SetSpritePosition(Vector3 newPosition)
     {
+        if (_sprite == null)
+        {
+            return;
+        }
+
         _sprite.transform.position = newPosition;
     }
 
     public void AreaMove(Vector2 target)
     {
         //todo: clean up this code
-        _startTile = CurrentPosition;
+        _startTile = new Vector2(CurrentTile.X, CurrentTile.Y);
         _endTile = target;
 
         if (TileOutOfBounds(target))
@@ -379,22 +413,19 @@ public class Entity
 
                     if (!CurrentArea.AreaBuilt())
                     {
-                        CurrentArea.BuildArea();
+                        CurrentArea.Build();
                     }
                     
                     CurrentTile = CalculateAreaEntryTile(target);
 
                     //update tile data for start and end tiles
                     UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                        CurrentArea.AreaTiles[(int) CurrentTile.GetGridPosition().x,
-                            (int) CurrentTile.GetGridPosition().y]);
+                        CurrentArea.AreaTiles[CurrentTile.X, CurrentTile.Y]);
 
-                    CurrentPosition = new Vector3((int) CurrentTile.GetGridPosition().x,
-                        (int) CurrentTile.GetGridPosition().y);
+                    CurrentPosition = new Vector3(CurrentTile.X, CurrentTile.Y);
 
                     if (_isPlayer)
                     {
-                        GameManager.Instance.Player.CurrentPosition = CurrentPosition;
                         GameManager.Instance.CurrentTile = CurrentTile;
                         GameManager.Instance.CurrentArea = CurrentArea;
                         GameManager.Instance.CurrentCell = CurrentCell;
@@ -410,22 +441,19 @@ public class Entity
 
                 if (!CurrentArea.AreaBuilt())
                 {
-                    CurrentArea.BuildArea();
+                    CurrentArea.Build();
                 }
 
                 CurrentTile = CalculateAreaEntryTile(target);
 
                 //update tile data for start and end tiles
-                CurrentPosition = new Vector3((int) CurrentTile.GetGridPosition().x,
-                    (int) CurrentTile.GetGridPosition().y);
+                CurrentPosition = new Vector3(CurrentTile.X, CurrentTile.Y);
                 UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
-                    CurrentArea.AreaTiles[(int) CurrentTile.GetGridPosition().x,
-                        (int) CurrentTile.GetGridPosition().y]);
+                    CurrentArea.AreaTiles[CurrentTile.X, CurrentTile.Y]);
 
                 if (_isPlayer)
                 {
                     GameManager.Instance.CurrentTile = CurrentTile;
-                    GameManager.Instance.Player.CurrentPosition = CurrentPosition;
                     GameManager.Instance.CurrentArea = CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                 }
@@ -435,11 +463,6 @@ public class Entity
         {
             CurrentPosition = _endTile;
             CurrentTile = CurrentArea.AreaTiles[(int) _endTile.x, (int) _endTile.y];
-            if (_isPlayer)
-            {
-                GameManager.Instance.Player.CurrentPosition = CurrentPosition;
-            }
-            //SetSpritePosition(EndTile);
 
             //update tile data for start and end tiles
             UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
@@ -459,8 +482,6 @@ public class Entity
         else
         {
             CurrentPosition = new Vector3((int) targetCell.x, (int) targetCell.y);
-
-            GameManager.Instance.Player.CurrentPosition = CurrentPosition;
 
             GameManager.Instance.CurrentCell = WorldData.Instance.Map[(int) targetCell.x, (int) targetCell.y];
             CurrentCell = GameManager.Instance.CurrentCell;
@@ -482,40 +503,40 @@ public class Entity
 
     public bool TileOutOfBounds(Vector2 target)
     {
-        return target.x >= CurrentArea.Width || target.x < 0 || target.y >= CurrentArea.Height || target.y < 0;
+        return target.y >= CurrentArea.Width || target.y < 0 || target.x >= CurrentArea.Height || target.x < 0;
     }
 
     public bool AreaOutOfBounds(Vector2 target)
     {
-        return target.x >= CurrentCell.GetCellWidth() || target.x < 0 || target.y >= CurrentCell.GetCellHeight() ||
-               target.y < 0;
+        return target.y >= CurrentCell.GetCellWidth() || target.y < 0 || target.x >= CurrentCell.GetCellHeight() ||
+               target.x < 0;
     }
 
     public bool CellOutOfBounds(Vector2 target)
     {
-        return target.x >= WorldData.Instance.Width || target.x < 0 || target.y >= WorldData.Instance.Height ||
-               target.y < 0;
+        return target.y >= WorldData.Instance.Width || target.y < 0 || target.x >= WorldData.Instance.Height ||
+               target.x < 0;
     }
 
     public Tile CalculateAreaEntryTile(Vector2 target)
     {
         var xOffset = 0;
         var yOffset = 0;
-        if (target.x >= GameManager.Instance.CurrentArea.Width)
+        if (target.x >= GameManager.Instance.CurrentArea.Height)
         {
-            xOffset = -GameManager.Instance.CurrentArea.Width;
+            xOffset = -GameManager.Instance.CurrentArea.Height;
         }
         else if (target.x < 0)
         {
-            xOffset = GameManager.Instance.CurrentArea.Width;
+            xOffset = GameManager.Instance.CurrentArea.Height;
         }
-        if (target.y >= GameManager.Instance.CurrentArea.Height)
+        if (target.y >= GameManager.Instance.CurrentArea.Width)
         {
-            yOffset = -GameManager.Instance.CurrentArea.Height;
+            yOffset = -GameManager.Instance.CurrentArea.Width;
         }
         else if (target.y < 0)
         {
-            yOffset = GameManager.Instance.CurrentArea.Height;
+            yOffset = GameManager.Instance.CurrentArea.Width;
         }
         return GameManager.Instance.CurrentArea.AreaTiles[(int) target.x + xOffset, (int) target.y + yOffset];
     }
@@ -524,21 +545,21 @@ public class Entity
     {
         var xOffset = 0;
         var yOffset = 0;
-        if (target.x >= GameManager.Instance.CurrentCell.GetCellWidth())
+        if (target.x >= GameManager.Instance.CurrentCell.GetCellHeight())
         {
-            xOffset = -GameManager.Instance.CurrentCell.GetCellWidth();
+            xOffset = -GameManager.Instance.CurrentCell.GetCellHeight();
         }
         else if (target.x < 0)
         {
-            xOffset = GameManager.Instance.CurrentCell.GetCellWidth();
+            xOffset = GameManager.Instance.CurrentCell.GetCellHeight();
         }
-        if (target.y >= GameManager.Instance.CurrentCell.GetCellHeight())
+        if (target.y >= GameManager.Instance.CurrentCell.GetCellWidth())
         {
-            yOffset = -GameManager.Instance.CurrentCell.GetCellHeight();
+            yOffset = -GameManager.Instance.CurrentCell.GetCellWidth();
         }
         else if (target.y < 0)
         {
-            yOffset = GameManager.Instance.CurrentCell.GetCellHeight();
+            yOffset = GameManager.Instance.CurrentCell.GetCellWidth();
         }
         var targetAreaPosition = new Vector2((int)target.x + xOffset, (int)target.y + yOffset);
         Debug.Log("Original target area:" + target);
@@ -548,44 +569,44 @@ public class Entity
 
     public Direction AreaOutOfBoundsDirection(Vector2 target, Area area)
     {
-        if (target.x >= area.Width)
+        if (target.x >= area.Height)
         {
-            if (target.y >= area.Height)
+            if (target.y >= area.Width)
             {
                 return Direction.NorthEast;
             }
-            return target.y < 0 ? Direction.SouthEast : Direction.East;
+            return target.y < 0 ? Direction.NorthWest : Direction.North;
         }
-        if (!(target.x < 0))
+        if (target.x < 0)
         {
-            return target.y < 0 ? Direction.South : Direction.North;
+            if (target.y >= area.Width)
+            {
+                return Direction.SouthEast;
+            }
+            return target.y < 0 ? Direction.SouthWest : Direction.South;
         }
-        if (target.y >= area.Height)
-        {
-            return Direction.NorthWest;
-        }
-        return target.y < 0 ? Direction.SouthWest : Direction.West;
+        return target.y >= area.Width ? Direction.East : Direction.West;
     }
 
     public Direction CellOutOfBoundsDirection(Vector2 target, Cell cell)
     {
-        if (target.x >= cell.GetCellWidth())
+        if (target.x >= cell.GetCellHeight())
         {
-            if (target.y >= cell.GetCellHeight())
+            if (target.y >= cell.GetCellWidth())
             {
                 return Direction.NorthEast;
             }
-            return target.y < 0 ? Direction.SouthEast : Direction.East;
+            return target.y < 0 ? Direction.NorthWest : Direction.North;
         }
-        if (!(target.x < 0))
+        if (target.x < 0)
         {
-            return target.y < 0 ? Direction.South : Direction.North;
+            if (target.y >= cell.GetCellWidth())
+            {
+                return Direction.SouthEast;
+            }
+            return target.y < 0 ? Direction.SouthWest : Direction.South;
         }
-        if (target.y >= cell.GetCellHeight())
-        {
-            return Direction.NorthWest;
-        }
-        return target.y < 0 ? Direction.SouthWest : Direction.West;
+        return target.y >= cell.GetCellWidth() ? Direction.East : Direction.West;
     }
 
     public void MeleeAttack(Entity target)
@@ -617,7 +638,7 @@ public class Entity
             if (AreaMapCanMove(target))
             {
                 AreaMove(target);
-                var v = new Vinteger((int)_sprite.transform.position.x, (int)_sprite.transform.position.y);
+                var v = new Vinteger(CurrentTile.X, CurrentTile.Y);
                 AreaMap.Instance.Fov.Refresh(v);
                 return true;
             }
@@ -749,7 +770,7 @@ public class Entity
 
             var roll = DiceRoller.Instance.RollDice(dice);
 
-            var chanceToHit = (float)part.Coverage / (float)_totalBodyPartCoverage * 100;
+            var chanceToHit = (float)part.Coverage / (float)TotalBodyPartCoverage * 100;
 
             partHit = roll <= chanceToHit;
 
@@ -862,8 +883,8 @@ public class Entity
 
     public int CalculateDistanceToTarget(Entity target)
     {
-        var a = target.CurrentPosition.x - CurrentPosition.x;
-        var b = target.CurrentPosition.y - CurrentPosition.y;
+        var a = target.CurrentTile.X - CurrentTile.X;
+        var b = target.CurrentTile.Y - CurrentTile.Y;
 
         return (int) Math.Sqrt(a * a + b * b);
     }

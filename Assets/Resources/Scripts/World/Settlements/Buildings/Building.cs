@@ -6,38 +6,68 @@ public class Building
     public GameObject[,] FloorTiles;
     public GameObject[,] WallTiles;
 
+    public int WallTypeIndex;
     public IDictionary<string, GameObject> WallTilePrefabs;
+
+    public int FloorTypeIndex;
     public List<GameObject> FloorTilePrefabs;
 
     public int Width;
     public int Height;
+
+    public char[,] Blueprint;
 
     public Building(BuildingPrefab prefab)
     {
         Width = prefab.Width;
         Height = prefab.Height;
 
-        FloorTiles = new GameObject[prefab.Width, prefab.Height];
-        WallTiles = new GameObject[prefab.Width, prefab.Height];
+        FloorTiles = new GameObject[Height, Width];
+        WallTiles = new GameObject[Height, Width];
 
         PickTilePrefabs();
 
-        for (var currentRow = 0; currentRow < prefab.Height; currentRow++)
+        Blueprint = prefab.Blueprint;
+
+        Build();
+    }
+
+    public Building(BuildingSdo sdo)
+    {
+        Width = sdo.Width;
+        Height = sdo.Height;
+        
+        FloorTiles = new GameObject[Height, Width];
+        WallTiles = new GameObject[Height, Width];
+        WallTypeIndex = sdo.WallTypeIndex;
+        FloorTypeIndex = sdo.FloorTypeIndex;
+
+        WallTilePrefabs = BuildingPrefabStore.GetWallTileTypeAt(WallTypeIndex);
+        FloorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
+
+        Blueprint = BuildingSdo.ConvertBlueprintForLoading(sdo.Blueprint);
+
+        Build();
+    }
+
+    private void Build()
+    {
+        for (var currentRow = 0; currentRow < Height; currentRow++)
         {
-            for (var currentColumn = 0; currentColumn < prefab.Width; currentColumn++)
+            for (var currentColumn = 0; currentColumn < Width; currentColumn++)
             {
-                var tileCode = prefab.Blueprint[currentColumn, currentRow];
+                var tileCode = Blueprint[currentRow, currentColumn];
 
                 if (BuildingPrefabStore.WallTileKeys.ContainsKey(tileCode))
                 {
                     var tile = GetRandomFloorTilePrefab();
 
-                    FloorTiles[currentColumn, currentRow] = tile;
+                    FloorTiles[currentRow, currentColumn] = tile;
 
                     var tileType = BuildingPrefabStore.WallTileKeys[tileCode];
                     tile = WallTilePrefabs[tileType];
 
-                    WallTiles[currentColumn, currentRow] = tile;
+                    WallTiles[currentRow, currentColumn] = tile;
                 }
                 else
                 {
@@ -48,7 +78,7 @@ public class Building
 
                     var tile = GetRandomFloorTilePrefab();
 
-                    FloorTiles[currentColumn, currentRow] = tile;
+                    FloorTiles[currentRow, currentColumn] = tile;
                 }
             }
         }
@@ -56,8 +86,11 @@ public class Building
 
     private void PickTilePrefabs()
     {
-        WallTilePrefabs = BuildingPrefabStore.GetRandomWallTileType();
-        FloorTilePrefabs = BuildingPrefabStore.GetRandomFloorTileType();
+        WallTypeIndex = BuildingPrefabStore.GetRandomWallTypeIndex();
+        WallTilePrefabs = BuildingPrefabStore.GetWallTileTypeAt(WallTypeIndex);
+
+        FloorTypeIndex = BuildingPrefabStore.GetRandomFloorTypeIndex();
+        FloorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
     }
 
     private GameObject GetRandomFloorTilePrefab()

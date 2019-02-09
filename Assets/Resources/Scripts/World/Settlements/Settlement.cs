@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class Settlement
 {
@@ -17,7 +18,7 @@ public class Settlement
     private readonly Cell _cell;
     private int _yearFounded;
     private string _history;
-    private List<Entity> _namedNpcs;
+    private List<Entity> _citizens;
     private List<Area> _areas;
     private List<Building> _buildings;
 
@@ -38,6 +39,52 @@ public class Settlement
         BuildAreas();
     }
 
+    public Settlement(SettlementSdo sdo)
+    {
+        if (sdo == null)
+        {
+            return;
+        }
+
+        Faction = WorldData.Instance.Factions[sdo.FactionName];
+        Size = sdo.Size;
+        Name = sdo.Name;
+        _cell = WorldData.Instance.MapDictionary[sdo.CellId];
+        _population = sdo.Population;
+        _history = sdo.History;
+    }
+
+    public SettlementSdo GetSettlementSdo()
+    {
+        var sdo = new SettlementSdo
+        {
+            CellId = _cell.Id,
+            Population = _population,
+            FactionName = Faction.Name,
+            History = _history,
+            LotSdos = LotSdo.ConvertToLotSdos(Lots),
+            BuildingSdos = new List<BuildingSdo>(),
+            Name = Name, 
+            CitizenIds = new List<Guid>(),
+            Size = Size
+        };
+
+        foreach (var lotSdo in sdo.LotSdos)
+        {
+            sdo.BuildingSdos.Add(lotSdo.AssignedBuildingSdo);
+        }
+
+        if (_citizens != null)
+        {
+            foreach (var citizen in _citizens)
+            {
+                sdo.CitizenIds.Add(citizen.Id);
+            }
+        }
+
+        return sdo;
+    }
+
     private void PickAreas()
     {
         _areas = new List<Area>();
@@ -46,8 +93,8 @@ public class Settlement
             var settlementPlaced = false;
             while (!settlementPlaced)
             {
-                var x = Random.Range(0, _cell.GetCellWidth());
-                var y = Random.Range(0, _cell.GetCellHeight());
+                var x = Random.Range(0, _cell.GetCellHeight());
+                var y = Random.Range(0, _cell.GetCellWidth());
 
                 var area = _cell.Areas[x, y];
 
@@ -74,7 +121,7 @@ public class Settlement
     {
         foreach (var area in _areas)
         {
-            area.BuildArea();
+            area.Build();
         }
     }
 }

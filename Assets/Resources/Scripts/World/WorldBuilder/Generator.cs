@@ -11,8 +11,8 @@ public class Generator : MonoBehaviour
     private int SeedHashCode { set; get; }
 
     // Adjustable variables for Unity Inspector
-    [SerializeField] private int _width = 270;
-    [SerializeField] private int _height = 75;
+    [SerializeField] private int _height = 30; //75
+    [SerializeField] private int _width = 60; //270
 
     [Header("Height Map")]
     [SerializeField]
@@ -110,6 +110,8 @@ public class Generator : MonoBehaviour
         Seed = WorldData.Instance.Seed;
         SeedHashCode = Seed.GetHashCode();
 
+        WorldData.Instance.SaveGameId = Math.Abs(DateTime.Now.GetHashCode()).ToString();
+
         // Get the mesh we are rendering our output to        
         //_heightMapRenderer = GameObject.Find("HeightTexture").GetComponentInChildren<MeshRenderer>();
         //_heatMapRenderer = GameObject.Find("HeatTexture").GetComponentInChildren<MeshRenderer>();
@@ -128,12 +130,11 @@ public class Generator : MonoBehaviour
         //testing
         while(GameManager.Instance.CurrentCell.BiomeType == BiomeType.Water || GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain)
         {
-            var x = Random.Range(0, _width);
-            var y = Random.Range(0, _height);
+            var x = Random.Range(0, _height);
+            var y = Random.Range(0, _width);
 
             GameManager.Instance.CurrentCell = _cells[x, y];
         }
-
 
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
@@ -160,6 +161,8 @@ public class Generator : MonoBehaviour
     #region Private Methods
     private void Generate()
     {
+        Debug.Log("World Generation Started");
+
         // Build the maps
         GetData();
         // Build our final objects based on our data
@@ -180,6 +183,8 @@ public class Generator : MonoBehaviour
         CreateFactions();
         PlaceSettlements();
 
+        Debug.Log("World Generation Complete");
+
         //RarityCapper = new Capper();
 
         // Render a texture representation of our map
@@ -193,20 +198,21 @@ public class Generator : MonoBehaviour
 
     private void GenerateBiomeMap()
     {
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
                 _cells[x, y].biomeType = GetBiomeType(_cells[x, y]);
+                _cells[x, y].SetCellSprite();
             }
         }
     }
 
     private void UpdateBiomeBitmask()
     {
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
                 _cells[x, y].UpdateBiomeBitmask();
             }
@@ -242,14 +248,14 @@ public class Generator : MonoBehaviour
     // Extract data from a noise module
     private void GetData()
     {
-        _heightData = new MapData(_width, _height);
-        _heatData = new MapData(_width, _height);
-        _moistureData = new MapData(_width, _height);
+        _heightData = new MapData(_height, _width);
+        _heatData = new MapData(_height, _width);
+        _moistureData = new MapData(_height, _width);
 
         // loop through each x,y point - get height value
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
 
                 // WRAP ON BOTH AXIS
@@ -260,8 +266,8 @@ public class Generator : MonoBehaviour
                 var dy = y2 - y1;
 
                 // Sample noise at smaller intervals
-                var s = x / (float)_width;
-                var t = y / (float)_height;
+                var s = x / (float)_height;
+                var t = y / (float)_width;
 
                 // Calculate our 4D coordinates
                 var nx = x1 + Mathf.Cos(s * 2 * Mathf.PI) * dx / (2 * Mathf.PI);
@@ -294,19 +300,20 @@ public class Generator : MonoBehaviour
     // Build a Cell array from our data
     private void LoadCells()
     {
-        _cells = new Cell[_width, _height];
+        _cells = new Cell[_height, _width];
 
-        for (var x = 0; x < _width; x++)
+        for (var currentRow = 0; currentRow < _height; currentRow++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var currentColumn = 0; currentColumn < _width; currentColumn++)
             {
                 var c = new Cell
                 {
-                    X = x,
-                    Y = y
+                    X = currentRow,
+                    Y = currentColumn,
+                    Id = currentRow + " " + currentColumn
                 };
 
-                var heightValue = _heightData.Data[x, y];
+                var heightValue = _heightData.Data[currentRow, currentColumn];
                 heightValue = (heightValue - _heightData.Min) / (_heightData.Max - _heightData.Min);
                 c.HeightValue = heightValue;
 
@@ -365,7 +372,7 @@ public class Generator : MonoBehaviour
                 }
 
                 // Set heat value
-                var heatValue = _heatData.Data[x, y];
+                var heatValue = _heatData.Data[currentRow, currentColumn];
                 heatValue = (heatValue - _heatData.Min) / (_heatData.Max - _heatData.Min);
                 c.HeatValue = heatValue;
 
@@ -400,7 +407,7 @@ public class Generator : MonoBehaviour
                 }
 
                 //Moisture Map Analyze  
-                var moistureValue = _moistureData.Data[x, y];
+                var moistureValue = _moistureData.Data[currentRow, currentColumn];
                 moistureValue = (moistureValue - _moistureData.Min) / (_moistureData.Max - _moistureData.Min);
                 c.MoistureValue = moistureValue;
 
@@ -412,35 +419,35 @@ public class Generator : MonoBehaviour
                 else if (moistureValue < _wettestValue) c.MoistureType = MoistureType.Wetter;
                 else c.MoistureType = MoistureType.Wettest;
 
-                _cells[x, y] = c;
+                _cells[currentRow, currentColumn] = c;
             }
         }
     }
 
     private Cell GetTop(Cell t)
     {
-        return _cells[t.X, MathHelper.Mod(t.Y + 1, _height)];
+        return _cells[MathHelper.Mod(t.X + 1, _height), t.Y];
     }
     private Cell GetBottom(Cell t)
     {
-        return _cells[t.X, MathHelper.Mod(t.Y - 1, _height)];
+        return _cells[MathHelper.Mod(t.X - 1, _height), t.Y];
     }
     private Cell GetLeft(Cell t)
     {
-        return _cells[MathHelper.Mod(t.X - 1, _width), t.Y];
+        return _cells[t.X, MathHelper.Mod(t.Y - 1, _width)];
     }
     private Cell GetRight(Cell t)
     {
-        return _cells[MathHelper.Mod(t.X + 1, _width), t.Y];
+        return _cells[t.X, MathHelper.Mod(t.Y + 1, _width)];
     }
 
     private void UpdateNeighbors()
     {
-        for (var x = 0; x < _width; x++)
+        for (var currentRow = 0; currentRow < _height; currentRow++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var currentColumn = 0; currentColumn < _width; currentColumn++)
             {
-                var c = _cells[x, y];
+                var c = _cells[currentRow, currentColumn];
 
                 c.Top = GetTop(c);
                 c.Bottom = GetBottom(c);
@@ -452,9 +459,9 @@ public class Generator : MonoBehaviour
 
     private void UpdateBitmasks()
     {
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
                 _cells[x, y].UpdateBitmask();
             }
@@ -466,9 +473,9 @@ public class Generator : MonoBehaviour
         // Use a stack instead of recursion
         var stack = new Stack<Cell>();
 
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
 
                 var c = _cells[x, y];
@@ -550,8 +557,8 @@ public class Generator : MonoBehaviour
         {
 
             // Get a random tile
-            var x = Random.Range(0, _width);
-            var y = Random.Range(0, _height);
+            var x = Random.Range(0, _height);
+            var y = Random.Range(0, _width);
             var cell = _cells[x, y];
 
             // validate the tile
@@ -706,9 +713,9 @@ public class Generator : MonoBehaviour
     private void BuildRiverGroups()
     {
         //loop each tile, checking if it belongs to multiple rivers
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
                 var c = _cells[x, y];
 
@@ -726,7 +733,7 @@ public class Generator : MonoBehaviour
                             for (var j = 0; j < _riverGroups[i].Rivers.Count; j++)
                             {
                                 var river = _riverGroups[i].Rivers[j];
-                                if (river.ID == tileriver.ID)
+                                if (river.Id == tileriver.Id)
                                 {
                                     group = _riverGroups[i];
                                 }
@@ -818,7 +825,7 @@ public class Generator : MonoBehaviour
 
         var counter = 0;
         var intersectionCount = river.Cells.Count - intersectionId;
-        var size = UnityEngine.Random.Range(intersectionSize, 5);
+        var size = Random.Range(intersectionSize, 5);
         river.Length = river.Cells.Count;
 
         // randomize size change
@@ -833,25 +840,25 @@ public class Generator : MonoBehaviour
         var fivemin = five / 3;
 
         // randomize length of each size
-        var count1 = UnityEngine.Random.Range(fivemin, five);
+        var count1 = Random.Range(fivemin, five);
         if (size < 4)
         {
             count1 = 0;
         }
-        var count2 = count1 + UnityEngine.Random.Range(fourmin, four);
+        var count2 = count1 + Random.Range(fourmin, four);
         if (size < 3)
         {
             count2 = 0;
             count1 = 0;
         }
-        var count3 = count2 + UnityEngine.Random.Range(threemin, three);
+        var count3 = count2 + Random.Range(threemin, three);
         if (size < 2)
         {
             count3 = 0;
             count2 = 0;
             count1 = 0;
         }
-        var count4 = count3 + UnityEngine.Random.Range(twomin, two);
+        var count4 = count3 + Random.Range(twomin, two);
 
         // Make sure we are not digging past the river path
         if (count4 > river.Length)
@@ -942,7 +949,7 @@ public class Generator : MonoBehaviour
         var counter = 0;
 
         // How wide are we digging this river?
-        var size = UnityEngine.Random.Range(1, 5);
+        var size = Random.Range(1, 5);
         river.Length = river.Cells.Count;
 
         // randomize size change
@@ -957,25 +964,25 @@ public class Generator : MonoBehaviour
         var fivemin = five / 3;
 
         // randomize lenght of each size
-        var count1 = UnityEngine.Random.Range(fivemin, five);
+        var count1 = Random.Range(fivemin, five);
         if (size < 4)
         {
             count1 = 0;
         }
-        var count2 = count1 + UnityEngine.Random.Range(fourmin, four);
+        var count2 = count1 + Random.Range(fourmin, four);
         if (size < 3)
         {
             count2 = 0;
             count1 = 0;
         }
-        var count3 = count2 + UnityEngine.Random.Range(threemin, three);
+        var count3 = count2 + Random.Range(threemin, three);
         if (size < 2)
         {
             count3 = 0;
             count2 = 0;
             count1 = 0;
         }
-        var count4 = count3 + UnityEngine.Random.Range(twomin, two);
+        var count4 = count3 + Random.Range(twomin, two);
 
         // Make sure we are not digging past the river path
         if (count4 > river.Length)
@@ -1034,9 +1041,9 @@ public class Generator : MonoBehaviour
 
     private void AdjustMoistureMap()
     {
-        for (var x = 0; x < _width; x++)
+        for (var x = 0; x < _height; x++)
         {
-            for (var y = 0; y < _height; y++)
+            for (var y = 0; y < _width; y++)
             {
 
                 var c = _cells[x, y];
@@ -1089,9 +1096,9 @@ public class Generator : MonoBehaviour
         var deck = new FactionDeck();
         const int numCellsTilNextDraw = 25;
 
-        var currentX = 0;
-        var currentY = 0;
-        var currentCell = _cells[currentX, currentY];
+        var currentRow = 0;
+        var currentColumn = 0;
+        var currentCell = _cells[currentRow, currentColumn];
 
         foreach (var card in deck.Cards)
         {
@@ -1103,44 +1110,48 @@ public class Generator : MonoBehaviour
                     var roll = Random.Range(0.000f, 1.000f);
                     if (roll <= chanceToPlaceCard)
                     {
-                        if (currentCell.PresentFaction == null)
+                        if (currentCell.PresentFactions == null)
                         {
-                            currentCell.PresentFaction = new List<Faction>();
+                            currentCell.PresentFactions = new List<Faction>();
                         }
-                        currentCell.PresentFaction.Add(card);
+                        currentCell.PresentFactions.Add(card);
 
                         CreateSettlement(card, currentCell);
 
                         var index = Random.Range(0, settlementFloorTiles.Length);
 
-                        currentCell.WorldMapSprite[Cell.WorldSpriteLayer.SettlementFloor] = settlementFloorTiles[index];
+                        currentCell.WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementFloor] = index;
+
+                        currentCell.WorldMapSprite.Layers[WorldSpriteLayer.SettlementFloor] = settlementFloorTiles[index];
 
                         index = Random.Range(0, settlementWallTiles.Length);
 
-                        currentCell.WorldMapSprite[Cell.WorldSpriteLayer.SettlementWall] = settlementWallTiles[index];
+                        currentCell.WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementWall] = index;
+
+                        currentCell.WorldMapSprite.Layers[WorldSpriteLayer.SettlementWall] = settlementWallTiles[index];
                         placed = true;
                         //Debug.Log(card + " placed at " + currentX + ", " + currentY);
                     }
                 }
-                if (currentX + numCellsTilNextDraw >= _width)
+                if (currentRow + numCellsTilNextDraw >= _height)
                 {
-                    currentX += numCellsTilNextDraw - _width;
+                    currentRow += numCellsTilNextDraw - _height;
                     
-                    if (currentY + 1 >= _height)
+                    if (currentColumn + 1 >= _width)
                     {
-                        currentY = 0;
+                        currentColumn = 0;
                     }
                     else
                     {
-                        currentY ++;
+                        currentColumn ++;
                     }
 
                 }
                 else
                 {
-                    currentX += numCellsTilNextDraw;
+                    currentRow += numCellsTilNextDraw;
                 }
-                currentCell = _cells[currentX, currentY];
+                currentCell = _cells[currentRow, currentColumn];
             }
         }
     }
