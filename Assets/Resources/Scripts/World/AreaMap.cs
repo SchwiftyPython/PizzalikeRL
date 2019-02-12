@@ -189,6 +189,25 @@ public class AreaMap : MonoBehaviour
         entity.CurrentTile.SetPresentEntity(null);
     }
 
+    public void RemoveDeadEntity(Entity entity)
+    {
+        Destroy(entity.GetSprite());
+
+        entity.CurrentTile.SetBlocksMovement(false);
+        entity.CurrentTile.SetPresentEntity(null);
+
+        //todo check for item drops
+
+        if (entity.ToppingDropped != null)
+        {
+            entity.CurrentTile.PresentTopping = new Topping(entity.ToppingDropped);
+
+            entity.CurrentTile.PresentTopping.WorldSprite = Instantiate(
+                entity.CurrentTile.PresentTopping.WorldSpritePrefab, entity.CurrentTile.GridPosition,
+                Quaternion.identity);
+        }
+    }
+
     public void InstantiatePlayerSprite()
     {
        var existingPlayerSprite = GameObject.FindWithTag("Player");
@@ -219,39 +238,6 @@ public class AreaMap : MonoBehaviour
         {
             Destroy(FovHolder.transform.GetChild(i).gameObject);
         }
-    }
-
-    private GameObject GetFovTileForWall(Tile wallTile)
-    {
-        if (wallTile.PresentWallTile.name.Contains("upper_left"))
-        {
-            return Fov.FovUpperLeftPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("upper_right"))
-        {
-            return Fov.FovUpperRightPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("lower_left"))
-        {
-            return Fov.FovLowerLeftPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("lower_right"))
-        {
-            return Fov.FovLowerRightPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("left"))
-        {
-            return Fov.FovStraightLeftPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("bottom"))
-        {
-            return Fov.FovStraightBottomPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("right"))
-        {
-            return Fov.FovStraightRightPrefab;
-        }
-        return Fov.FovStraightTopPrefab;
     }
 
     private void PlacePlayer()
@@ -566,6 +552,7 @@ public class AreaMap : MonoBehaviour
         tile.Right = GetTempRight(tile, tempMap);
     }
 
+    //todo fix these
     private Tile GetTempTop(Tile t, Tile[,] tempMap)
     {
         return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y - 1), _currentArea.Height)];

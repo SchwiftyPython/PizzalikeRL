@@ -44,6 +44,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
 		</EntityTemplate>
 		
 		<EntityTemplate type = "pepperoni worm">
@@ -79,6 +80,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<Topping>pepperoni</Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "beetle">
@@ -126,6 +128,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "giant moth">
@@ -173,6 +176,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "goose">
@@ -218,6 +222,7 @@
 				<NameFile>bird_female_first_names</NameFile>
 				<NameFile>bird_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "skunk">
@@ -265,6 +270,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "spider">
@@ -311,6 +317,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>				
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "turkey">
@@ -356,6 +363,7 @@
 				<NameFile>bird_female_first_names</NameFile>
 				<NameFile>bird_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 
 	</EntityTemplates>  

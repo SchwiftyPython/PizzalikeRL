@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
         {
             if (entity.IsDead())
             {
-                AreaMap.Instance.RemoveEntity(entity);
+                AreaMap.Instance.RemoveDeadEntity(entity);
             }
         }
     }

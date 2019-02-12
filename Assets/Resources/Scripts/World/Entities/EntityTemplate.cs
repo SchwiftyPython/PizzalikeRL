@@ -63,4 +63,7 @@ public class EntityTemplate
     [XmlArray("NameFiles")]
     [XmlArrayItem("NameFile")]
     public List<string> NameFiles;
+
+    [XmlElement("Topping")]
+    public string Topping;
 }

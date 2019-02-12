@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -85,6 +84,7 @@ public class Entity
 
     public IDictionary<Guid, Item> Inventory { get; } //todo create method for adding items to inventory
     public IDictionary<BodyPart, Item> Equipped;
+    public Topping ToppingDropped;
 
     public BodyDictionary Body { get; set; }
 
@@ -168,6 +168,11 @@ public class Entity
 
         if (isPlayer) Inventory.Add(testBow.Id, testBow );
         ////////////////////////////////////////
+
+        if (!string.IsNullOrEmpty(template.Topping))
+        {
+            ToppingDropped = new Topping(template.Topping);
+        }
     }
 
     public void SetStats(int strength, int agility, int constitution, int intelligence)

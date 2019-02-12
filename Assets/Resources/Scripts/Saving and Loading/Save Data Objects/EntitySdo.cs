@@ -60,6 +60,8 @@ public class EntitySdo
 
     public bool Mobile;
 
+    public ToppingSdo ToppingDropped;
+
     public static SaveGameData.SaveData.SerializableEntitiesDictionary ConvertToEntitySdos(List<Entity> entities)
     {
         var sdos = new SaveGameData.SaveData.SerializableEntitiesDictionary();
@@ -108,7 +110,8 @@ public class EntitySdo
             CurrentCellId = entity.CurrentCell?.Id,
             CurrentAreaId = entity.CurrentArea?.Id,
             CurrentTileId = entity.CurrentTile?.Id,
-            Mobile = entity.Mobile
+            Mobile = entity.Mobile,
+            ToppingDropped = ToppingSdo.ConvertToToppingSdo(entity.ToppingDropped)
         };
 
         foreach (var itemId in entity.Inventory.Keys)
@@ -131,9 +134,6 @@ public class EntitySdo
 
         foreach (var entitySdo in entitySdos)
         {
-            try
-            { 
-
             var entity = new Entity(entitySdo.Key, entitySdo.Value.PrefabPath, entitySdo.Value.IsPlayer)
             {
                 PrefabPath = entitySdo.Value.PrefabPath,
@@ -155,25 +155,10 @@ public class EntitySdo
                 Fluff = entitySdo.Value.Fluff,
                 Goals = entitySdo.Value.Goals,
                 Mobile = entitySdo.Value.Mobile,
-                CurrentCell = WorldData.Instance.MapDictionary[entitySdo.Value.CurrentCellId]
+                CurrentCell = WorldData.Instance.MapDictionary[entitySdo.Value.CurrentCellId],
+                ToppingDropped = ToppingSdo.ConvertToTopping(entitySdo.Value.ToppingDropped)
             };
-
             
-
-            /* var areaId = entitySdo.Value.CurrentAreaId.Split(' ');
-
-             var areaX = Convert.ToInt32(areaId[0]);
-             var areaY = Convert.ToInt32(areaId[1]);
-
-             entity.CurrentArea = entity.CurrentCell.Areas[areaX, areaY];
-
-             var tileId = entitySdo.Value.CurrentTileId.Split(' ');
-
-             var tileX = Convert.ToInt32(tileId[0]);
-             var tileY = Convert.ToInt32(tileId[1]);
-
-             entity.CurrentTile = entity.CurrentArea.AreaTiles[tileX, tileY];*/
-
             foreach (var itemId in entitySdo.Value.InventoryItemIds)
             {
                 var item = WorldData.Instance.Items[itemId];
@@ -198,17 +183,8 @@ public class EntitySdo
                    entity.Equipped.Add(equipped.Key, item);
                 }
             }
-
             entities.Add(entity.Id, entity);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
         }
-
-
         return entities;
     }
 }

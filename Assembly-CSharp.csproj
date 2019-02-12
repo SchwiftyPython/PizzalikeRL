@@ -275,6 +275,8 @@
     <Compile Include="Assets\Resources\Scripts\MoveEntity.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Pizza.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\PizzaOrder.cs" />
+    <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Topping.cs" />
+    <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Toppings.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\AreaSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\ArmorSdo.cs" />
@@ -288,6 +290,7 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\RiverSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\SettlementSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\TileSdo.cs" />
+    <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\ToppingSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\WeaponSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SaveGameData.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableDictionary.cs" />

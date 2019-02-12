@@ -16,6 +16,7 @@ public class WorldData : MonoBehaviour
     public List<Entity> FactionLeaders { get; set; }
     public List<Entity> OtherNamedNpcs { get; set; }
     public Dictionary<int, River> Rivers { get; set; }
+    public Dictionary<Toppings, GameObject> WorldViewToppingsDictionary { get; set; }
 
     public string Seed
     {
@@ -39,8 +40,9 @@ public class WorldData : MonoBehaviour
         }
     }
 
-    public int Height = 30;
-    public int Width = 60;
+    //Set in inspector
+    public int Height;
+    public int Width;
 
     public string SaveGameId { get; set; }
 
@@ -108,18 +110,7 @@ public class WorldData : MonoBehaviour
     public GameObject[] IceWaterTiles = new GameObject[1];
     public GameObject[] WastelandWaterTiles = new GameObject[1];
 
-    //Todo: This is replaced by deck system
-    public Dictionary<BiomeType, string[]> BiomePossibleEntities = new Dictionary<BiomeType, string[]>
-    {
-        {BiomeType.Desert, new[] {"pepperoni worm"}},
-        {BiomeType.Grassland, new[] {"pepperoni worm"}},
-        {BiomeType.SeasonalForest, new[] {"pepperoni worm"}},
-        {BiomeType.TropicalRainforest, new[] {"pepperoni worm"}},
-        {BiomeType.Woodland, new[] {"pepperoni worm"}},
-        {BiomeType.Ice, new[] {"pepperoni worm"}},
-        {BiomeType.Swamp, new[] {"pepperoni worm"}},
-        {BiomeType.Wasteland, new[] {"pepperoni worm"}}
-    };
+    public GameObject[] PizzaToppingsWorldView;
     
     public static WorldData Instance;
 
@@ -142,6 +133,32 @@ public class WorldData : MonoBehaviour
         Rivers = new Dictionary<int, River>();
     }
 
+    public void PopulateToppingsDictionaries()
+    {
+        WorldViewToppingsDictionary = new Dictionary<Toppings, GameObject>
+        {
+            {Toppings.Bacon, null },
+            {Toppings.BellPepper, null },
+            {Toppings.Cheese, null },
+            {Toppings.Jalapeno, null },
+            {Toppings.Mushrooms, null },
+            {Toppings.Olives, null },
+            {Toppings.Onion, null },
+            {Toppings.Pepperoni, null },
+            {Toppings.Pineapple, null },
+            {Toppings.Sausage, null },
+            {Toppings.Tomato, null },
+            {Toppings.Wheat, null }
+        };
+
+        var index = 0;
+        foreach (var topping in WorldViewToppingsDictionary.Keys.ToArray())
+        {
+            WorldViewToppingsDictionary[topping] = PizzaToppingsWorldView[index];
+            index++;
+        }
+    }
+
     public void CreateMapDictionary()
     {
         MapDictionary = new Dictionary<string, Cell>();
@@ -155,6 +172,11 @@ public class WorldData : MonoBehaviour
                 MapDictionary.Add(currentCell.Id, currentCell);
             }
         }
+    }
+
+    public GameObject GetToppingWorldViewSpriteByType(Toppings toppingType)
+    {
+        return WorldViewToppingsDictionary[toppingType];
     }
 
     public GameObject GetTileTextureByNameRarityAndBiome(string prefabName, BiomeType biomeType)
@@ -384,11 +406,6 @@ public class WorldData : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException(nameof(biomeType), biomeType, null);
         }
-    }
-
-    private Dictionary<string, GameObject> GetTileTextureDictionaryForLoading(List<GameObject> tiles)
-    {
-        return tiles.ToDictionary(tile => tile.name);
     }
 
     private static Dictionary<GameObject, Rarities> AddCommonTiles(IEnumerable<GameObject> tiles)
