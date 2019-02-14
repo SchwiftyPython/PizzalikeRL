@@ -111,6 +111,7 @@ public class WorldData : MonoBehaviour
     public GameObject[] WastelandWaterTiles = new GameObject[1];
 
     public GameObject[] PizzaToppingsWorldView;
+    public GameObject[] ItemPrefabsWorldView;
     
     public static WorldData Instance;
 

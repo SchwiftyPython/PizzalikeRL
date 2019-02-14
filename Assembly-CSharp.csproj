@@ -336,6 +336,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Items\Armor.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Item.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemRarity.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Items\ItemStore.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateLoader.cs" />

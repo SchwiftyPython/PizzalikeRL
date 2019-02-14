@@ -164,8 +164,6 @@ public class Entity
         //Testing ranged attack////////////////////////
         var testBow = new Weapon(ItemTemplateLoader.GetEntityTemplate("bow"), ItemRarity.Common);
 
-        WorldData.Instance.Items.Add(testBow.Id, testBow);
-
         if (isPlayer) Inventory.Add(testBow.Id, testBow );
         ////////////////////////////////////////
 

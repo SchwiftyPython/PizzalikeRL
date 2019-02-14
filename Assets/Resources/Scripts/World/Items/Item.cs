@@ -27,5 +27,8 @@ public class Item
         BodyPartCategory = template.BodyPartCategory;
         Rarity = rarity;
         Id = Guid.NewGuid();
+
+        //todo send new item event
+        WorldData.Instance.Items.Add(Id, this);
     }
 }
