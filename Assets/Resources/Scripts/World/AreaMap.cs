@@ -206,8 +206,7 @@ public class AreaMap : MonoBehaviour
 
         var itemRarityForRoll = DetermineRarityForItemDropRoll();
 
-        //if (ItemDropped(itemRarityForRoll))
-        if (true)
+        if (ItemDropped(itemRarityForRoll))
         {
             var item = ItemStore.Instance.GetRandomItemForRarity(itemRarityForRoll);
 
