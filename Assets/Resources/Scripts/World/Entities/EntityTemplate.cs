@@ -45,10 +45,6 @@ public class EntityTemplate
     [XmlElement("IsHostile")]
     public bool IsHostile;
 
-    [XmlArray("PossibleInventory")]
-    [XmlArrayItem("Item")]
-    public List<Item> PossibleInventory;    
-
     [XmlElement("SpritePath")]
     public string SpritePath;
 

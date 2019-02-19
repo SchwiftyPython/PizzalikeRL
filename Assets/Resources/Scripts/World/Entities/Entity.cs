@@ -161,12 +161,6 @@ public class Entity
         CalculateTotalBodyPartCoverage();
         PopulateEquipped();
 
-        //Testing ranged attack////////////////////////
-        var testBow = new Weapon(ItemTemplateLoader.GetEntityTemplate("bow"), ItemRarity.Common);
-
-        if (isPlayer) Inventory.Add(testBow.Id, testBow );
-        ////////////////////////////////////////
-
         if (!string.IsNullOrEmpty(template.Topping))
         {
             ToppingDropped = new Topping(template.Topping);

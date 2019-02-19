@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class Item
 {
-    protected GameObject Prefab;
-    protected GameObject Sprite;
+    public GameObject WorldPrefab;
+    public GameObject WorldSprite;
+
+    public GameObject InventoryPrefab;
+    public GameObject InventorySprite;
 
     public ItemRarity Rarity;
 
@@ -20,13 +23,14 @@ public class Item
 
     public Item(ItemTemplate template, ItemRarity rarity)
     {
-        //todo get prefab if we go that route. 
-        //May end up getting prefab based on item characteristics and/or modifying appearance at runtime.
         ItemType = template.Type;
         ItemCategory = template.Category;
         BodyPartCategory = template.BodyPartCategory;
         Rarity = rarity;
         Id = Guid.NewGuid();
+
+        //May end up getting prefab based on item characteristics and/or modifying appearance at runtime.
+        WorldPrefab = ItemStore.Instance.GetWorldPrefabForItemByType(ItemType);
 
         //todo send new item event
         WorldData.Instance.Items.Add(Id, this);

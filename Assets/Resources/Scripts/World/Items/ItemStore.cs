@@ -77,9 +77,53 @@ public class ItemStore : MonoBehaviour
             case "weapon":
                 return new Weapon(itemTemplate, rarity);
             case "consumable":
-                return new Item(itemTemplate, rarity);
+                return GetRandomItem();
+                //todo need sprite 
+                //return new Item(itemTemplate, rarity);
             default:
                 return new Item(itemTemplate, rarity);
+        }
+    }
+
+    //<Summary>
+    //    Returns a random item of specified rarity 
+    //</Summary>
+    public Item GetRandomItemForRarity(ItemRarity rarity)
+    {
+        var itemTemplate = GetRandomBaseItemTemplate();
+
+        switch (itemTemplate.Category.ToLower())
+        {
+            case "armor":
+                return new Armor(itemTemplate, rarity);
+            case "weapon":
+                return new Weapon(itemTemplate, rarity);
+            case "consumable":
+                return GetRandomItemForRarity(rarity);
+            //todo need sprite 
+            //return new Item(itemTemplate, rarity);
+            default:
+                return new Item(itemTemplate, rarity);
+        }
+    }
+
+    //<Summary>
+    //    Gets prefab for item based on type 
+    //</Summary>
+    public GameObject GetWorldPrefabForItemByType(string type)
+    {
+        //todo update this when weapon components added
+
+        switch (type.ToLower())
+        {
+            case "helmet":
+                return _itemPrefabsWorldView[ItemPrefabKeys.BallisticHelmet];
+            case "sword":
+                return _itemPrefabsWorldView[ItemPrefabKeys.ShortSword];
+            case "bow":
+                return _itemPrefabsWorldView[ItemPrefabKeys.GreatBow];
+            default:
+                return null;
         }
     }
 

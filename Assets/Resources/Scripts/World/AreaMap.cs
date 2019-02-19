@@ -6,6 +6,14 @@ using Random = UnityEngine.Random;
 
 public class AreaMap : MonoBehaviour
 {
+    private Dictionary<ItemRarity, float> _itemDropChances = new Dictionary<ItemRarity, float>
+    {
+        { ItemRarity.Common,  .288f },
+        { ItemRarity.Uncommon, .236f },
+        { ItemRarity.Rare, .098f },
+        { ItemRarity.Legendary, .076f }
+    };
+
     private Transform _areaMapHolderTransform;
     private Area _currentArea;
     private GameObject _playerSprite;
@@ -196,7 +204,19 @@ public class AreaMap : MonoBehaviour
         entity.CurrentTile.SetBlocksMovement(false);
         entity.CurrentTile.SetPresentEntity(null);
 
-        //todo check for item drops
+        var itemRarityForRoll = DetermineRarityForItemDropRoll();
+
+        //if (ItemDropped(itemRarityForRoll))
+        if (true)
+        {
+            var item = ItemStore.Instance.GetRandomItemForRarity(itemRarityForRoll);
+
+            entity.CurrentTile.PresentItem = item;
+
+            item.WorldSprite = Instantiate(
+                item.WorldPrefab, entity.CurrentTile.GridPosition,
+                Quaternion.identity);
+        }
 
         if (entity.ToppingDropped != null)
         {
@@ -238,6 +258,27 @@ public class AreaMap : MonoBehaviour
         {
             Destroy(FovHolder.transform.GetChild(i).gameObject);
         }
+    }
+
+    private ItemRarity DetermineRarityForItemDropRoll()
+    {
+        var roll = Random.Range(0, 4);
+
+        switch (roll)
+        {
+            case 0: return ItemRarity.Common;
+            case 1: return ItemRarity.Uncommon;
+            case 2: return ItemRarity.Rare;
+            case 3: return ItemRarity.Legendary;
+            default: return ItemRarity.Common;
+        }
+    }
+
+    private bool ItemDropped(ItemRarity rarity)
+    {
+        var roll = Random.Range(0f, 1f);
+
+        return roll < _itemDropChances[rarity];
     }
 
     private void PlacePlayer()
