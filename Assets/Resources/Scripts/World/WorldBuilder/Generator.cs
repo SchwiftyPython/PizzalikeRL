@@ -9,10 +9,9 @@ public class Generator : MonoBehaviour
 {
     public string Seed { set; get; }
     private int SeedHashCode { set; get; }
-
-    // Adjustable variables for Unity Inspector
-    [SerializeField] private int _height = 30; //75
-    [SerializeField] private int _width = 60; //270
+    
+    private int _height; 
+    private int _width; 
 
     [Header("Height Map")]
     [SerializeField]
@@ -99,8 +98,8 @@ public class Generator : MonoBehaviour
 		{ BiomeType.Ice, BiomeType.Wasteland, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
 		{ BiomeType.Ice, BiomeType.Wasteland, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.Wasteland,           BiomeType.Wasteland },             //DRY
 		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Wasteland,    BiomeType.Woodland,            BiomeType.Wasteland,           BiomeType.Wasteland },             //WET
-		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Woodland,            BiomeType.Swamp,               BiomeType.Swamp },  //WETTER
-		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.Swamp,               BiomeType.Swamp }   //WETTEST
+		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Woodland,            BiomeType.Swamp,               BiomeType.Swamp },              //WETTER
+		{ BiomeType.Ice, BiomeType.Swamp,     BiomeType.Swamp,        BiomeType.Swamp,               BiomeType.Swamp,               BiomeType.Swamp }               //WETTEST
     };
 
     public Capper RarityCapper;
@@ -109,36 +108,31 @@ public class Generator : MonoBehaviour
     {
         Seed = WorldData.Instance.Seed;
         SeedHashCode = Seed.GetHashCode();
+        _height = WorldData.Instance.Height;
+        _width = WorldData.Instance.Width;
 
         WorldData.Instance.SaveGameId = Math.Abs(DateTime.Now.GetHashCode()).ToString();
 
-        // Get the mesh we are rendering our output to        
-        //_heightMapRenderer = GameObject.Find("HeightTexture").GetComponentInChildren<MeshRenderer>();
-        //_heatMapRenderer = GameObject.Find("HeatTexture").GetComponentInChildren<MeshRenderer>();
-        //_moistureMapRenderer = GameObject.Find("MoistureTexture").GetComponentInChildren<MeshRenderer>();
-        //_biomeMapRenderer = GameObject.Find("BiomeTexture").GetComponentInChildren<MeshRenderer>();
-
-        // Initialize the generator
+        WorldData.Instance.PopulateToppingsDictionaries();
+        
         Initialize();
         Generate();
-        //DrawMap();
 
         WorldData.Instance.Map = _cells;
-
-        GameManager.Instance.CurrentCell = _cells[25, 17];
-
-        //testing
-        while(GameManager.Instance.CurrentCell.BiomeType == BiomeType.Water || GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain)
+        
+        //todo don't want to start in hostile settlement either
+        do
         {
             var x = Random.Range(0, _height);
             var y = Random.Range(0, _width);
 
             GameManager.Instance.CurrentCell = _cells[x, y];
-        }
+
+        } while (GameManager.Instance.CurrentCell.BiomeType == BiomeType.Water ||
+                 GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain);
 
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
         GameManager.Instance.WorldMapGenComplete = true;
-        //SceneManager.LoadScene("WorldMap");
         SceneManager.LoadScene("Area");
     }
     #region Public Methods

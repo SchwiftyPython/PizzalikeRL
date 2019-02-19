@@ -6,6 +6,14 @@ using Random = UnityEngine.Random;
 
 public class AreaMap : MonoBehaviour
 {
+    private Dictionary<ItemRarity, float> _itemDropChances = new Dictionary<ItemRarity, float>
+    {
+        { ItemRarity.Common,  .288f },
+        { ItemRarity.Uncommon, .236f },
+        { ItemRarity.Rare, .098f },
+        { ItemRarity.Legendary, .076f }
+    };
+
     private Transform _areaMapHolderTransform;
     private Area _currentArea;
     private GameObject _playerSprite;
@@ -189,6 +197,36 @@ public class AreaMap : MonoBehaviour
         entity.CurrentTile.SetPresentEntity(null);
     }
 
+    public void RemoveDeadEntity(Entity entity)
+    {
+        Destroy(entity.GetSprite());
+
+        entity.CurrentTile.SetBlocksMovement(false);
+        entity.CurrentTile.SetPresentEntity(null);
+
+        var itemRarityForRoll = DetermineRarityForItemDropRoll();
+
+        if (ItemDropped(itemRarityForRoll))
+        {
+            var item = ItemStore.Instance.GetRandomItemForRarity(itemRarityForRoll);
+
+            entity.CurrentTile.PresentItem = item;
+
+            item.WorldSprite = Instantiate(
+                item.WorldPrefab, entity.CurrentTile.GridPosition,
+                Quaternion.identity);
+        }
+
+        if (entity.ToppingDropped != null)
+        {
+            entity.CurrentTile.PresentTopping = new Topping(entity.ToppingDropped);
+
+            entity.CurrentTile.PresentTopping.WorldSprite = Instantiate(
+                entity.CurrentTile.PresentTopping.WorldSpritePrefab, entity.CurrentTile.GridPosition,
+                Quaternion.identity);
+        }
+    }
+
     public void InstantiatePlayerSprite()
     {
        var existingPlayerSprite = GameObject.FindWithTag("Player");
@@ -221,37 +259,25 @@ public class AreaMap : MonoBehaviour
         }
     }
 
-    private GameObject GetFovTileForWall(Tile wallTile)
+    private ItemRarity DetermineRarityForItemDropRoll()
     {
-        if (wallTile.PresentWallTile.name.Contains("upper_left"))
+        var roll = Random.Range(0, 4);
+
+        switch (roll)
         {
-            return Fov.FovUpperLeftPrefab;
+            case 0: return ItemRarity.Common;
+            case 1: return ItemRarity.Uncommon;
+            case 2: return ItemRarity.Rare;
+            case 3: return ItemRarity.Legendary;
+            default: return ItemRarity.Common;
         }
-        if (wallTile.PresentWallTile.name.Contains("upper_right"))
-        {
-            return Fov.FovUpperRightPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("lower_left"))
-        {
-            return Fov.FovLowerLeftPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("lower_right"))
-        {
-            return Fov.FovLowerRightPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("left"))
-        {
-            return Fov.FovStraightLeftPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("bottom"))
-        {
-            return Fov.FovStraightBottomPrefab;
-        }
-        if (wallTile.PresentWallTile.name.Contains("right"))
-        {
-            return Fov.FovStraightRightPrefab;
-        }
-        return Fov.FovStraightTopPrefab;
+    }
+
+    private bool ItemDropped(ItemRarity rarity)
+    {
+        var roll = Random.Range(0f, 1f);
+
+        return roll < _itemDropChances[rarity];
     }
 
     private void PlacePlayer()
@@ -566,6 +592,7 @@ public class AreaMap : MonoBehaviour
         tile.Right = GetTempRight(tile, tempMap);
     }
 
+    //todo fix these
     private Tile GetTempTop(Tile t, Tile[,] tempMap)
     {
         return tempMap[(int)t.GridPosition.x, MathHelper.Mod((int)(t.GridPosition.y - 1), _currentArea.Height)];

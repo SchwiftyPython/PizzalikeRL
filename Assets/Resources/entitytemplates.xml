@@ -15,9 +15,7 @@
             <MaxIntelligence> 6 </MaxIntelligence>			
 			<Playable> true </Playable>			
 			<Wild> false </Wild>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
+			<IsHostile> false </IsHostile>   			
 			<SpritePath>Prefabs/Sprites/Humanoids/human_male_2</SpritePath>			
 			<BodyParts>
 			    <Part>human torso</Part>
@@ -44,6 +42,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
 		</EntityTemplate>
 		
 		<EntityTemplate type = "pepperoni worm">
@@ -59,9 +58,7 @@
             <MaxIntelligence> 6 </MaxIntelligence>				
 			<Playable> false </Playable>			
 			<Wild> true </Wild>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
+			<IsHostile> false </IsHostile> 			
 			<SpritePath>Prefabs/Sprites/Creatures/pepperoni_worm_1</SpritePath>			
 			<BodyParts>				
 				<Part>worm body</Part>				
@@ -79,6 +76,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<Topping>pepperoni</Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "beetle">
@@ -97,9 +95,7 @@
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
 			<Wild> true </Wild>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
+			<IsHostile> false </IsHostile> 			
 			<SpritePath>Prefabs/Sprites/Creatures/beetle_1</SpritePath>			
 			<BodyParts>				
 				<Part>insect thorax</Part>
@@ -126,6 +122,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "giant moth">
@@ -143,9 +140,7 @@
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
 			<Wild> true </Wild>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
+			<IsHostile> false </IsHostile>     		 
 			<SpritePath>Prefabs/Sprites/Creatures/giant_moth_1</SpritePath>			
 			<BodyParts>				
 				<Part>insect thorax</Part>
@@ -173,6 +168,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "goose">
@@ -190,9 +186,7 @@
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
 			<Wild> true </Wild>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
+			<IsHostile> false </IsHostile>  			 
 			<SpritePath>Prefabs/Sprites/Creatures/goose_1</SpritePath>			
 			<BodyParts>				
 				<Part>large bird body</Part>                		
@@ -218,6 +212,7 @@
 				<NameFile>bird_female_first_names</NameFile>
 				<NameFile>bird_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "skunk">
@@ -235,9 +230,7 @@
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
 			<Wild> true </Wild>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
+			<IsHostile> false </IsHostile>  			
 			<SpritePath>Prefabs/Sprites/Creatures/skunk_1</SpritePath>			
 			<BodyParts>				
 				<Part>small mammal body</Part>                		
@@ -265,6 +258,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "spider">
@@ -282,9 +276,7 @@
             <MaxIntelligence> 4 </MaxIntelligence>				
 			<Playable> false </Playable>			
 			<Wild> true </Wild>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
+			<IsHostile> false </IsHostile>  			
 			<SpritePath>Prefabs/Sprites/Creatures/spider_1</SpritePath>			
 			<BodyParts>		
                 <Part>arachnid cephalothorax</Part>			
@@ -311,6 +303,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>				
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 		
 		<EntityTemplate type = "turkey">
@@ -328,9 +321,7 @@
             <MaxIntelligence> 3 </MaxIntelligence>				
 			<Playable> false </Playable>			
 			<Wild> true </Wild>
-			<IsHostile> false </IsHostile>      	
-			<PossibleInventory>
-			</PossibleInventory>  
+			<IsHostile> false </IsHostile>   			
 			<SpritePath>Prefabs/Sprites/Creatures/turkey_1</SpritePath>			
 			<BodyParts>		
                 <Part>large bird body</Part>                		
@@ -356,6 +347,7 @@
 				<NameFile>bird_female_first_names</NameFile>
 				<NameFile>bird_last_names</NameFile>
 			</NameFiles>
+			<Topping></Topping>
         </EntityTemplate>
 
 	</EntityTemplates>  

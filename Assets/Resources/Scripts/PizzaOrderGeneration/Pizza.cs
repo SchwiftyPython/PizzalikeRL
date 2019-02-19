@@ -29,25 +29,6 @@ public class Pizza
         HotSauce
     }
 
-    public enum Toppings
-    {
-        Cheese,
-        Pepperoni,
-        Sausage,
-        Meatball,
-        Ham,
-        Bacon,
-        Chicken,
-        Beef,
-        Pork,
-        Mushrooms,
-        Spinach,
-        Onion,
-        Olives,
-        Pineapple,
-        Jalapeno
-    }
-
     #endregion Enums
 
     public Size PizzaSize { get; }
@@ -66,7 +47,7 @@ public class Pizza
         {
             var topping = GetRandomPizzaComponent<Toppings>();
 
-            if (!PizzaToppings.Contains(topping))
+            if (!PizzaToppings.Contains(topping) && topping != Toppings.Wheat)
             {
                 PizzaToppings.Add(topping);
             }

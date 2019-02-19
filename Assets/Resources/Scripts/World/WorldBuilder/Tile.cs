@@ -40,6 +40,8 @@ public class Tile
     public Lot Lot;
     public GameObject PresentWallTile { get; set; }
 
+    public Topping PresentTopping { get; set; }
+
     public Visibilities Visibility
     {
         get { return _visibility; }

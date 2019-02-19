@@ -7,7 +7,7 @@ public class ItemTemplateLoader : MonoBehaviour {
     private static List<string> _itemTemplateTypes;
     private static ItemTemplateContainer _ic;
 
-    private void Start()
+    private void Awake()
     {
         LoadTemplatesFromFile();
     }
@@ -31,7 +31,12 @@ public class ItemTemplateLoader : MonoBehaviour {
 
     public static List<string> GetEntityTemplateTypes()
     {
-        return new List<string>(_itemTemplateTypes);
+        if (_itemTemplateTypes == null)
+        {
+            LoadTemplatesFromFile();
+        }
+
+        return _itemTemplateTypes != null ? new List<string>(_itemTemplateTypes) : null;
     }
 
     private static void LoadTemplatesFromFile()

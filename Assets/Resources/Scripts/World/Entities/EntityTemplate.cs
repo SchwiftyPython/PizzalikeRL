@@ -45,10 +45,6 @@ public class EntityTemplate
     [XmlElement("IsHostile")]
     public bool IsHostile;
 
-    [XmlArray("PossibleInventory")]
-    [XmlArrayItem("Item")]
-    public List<Item> PossibleInventory;    
-
     [XmlElement("SpritePath")]
     public string SpritePath;
 
@@ -63,4 +59,7 @@ public class EntityTemplate
     [XmlArray("NameFiles")]
     [XmlArrayItem("NameFile")]
     public List<string> NameFiles;
+
+    [XmlElement("Topping")]
+    public string Topping;
 }
