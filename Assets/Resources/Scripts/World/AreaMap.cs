@@ -210,7 +210,7 @@ public class AreaMap : MonoBehaviour
         {
             var item = ItemStore.Instance.GetRandomItemForRarity(itemRarityForRoll);
 
-            entity.CurrentTile.PresentItem = item;
+            entity.CurrentTile.PresentItems = item;
 
             item.WorldSprite = Instantiate(
                 item.WorldPrefab, entity.CurrentTile.GridPosition,
@@ -257,6 +257,11 @@ public class AreaMap : MonoBehaviour
         {
             Destroy(FovHolder.transform.GetChild(i).gameObject);
         }
+    }
+
+    private void HandleItemDrops(Entity entity)
+    {
+        //todo move item drop code here and handle multiple items with chest
     }
 
     private ItemRarity DetermineRarityForItemDropRoll()

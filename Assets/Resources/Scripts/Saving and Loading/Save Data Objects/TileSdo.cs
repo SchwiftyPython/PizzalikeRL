@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -10,7 +11,7 @@ public class TileSdo
 
     //public Prop PresentProp;
 
-    public Guid PresentItemId;
+    public List<Guid> PresentItemIds;
 
     public Rarities Rarity;
 
@@ -47,13 +48,13 @@ public class TileSdo
 
     public static TileSdo ConvertToTileSdo(Tile tile)
     {
-        return new TileSdo
+        var sdo =  new TileSdo
         {
             Visibility = tile.Visibility,
             PresentEntityId = tile.GetPresentEntity() != null
                 ? tile.GetPresentEntity().Id
                 : Guid.Empty,
-            PresentItemId = tile.PresentItem?.Id ?? Guid.Empty,
+            PresentItemIds = new List<Guid>(),
             Rarity = tile.Rarity,
             PrefabName = tile.PrefabName,
             BlocksMovement = tile.GetBlocksMovement(),
@@ -63,6 +64,13 @@ public class TileSdo
             Revealed = tile.Revealed,
             LotSdo = LotSdo.ConvertToLotSdo(tile.Lot)
         };
+
+        foreach (var item in tile.PresentItems)
+        {
+            sdo.PresentItemIds.Add(item.Id);
+        }
+
+        return sdo;
     }
 
     public static Tile[,] ConvertToAreaTiles(TileSdo[] sdos, int height, int width, BiomeType biomeType)
@@ -96,7 +104,13 @@ public class TileSdo
             tile.GetPresentEntity().CurrentTile = tile;
         }
 
-        tile.PresentItem = sdo.PresentItemId != Guid.Empty ? WorldData.Instance.Items[sdo.PresentItemId] : null;
+        tile.PresentItems = new List<Item>();
+
+        foreach (var itemId in sdo.PresentItemIds)
+        {
+            tile.PresentItems.Add(WorldData.Instance.Items[itemId]);
+        }
+
         tile.Rarity = sdo.Rarity;
         tile.SetBlocksMovement(sdo.BlocksMovement);
         tile.SetBlocksLight(sdo.BlocksLight);
