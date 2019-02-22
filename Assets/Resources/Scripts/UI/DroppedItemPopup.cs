@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DroppedItemPopup : MonoBehaviour
 {
     private bool _processingInput;
-    private IDictionary<char, GameObject> _buttons;
+    public IDictionary<char, GameObject> Buttons { get; private set; }
     private char _keyMapLetter;
 
     private List<Item> _items;
@@ -44,9 +45,9 @@ public class DroppedItemPopup : MonoBehaviour
             _processingInput = true;
             char keyPressed;
             char.TryParse(Input.inputString, out keyPressed);
-            if (_buttons.ContainsKey(keyPressed))
+            if (Buttons.ContainsKey(keyPressed))
             {
-                var pressedButton = _buttons[keyPressed].transform.GetComponent<Button>();
+                var pressedButton = Buttons[keyPressed].transform.GetComponent<Button>();
                 pressedButton.onClick.Invoke();
             }
 
@@ -55,13 +56,14 @@ public class DroppedItemPopup : MonoBehaviour
                 Hide();
             }
             Debug.Log("Button Pressed: " + Input.inputString);
-            Debug.Log("_buttons count: " + _buttons.Count);
+            Debug.Log("_buttons count: " + Buttons.Count);
             _processingInput = false;
         }
     }
 
     public void Hide()
     {
+        DestroyOldItemButtons();
         DroppedItemWindow.SetActive(false);
         TitleBar.SetActive(false);
         ActionBar.SetActive(false);
@@ -69,7 +71,7 @@ public class DroppedItemPopup : MonoBehaviour
 
     public void DisplayDroppedItems()
     {
-        _buttons = new Dictionary<char, GameObject>();
+        Buttons = new Dictionary<char, GameObject>();
         _items = new List<Item>();
 
         var itemParent = transform;
@@ -78,11 +80,51 @@ public class DroppedItemPopup : MonoBehaviour
         {
             var itemButton = Instantiate(DroppedItemButtonPrefab, new Vector3(0, 0), Quaternion.identity);
             itemButton.transform.SetParent(itemParent);
-            _buttons.Add(_keyMapLetter, itemButton);
+            Buttons.Add(_keyMapLetter, itemButton);
 
             var textFields = itemButton.GetComponentsInChildren<Text>(true);
+
+            //todo come up with some kind of naming system based on material or legend
+            if (item.ItemCategory.Equals("weapon"))
+            {
+                textFields[0].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
+                textFields[1].text = _keyMapLetter.ToString();
+            }
+            else if (item.ItemCategory.Equals("armor"))
+            {
+                var defense = ((Armor)item).Defense;
+                textFields[0].text = "-  " + item.ItemType + "     [ " + defense + " def ]"; //todo replace def with a shield icon
+                textFields[1].text = _keyMapLetter.ToString();
+            }
+            textFields[2].text = item.Id.ToString();
+            NextKeyMapLetter();
         }
 
         _keyMapLetter = 'a';
+    }
+
+    private void NextKeyMapLetter()
+    {
+        if (_keyMapLetter == 'z')
+        {
+            _keyMapLetter = 'a';
+        }
+        else if (_keyMapLetter == 'Z')
+        {
+            _keyMapLetter = 'A';
+        }
+        else
+        {
+            _keyMapLetter = (char)(_keyMapLetter + 1);
+        }
+    }
+
+    private void DestroyOldItemButtons()
+    {
+        foreach (var button in Buttons.Values.ToArray())
+        {
+            Destroy(button);
+        }
+        Buttons.Clear();
     }
 }

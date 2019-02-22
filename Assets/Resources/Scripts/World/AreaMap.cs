@@ -210,7 +210,7 @@ public class AreaMap : MonoBehaviour
         {
             var item = ItemStore.Instance.GetRandomItemForRarity(itemRarityForRoll);
 
-            entity.CurrentTile.PresentItems = item;
+            entity.CurrentTile.PresentItems.Add(item);
 
             item.WorldSprite = Instantiate(
                 item.WorldPrefab, entity.CurrentTile.GridPosition,
