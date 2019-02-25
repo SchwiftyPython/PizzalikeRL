@@ -206,6 +206,21 @@ public class InputController : MonoBehaviour
                     }
                 }
             }
+            //Open dropped item popup for player's current tile
+            else if (Input.GetKeyDown(KeyCode.G))
+            {
+                if (currentScene.Equals(_areaMapSceneName) && !ActionWindow.Instance.isActiveAndEnabled &&
+                    !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf &&
+                    !AreaMap.Instance.DroppedItemPopUp.activeSelf)
+                {
+                    DroppedItemPopup.Instance.DisplayDroppedItems();
+                }
+            }
+            //Starts Look interaction
+            else if (Input.GetKeyDown(KeyCode.L))
+            {
+                //todo
+            }
             else if (Input.GetMouseButtonDown(0))
             {
                 if (currentScene.Equals(_areaMapSceneName) && !ActionWindow.Instance.isActiveAndEnabled &&
@@ -218,8 +233,8 @@ public class InputController : MonoBehaviour
                     {
                         return;
                     }
-                                                  
-                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int)pos.y, (int)pos.x];
+
+                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int) pos.y, (int) pos.x];
 
                     //highlight tile and path to it
                     StartCoroutine(HighlightPathToTarget(_player, selectedTile.GetGridPosition()));

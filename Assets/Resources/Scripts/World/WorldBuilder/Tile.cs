@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum Visibilities
@@ -14,7 +15,7 @@ public class Tile
 
     private Entity _presentEntity;
     private Prop _presentProp;
-    private Item _presentItem;
+    private List<Item> _presentItems;
 
     private Rarities _rarity;
     private string _prefabName;
@@ -59,24 +60,18 @@ public class Tile
         }
     }
 
-    public Item PresentItem {
-        get {
-            return _presentItem;
-        }
+    public List<Item> PresentItems
+    {
+        get { return _presentItems; }
 
-        set {
-            _presentItem = value;
-        }
+        set { _presentItems = value; }
     }
 
-    public Rarities Rarity {
-        get {
-            return _rarity;
-        }
+    public Rarities Rarity
+    {
+        get { return _rarity; }
 
-        set {
-            _rarity = value;
-        }
+        set { _rarity = value; }
     }
 
     public string PrefabName
@@ -101,6 +96,7 @@ public class Tile
         _blocksMovement = blocksMovement;
         _blocksLight = blocksLight;
         Id = X + " " + Y;
+        PresentItems = new List<Item>();
     }
 
     public void SetPresentEntity(Entity entity)
@@ -171,11 +167,5 @@ public class Tile
         }
 
         FovTile.GetComponent<SpriteRenderer>().color = color;
-
-        //todo will need to refine this based on player pos vs wall. Should work for now.
-//        if (IsWall())
-//        {
-//            Debug.Log("Wall tile: " + visibility);
-//        }
     }
 }

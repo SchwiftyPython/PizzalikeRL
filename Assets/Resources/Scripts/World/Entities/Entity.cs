@@ -82,11 +82,17 @@ public class Entity
     [Serializable]
     public class BodyDictionary : SerializableDictionary<Guid, BodyPart> { }
 
+    public BodyDictionary Body { get; set; }
+
     public IDictionary<Guid, Item> Inventory { get; } //todo create method for adding items to inventory
     public IDictionary<BodyPart, Item> Equipped;
-    public Topping ToppingDropped;
 
-    public BodyDictionary Body { get; set; }
+    [Serializable]
+    public class ToppingCountDictionary : SerializableDictionary<Toppings, int> { }
+
+    public ToppingCountDictionary ToppingCounts = new ToppingCountDictionary();
+
+    public Topping ToppingDropped;
 
     public string EntityType { get; set; }
     public EntityClassification Classification { get; set; }
@@ -119,6 +125,25 @@ public class Entity
         Equipped = new Dictionary<BodyPart, Item>();
 
         Prefab = Resources.Load(prefabPath) as GameObject;
+
+        if (isPlayer)
+        {
+            ToppingCounts = new ToppingCountDictionary
+            {
+                {Toppings.Bacon, 0 },
+                {Toppings.BellPepper, 0 },
+                {Toppings.Cheese, 0 },
+                {Toppings.Jalapeno, 0 },
+                {Toppings.Mushrooms, 0 },
+                {Toppings.Olives, 0 },
+                {Toppings.Onion, 0 },
+                {Toppings.Pepperoni, 0 },
+                {Toppings.Pineapple, 0 },
+                {Toppings.Tomato, 0 },
+                {Toppings.Wheat, 0 },
+                {Toppings.Sausage, 0 }
+            };
+        }
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
@@ -134,6 +159,22 @@ public class Entity
         {
             Level = 1;
             Xp = 0;
+
+            ToppingCounts = new ToppingCountDictionary
+            {
+                {Toppings.Bacon, 0 },
+                {Toppings.BellPepper, 0 },
+                {Toppings.Cheese, 0 },
+                {Toppings.Jalapeno, 0 },
+                {Toppings.Mushrooms, 0 },
+                {Toppings.Olives, 0 },
+                {Toppings.Onion, 0 },
+                {Toppings.Pepperoni, 0 },
+                {Toppings.Pineapple, 0 },
+                {Toppings.Tomato, 0 },
+                {Toppings.Wheat, 0 },
+                {Toppings.Sausage, 0 }
+            };
         }
         else
         {
@@ -464,6 +505,11 @@ public class Entity
             //update tile data for start and end tiles
             UpdateTileData(CurrentArea.AreaTiles[(int) _startTile.x, (int) _startTile.y],
                 CurrentArea.AreaTiles[(int) _endTile.x, (int) _endTile.y]);
+
+            if (_isPlayer)
+            {
+                GameManager.Instance.CurrentTile = CurrentTile;
+            }
         }
 
         //Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
@@ -617,7 +663,6 @@ public class Entity
             }
             var message = EntityType + " killed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
-            //AreaMap.Instance.RemoveEntity(target);
         }
         else
         {
@@ -637,6 +682,7 @@ public class Entity
                 AreaMove(target);
                 var v = new Vinteger(CurrentTile.X, CurrentTile.Y);
                 AreaMap.Instance.Fov.Refresh(v);
+                AutoPickupToppingsInCurrentTile();
                 return true;
             }
             if (!EntityPresent(target))
@@ -914,5 +960,29 @@ public class Entity
             where e.GetType() == typeof(Weapon)
                   && ((Weapon)e).Range > 1
             select e).FirstOrDefault();
+    }
+    
+    //<Summary>
+    // Picks up any pizza topping occupying player's current tile
+    // This method assumes only one topping per tile
+    //</Summary>
+    private void AutoPickupToppingsInCurrentTile()
+    {
+        if (CurrentTile.PresentTopping == null)
+        {
+            return;
+        }
+
+        ToppingCounts[CurrentTile.PresentTopping.Type] += 1;
+
+        var message = "Picked up " + CurrentTile.PresentTopping.Type;
+        GameManager.Instance.Messages.Add(message);
+
+        if (CurrentTile.PresentItems.Count < 1)
+        {
+            UnityEngine.Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
+        }
+
+        CurrentTile.PresentTopping = null;
     }
 }
