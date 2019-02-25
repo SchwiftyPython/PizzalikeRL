@@ -32,6 +32,7 @@ public class AreaMap : MonoBehaviour
 
     public PopUpWindow PizzaOrderPopUp;
     public GameObject ObjectInfoWindow;
+    public GameObject DroppedItemPopUp;
 
     public GameObject Camera;
 
@@ -195,36 +196,16 @@ public class AreaMap : MonoBehaviour
 
         entity.CurrentTile.SetBlocksMovement(false);
         entity.CurrentTile.SetPresentEntity(null);
+        _currentArea.PresentEntities.Remove(entity);
     }
 
+    //<Summary>
+    // Removes dead entities from area
+    //</Summary>
     public void RemoveDeadEntity(Entity entity)
     {
-        Destroy(entity.GetSprite());
-
-        entity.CurrentTile.SetBlocksMovement(false);
-        entity.CurrentTile.SetPresentEntity(null);
-
-        var itemRarityForRoll = DetermineRarityForItemDropRoll();
-
-        if (ItemDropped(itemRarityForRoll))
-        {
-            var item = ItemStore.Instance.GetRandomItemForRarity(itemRarityForRoll);
-
-            entity.CurrentTile.PresentItems.Add(item);
-
-            item.WorldSprite = Instantiate(
-                item.WorldPrefab, entity.CurrentTile.GridPosition,
-                Quaternion.identity);
-        }
-
-        if (entity.ToppingDropped != null)
-        {
-            entity.CurrentTile.PresentTopping = new Topping(entity.ToppingDropped);
-
-            entity.CurrentTile.PresentTopping.WorldSprite = Instantiate(
-                entity.CurrentTile.PresentTopping.WorldSpritePrefab, entity.CurrentTile.GridPosition,
-                Quaternion.identity);
-        }
+        RemoveEntity(entity);
+        HandleItemDrops(entity);
     }
 
     public void InstantiatePlayerSprite()
@@ -261,10 +242,57 @@ public class AreaMap : MonoBehaviour
 
     private void HandleItemDrops(Entity entity)
     {
-        //todo move item drop code here and handle multiple items with chest
+        var itemRarityForRoll = DetermineRarityForItemDropRoll();
+
+        Item item = null;
+        if (ItemDropped(itemRarityForRoll))
+        {
+            item = ItemStore.Instance.GetRandomItemForRarity(itemRarityForRoll);
+
+            entity.CurrentTile.PresentItems.Add(item);
+        }
+
+        if (entity.ToppingDropped != null)
+        {
+            entity.CurrentTile.PresentTopping = new Topping(entity.ToppingDropped);
+        }
+
+        if (entity.CurrentTile.PresentItems.Count > 1 ||
+            entity.CurrentTile.PresentItems.Count > 0 && entity.CurrentTile.PresentTopping != null)
+        {
+           var chestSprite = Instantiate(
+                WorldData.Instance.SmallChest, entity.CurrentTile.GridPosition,
+                Quaternion.identity);
+
+            foreach (var droppedItem in entity.CurrentTile.PresentItems)
+            {
+                droppedItem.WorldSprite = chestSprite;
+            }
+
+            entity.CurrentTile.PresentTopping.WorldSprite = chestSprite;
+
+            return;
+        }
+
+        if (entity.CurrentTile.PresentItems.Count > 0)
+        {
+            if (item != null)
+            {
+                item.WorldSprite = Instantiate(
+                    item.WorldPrefab, entity.CurrentTile.GridPosition,
+                    Quaternion.identity);
+            }
+        }
+
+        if (entity.CurrentTile.PresentTopping != null)
+        {
+            entity.CurrentTile.PresentTopping.WorldSprite = Instantiate(
+                entity.CurrentTile.PresentTopping.WorldSpritePrefab, entity.CurrentTile.GridPosition,
+                Quaternion.identity);
+        }
     }
 
-    private ItemRarity DetermineRarityForItemDropRoll()
+    private static ItemRarity DetermineRarityForItemDropRoll()
     {
         var roll = Random.Range(0, 4);
 
@@ -300,7 +328,6 @@ public class AreaMap : MonoBehaviour
                 {
                     if (!_currentArea.AreaTiles[x, y].GetBlocksMovement())
                     {
-                        //_playerSprite.transform.position = new Vector3(x, y);
                         _player.CurrentPosition = new Vector3(x, y);
                         _player.CurrentTile = _currentArea.AreaTiles[x, y];
                         //Debug.Log(("current area: " + _currentArea.AreaTiles[x, y]));

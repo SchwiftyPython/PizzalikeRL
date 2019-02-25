@@ -62,6 +62,8 @@ public class EntitySdo
 
     public ToppingSdo ToppingDropped;
 
+    public Entity.ToppingCountDictionary ToppingCounts;
+
     public static SaveGameData.SaveData.SerializableEntitiesDictionary ConvertToEntitySdos(List<Entity> entities)
     {
         var sdos = new SaveGameData.SaveData.SerializableEntitiesDictionary();
@@ -111,7 +113,8 @@ public class EntitySdo
             CurrentAreaId = entity.CurrentArea?.Id,
             CurrentTileId = entity.CurrentTile?.Id,
             Mobile = entity.Mobile,
-            ToppingDropped = ToppingSdo.ConvertToToppingSdo(entity.ToppingDropped)
+            ToppingDropped = ToppingSdo.ConvertToToppingSdo(entity.ToppingDropped),
+            ToppingCounts = entity.ToppingCounts
         };
 
         foreach (var itemId in entity.Inventory.Keys)
@@ -156,7 +159,8 @@ public class EntitySdo
                 Goals = entitySdo.Value.Goals,
                 Mobile = entitySdo.Value.Mobile,
                 CurrentCell = WorldData.Instance.MapDictionary[entitySdo.Value.CurrentCellId],
-                ToppingDropped = ToppingSdo.ConvertToTopping(entitySdo.Value.ToppingDropped)
+                ToppingDropped = ToppingSdo.ConvertToTopping(entitySdo.Value.ToppingDropped),
+                ToppingCounts = entitySdo.Value.ToppingCounts
             };
             
             foreach (var itemId in entitySdo.Value.InventoryItemIds)

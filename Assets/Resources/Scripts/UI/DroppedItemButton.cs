@@ -27,13 +27,17 @@ public class DroppedItemButton : MonoBehaviour
 
         selectedTile.PresentItems.Remove(item);
 
+        var message = "Picked up " + item.ItemType; //todo change to item name
+        GameManager.Instance.Messages.Add(message);
+
         if (selectedTile.PresentItems.Count <= 0)
         {
+            Destroy(item.WorldSprite);
             DroppedItemPopup.Instance.Hide();
         }
         else
         {
-            //todo refresh DroppedItemPoup
+            DroppedItemPopup.Instance.Refresh();
         }
     }
 }

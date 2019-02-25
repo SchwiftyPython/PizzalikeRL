@@ -13,7 +13,6 @@ public class DroppedItemPopup : MonoBehaviour
     private List<Item> _items;
 
     public GameObject DroppedItemWindow;
-    public GameObject TitleBar;
     public GameObject ActionBar;
 
     public GameObject CloseButton;
@@ -34,7 +33,6 @@ public class DroppedItemPopup : MonoBehaviour
         }
 
         DroppedItemWindow.SetActive(false);
-        TitleBar.SetActive(false);
         ActionBar.SetActive(false);
     }
 
@@ -65,17 +63,29 @@ public class DroppedItemPopup : MonoBehaviour
     {
         DestroyOldItemButtons();
         DroppedItemWindow.SetActive(false);
-        TitleBar.SetActive(false);
         ActionBar.SetActive(false);
+    }
+
+    public void Refresh()
+    {
+        DestroyOldItemButtons();
+        DisplayDroppedItems();
     }
 
     public void DisplayDroppedItems()
     {
+        if (GameManager.Instance.CurrentTile.PresentItems == null ||
+            GameManager.Instance.CurrentTile.PresentItems.Count < 1)
+        {
+            return;
+        }
+
         Buttons = new Dictionary<char, GameObject>();
         _items = new List<Item>();
 
         var itemParent = transform;
 
+        _keyMapLetter = 'a';
         foreach (var item in GameManager.Instance.CurrentTile.PresentItems)
         {
             var itemButton = Instantiate(DroppedItemButtonPrefab, new Vector3(0, 0), Quaternion.identity);
@@ -100,7 +110,8 @@ public class DroppedItemPopup : MonoBehaviour
             NextKeyMapLetter();
         }
 
-        _keyMapLetter = 'a';
+        DroppedItemWindow.SetActive(true);
+        ActionBar.SetActive(true);
     }
 
     private void NextKeyMapLetter()

@@ -209,7 +209,12 @@ public class InputController : MonoBehaviour
             //Open dropped item popup for player's current tile
             else if (Input.GetKeyDown(KeyCode.G))
             {
-                
+                if (currentScene.Equals(_areaMapSceneName) && !ActionWindow.Instance.isActiveAndEnabled &&
+                    !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf &&
+                    !AreaMap.Instance.DroppedItemPopUp.activeSelf)
+                {
+                    DroppedItemPopup.Instance.DisplayDroppedItems();
+                }
             }
             //Starts Look interaction
             else if (Input.GetKeyDown(KeyCode.L))

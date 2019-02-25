@@ -96,6 +96,7 @@ public class Tile
         _blocksMovement = blocksMovement;
         _blocksLight = blocksLight;
         Id = X + " " + Y;
+        PresentItems = new List<Item>();
     }
 
     public void SetPresentEntity(Entity entity)
@@ -166,11 +167,5 @@ public class Tile
         }
 
         FovTile.GetComponent<SpriteRenderer>().color = color;
-
-        //todo will need to refine this based on player pos vs wall. Should work for now.
-//        if (IsWall())
-//        {
-//            Debug.Log("Wall tile: " + visibility);
-//        }
     }
 }
