@@ -77,6 +77,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         _buttons = new Dictionary<char, GameObject>();
 
         PopulateSectionDictionary(bodyPart.Type);
+        BodyPartFilterId = bodyPart.Id;
 
         _keyMapLetter = 'a';
         foreach (var section in _sortedItems.Keys)
