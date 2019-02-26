@@ -155,6 +155,8 @@ public class Entity
         Classification = template.Classification;
         Faction = faction;
 
+        Inventory = new Dictionary<Guid, Item>();
+
         if (isPlayer)
         {
             Level = 1;
@@ -175,6 +177,11 @@ public class Entity
                 {Toppings.Wheat, 0 },
                 {Toppings.Sausage, 0 }
             };
+
+            //todo testing
+            var item = ItemStore.Instance.GetRandomItem();
+
+            Inventory.Add(item.Id, item);
         }
         else
         {
@@ -196,8 +203,7 @@ public class Entity
 
         PrefabPath = template.SpritePath;
         Prefab = Resources.Load(template.SpritePath) as GameObject;
-        
-        Inventory = new Dictionary<Guid, Item>();
+
         BuildBody(template);
         CalculateTotalBodyPartCoverage();
         PopulateEquipped();
