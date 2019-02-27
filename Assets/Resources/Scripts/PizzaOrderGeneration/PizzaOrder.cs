@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 public class PizzaOrder
@@ -57,9 +58,9 @@ public class PizzaOrder
 
     private void ChooseCustomer()
     {
-        var allNamedNpcs = new List<Entity>(WorldData.Instance.FactionLeaders);
-        allNamedNpcs.AddRange(WorldData.Instance.OtherNamedNpcs);
+        var allNpcs = new List<Entity>(WorldData.Instance.Entities.Values)
+            .Where(e => e.IsPlayer() == false).ToList();
 
-        Customer = allNamedNpcs[Random.Range(0, allNamedNpcs.Count)];
+        Customer = allNpcs[Random.Range(0, allNpcs.Count)];
     }
 }

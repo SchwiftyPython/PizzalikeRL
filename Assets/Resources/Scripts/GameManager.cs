@@ -93,6 +93,14 @@ public class GameManager : MonoBehaviour
                 if (AreaMap.Instance.AreaReady)
                 {
                     CurrentState = GameState.Playerturn;
+
+                    if (Instance.ActiveOrders.Count < 1)
+                    {
+                        //todo testing pizza order
+                        var order = new PizzaOrder(PizzaOrder.OrderDifficulty.Easy);
+
+                        Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
+                    }
                 }
                 break;
             case GameState.Playerturn:

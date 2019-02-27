@@ -38,8 +38,8 @@ public class PizzaOrderJournalWindow : MonoBehaviour
         {
             var orderButton = Instantiate(PizzaOrderPrefab, new Vector3(0, 0), Quaternion.identity);
             orderButton.transform.SetParent(OrderButtonParent.transform);
-
-            var orderTitle = orderButton.GetComponentInChildren<Text>();
+            
+            var orderTitle = orderButton.GetComponentInChildren<Toggle>().GetComponentInChildren<Text>();
             orderTitle.text = $"{order.Customer.Fluff.Name}";
         }
     }
