@@ -9,6 +9,8 @@ public class PizzaOrderJournalWindow : MonoBehaviour
     public GameObject PizzaOrderPrefab;
     public GameObject OrderButtonParent;
     public GameObject OrderDescription;
+    public GameObject IngredientPrefab;
+    public GameObject IngredientPrefabParent;
 
     private IDictionary<string, PizzaOrder> _activeOrders;
 
@@ -48,18 +50,26 @@ public class PizzaOrderJournalWindow : MonoBehaviour
     {
         var order = _activeOrders[customerName];
 
-        var message = $"{order.Customer.Fluff.Name} has ordered {order.Pizzas.Count} pizzas. \n Location: {order.CustomerLocation.X}, {order.CustomerLocation.Y} ";
+        var message = $"{order.Customer.Fluff.Name} has ordered {order.Pizzas.Count} pizzas. \n Location: {order.CustomerLocation}";
 
         var currentPizzaNumber = 0;
         foreach (var pizza in order.Pizzas)
         {
+            foreach (var topping in pizza.PizzaToppings) //todo good for one pizza, but we need to sum like toppings before instantiation -- maybe in pizza order
+            {
+                var prefab = WorldData.Instance.WorldViewToppingsDictionary[topping.Key];
+
+                var ingredient = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+                ingredient.transform.SetParent(IngredientPrefabParent.transform);
+            }
+
+
             currentPizzaNumber++;
             message += "\nPizza #" + currentPizzaNumber + "\n\n";
 
             var pizzaOrderDetails = string.Empty;
             pizzaOrderDetails += $"Size: {pizza.PizzaSize}" +
                                  $" \nCrust: {pizza.PizzaCrust}" +
-                                 $" \nSauce: {pizza.PizzaSauce}" +
                                  " \nToppings: ";
 
             pizzaOrderDetails =

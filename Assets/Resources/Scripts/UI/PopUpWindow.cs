@@ -9,7 +9,7 @@ public class PopUpWindow : MonoBehaviour
 
     public void Show(PizzaOrder order)
     {
-        var message = $"{order.Customer.Fluff.Name} has ordered {order.Pizzas.Count} pizzas. \n Location: {order.CustomerLocation.X}, {order.CustomerLocation.Y} ";
+        var message = $"{order.Customer.Fluff.Name} has ordered {order.Pizzas.Count} pizzas. \n Location: {order.CustomerLocation}";
 
         var currentPizzaNumber = 0;
         foreach (var pizza in order.Pizzas)
@@ -20,7 +20,6 @@ public class PopUpWindow : MonoBehaviour
             var pizzaOrderDetails = string.Empty;
             pizzaOrderDetails += $" Size: {pizza.PizzaSize}" +
                                  $" \nCrust: {pizza.PizzaCrust}" +
-                                 $" \nSauce: {pizza.PizzaSauce}" +
                                  " \nToppings: ";
 
             pizzaOrderDetails =

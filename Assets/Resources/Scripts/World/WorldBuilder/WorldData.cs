@@ -17,6 +17,7 @@ public class WorldData : MonoBehaviour
     public List<Entity> OtherNamedNpcs { get; set; }
     public Dictionary<int, River> Rivers { get; set; }
     public Dictionary<Toppings, GameObject> WorldViewToppingsDictionary { get; set; }
+    public Dictionary<Toppings, GameObject> UiViewToppingsDictionary { get; set; }
 
     public string Seed
     {
@@ -111,6 +112,7 @@ public class WorldData : MonoBehaviour
     public GameObject[] WastelandWaterTiles = new GameObject[1];
 
     public GameObject[] PizzaToppingsWorldView;
+    public GameObject[] PizzaToppingsUiView;
     public GameObject[] ItemPrefabsWorldView;
 
     public GameObject SmallChest;
@@ -154,10 +156,27 @@ public class WorldData : MonoBehaviour
             {Toppings.Wheat, null }
         };
 
+        UiViewToppingsDictionary = new Dictionary<Toppings, GameObject>
+        {
+            {Toppings.Bacon, null },
+            {Toppings.BellPepper, null },
+            {Toppings.Cheese, null },
+            {Toppings.Jalapeno, null },
+            {Toppings.Mushrooms, null },
+            {Toppings.Olives, null },
+            {Toppings.Onion, null },
+            {Toppings.Pepperoni, null },
+            {Toppings.Pineapple, null },
+            {Toppings.Sausage, null },
+            {Toppings.Tomato, null },
+            {Toppings.Wheat, null }
+        };
+
         var index = 0;
         foreach (var topping in WorldViewToppingsDictionary.Keys.ToArray())
         {
             WorldViewToppingsDictionary[topping] = PizzaToppingsWorldView[index];
+            UiViewToppingsDictionary[topping] = PizzaToppingsUiView[index];
             index++;
         }
     }
