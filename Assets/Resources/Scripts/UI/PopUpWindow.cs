@@ -19,7 +19,6 @@ public class PopUpWindow : MonoBehaviour
 
             var pizzaOrderDetails = string.Empty;
             pizzaOrderDetails += $" Size: {pizza.PizzaSize}" +
-                                 $" \nCrust: {pizza.PizzaCrust}" +
                                  " \nToppings: ";
 
             pizzaOrderDetails =

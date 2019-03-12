@@ -14,13 +14,6 @@ public class Pizza
         Large
     }
 
-    public enum Crust
-    {
-        Pan,
-        Stuffed,
-        Thin
-    }
-
     #endregion Enums
 
     private readonly Dictionary<Toppings, int> _baseIngredientCount = new Dictionary<Toppings, int>
@@ -47,13 +40,11 @@ public class Pizza
     };
 
     public Size PizzaSize { get; }
-    public Crust PizzaCrust { get; }
     public readonly Dictionary<Toppings, int> PizzaToppings;
 
     public Pizza(int numToppings = 1)
     {
         PizzaSize = GetRandomPizzaComponent<Size>();
-        PizzaCrust = GetRandomPizzaComponent<Crust>(); //todo work this out and see if worth doing -- modifies cheese and wheat amounts
         PizzaToppings = new Dictionary<Toppings, int>();
 
         for (var i = 0; i < numToppings; i++)
