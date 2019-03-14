@@ -6,7 +6,7 @@ public class PopUpWindow : MonoBehaviour
 {
     public GameObject Window;
     public Text MessageField;
-
+    
     public void Show(PizzaOrder order)
     {
         var message = $"{order.Customer.Fluff.Name} has ordered {order.Pizzas.Count} pizzas. \n Location: {order.CustomerLocation}";

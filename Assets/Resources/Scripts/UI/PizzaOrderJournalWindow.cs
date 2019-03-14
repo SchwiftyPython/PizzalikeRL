@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,11 +49,22 @@ public class PizzaOrderJournalWindow : MonoBehaviour
     {
         _requiredToppingCounts = new Dictionary<Toppings, int>();
 
+        for (var i = 0; i < IngredientPrefabParent.transform.childCount; i++)
+        {
+            Destroy(IngredientPrefabParent.transform.GetChild(i).gameObject);
+        }
+
         var order = _activeOrders[customerName];
+        
+        var message = $"  {order.Customer.Fluff.Name} has ordered {order.Pizzas.Count} pizza";
 
-        var message = $"{order.Customer.Fluff.Name} has ordered {order.Pizzas.Count} pizzas. \n Location: {order.CustomerLocation}";
+        if (order.Pizzas.Count > 1)
+        {
+            message += "s";
+        }
 
-        var currentPizzaNumber = 0;
+        message += $". \n  Location: {order.CustomerLocation}";
+
         foreach (var pizza in order.Pizzas)
         {
             foreach (var topping in pizza.PizzaToppings) 
@@ -69,21 +78,12 @@ public class PizzaOrderJournalWindow : MonoBehaviour
                     _requiredToppingCounts.Add(topping.Key, topping.Value);
                 }
             }
-
-            currentPizzaNumber++;
-            message += "\nPizza #" + currentPizzaNumber + "\n\n";
-
-            var pizzaOrderDetails = string.Empty;
-            pizzaOrderDetails += $"Size: {pizza.PizzaSize}" +
-                                 " \nToppings: ";
-
-            pizzaOrderDetails =
-                pizza.PizzaToppings.Aggregate(pizzaOrderDetails, (current, topping) => current + $" {topping}\n ");
-            message += pizzaOrderDetails;
         }
 
         OrderDescription.transform.GetComponent<Text>().text = message;
         OrderDescription.SetActive(true);
+
+        var currentToppingCounts = GameManager.Instance.Player.ToppingCounts;
 
         foreach (var topping in _requiredToppingCounts)
         {
@@ -92,13 +92,12 @@ public class PizzaOrderJournalWindow : MonoBehaviour
 
             var ingredientSpritePrefab = WorldData.Instance.WorldViewToppingsDictionary[topping.Key];
             
-            ingredient.GetComponentInChildren<Image>().sprite = ingredientSpritePrefab.GetComponent<SpriteRenderer>().sprite;
-            ingredientSpritePrefab.transform.SetParent(ingredient.transform);
+            ingredient.GetComponentsInChildren<Image>()[1].sprite = ingredientSpritePrefab.GetComponent<SpriteRenderer>().sprite;
 
             var textFields = ingredient.GetComponentInChildren<Image>().GetComponentsInChildren<Text>();
 
             textFields[0].text = topping.Key.ToString();
-            textFields[1].text = topping.Value.ToString();
+            textFields[1].text = $"{currentToppingCounts[topping.Key]}/{topping.Value}";
         }
     }
 }

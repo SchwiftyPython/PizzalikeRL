@@ -97,7 +97,11 @@ public class GameManager : MonoBehaviour
                     if (Instance.ActiveOrders.Count < 1)
                     {
                         //todo testing pizza order
-                        var order = new PizzaOrder(PizzaOrder.OrderDifficulty.Easy);
+                        var order = new PizzaOrder(PizzaOrder.OrderDifficulty.Hard);
+
+                        Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
+
+                        order = new PizzaOrder(PizzaOrder.OrderDifficulty.Hard);
 
                         Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
                     }
