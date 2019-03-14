@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 public class PizzaOrder
@@ -13,7 +14,7 @@ public class PizzaOrder
     public List<Pizza> Pizzas;
     public Entity Customer;
     
-    public Cell CustomerLocation;
+    public string CustomerLocation;
 
     public PizzaOrder() { }
 
@@ -23,7 +24,7 @@ public class PizzaOrder
         Pizzas.AddRange(GenerateOrder(difficulty));
 
         ChooseCustomer();
-        CustomerLocation = Customer.CurrentCell; //todo Use name of region cell is in when implemented
+        CustomerLocation = Customer.CurrentCell.Settlement.Name; 
     }
 
     private static IEnumerable<Pizza> GenerateOrder(OrderDifficulty difficulty)
@@ -57,9 +58,9 @@ public class PizzaOrder
 
     private void ChooseCustomer()
     {
-        var allNamedNpcs = new List<Entity>(WorldData.Instance.FactionLeaders);
-        allNamedNpcs.AddRange(WorldData.Instance.OtherNamedNpcs);
+        var allNpcs = new List<Entity>(WorldData.Instance.Entities.Values)
+            .Where(e => e.IsPlayer() == false && e.Fluff != null).ToList();
 
-        Customer = allNamedNpcs[Random.Range(0, allNamedNpcs.Count)];
+        Customer = allNpcs[Random.Range(0, allNpcs.Count)];
     }
 }

@@ -177,11 +177,6 @@ public class Entity
                 {Toppings.Wheat, 0 },
                 {Toppings.Sausage, 0 }
             };
-
-            //todo testing
-            var item = ItemStore.Instance.GetRandomItem();
-
-            Inventory.Add(item.Id, item);
         }
         else
         {

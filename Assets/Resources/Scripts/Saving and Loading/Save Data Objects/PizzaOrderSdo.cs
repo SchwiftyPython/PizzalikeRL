@@ -8,14 +8,11 @@ public class PizzaOrderSdo
 
     public Guid CustomerId;
 
-    public string CustomerLocationId;
-
     public static PizzaOrderSdo ConvertToPizzaOrderSdo(PizzaOrder order)
     {
         var tempSdo = new PizzaOrderSdo
         {
             CustomerId = order.Customer.Id,
-            CustomerLocationId = order.CustomerLocation.Id,
             Pizzas = order.Pizzas
         };
 
@@ -27,9 +24,10 @@ public class PizzaOrderSdo
         var order = new PizzaOrder
         {
             Customer = WorldData.Instance.Entities[sdo.CustomerId],
-            CustomerLocation = WorldData.Instance.MapDictionary[sdo.CustomerLocationId],
             Pizzas = sdo.Pizzas
         };
+
+        order.CustomerLocation = order.Customer.CurrentCell.Settlement.Name;
 
         return order;
     }
