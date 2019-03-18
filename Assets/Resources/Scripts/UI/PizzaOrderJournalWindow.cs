@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,8 +41,34 @@ public class PizzaOrderJournalWindow : MonoBehaviour
             var orderButton = Instantiate(PizzaOrderPrefab, new Vector3(0, 0), Quaternion.identity);
             orderButton.transform.SetParent(OrderButtonParent.transform);
             
-            var orderTitle = orderButton.GetComponentInChildren<Toggle>().GetComponentInChildren<Text>();
+            var orderTitle = orderButton.GetComponentInChildren<Text>();
             orderTitle.text = $"{order.Customer.Fluff.Name}";
+
+            _requiredToppingCounts = new Dictionary<Toppings, int>();
+
+            foreach (var pizza in order.Pizzas)
+            {
+                foreach (var topping in pizza.PizzaToppings)
+                {
+                    if (_requiredToppingCounts.ContainsKey(topping.Key))
+                    {
+                        _requiredToppingCounts[topping.Key] += topping.Value;
+                    }
+                    else
+                    {
+                        _requiredToppingCounts.Add(topping.Key, topping.Value);
+                    }
+                }
+            }
+
+            var currentToppingCounts = GameManager.Instance.Player.ToppingCounts;
+
+            var orderComplete =
+                _requiredToppingCounts.All(topping => currentToppingCounts[topping.Key] >= topping.Value);
+
+            var checkmark = orderButton.GetComponentsInChildren<Image>()[2];
+
+            checkmark.enabled = orderComplete;
         }
     }
 

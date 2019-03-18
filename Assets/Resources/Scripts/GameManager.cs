@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -96,12 +98,9 @@ public class GameManager : MonoBehaviour
 
                     if (Instance.ActiveOrders.Count < 1)
                     {
-                        //todo testing pizza order
-                        var order = new PizzaOrder(PizzaOrder.OrderDifficulty.Hard);
-
-                        Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
-
-                        order = new PizzaOrder(PizzaOrder.OrderDifficulty.Hard);
+                        //todo create intelligent difficulty system - easy, medium, then whatever
+                        var order = new PizzaOrder((PizzaOrder.OrderDifficulty) Random.Range(0,
+                            Enum.GetNames(typeof(PizzaOrder.OrderDifficulty)).Length));
 
                         Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
                     }
