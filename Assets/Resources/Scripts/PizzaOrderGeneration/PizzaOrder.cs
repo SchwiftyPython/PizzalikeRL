@@ -62,5 +62,6 @@ public class PizzaOrder
             .Where(e => e.IsPlayer() == false && e.Fluff != null).ToList();
 
         Customer = allNpcs[Random.Range(0, allNpcs.Count)];
+        Customer.IsCustomer = true;
     }
 }

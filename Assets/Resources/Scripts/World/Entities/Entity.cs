@@ -105,6 +105,7 @@ public class Entity
     public Tile CurrentTile;
 
     public bool Mobile;
+    public bool IsCustomer;
 
     public Vector3 CurrentPosition
     {

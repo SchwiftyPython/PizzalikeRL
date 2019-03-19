@@ -18,6 +18,7 @@ public class AreaMap : MonoBehaviour
     private Area _currentArea;
     private GameObject _playerSprite;
     private Entity _player;
+    private bool _customerPresent;
 
     private Dictionary<string, GameObject> _waterTiles;
 
@@ -33,6 +34,7 @@ public class AreaMap : MonoBehaviour
     public PopUpWindow PizzaOrderPopUp;
     public GameObject ObjectInfoWindow;
     public GameObject DroppedItemPopUp;
+    public GameObject ExclamationPointPrefab;
 
     public GameObject Camera;
 
@@ -48,7 +50,6 @@ public class AreaMap : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        //DontDestroyOnLoad(gameObject);
     }
 
     private void Init()
@@ -82,12 +83,11 @@ public class AreaMap : MonoBehaviour
         if (_currentArea.PresentEntities.Count > 1)
         {
             PlaceNpcs();
+            MarkCustomers();
         }
 
         CreateAStarGraph();
         AstarPath.active.Scan();
-
-        //fieldOfView = AreaMapHolder.AddComponent<Fov>();
 
         Fov.Init(_currentArea);
         var v = new Vinteger(_player.CurrentTile.X, _player.CurrentTile.Y);
@@ -98,7 +98,6 @@ public class AreaMap : MonoBehaviour
    
     public void EnterArea()
     {
-        //Destroy(WorldMap.Instance?.Camera);
         if (AreaMapHolder != null || NpcSpriteHolder != null)
         {
             Deconstruct();
@@ -121,9 +120,24 @@ public class AreaMap : MonoBehaviour
 
                 tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(currentColumn, currentRow, -4), Quaternion.identity);
                 tile.FovTile.transform.SetParent(FovHolder.transform);
-
-                //instance.GetComponent<SpriteRenderer>().color = _currentArea.AreaTiles[j, i].Revealed ? Color.gray : Color.black;
             }
+        }
+    }
+
+    public void MarkCustomers()
+    {
+        foreach (var entity in _currentArea.PresentEntities)
+        {
+            if (!entity.IsCustomer)
+            {
+                continue;
+            }
+
+            var marker = Instantiate(ExclamationPointPrefab, new Vector2(0, 0), Quaternion.identity);
+                
+            marker.transform.SetParent(entity.GetSprite().transform);
+
+            marker.transform.localPosition = new Vector3(0.5f, 1.35f, -1);
         }
     }
 

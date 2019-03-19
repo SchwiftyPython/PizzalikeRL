@@ -16,7 +16,7 @@ public class WorldTileInfo : MonoBehaviour
     public void OnRightClick()
     {
         var position = GetComponent<Transform>().position;
-        var clickedCell = WorldData.Instance.Map[(int)position.x, (int)position.y];
+        var clickedCell = WorldData.Instance.Map[(int)position.y, (int)position.x];
 
         Show(clickedCell);
     }
