@@ -333,6 +333,11 @@ public class InputController : MonoBehaviour
 
         foreach (var tile in _highlightedTiles)
         {
+            if (tile.TextureInstance == null)
+            {
+                continue;
+            }
+
             tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
         }
     }
