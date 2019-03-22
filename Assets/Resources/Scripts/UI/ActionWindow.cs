@@ -98,7 +98,20 @@ public class ActionWindow : MonoBehaviour
 
     public void OnDeliverButtonClicked()
     {
-        //todo complete order
+        var presentEntity = _selectedTile.GetPresentEntity();
+
+        GameManager.Instance.ActiveOrders.Remove(presentEntity.Fluff.Name);
+
+        //Remove marker from customer
+        for (var i = 0; i < presentEntity.GetSprite().transform.childCount; i++)
+        {
+            Destroy(presentEntity.GetSprite().transform.GetChild(i).gameObject);
+        }
+
+        //todo popup sucking off player for delivering pizza
+        //todo award whatever skill point currency
+        //todo Generate some fluff about order, create landmark, etc
+
         AfterActionCleanup();
     }
 
