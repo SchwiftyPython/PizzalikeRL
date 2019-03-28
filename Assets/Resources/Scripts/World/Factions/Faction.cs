@@ -16,6 +16,8 @@ public class Faction
     private const int MaxRelationshipLevel = 1000;
     private const int MinRelationshipLevel = MaxRelationshipLevel * -1;
 
+    private const int CitizenPopulationValue = 50;
+
     public PopulationType PopType;
 
     public string Type;
@@ -134,6 +136,12 @@ public class Faction
     public void ChangePopulation(int change)
     {
         Population += change;
+
+        //todo figure out where below will fit. Probably need an overload for when this is called after a citizen was killed
+
+        //todo if oldpop - newpop >= CitizenPopulationValue then pick citizen at random and kill
+        //if newpop - oldpop >= CitizenPopulationValue then new citizen
+        // num to kill or create = difference in pop / CitizenPopulationValue
     }
 
     public void CreateLeader()
@@ -202,7 +210,7 @@ public class Faction
 
         EntityTemplate template = null;
 
-        for (var i = 0; i < Population; i += 50)
+        for (var i = 0; i < Population; i += CitizenPopulationValue)
         {
             if (PopType == PopulationType.MixedSpecies)
             {

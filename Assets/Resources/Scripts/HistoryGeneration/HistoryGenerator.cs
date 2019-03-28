@@ -62,8 +62,20 @@ public class HistoryGenerator : MonoBehaviour
 
     public static int CurrentTurn;
 
+    public static HistoryGenerator Instance;
+
     private void Start()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+
         _situationStore = new SituationStore();
         _situationStore.Initialize();
 
@@ -82,7 +94,7 @@ public class HistoryGenerator : MonoBehaviour
 
         CurrentTurn = 0;
 
-        Generate();
+        //Generate();
 
         //Debug.Log($"Done Generating on {_currentMonth} {_currentDayOfTheWeek}, {_currentYear}");
 
@@ -92,7 +104,7 @@ public class HistoryGenerator : MonoBehaviour
 //        }
     }
 
-    private void Generate()
+    public void Generate()
     {
         var turnsLeftInDay = TurnsPerTime["day"];
         var turnsLeftInMonth = TurnsPerTime["month"];
@@ -103,6 +115,11 @@ public class HistoryGenerator : MonoBehaviour
         { 
             while (turnsLeftInYear > 0)
             {
+                //todo This would only work the first time generating
+                // Could add player age to current year to find point to start generating
+                // Also need to consider that at least one parent is spoken for from previous player
+                // so will have to watch out with the parent stories. Maybe let it run like normal and
+                // overwrite with information that was already available.
                 if (CurrentTurn >= GameManager.Instance.Player.Fluff.Age * TurnsPerDay * DaysPerYear)
                 {
                     GameManager.Instance.Player.Fluff.AddToBackground(BackgroundGenerator.Instance.GenerateLifeEvent());

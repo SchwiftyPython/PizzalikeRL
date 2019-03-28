@@ -177,6 +177,8 @@ public class Generator : MonoBehaviour
         CreateFactions();
         PlaceSettlements();
 
+        HistoryGenerator.Instance.Generate();
+
         Debug.Log("World Generation Complete");
 
         //RarityCapper = new Capper();
