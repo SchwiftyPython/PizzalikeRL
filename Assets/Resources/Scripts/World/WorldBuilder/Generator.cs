@@ -155,7 +155,7 @@ public class Generator : MonoBehaviour
     #region Private Methods
     private void Generate()
     {
-        Debug.Log("World Generation Started");
+        Debug.Log("World Generation Started...");
 
         // Build the maps
         GetData();
@@ -177,9 +177,11 @@ public class Generator : MonoBehaviour
         CreateFactions();
         PlaceSettlements();
 
+        Debug.Log("Generating History...");
+
         HistoryGenerator.Instance.Generate();
 
-        Debug.Log("World Generation Complete");
+        Debug.Log("World Generation Complete!");
 
         //RarityCapper = new Capper();
 

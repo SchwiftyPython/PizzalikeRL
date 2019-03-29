@@ -41,7 +41,7 @@ public class StoryGenerator : MonoBehaviour
         _stories[storyTitle].Invoke(details);
     }
 
-    //for testing I'm guessing -- might be able to use for diaplying stories in game
+    //for testing I'm guessing -- might be able to use for displaying stories in game
     private static void DisplayText(string output)
     {
         StoryBoxHolder.transform.GetChild(0).GetComponent<Text>().text = output;
@@ -76,12 +76,6 @@ public class StoryGenerator : MonoBehaviour
         WorldData.Instance.FactionLeaders.Remove(details.NamedCharacters[0]);
 
         WorldData.Instance.FactionLeaders.Add(details.NamedCharacters[1]);
-
-        var faction = details.Factions.FirstOrDefault();
-        if (faction != null)
-        {
-            faction.Leader = details.NamedCharacters[1];
-        }
 
         var story = GenerateText(file);
 

@@ -82,7 +82,9 @@ public class SituationStore
                 string line;
                 while (null != (line = reader.ReadLine()?.Trim()))
                 {
-                    situatons.AddRange(line.Split(',')); 
+                    var processedLine = line.Split(',');
+
+                    situatons.Add(processedLine.FirstOrDefault()); 
                 }
             }
         }
