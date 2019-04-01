@@ -111,76 +111,80 @@ public class HistoryGenerator : MonoBehaviour
         var turnsLeftInYear = TurnsPerTime["year"];
         var turnsLeftInHistoryGeneration = Random.Range(MinTurns, MaxTurns);
         var turnsTilNextSituation = Random.Range(TurnsPerDay, TurnsPerDay * DaysPerMonth);
+        var turnsTilNextLifeEvent = Random.Range(TurnsPerDay * DaysPerMonth, TurnsPerDay * DaysPerYear);
 
         try
         {
-
             while (turnsLeftInHistoryGeneration > 0)
             {
-                while (turnsLeftInYear > 0)
+                if (turnsLeftInYear <= 0)
                 {
-                    //todo This would only work the first time generating
-                    // Could add player age to current year to find point to start generating
-                    // Also need to consider that at least one parent is spoken for from previous player
-                    // so will have to watch out with the parent stories. Maybe let it run like normal and
-                    // overwrite with information that was already available.
-                    if (CurrentTurn >= GameManager.Instance.Player.Fluff.Age * TurnsPerDay * DaysPerYear)
-                    {
-                        GameManager.Instance.Player.Fluff.AddToBackground(
-                            BackgroundGenerator.Instance.GenerateLifeEvent());
-                    }
-
-                    while (turnsLeftInMonth > 0)
-                    {
-                        while (turnsLeftInDay > 0)
-                        {
-                            if (ActiveSituations.Any())
-                            {
-                                var activeSituations = ActiveSituations.Values.ToList();
-                                foreach (var situation in activeSituations)
-                                {
-                                    if (situation.GetTurnsTilNextSituation() <= 0)
-                                    {
-                                        var nextSituation = PickNextSituation(situation.GetNextSituations());
-                                        _situationStore.RunSituation(nextSituation, situation.GetSituationContainer());
-
-//                                    Debug.Log($"Ran {nextSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}\n " +
-//                                              $"Faction: {situation.GetFactions().First().Name}: {situation.GetFactions().First().Population}");
-                                    }
-                                    else
-                                    {
-                                        situation.DecrementTurnsTilNextSituation();
-                                    }
-                                }
-                            }
-
-                            if (turnsTilNextSituation <= 0)
-                            {
-                                var startSituation = PickStartSituation();
-                                _situationStore.RunSituation(startSituation);
-
-                                turnsTilNextSituation = Random.Range(TurnsPerDay, TurnsPerDay * DaysPerMonth);
-
-//                            Debug.Log(
-//                                $"Ran {startSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}");
-                            }
-
-                            CurrentTurn++;
-
-                            turnsLeftInDay--;
-                            turnsLeftInMonth--;
-                            turnsLeftInYear--;
-                            turnsLeftInHistoryGeneration--;
-                            turnsTilNextSituation--;
-                        }
-                        AdvanceToNextDay();
-                        turnsLeftInDay = TurnsPerTime["day"];
-                    }
+                    _currentYear++;
+                    turnsLeftInYear = TurnsPerTime["year"];
+                }
+                if (turnsLeftInMonth <= 0)
+                {
                     AdvanceToNextMonth();
                     turnsLeftInMonth = TurnsPerTime["month"];
                 }
-                _currentYear++;
-                turnsLeftInYear = TurnsPerTime["year"];
+                if (turnsLeftInDay <= 0)
+                {
+                    AdvanceToNextDay();
+                    turnsLeftInDay = TurnsPerTime["day"];
+                }
+
+                //todo This would only work the first time generating
+                // Could add player age to current year to find point to start generating
+                // Also need to consider that at least one parent is spoken for from previous player
+                // so will have to watch out with the parent stories. Maybe let it run like normal and
+                // overwrite with information that was already available.
+                if (CurrentTurn >= turnsTilNextLifeEvent)
+                {
+                    GameManager.Instance.Player.Fluff.AddToBackground(
+                        BackgroundGenerator.Instance.GenerateLifeEvent());
+
+                    turnsTilNextLifeEvent = Random.Range(TurnsPerDay * DaysPerMonth, TurnsPerDay * DaysPerYear);
+                }
+
+                if (ActiveSituations.Any())
+                {
+                    var activeSituations = ActiveSituations.Values.ToList();
+                    foreach (var situation in activeSituations)
+                    {
+                        if (situation.GetTurnsTilNextSituation() <= 0)
+                        {
+                            var nextSituation = PickNextSituation(situation.GetNextSituations());
+                            _situationStore.RunSituation(nextSituation, situation.GetSituationContainer());
+
+                            //                                    Debug.Log($"Ran {nextSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}\n " +
+                            //                                              $"Faction: {situation.GetFactions().First().Name}: {situation.GetFactions().First().Population}");
+                        }
+                        else
+                        {
+                            situation.DecrementTurnsTilNextSituation();
+                        }
+                    }
+                }
+
+                if (turnsTilNextSituation <= 0)
+                {
+                    var startSituation = PickStartSituation();
+                    _situationStore.RunSituation(startSituation);
+
+                    turnsTilNextSituation = Random.Range(TurnsPerDay, TurnsPerDay * DaysPerMonth);
+
+                    //                            Debug.Log(
+                    //                                $"Ran {startSituation} on {_currentDayOfTheWeek} {_currentMonth} {_currentNumericalDay}, {_currentYear}");
+                }
+
+                CurrentTurn++;
+
+                turnsLeftInDay--;
+                turnsLeftInMonth--;
+                turnsLeftInYear--;
+                turnsLeftInHistoryGeneration--;
+                turnsTilNextSituation--;
+                turnsTilNextLifeEvent--;
             }
         }
         catch (Exception e)

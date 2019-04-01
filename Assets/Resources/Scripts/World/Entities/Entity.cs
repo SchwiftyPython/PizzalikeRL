@@ -46,6 +46,10 @@ public class Entity
     private bool _isHostile;
     private bool _isWild;
 
+    private Entity _birthFather;
+    private Entity _birthMother;
+    private List<Entity> _children;
+
     private int _coins;
 
     public  GameObject Prefab;
@@ -118,7 +122,7 @@ public class Entity
         }
     }
 
-    public Entity(Guid id, string prefabPath ,bool isPlayer = false)
+    public Entity(Guid id, string prefabPath, bool isPlayer = false)
     {
         Id = id;
         _isPlayer = isPlayer;
@@ -146,6 +150,70 @@ public class Entity
             };
         }
     }
+    
+    public Entity(Entity ancestor, Faction faction = null, bool isPlayer = false)
+    {
+        Id = Guid.NewGuid();
+
+        _isPlayer = isPlayer;
+
+        //todo determine entity type and classification based on birth parents
+
+        Faction = faction;
+
+        Inventory = new Dictionary<Guid, Item>();
+
+        if (_isPlayer)
+        {
+            Level = 1;
+            Xp = 0;
+
+            ToppingCounts = new ToppingCountDictionary
+            {
+                {Toppings.Bacon, 0 },
+                {Toppings.BellPepper, 0 },
+                {Toppings.Cheese, 0 },
+                {Toppings.Jalapeno, 0 },
+                {Toppings.Mushrooms, 0 },
+                {Toppings.Olives, 0 },
+                {Toppings.Onion, 0 },
+                {Toppings.Pepperoni, 0 },
+                {Toppings.Pineapple, 0 },
+                {Toppings.Tomato, 0 },
+                {Toppings.Wheat, 0 },
+                {Toppings.Sausage, 0 }
+            };
+        }
+
+        const int minModifier = 4;
+        const int maxModifier = 2;
+
+        Strength = GenStrength(ancestor.Strength - minModifier, ancestor.Strength - maxModifier);
+        Agility = GenAgility(ancestor.Agility - minModifier, ancestor.Agility - maxModifier);
+        Constitution = GenConstitution(ancestor.Constitution - minModifier, ancestor.Constitution - maxModifier);
+        Intelligence = GenIntelligence(ancestor.Intelligence - minModifier, ancestor.Intelligence - maxModifier);
+
+        CurrentHp = MaxHp = GenMaxHp();
+        Speed = GenSpeed();
+        Defense = GenDefense();
+
+        _isWild = false;
+        Mobile = true;
+
+        //todo get template based on entity type
+//        PrefabPath = template.SpritePath;
+//        Prefab = Resources.Load(template.SpritePath) as GameObject;
+//
+//        BuildBody(template);
+//        CalculateTotalBodyPartCoverage();
+//        PopulateEquipped();
+//
+//        if (!string.IsNullOrEmpty(template.Topping))
+//        {
+//            ToppingDropped = new Topping(template.Topping);
+//        }
+
+    }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
     {
@@ -158,7 +226,7 @@ public class Entity
 
         Inventory = new Dictionary<Guid, Item>();
 
-        if (isPlayer)
+        if (_isPlayer)
         {
             Level = 1;
             Xp = 0;
