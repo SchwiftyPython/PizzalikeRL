@@ -46,9 +46,9 @@ public class Entity
     private bool _isHostile;
     private bool _isWild;
 
-    private Entity _birthFather;
-    private Entity _birthMother;
-    private List<Entity> _children;
+    public Entity BirthFather { get; set; }
+    public Entity BirthMother { get; set; }
+    public List<Entity> Children { get; set; }
 
     private int _coins;
 
@@ -151,13 +151,13 @@ public class Entity
         }
     }
     
-    public Entity(Entity ancestor, Faction faction = null, bool isPlayer = false)
+    public Entity(Entity parent, Faction faction = null, bool isPlayer = false)
     {
         Id = Guid.NewGuid();
 
         _isPlayer = isPlayer;
 
-        //todo determine entity type and classification based on birth parents
+        EntityType = GetEntityTypeFromParents(parent);
 
         Faction = faction;
 
@@ -188,10 +188,10 @@ public class Entity
         const int minModifier = 4;
         const int maxModifier = 2;
 
-        Strength = GenStrength(ancestor.Strength - minModifier, ancestor.Strength - maxModifier);
-        Agility = GenAgility(ancestor.Agility - minModifier, ancestor.Agility - maxModifier);
-        Constitution = GenConstitution(ancestor.Constitution - minModifier, ancestor.Constitution - maxModifier);
-        Intelligence = GenIntelligence(ancestor.Intelligence - minModifier, ancestor.Intelligence - maxModifier);
+        Strength = GenStrength(parent.Strength - minModifier, parent.Strength - maxModifier);
+        Agility = GenAgility(parent.Agility - minModifier, parent.Agility - maxModifier);
+        Constitution = GenConstitution(parent.Constitution - minModifier, parent.Constitution - maxModifier);
+        Intelligence = GenIntelligence(parent.Intelligence - minModifier, parent.Intelligence - maxModifier);
 
         CurrentHp = MaxHp = GenMaxHp();
         Speed = GenSpeed();
@@ -351,6 +351,44 @@ public class Entity
                 Equipped.Add(bodyPart, new Item());
             }
         }
+    }
+
+    private string GetEntityTypeFromParents(Entity parent)
+    {
+        if (parent.Fluff.Sex.Equals("male"))
+        {
+            BirthFather = parent;
+        }
+        if (parent.Fluff.Sex.Equals("female"))
+        {
+            BirthMother = parent;
+        }
+
+        var templateTypes = EntityTemplateLoader.GetAllEntityTemplateTypes();
+
+        var entityType = templateTypes[Random.Range(0, templateTypes.Length)];
+
+        var template = EntityTemplateLoader.GetEntityTemplate(entityType);
+
+        if (BirthFather == null)
+        {
+            BirthFather = new Entity(template);
+        }
+        if (BirthMother == null)
+        {
+            BirthMother = new Entity(template);
+        }
+
+        //todo create dictionary for these weighted values
+        //choose key randomly
+        //roll
+        //check if roll < weight
+        //loop until true
+        var inheritFromMotherChance = 35;
+        var inheritFromFatherChance = 35;
+        var inheritFromBothChance = 30;
+
+        return String.Empty;
     }
 
     private static int GenStrength(int min, int max)

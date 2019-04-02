@@ -18,12 +18,12 @@ public class EntityFluff
 
     private readonly int _turnBorn;  
     private readonly string _entityType;
-    private readonly string _sex;
+    public string Sex { get; }
     public string FactionName { get; }
 
     public EntityFluff(string entityType, List<string> possibleNameFiles)
     {
-        _sex = _sexes[Random.Range(0, _sexes.Count)];
+        Sex = _sexes[Random.Range(0, _sexes.Count)];
         _entityType = entityType;
         Name = GenerateName(possibleNameFiles);
         Background = new List<string>();
@@ -32,7 +32,7 @@ public class EntityFluff
 
     public EntityFluff(string entityType, string factionName, List<string> possibleNameFiles)
     {
-        _sex = _sexes[Random.Range(0, _sexes.Count)];
+        Sex = _sexes[Random.Range(0, _sexes.Count)];
         _entityType = entityType;
         Name = GenerateName(possibleNameFiles);
         _turnBorn = HistoryGenerator.CurrentTurn;
@@ -57,6 +57,6 @@ public class EntityFluff
 
     private string GenerateName(List<string> possibleNameFiles)
     {
-        return NameStore.Instance.GenerateFullName(possibleNameFiles, _sex);
+        return NameStore.Instance.GenerateFullName(possibleNameFiles, Sex);
     }
 }

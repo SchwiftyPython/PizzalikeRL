@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 [Serializable]
 public class EntitySdo
@@ -64,6 +62,12 @@ public class EntitySdo
 
     public Entity.ToppingCountDictionary ToppingCounts;
 
+    public Guid BirthMotherId;
+
+    public Guid BirthFatherId;
+
+    public  List<Guid> ChildrenIds;
+ 
     public static SaveGameData.SaveData.SerializableEntitiesDictionary ConvertToEntitySdos(List<Entity> entities)
     {
         var sdos = new SaveGameData.SaveData.SerializableEntitiesDictionary();
@@ -114,7 +118,10 @@ public class EntitySdo
             CurrentTileId = entity.CurrentTile?.Id,
             Mobile = entity.Mobile,
             ToppingDropped = ToppingSdo.ConvertToToppingSdo(entity.ToppingDropped),
-            ToppingCounts = entity.ToppingCounts
+            ToppingCounts = entity.ToppingCounts,
+            BirthMotherId = entity.BirthMother.Id,
+            BirthFatherId = entity.BirthFather.Id,
+            ChildrenIds = new List<Guid>()
         };
 
         foreach (var itemId in entity.Inventory.Keys)
@@ -125,6 +132,11 @@ public class EntitySdo
         foreach (var part in entity.Equipped.Keys)
         {
            sdo.EquippedIds.Add(new KeyValuePair<BodyPart, Guid>(part, entity.Equipped[part].Id));
+        }
+
+        foreach (var child in entity.Children)
+        {
+            sdo.ChildrenIds.Add(child.Id);
         }
 
         return sdo;
@@ -188,6 +200,29 @@ public class EntitySdo
                 }
             }
             entities.Add(entity.Id, entity);
+        }
+
+        foreach (var entitySdo in entitySdos)
+        {
+            var entity = entities[entitySdo.Key];
+
+            if (entities.ContainsKey(entitySdo.Value.BirthMotherId))
+            {
+                entity.BirthMother = entities[entitySdo.Value.BirthMotherId];
+            }
+
+            if (entities.ContainsKey(entitySdo.Value.BirthFatherId))
+            {
+                entity.BirthFather = entities[entitySdo.Value.BirthFatherId];
+            }
+
+            foreach (var childId in entitySdo.Value.ChildrenIds)
+            {
+                if (entities.ContainsKey(childId))
+                {
+                    entity.Children.Add(entities[childId]);
+                }
+            }
         }
         return entities;
     }
