@@ -132,8 +132,7 @@ public class HistoryGenerator : MonoBehaviour
                     AdvanceToNextDay();
                     turnsLeftInDay = TurnsPerTime["day"];
                 }
-
-                //todo This would only work the first time generating
+               
                 // Could add player age to current year to find point to start generating
                 // Also need to consider that at least one parent is spoken for from previous player
                 // so will have to watch out with the parent stories. Maybe let it run like normal and

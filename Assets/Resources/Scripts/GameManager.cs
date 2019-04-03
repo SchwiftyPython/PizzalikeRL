@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public bool PlayerInStartingArea;
     public bool PlayerEnteringAreaFromWorldMap;
     public bool BusyGeneratingHistory;
+    public bool PlayerDeathRoutineComplete;
+    public bool PlayerDead;
 
     public Cell CurrentCell;
     public Area CurrentArea;
@@ -36,7 +38,8 @@ public class GameManager : MonoBehaviour
         EnterArea,
         Playerturn,
         Enemyturn,
-        EndTurn
+        EndTurn,
+        PlayerDeath
     }
 
     public GameState CurrentState { get; set; }
@@ -69,6 +72,14 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         CurrentScene = SceneManager.GetActiveScene();
+
+        if (PlayerDead)
+        {
+            PlayerDead = false;
+            PlayerDeathRoutineComplete = false;
+            CurrentState = GameState.PlayerDeath;
+            RunPlayerDeathRoutine();
+        }
 
         Debug.Log(CurrentState);
         switch (CurrentState)
@@ -140,7 +151,22 @@ public class GameManager : MonoBehaviour
                     CurrentState = WhoseTurn();
                 }
                 break;
+            case GameState.PlayerDeath:
+                if (PlayerDeathRoutineComplete)
+                {
+                    CurrentState = GameState.EnterArea;
+                }
+                break;
         }
+    }
+
+    private void RunPlayerDeathRoutine()
+    {
+        HistoryGenerator.Instance.Generate();
+        //todo gen 2 - 4 descendants
+        //todo load scene with choose descendant window 
+        //todo load modified character creation for player to spend points
+        //todo set PlayerDeathRoutineComplete = true
     }
 
     private GameState WhoseTurn()
@@ -190,9 +216,16 @@ public class GameManager : MonoBehaviour
     {
         foreach (var entity in CurrentArea.PresentEntities.ToArray())
         {
-            if (entity.IsDead())
+            if (!entity.IsDead())
             {
-                AreaMap.Instance.RemoveDeadEntity(entity);
+                continue;
+            }
+
+            AreaMap.Instance.RemoveDeadEntity(entity);
+
+            if (entity.IsPlayer())
+            {
+                PlayerDead = true;
             }
         }
     }
