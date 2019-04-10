@@ -301,6 +301,8 @@
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterCreation.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\SpeciesOptionButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\CharacterWindow.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\DelivererSelectWindow.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\DescendantButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\DroppedItemButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\DroppedItemPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\EquipmentWindow.cs" />

@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class PizzaOrderJournalWindow : MonoBehaviour
 {
+    private IDictionary<string, PizzaOrder> _activeOrders;
+    private IDictionary<Toppings, int> _requiredToppingCounts;
+
     public GameObject PizzaOrderPrefab;
     public GameObject OrderButtonParent;
     public GameObject OrderDescription;
     public GameObject IngredientPrefab;
     public GameObject IngredientPrefabParent;
-
-    private IDictionary<string, PizzaOrder> _activeOrders;
-    private IDictionary<Toppings, int> _requiredToppingCounts;
 
     public static PizzaOrderJournalWindow Instance;
 
