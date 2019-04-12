@@ -2,11 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.U2D;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class DelivererSelectWindow : MonoBehaviour
 {
     private IDictionary<Guid, Entity> _descendants;
+
+    private const int MinDescendants = 2;
+    private const int MaxDescendants = 4;
 
     public GameObject DescendantPrefab;
     public GameObject DescendantButtonParent;
@@ -39,13 +44,22 @@ public class DelivererSelectWindow : MonoBehaviour
 
     private void PopulateWindow()
     {
-        var numDescendants = Random.Range(2, 5);
+        var numDescendants = Random.Range(MinDescendants, MaxDescendants + 1);
 
         for (var i = 0; i < numDescendants; i++)
         {
             var descendant = new Entity(GameManager.Instance.Player, null, true);
 
             _descendants.Add(descendant.Id, descendant);
+
+            var descendantButton = Instantiate(DescendantPrefab, new Vector3(0, 0), Quaternion.identity);
+            descendantButton.transform.SetParent(DescendantButtonParent.transform);
+
+            var descendantTitle = descendantButton.GetComponentInChildren<Text>();
+            descendantTitle.text = $"{descendant.Fluff.Name}, {descendant.Fluff.BackgroundType}";
+
+            var playerSprite = descendantButton.GetComponentsInChildren<Image>()[1];
+            playerSprite.sprite = descendant.GetSpritePrefab().GetComponent<SpriteRenderer>().sprite;
         }
     }
 }
