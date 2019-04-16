@@ -61,29 +61,6 @@ public class DelivererSelectWindow : MonoBehaviour
         PopulateWindow();
     }
 
-    private void PopulateWindow()
-    {
-        _descendants = new Dictionary<Guid, Entity>();
-
-        var numDescendants = Random.Range(MinDescendants, MaxDescendants + 1);
-
-        for (var i = 0; i < numDescendants; i++)
-        {
-            var descendant = new Entity(GameManager.Instance.Player, null, true);
-
-            _descendants.Add(descendant.Id, descendant);
-
-            var descendantButton = Instantiate(DescendantPrefab, new Vector3(0, 0), Quaternion.identity);
-            descendantButton.transform.SetParent(DescendantButtonParent.transform);
-
-            var descendantTitle = descendantButton.GetComponentInChildren<Text>();
-            descendantTitle.text = $"{descendant.Fluff.Name}, {descendant.Fluff.BackgroundType}";
-
-            var playerSprite = descendantButton.GetComponentsInChildren<Image>()[1];
-            playerSprite.sprite = descendant.GetSpritePrefab().GetComponent<SpriteRenderer>().sprite;
-        }
-    }
-
     public void ShowInnerWindow(GameObject window, Button tab)
     {
         if (window != CurrentWindow)
@@ -113,6 +90,50 @@ public class DelivererSelectWindow : MonoBehaviour
             case "Skills":
                 ShowInnerWindow(SkillsWindow, tab);
                 break;
+        }
+    }
+
+    public void DisplayDescendantDetails(Guid id)
+    {
+        if (id == Guid.Empty || !_descendants.ContainsKey(id))
+        {
+            return;
+        }
+
+        var selectedDescendant = _descendants[id];
+
+        StrengthValueBox.GetComponent<TextMesh>().text = selectedDescendant.Strength.ToString();
+        AgilityValueBox.GetComponent<TextMesh>().text = selectedDescendant.Agility.ToString();
+        ConstitutionValueBox.GetComponent<TextMesh>().text = selectedDescendant.Constitution.ToString();
+        IntelligenceValueBox.GetComponent<TextMesh>().text = selectedDescendant.Intelligence.ToString();
+        HpValueBox.GetComponent<TextMesh>().text = selectedDescendant.MaxHp.ToString();
+        DefenseValueBox.GetComponent<TextMesh>().text = selectedDescendant.Defense.ToString();
+        SpeedValueBox.GetComponent<TextMesh>().text = selectedDescendant.Speed.ToString();
+    }
+
+    private void PopulateWindow()
+    {
+        _descendants = new Dictionary<Guid, Entity>();
+
+        var numDescendants = Random.Range(MinDescendants, MaxDescendants + 1);
+
+        for (var i = 0; i < numDescendants; i++)
+        {
+            var descendant = new Entity(GameManager.Instance.Player, null, true);
+
+            _descendants.Add(descendant.Id, descendant);
+
+            var descendantButton = Instantiate(DescendantPrefab, new Vector3(0, 0), Quaternion.identity);
+            descendantButton.transform.SetParent(DescendantButtonParent.transform);
+
+            var descendantTitle = descendantButton.GetComponentInChildren<TextMesh>();
+            descendantTitle.text = $"{descendant.Fluff.Name}, {descendant.Fluff.BackgroundType}";
+
+            var id = descendantButton.GetComponentInChildren<Text>(true);
+            id.text = descendant.Id.ToString();
+
+            var playerSprite = descendantButton.GetComponentsInChildren<Image>()[1];
+            playerSprite.sprite = descendant.GetSpritePrefab().GetComponent<SpriteRenderer>().sprite;
         }
     }
 }
