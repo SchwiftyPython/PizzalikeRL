@@ -18,6 +18,7 @@ public class WorldData : MonoBehaviour
     public Dictionary<int, River> Rivers { get; set; }
     public Dictionary<Toppings, GameObject> WorldViewToppingsDictionary { get; set; }
     public Dictionary<Toppings, GameObject> UiViewToppingsDictionary { get; set; }
+    public Cell PlayerStartingPlace;
 
     public string Seed
     {

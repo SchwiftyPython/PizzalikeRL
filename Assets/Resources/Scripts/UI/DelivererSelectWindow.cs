@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+//todo add modified character creation for player to spend points
 public class DelivererSelectWindow : MonoBehaviour
 {
-    private IDictionary<Guid, Entity> _descendants;
-
     private const int MinDescendants = 2;
     private const int MaxDescendants = 4;
+
+    private IDictionary<Guid, Entity> _descendants;
+    private Entity _selectedDescendant;
 
     public Color ActiveTabColor;
     public Color InactiveTabColor;
@@ -100,15 +103,20 @@ public class DelivererSelectWindow : MonoBehaviour
             return;
         }
 
-        var selectedDescendant = _descendants[id];
+        _selectedDescendant = _descendants[id];
 
-        StrengthValueBox.GetComponent<TextMesh>().text = selectedDescendant.Strength.ToString();
-        AgilityValueBox.GetComponent<TextMesh>().text = selectedDescendant.Agility.ToString();
-        ConstitutionValueBox.GetComponent<TextMesh>().text = selectedDescendant.Constitution.ToString();
-        IntelligenceValueBox.GetComponent<TextMesh>().text = selectedDescendant.Intelligence.ToString();
-        HpValueBox.GetComponent<TextMesh>().text = selectedDescendant.MaxHp.ToString();
-        DefenseValueBox.GetComponent<TextMesh>().text = selectedDescendant.Defense.ToString();
-        SpeedValueBox.GetComponent<TextMesh>().text = selectedDescendant.Speed.ToString();
+        StrengthValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Strength.ToString();
+        AgilityValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Agility.ToString();
+        ConstitutionValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Constitution.ToString();
+        IntelligenceValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Intelligence.ToString();
+        HpValueBox.GetComponent<TextMesh>().text = _selectedDescendant.MaxHp.ToString();
+        DefenseValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Defense.ToString();
+        SpeedValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Speed.ToString();
+    }
+
+    public void OnContinueClick()
+    {
+        GameManager.Instance.ContinueGame(_selectedDescendant);
     }
 
     private void PopulateWindow()
@@ -126,7 +134,7 @@ public class DelivererSelectWindow : MonoBehaviour
             var descendantButton = Instantiate(DescendantPrefab, new Vector3(0, 0), Quaternion.identity);
             descendantButton.transform.SetParent(DescendantButtonParent.transform);
 
-            var descendantTitle = descendantButton.GetComponentInChildren<TextMesh>();
+            var descendantTitle = descendantButton.GetComponentInChildren<TextMeshPro>();
             descendantTitle.text = $"{descendant.Fluff.Name}, {descendant.Fluff.BackgroundType}";
 
             var id = descendantButton.GetComponentInChildren<Text>(true);

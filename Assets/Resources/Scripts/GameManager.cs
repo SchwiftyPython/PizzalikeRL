@@ -160,13 +160,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ContinueGame(Entity player)
+    {
+        if (WorldData.Instance.Entities.ContainsKey(Player.Id))
+        {
+            WorldData.Instance.Entities.Remove(Player.Id);
+        }
+
+        Player = player;
+        WorldData.Instance.Entities.Add(Player.Id, Player);
+
+        CurrentCell = WorldData.Instance.PlayerStartingPlace;
+        CurrentArea = CurrentCell.Areas[1, 1];
+
+        Player.CurrentCell = CurrentCell;
+        Player.CurrentArea = CurrentArea;
+
+        PlayerDeathRoutineComplete = true;
+    }
+
     private void RunPlayerDeathRoutine()
     {
         HistoryGenerator.Instance.Generate();
-        //todo gen 2 - 4 descendants
-        //todo load scene with choose descendant window 
-        //todo load modified character creation for player to spend points
-        //todo set PlayerDeathRoutineComplete = true
+        
+        SceneManager.LoadScene("PlayerDeath"); 
     }
 
     private GameState WhoseTurn()

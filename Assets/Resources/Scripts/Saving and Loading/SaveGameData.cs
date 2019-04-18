@@ -47,6 +47,8 @@ public class SaveGameData : MonoBehaviour
         public class SerializableOrdersDictionary : SerializableDictionary<string, PizzaOrderSdo> { }
 
         public SerializableOrdersDictionary ActiveOrders;
+
+        public string PlayerStartingPlaceCellId;
     }
 
     [Serializable]
@@ -104,7 +106,8 @@ public class SaveGameData : MonoBehaviour
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders),
                 FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
                 EntitySdos = EntitySdo.ConvertToEntitySdos(WorldData.Instance.Entities.Values.ToList()),
-                Items = ConvertItemsForSaving(WorldData.Instance.Items)
+                Items = ConvertItemsForSaving(WorldData.Instance.Items),
+                PlayerStartingPlaceCellId = WorldData.Instance.PlayerStartingPlace.Id
             };
 
             var saveGameFileNames =
@@ -145,13 +148,15 @@ public class SaveGameData : MonoBehaviour
         WorldData.Instance.Entities = ConvertEntitiesForPlaying(saveData.EntitySdos);
 
         WorldData.Instance.Factions = ConvertFactionsForPlaying(saveData.FactionSdos);
-        
+
         WorldData.Instance.Map = ConvertMapForPlaying(saveData.Map);
 
         WorldData.Instance.Seed = saveData.StartingSeed;
         Random.state = saveData.SeedState;
 
         WorldData.Instance.SaveGameId = fileName;
+
+        WorldData.Instance.PlayerStartingPlace = WorldData.Instance.MapDictionary[saveData.PlayerStartingPlaceCellId];
 
         GameManager.Instance.Player = WorldData.Instance.Entities[saveData.PlayerId];
 

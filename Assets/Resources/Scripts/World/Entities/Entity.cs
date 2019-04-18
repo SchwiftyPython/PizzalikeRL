@@ -211,6 +211,9 @@ public class Entity
         CalculateTotalBodyPartCoverage();
         PopulateEquipped();
 
+        CreateFluff(template);
+        Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
+
         if (!string.IsNullOrEmpty(template.Topping))
         {
             ToppingDropped = new Topping(template.Topping);
