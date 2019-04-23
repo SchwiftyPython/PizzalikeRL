@@ -132,6 +132,7 @@ public class Generator : MonoBehaviour
                  GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain);
 
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
+        WorldData.Instance.PlayerStartingPlace = GameManager.Instance.CurrentCell;
         GameManager.Instance.WorldMapGenComplete = true;
         SceneManager.LoadScene("Area");
     }

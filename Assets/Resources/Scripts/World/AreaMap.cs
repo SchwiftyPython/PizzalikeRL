@@ -45,6 +45,7 @@ public class AreaMap : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            //DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {
@@ -56,6 +57,12 @@ public class AreaMap : MonoBehaviour
     {
         AreaReady = false;
         AreaMapHolder = new GameObject("AreaMapHolder");
+
+        if (FovHolder == null)
+        {
+            FovHolder = GameObject.Find("Fov");
+        }
+
         Fov = FovHolder.GetComponent<Fov>();
 
         if (_player == null || _player != GameManager.Instance.Player)
@@ -246,6 +253,11 @@ public class AreaMap : MonoBehaviour
         if (AreaMapHolder != null)
         {
             Destroy(AreaMapHolder);
+        }
+
+        if (FovHolder == null)
+        {
+            return;
         }
 
         for (var i = 0; i < FovHolder.transform.childCount; i++)

@@ -188,10 +188,10 @@ public class Entity
         const int minModifier = 4;
         const int maxModifier = 2;
 
-        Strength = GenStrength(parent.Strength - minModifier, parent.Strength - maxModifier);
-        Agility = GenAgility(parent.Agility - minModifier, parent.Agility - maxModifier);
-        Constitution = GenConstitution(parent.Constitution - minModifier, parent.Constitution - maxModifier);
-        Intelligence = GenIntelligence(parent.Intelligence - minModifier, parent.Intelligence - maxModifier);
+        Strength = GenStrength(parent.Strength - minModifier, parent.Strength + maxModifier);
+        Agility = GenAgility(parent.Agility - minModifier, parent.Agility + maxModifier);
+        Constitution = GenConstitution(parent.Constitution - minModifier, parent.Constitution + maxModifier);
+        Intelligence = GenIntelligence(parent.Intelligence - minModifier, parent.Intelligence + maxModifier);
 
         CurrentHp = MaxHp = GenMaxHp();
         Speed = GenSpeed();

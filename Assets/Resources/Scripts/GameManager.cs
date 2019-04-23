@@ -99,6 +99,8 @@ public class GameManager : MonoBehaviour
             case GameState.EnterArea:
                 if (AreaMap.Instance == null)
                 {
+                    //var areaMap = new GameObject();
+                    //areaMap.AddComponent<AreaMap>();
                     break;
                 }
 
@@ -154,6 +156,7 @@ public class GameManager : MonoBehaviour
             case GameState.PlayerDeath:
                 if (PlayerDeathRoutineComplete)
                 {
+                    SceneManager.LoadScene(AreaMapSceneName);
                     CurrentState = GameState.EnterArea;
                 }
                 break;
@@ -176,10 +179,12 @@ public class GameManager : MonoBehaviour
         Player.CurrentCell = CurrentCell;
         Player.CurrentArea = CurrentArea;
 
+        PlayerInStartingArea = true;
+
         PlayerDeathRoutineComplete = true;
     }
 
-    private void RunPlayerDeathRoutine()
+    private static void RunPlayerDeathRoutine()
     {
         HistoryGenerator.Instance.Generate();
         

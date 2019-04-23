@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -62,6 +63,7 @@ public class DelivererSelectWindow : MonoBehaviour
     private void Start()
     {
         PopulateWindow();
+        DisplayDescendantDetails(_descendants.First().Key);
     }
 
     public void ShowInnerWindow(GameObject window, Button tab)
@@ -105,13 +107,13 @@ public class DelivererSelectWindow : MonoBehaviour
 
         _selectedDescendant = _descendants[id];
 
-        StrengthValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Strength.ToString();
-        AgilityValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Agility.ToString();
-        ConstitutionValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Constitution.ToString();
-        IntelligenceValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Intelligence.ToString();
-        HpValueBox.GetComponent<TextMesh>().text = _selectedDescendant.MaxHp.ToString();
-        DefenseValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Defense.ToString();
-        SpeedValueBox.GetComponent<TextMesh>().text = _selectedDescendant.Speed.ToString();
+        StrengthValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Strength.ToString();
+        AgilityValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Agility.ToString();
+        ConstitutionValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Constitution.ToString();
+        IntelligenceValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Intelligence.ToString();
+        HpValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.MaxHp.ToString();
+        DefenseValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Defense.ToString();
+        SpeedValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Speed.ToString();
     }
 
     public void OnContinueClick()
@@ -134,8 +136,13 @@ public class DelivererSelectWindow : MonoBehaviour
             var descendantButton = Instantiate(DescendantPrefab, new Vector3(0, 0), Quaternion.identity);
             descendantButton.transform.SetParent(DescendantButtonParent.transform);
 
-            var descendantTitle = descendantButton.GetComponentInChildren<TextMeshPro>();
-            descendantTitle.text = $"{descendant.Fluff.Name}, {descendant.Fluff.BackgroundType}";
+            if (i == 0)
+            {
+                descendantButton.GetComponent<Button>().Select();
+            }
+
+            var descendantTitle = descendantButton.GetComponentInChildren<TextMeshProUGUI>();
+            descendantTitle.text = $"{descendant.Fluff.Name}, {Capitalize(descendant.Fluff.BackgroundType.Name)}";
 
             var id = descendantButton.GetComponentInChildren<Text>(true);
             id.text = descendant.Id.ToString();
@@ -143,5 +150,14 @@ public class DelivererSelectWindow : MonoBehaviour
             var playerSprite = descendantButton.GetComponentsInChildren<Image>()[1];
             playerSprite.sprite = descendant.GetSpritePrefab().GetComponent<SpriteRenderer>().sprite;
         }
+    }
+
+    private static string Capitalize(string s)
+    {
+        if (string.IsNullOrEmpty(s))
+        {
+            return string.Empty;
+        }
+        return char.ToUpper(s[0]) + s.Substring(1);
     }
 }
