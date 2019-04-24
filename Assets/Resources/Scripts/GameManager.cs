@@ -170,6 +170,11 @@ public class GameManager : MonoBehaviour
             WorldData.Instance.Entities.Remove(Player.Id);
         }
 
+        if (Player.GetSprite() != null)
+        {
+            Destroy(Player.GetSprite());
+        }
+
         Player = player;
         WorldData.Instance.Entities.Add(Player.Id, Player);
 

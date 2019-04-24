@@ -47,15 +47,10 @@ public class InputController : MonoBehaviour
 
         if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn)
         {
-            if (_player == null)
+            if (_player == null || _player != GameManager.Instance.Player)
             {
                 _player = GameManager.Instance.Player;
                 //Debug.Log ("player reference in update: " + _player);
-            }
-
-            if (_player.GetSprite() == null)
-            {
-                AreaMap.Instance.InstantiatePlayerSprite();
             }
 
             if (Input.GetKeyDown(KeyCode.Keypad8))
