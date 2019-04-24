@@ -16,6 +16,7 @@ public class StoryGenerator : MonoBehaviour
         {"faction leader assassination", FactionLeaderAssassination }
     };
 
+    //for testing?
     public static GameObject StoryBoxHolder;
 
     public static StoryGenerator Instance;
@@ -32,7 +33,7 @@ public class StoryGenerator : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        StoryBoxHolder = GameObject.Find("StoryBoxHolder");
+        //StoryBoxHolder = GameObject.Find("StoryBoxHolder");
     }
 
     public void Write(string storyTitle, SituationContainer details)
@@ -40,6 +41,7 @@ public class StoryGenerator : MonoBehaviour
         _stories[storyTitle].Invoke(details);
     }
 
+    //for testing I'm guessing -- might be able to use for displaying stories in game
     private static void DisplayText(string output)
     {
         StoryBoxHolder.transform.GetChild(0).GetComponent<Text>().text = output;
@@ -75,12 +77,6 @@ public class StoryGenerator : MonoBehaviour
 
         WorldData.Instance.FactionLeaders.Add(details.NamedCharacters[1]);
 
-        var faction = details.Factions.FirstOrDefault();
-        if (faction != null)
-        {
-            faction.Leader = details.NamedCharacters[1];
-        }
-
         var story = GenerateText(file);
 
         story = story.Replace(oldFactionLeader, details.NamedCharacters[0].Fluff.Name);
@@ -89,6 +85,6 @@ public class StoryGenerator : MonoBehaviour
 
         details.NamedCharacters[1].Fluff.AddToBackground(story);
 
-        DisplayText(story);
+        //DisplayText(story);
     }
 }

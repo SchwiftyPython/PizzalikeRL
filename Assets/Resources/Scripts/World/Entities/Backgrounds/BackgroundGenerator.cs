@@ -70,7 +70,7 @@ public class BackgroundGenerator : MonoBehaviour
         return GenerateText(ParentStatusFile);
     }
 
-    private string GenerateText(TextAsset file)
+    private static string GenerateText(TextAsset file)
     {
         try
         {

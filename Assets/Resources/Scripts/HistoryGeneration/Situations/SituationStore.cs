@@ -82,7 +82,9 @@ public class SituationStore
                 string line;
                 while (null != (line = reader.ReadLine()?.Trim()))
                 {
-                    situatons.AddRange(line.Split(',')); 
+                    var processedLine = line.Split(',');
+
+                    situatons.Add(processedLine.FirstOrDefault()); 
                 }
             }
         }
@@ -112,6 +114,8 @@ public class SituationStore
     // TODO needs to be redone without prereqs
     private static void HereticNation(SituationContainer sc = null)
     {
+        return;
+
         if (WorldData.Instance.Factions.Count < 2)
         {
             return;
@@ -154,11 +158,11 @@ public class SituationStore
             "plague cured"
         };
 
-        var id = new Guid();
+        var id = Guid.NewGuid();
 
         while (HistoryGenerator.SituationIdExists(id))
         {
-            id = new Guid();
+            id = Guid.NewGuid();
         }
 
         var situationContainer = new SituationContainer

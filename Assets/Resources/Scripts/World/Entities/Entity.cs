@@ -46,6 +46,10 @@ public class Entity
     private bool _isHostile;
     private bool _isWild;
 
+    public Entity BirthFather { get; set; }
+    public Entity BirthMother { get; set; }
+    public List<Entity> Children { get; set; }
+
     private int _coins;
 
     public  GameObject Prefab;
@@ -118,7 +122,7 @@ public class Entity
         }
     }
 
-    public Entity(Guid id, string prefabPath ,bool isPlayer = false)
+    public Entity(Guid id, string prefabPath, bool isPlayer = false)
     {
         Id = id;
         _isPlayer = isPlayer;
@@ -146,6 +150,76 @@ public class Entity
             };
         }
     }
+    
+    public Entity(Entity parent, Faction faction = null, bool isPlayer = false)
+    {
+        Id = Guid.NewGuid();
+
+        _isPlayer = isPlayer;
+
+        EntityType = GetEntityTypeFromParents(parent);
+
+        Faction = faction;
+
+        Inventory = new Dictionary<Guid, Item>();
+
+        if (_isPlayer)
+        {
+            Level = 1;
+            Xp = 0;
+
+            ToppingCounts = new ToppingCountDictionary
+            {
+                {Toppings.Bacon, 0 },
+                {Toppings.BellPepper, 0 },
+                {Toppings.Cheese, 0 },
+                {Toppings.Jalapeno, 0 },
+                {Toppings.Mushrooms, 0 },
+                {Toppings.Olives, 0 },
+                {Toppings.Onion, 0 },
+                {Toppings.Pepperoni, 0 },
+                {Toppings.Pineapple, 0 },
+                {Toppings.Tomato, 0 },
+                {Toppings.Wheat, 0 },
+                {Toppings.Sausage, 0 }
+            };
+        }
+
+        const int minModifier = 4;
+        const int maxModifier = 2;
+
+        Strength = GenStrength(parent.Strength - minModifier, parent.Strength + maxModifier);
+        Agility = GenAgility(parent.Agility - minModifier, parent.Agility + maxModifier);
+        Constitution = GenConstitution(parent.Constitution - minModifier, parent.Constitution + maxModifier);
+        Intelligence = GenIntelligence(parent.Intelligence - minModifier, parent.Intelligence + maxModifier);
+
+        CurrentHp = MaxHp = GenMaxHp();
+        Speed = GenSpeed();
+        Defense = GenDefense();
+
+        _isWild = false;
+        Mobile = true;
+
+        var template = EntityTemplateLoader.GetEntityTemplate(EntityType);
+
+        Classification = template.Classification;
+        
+        PrefabPath = template.SpritePath;
+        Prefab = Resources.Load(template.SpritePath) as GameObject;
+
+        BuildBody(template);
+        CalculateTotalBodyPartCoverage();
+        PopulateEquipped();
+
+        CreateFluff(template);
+        Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
+
+        if (!string.IsNullOrEmpty(template.Topping))
+        {
+            ToppingDropped = new Topping(template.Topping);
+        }
+
+    }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
     {
@@ -158,7 +232,7 @@ public class Entity
 
         Inventory = new Dictionary<Guid, Item>();
 
-        if (isPlayer)
+        if (_isPlayer)
         {
             Level = 1;
             Xp = 0;
@@ -282,6 +356,70 @@ public class Entity
             {
                 Equipped.Add(bodyPart, new Item());
             }
+        }
+    }
+
+    private string GetEntityTypeFromParents(Entity parent)
+    {
+        if (parent.Fluff.Sex.Equals("male"))
+        {
+            BirthFather = parent;
+        }
+        if (parent.Fluff.Sex.Equals("female"))
+        {
+            BirthMother = parent;
+        }
+
+        var templateTypes = EntityTemplateLoader.GetAllEntityTemplateTypes();
+
+        var entityType = templateTypes[Random.Range(0, templateTypes.Length)];
+
+        var template = EntityTemplateLoader.GetEntityTemplate(entityType);
+
+        if (BirthFather == null)
+        {
+            BirthFather = new Entity(template);
+        }
+        if (BirthMother == null)
+        {
+            BirthMother = new Entity(template);
+        }
+
+        var inheritFromChances = new Dictionary<string, int>
+        {
+            { "mother", 95 },
+            { "father", 95 },
+            //{ "both", 60 }
+        };
+
+        var chanceTotal = (double)inheritFromChances.Values.Sum(n => n);
+
+        var picked = false;
+        var inheritFrom = string.Empty;
+
+        while (!picked)
+        {
+            var index = Random.Range(0, inheritFromChances.Count);
+
+            var chosenParent = inheritFromChances.ElementAt(index);
+
+            var chance = chosenParent.Value / chanceTotal;
+
+            var roll = Random.Range(0f, 1f);
+
+            if (roll < chance)
+            {
+                inheritFrom = chosenParent.Key;
+                picked = true;
+            }
+        }
+
+        switch (inheritFrom)
+        {
+            case "mother": return BirthMother.EntityType;
+            case "father": return BirthFather.EntityType;
+            //case "both": todo figure out some mish mash deal
+            default: return string.Empty;
         }
     }
 

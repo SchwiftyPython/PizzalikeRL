@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 [Serializable]
@@ -18,21 +19,23 @@ public class EntityFluff
 
     private readonly int _turnBorn;  
     private readonly string _entityType;
-    private readonly string _sex;
+    public string Sex { get; }
     public string FactionName { get; }
 
     public EntityFluff(string entityType, List<string> possibleNameFiles)
     {
-        _sex = _sexes[Random.Range(0, _sexes.Count)];
+        Sex = _sexes[Random.Range(0, _sexes.Count)];
         _entityType = entityType;
         Name = GenerateName(possibleNameFiles);
         Background = new List<string>();
         _turnBorn = HistoryGenerator.CurrentTurn;
+
+        BackgroundType = PickBackgroundType();
     }
 
     public EntityFluff(string entityType, string factionName, List<string> possibleNameFiles)
     {
-        _sex = _sexes[Random.Range(0, _sexes.Count)];
+        Sex = _sexes[Random.Range(0, _sexes.Count)];
         _entityType = entityType;
         Name = GenerateName(possibleNameFiles);
         _turnBorn = HistoryGenerator.CurrentTurn;
@@ -57,6 +60,17 @@ public class EntityFluff
 
     private string GenerateName(List<string> possibleNameFiles)
     {
-        return NameStore.Instance.GenerateFullName(possibleNameFiles, _sex);
+        return NameStore.Instance.GenerateFullName(possibleNameFiles, Sex);
+    }
+
+    private static CharacterBackground PickBackgroundType()
+    {
+        var allBackgrounds = CharacterBackgroundLoader.GetCharacterBackgroundTypes().ToList();
+
+        var index = Random.Range(0, allBackgrounds.Count);
+
+        var selectedBackgroundType = allBackgrounds[index];
+
+        return CharacterBackgroundLoader.GetCharacterBackground(selectedBackgroundType);
     }
 }

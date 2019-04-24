@@ -132,6 +132,7 @@ public class Generator : MonoBehaviour
                  GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain);
 
         GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
+        WorldData.Instance.PlayerStartingPlace = GameManager.Instance.CurrentCell;
         GameManager.Instance.WorldMapGenComplete = true;
         SceneManager.LoadScene("Area");
     }
@@ -155,7 +156,7 @@ public class Generator : MonoBehaviour
     #region Private Methods
     private void Generate()
     {
-        Debug.Log("World Generation Started");
+        Debug.Log("World Generation Started...");
 
         // Build the maps
         GetData();
@@ -177,7 +178,11 @@ public class Generator : MonoBehaviour
         CreateFactions();
         PlaceSettlements();
 
-        Debug.Log("World Generation Complete");
+        Debug.Log("Generating History...");
+
+        HistoryGenerator.Instance.Generate();
+
+        Debug.Log("World Generation Complete!");
 
         //RarityCapper = new Capper();
 

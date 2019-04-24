@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public bool PlayerInStartingArea;
     public bool PlayerEnteringAreaFromWorldMap;
     public bool BusyGeneratingHistory;
+    public bool PlayerDeathRoutineComplete;
+    public bool PlayerDead;
 
     public Cell CurrentCell;
     public Area CurrentArea;
@@ -36,7 +38,8 @@ public class GameManager : MonoBehaviour
         EnterArea,
         Playerturn,
         Enemyturn,
-        EndTurn
+        EndTurn,
+        PlayerDeath
     }
 
     public GameState CurrentState { get; set; }
@@ -70,6 +73,14 @@ public class GameManager : MonoBehaviour
     {
         CurrentScene = SceneManager.GetActiveScene();
 
+        if (PlayerDead)
+        {
+            PlayerDead = false;
+            PlayerDeathRoutineComplete = false;
+            CurrentState = GameState.PlayerDeath;
+            RunPlayerDeathRoutine();
+        }
+
         Debug.Log(CurrentState);
         switch (CurrentState)
         {
@@ -88,6 +99,8 @@ public class GameManager : MonoBehaviour
             case GameState.EnterArea:
                 if (AreaMap.Instance == null)
                 {
+                    //var areaMap = new GameObject();
+                    //areaMap.AddComponent<AreaMap>();
                     break;
                 }
 
@@ -140,7 +153,47 @@ public class GameManager : MonoBehaviour
                     CurrentState = WhoseTurn();
                 }
                 break;
+            case GameState.PlayerDeath:
+                if (PlayerDeathRoutineComplete)
+                {
+                    SceneManager.LoadScene(AreaMapSceneName);
+                    CurrentState = GameState.EnterArea;
+                }
+                break;
         }
+    }
+
+    public void ContinueGame(Entity player)
+    {
+        if (WorldData.Instance.Entities.ContainsKey(Player.Id))
+        {
+            WorldData.Instance.Entities.Remove(Player.Id);
+        }
+
+        if (Player.GetSprite() != null)
+        {
+            Destroy(Player.GetSprite());
+        }
+
+        Player = player;
+        WorldData.Instance.Entities.Add(Player.Id, Player);
+
+        CurrentCell = WorldData.Instance.PlayerStartingPlace;
+        CurrentArea = CurrentCell.Areas[1, 1];
+
+        Player.CurrentCell = CurrentCell;
+        Player.CurrentArea = CurrentArea;
+
+        PlayerInStartingArea = true;
+
+        PlayerDeathRoutineComplete = true;
+    }
+
+    private static void RunPlayerDeathRoutine()
+    {
+        HistoryGenerator.Instance.Generate();
+        
+        SceneManager.LoadScene("PlayerDeath"); 
     }
 
     private GameState WhoseTurn()
@@ -190,9 +243,16 @@ public class GameManager : MonoBehaviour
     {
         foreach (var entity in CurrentArea.PresentEntities.ToArray())
         {
-            if (entity.IsDead())
+            if (!entity.IsDead())
             {
-                AreaMap.Instance.RemoveDeadEntity(entity);
+                continue;
+            }
+
+            AreaMap.Instance.RemoveDeadEntity(entity);
+
+            if (entity.IsPlayer())
+            {
+                PlayerDead = true;
             }
         }
     }
