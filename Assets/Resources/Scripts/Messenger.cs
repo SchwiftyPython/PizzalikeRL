@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Messenger : MonoBehaviour
 {
-    private const int MaxMessagesOnScreen = 3;
+    private const int MaxMessagesOnScreen = 45;
 
     private Queue<GameObject> _messagesOnScreen;
 
@@ -13,6 +14,8 @@ public class Messenger : MonoBehaviour
     public GameObject Message;
 
     public RectTransform MessageParent;
+
+    public ScrollRect MessageScrollRect;
 
     private void Awake()
     {
@@ -39,6 +42,11 @@ public class Messenger : MonoBehaviour
         }
     }
 
+    private void ScrollToBottom()
+    {
+        MessageScrollRect.normalizedPosition = new Vector2(0, 0);
+    }
+
     public static Messenger GetInstance()
     {
         return _instance;
@@ -54,9 +62,11 @@ public class Messenger : MonoBehaviour
 
         cm.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
 
-        cm.transform.GetChild(0).GetComponent<Text>().text = myMessage;
+        cm.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = myMessage;
 
         _messagesOnScreen.Enqueue(cm);
+
+        ScrollToBottom();
     }
 
     public void CreateMessage(string myMessage, Color messageColor)
@@ -69,10 +79,12 @@ public class Messenger : MonoBehaviour
 
         cm.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
 
-        cm.transform.GetChild(0).GetComponent<Text>().text = myMessage;
+        cm.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = myMessage;
 
-        cm.transform.GetChild(0).GetComponent<Text>().color = messageColor;
+        cm.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = messageColor;
 
         _messagesOnScreen.Enqueue(cm);
+
+        ScrollToBottom();
     }
 }

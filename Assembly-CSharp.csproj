@@ -301,6 +301,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterBackgroundOptionButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterCreation.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\SpeciesOptionButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\CharacterStatusAreaView.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\CharacterWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\DelivererSelectWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\DescendantButton.cs" />
