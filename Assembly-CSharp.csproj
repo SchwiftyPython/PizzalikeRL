@@ -256,6 +256,7 @@
     <Compile Include="Assets\Resources\Scripts\EntityInfo.cs" />
     <Compile Include="Assets\Resources\Scripts\Fov.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\GlobalHelper.cs" />
     <Compile Include="Assets\Resources\Scripts\GoalDirection.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\ConditionChecker.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\HistoryGenerator.cs" />
@@ -314,6 +315,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\ItemButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\LoadWindowPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderJournalAreaView.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderJournalWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PopUpWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\SaveGameFileButton.cs" />
