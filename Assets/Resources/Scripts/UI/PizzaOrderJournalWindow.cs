@@ -76,10 +76,7 @@ public class PizzaOrderJournalWindow : MonoBehaviour
     {
         _requiredToppingCounts = new Dictionary<Toppings, int>();
 
-        for (var i = 0; i < IngredientPrefabParent.transform.childCount; i++)
-        {
-            Destroy(IngredientPrefabParent.transform.GetChild(i).gameObject);
-        }
+        GlobalHelper.DestroyAllChildren(IngredientPrefabParent);
 
         var order = _activeOrders[customerName];
         

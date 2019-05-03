@@ -35,19 +35,40 @@ public class PizzaOrderJournalAreaView : MonoBehaviour
         PopulateWindow();
     }
 
+    //todo register for active order change event
+    private void Update()
+    {
+        if (_activeOrders == null || _activeOrders.Count != GameManager.Instance.ActiveOrders.Count ||
+            _activeOrders.Count != OrderTabParent.transform.childCount)
+        {
+            RefreshOrderDisplay();
+        }
+    }
+
     private void PopulateWindow()
     {
-        _activeOrders = GameManager.Instance.ActiveOrders;
+        if (_activeOrders == null || _activeOrders != GameManager.Instance.ActiveOrders)
+        {
+            _activeOrders = GameManager.Instance.ActiveOrders;
+        }
 
         var orderNumber = 1;
 
         foreach (var order in _activeOrders.Values)
         {
-            var orderButton = Instantiate(PizzaOrderTabPrefab, new Vector3(0, 0), Quaternion.identity);
-            orderButton.transform.SetParent(OrderTabParent.transform);
+            if (_activeOrders.Count > 1)
+            {
+                var orderTab = Instantiate(PizzaOrderTabPrefab, new Vector3(0, 0), Quaternion.identity);
+                orderTab.transform.SetParent(OrderTabParent.transform);
 
-            var orderTitle = orderButton.GetComponentInChildren<TextMeshProUGUI>();
-            orderTitle.text = $"{orderNumber}";
+                var orderTitle = orderTab.GetComponentInChildren<TextMeshProUGUI>();
+                orderTitle.text = $"Order {orderNumber}";
+            }
+            else
+            {
+                var oneOrderBar = Instantiate(OneOrderBarPrefab, new Vector3(0, 0), Quaternion.identity);
+                oneOrderBar.transform.SetParent(OrderTabParent.transform);
+            }
 
             _requiredToppingCounts = new Dictionary<Toppings, int>();
 
@@ -71,11 +92,17 @@ public class PizzaOrderJournalAreaView : MonoBehaviour
             var orderComplete =
                 _requiredToppingCounts.All(topping => currentToppingCounts[topping.Key] >= topping.Value);
 
-            var checkmark = orderButton.GetComponentsInChildren<Image>()[2];
-
-            checkmark.enabled = orderComplete;
+//            todo add checkmark next to each topping. Highlight tab some color to indicate complete  
+//            var checkmark = orderTab.GetComponentsInChildren<Image>()[2];
+//
+//            checkmark.enabled = orderComplete;
 
             orderNumber++;
+        }
+
+        if (_activeOrders.Count == 1)
+        {
+            DisplayOrderDetails(0);
         }
     }
 
@@ -83,10 +110,7 @@ public class PizzaOrderJournalAreaView : MonoBehaviour
     {
         _requiredToppingCounts = new Dictionary<Toppings, int>();
 
-        for (var i = 0; i < IngredientPrefabParent.transform.childCount; i++)
-        {
-            Destroy(IngredientPrefabParent.transform.GetChild(i).gameObject);
-        }
+        GlobalHelper.DestroyAllChildren(IngredientPrefabParent);
 
         var order = _activeOrders.ElementAt(orderTabNumber).Value;
 
@@ -128,7 +152,7 @@ public class PizzaOrderJournalAreaView : MonoBehaviour
 
             ingredient.GetComponentsInChildren<Image>()[1].sprite = ingredientSpritePrefab.GetComponent<SpriteRenderer>().sprite;
 
-            var textFields = ingredient.GetComponentInChildren<Image>().GetComponentsInChildren<Text>();
+            var textFields = ingredient.GetComponentInChildren<Image>().GetComponentsInChildren<TextMeshProUGUI>();
 
             textFields[0].text = topping.Key.ToString();
             textFields[1].text = $"{currentToppingCounts[topping.Key]}/{topping.Value}";
@@ -137,7 +161,7 @@ public class PizzaOrderJournalAreaView : MonoBehaviour
 
     //todo register for topping picked up event, new order event, completed order event
     //Not confident kill and fill is good idea
-    public void UpdateOrderDisplay()
+    public void RefreshOrderDisplay()
     {
         Clear();
         PopulateWindow();
