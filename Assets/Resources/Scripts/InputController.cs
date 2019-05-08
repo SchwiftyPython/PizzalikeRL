@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -364,7 +365,7 @@ public class InputController : MonoBehaviour
 
         _canvasGraphicRaycaster.Raycast(pointerEventData, results);
 
-        return results.Count > 0;
+        return results.Any();
     }
 }
 

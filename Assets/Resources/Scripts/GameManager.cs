@@ -4,8 +4,29 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
+public enum CameraPosition
+{
+    Left,
+    Center,
+    Right
+}
+
 public class GameManager : MonoBehaviour
 {
+    private const float _cameraY = 10.5f;
+    private const float _rightCameraX = 63f;
+    private const float _centerCameraX = 36f;
+    private const float _leftCameraX = 29f;
+
+    private CameraPosition _currentCameraPosition;
+
+    private readonly IDictionary<CameraPosition, int[]> _playerPositionRangesForCameraPosition = new Dictionary<CameraPosition, int[]>
+    {
+        {CameraPosition.Left, new[] {0, 35} },
+        {CameraPosition.Center, new[] {36, 42} },
+        {CameraPosition.Right, new[] {43, 79} }
+    };
+
     public const string WorldMapSceneName = "WorldMap";
     public const string AreaMapSceneName = "Area";
 
@@ -264,9 +285,38 @@ public class GameManager : MonoBehaviour
         return viewPosition.x <= 0 || viewPosition.x >= 1 || viewPosition.y <= 0 || viewPosition.y >= 1;
     }
 
+    private bool PlayerNearCameraEdge()
+    {
+        switch (_currentCameraPosition)
+        {
+            case CameraPosition.Left:
+                if (Player.CurrentPosition.x >= _playerPositionRangesForCameraPosition[CameraPosition.Left][1])
+                {
+                    return true;
+                }
+                break;
+            case CameraPosition.Center:
+                if (Player.CurrentPosition.x <= _playerPositionRangesForCameraPosition[CameraPosition.Center][0] ||
+                    Player.CurrentPosition.x >= _playerPositionRangesForCameraPosition[CameraPosition.Center][1])
+                {
+                    return true;
+                }
+                break;
+            case CameraPosition.Right:
+                if (Player.CurrentPosition.x <= _playerPositionRangesForCameraPosition[CameraPosition.Right][0])
+                {
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+
     private void MoveCameraToPlayer()
     {
-        //todo make this smoother by setting min max settings for x and y for camera
-        Camera.main.transform.localPosition = new Vector3(Player.CurrentPosition.x + .5f, Player.CurrentPosition.y + .5f, -10);
+        
+
+
+        //Camera.main.transform.localPosition = new Vector3(Player.CurrentPosition.x + .5f, Player.CurrentPosition.y + .5f, -10);
     }
 }
