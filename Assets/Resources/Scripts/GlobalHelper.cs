@@ -6,7 +6,7 @@ public class GlobalHelper : MonoBehaviour
     {
         for (var i = 0; i < parent.transform.childCount; i++)
         {
-            Destroy(parent.transform.GetChild(i));
+            Destroy(parent.transform.GetChild(i).gameObject);
         }
     }
 }

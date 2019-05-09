@@ -114,14 +114,9 @@ public class PizzaOrderJournalAreaView : MonoBehaviour
 
         var order = _activeOrders.ElementAt(orderTabNumber).Value;
 
-        var message = $"  {order.Customer.Fluff.Name} has ordered {order.Pizzas.Count} pizza";
+        var message = $"Customer: {order.Customer.Fluff.Name}";
 
-        if (order.Pizzas.Count > 1)
-        {
-            message += "s";
-        }
-
-        message += $". \n  Location: {order.CustomerLocation}";
+        message += $"\nLocation: {order.CustomerLocation}";
 
         foreach (var pizza in order.Pizzas)
         {
