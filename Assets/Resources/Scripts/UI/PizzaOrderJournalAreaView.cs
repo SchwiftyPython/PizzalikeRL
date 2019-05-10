@@ -86,17 +86,6 @@ public class PizzaOrderJournalAreaView : MonoBehaviour
                     }
                 }
             }
-
-//            var currentToppingCounts = GameManager.Instance.Player.ToppingCounts;
-//
-//            var orderComplete =
-//                _requiredToppingCounts.All(topping => currentToppingCounts[topping.Key] >= topping.Value);
-
-//            todo add checkmark next to each topping. Highlight tab some color to indicate complete  
-//            var checkmark = orderTab.GetComponentsInChildren<Image>()[2];
-//
-//            checkmark.enabled = orderComplete;
-
             orderNumber++;
         }
 

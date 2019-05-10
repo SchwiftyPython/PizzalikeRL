@@ -139,13 +139,6 @@ public class GameManager : MonoBehaviour
                             Enum.GetNames(typeof(PizzaOrder.OrderDifficulty)).Length));
 
                         Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
-
-                        //TESTING //////////TESTING////////////TESTING/////////////TESTING/////////
-                        order = new PizzaOrder((PizzaOrder.OrderDifficulty)Random.Range(0,
-                            Enum.GetNames(typeof(PizzaOrder.OrderDifficulty)).Length));
-
-                        Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
-                        //TESTING //////TESTING////////////TESTING/////////////////TESTING///////
                     }
                 }
                 break;
@@ -288,6 +281,11 @@ public class GameManager : MonoBehaviour
 
     private bool PlayerInvisible()
     {
+        if (Camera.main == null || Player == null || Player.GetSprite() == null)
+        {
+            return true;
+        }
+
         var viewPosition = Camera.main.WorldToViewportPoint(Player.GetSprite().GetComponent<Renderer>().bounds.center);
 
         return viewPosition.x <= 0 || viewPosition.x >= 1 || viewPosition.y <= 0 || viewPosition.y >= 1;

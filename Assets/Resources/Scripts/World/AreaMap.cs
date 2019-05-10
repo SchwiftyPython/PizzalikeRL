@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class AreaMap : MonoBehaviour
 {
-    private Dictionary<ItemRarity, float> _itemDropChances = new Dictionary<ItemRarity, float>
+    private readonly Dictionary<ItemRarity, float> _itemDropChances = new Dictionary<ItemRarity, float>
     {
         { ItemRarity.Common,  .288f },
         { ItemRarity.Uncommon, .236f },
@@ -50,6 +50,15 @@ public class AreaMap : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void Update()
+    {
+        if (_player == null || _player != GameManager.Instance.Player || _playerSprite == null)
+        {
+            _player = GameManager.Instance.Player;
+            InstantiatePlayerSprite();
         }
     }
 
