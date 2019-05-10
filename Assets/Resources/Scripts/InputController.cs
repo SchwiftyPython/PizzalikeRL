@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class InputController : MonoBehaviour
 {
@@ -22,8 +25,11 @@ public class InputController : MonoBehaviour
     public Color HighlightedColor;
     private List<Tile> _highlightedTiles;
 
-    public bool ActionTaken; 
-    //Vector2 target;
+    public bool ActionTaken;
+
+    public GameObject Canvas;
+    private GraphicRaycaster _canvasGraphicRaycaster;
+    private EventSystem _canvasEventSystem;
 
     private void Start()
     {
@@ -39,6 +45,13 @@ public class InputController : MonoBehaviour
 
         _areaMapSceneName = GameManager.AreaMapSceneName;
         _worldMapSceneName = GameManager.WorldMapSceneName;
+
+        if (Canvas == null)
+        {
+            Canvas = GameObject.Find("UI");
+        }
+        _canvasGraphicRaycaster = Canvas.GetComponent<GraphicRaycaster>();
+        _canvasEventSystem = Canvas.GetComponent<EventSystem>();
     }
 
     private void Update()
@@ -219,7 +232,7 @@ public class InputController : MonoBehaviour
             else if (Input.GetMouseButtonDown(0))
             {
                 if (currentScene.Equals(_areaMapSceneName) && !ActionWindow.Instance.isActiveAndEnabled &&
-                    !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf)
+                    !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf && !IsUiClicked())
                 {
                     var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -335,6 +348,24 @@ public class InputController : MonoBehaviour
 
             tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
         }
+    }
+
+    private bool IsUiClicked()
+    {
+        if (Canvas == null)
+        {
+            Canvas = GameObject.Find("UI");
+        }
+        _canvasGraphicRaycaster = Canvas.GetComponent<GraphicRaycaster>();
+        _canvasEventSystem = Canvas.GetComponent<EventSystem>();
+
+        var pointerEventData = new PointerEventData(_canvasEventSystem) { position = Input.mousePosition };
+
+        var results = new List<RaycastResult>();
+
+        _canvasGraphicRaycaster.Raycast(pointerEventData, results);
+
+        return results.Any();
     }
 }
 

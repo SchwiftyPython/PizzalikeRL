@@ -4,8 +4,29 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
+public enum CameraPosition
+{
+    Left,
+    Center,
+    Right
+}
+
 public class GameManager : MonoBehaviour
 {
+    private const float CameraY = 10.5f;
+    private const float RightCameraX = 63f;
+    private const float CenterCameraX = 36f;
+    private const float LeftCameraX = 29f;
+
+    private CameraPosition _currentCameraPosition;
+
+    private readonly IDictionary<CameraPosition, int[]> _playerPositionRangesForCameraPosition = new Dictionary<CameraPosition, int[]>
+    {
+        {CameraPosition.Left, new[] {0, 34} },
+        {CameraPosition.Center, new[] {34, 44} },
+        {CameraPosition.Right, new[] {44, 79} }
+    };
+
     public const string WorldMapSceneName = "WorldMap";
     public const string AreaMapSceneName = "Area";
 
@@ -67,6 +88,8 @@ public class GameManager : MonoBehaviour
         Messages = new List<string>();
 
         ActiveOrders = new Dictionary<string, PizzaOrder>();
+
+        _currentCameraPosition = CameraPosition.Right;
     }
 
     private void Update()
@@ -120,9 +143,8 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case GameState.Playerturn:
-                if (PlayerInvisible())
+                if (PlayerInvisible() || PlayerNearCameraEdge())
                 {
-                    Debug.Log("Player not in camera!");
                     MoveCameraToPlayer();
                 }
                 if (InputController.Instance.ActionTaken)
@@ -259,14 +281,92 @@ public class GameManager : MonoBehaviour
 
     private bool PlayerInvisible()
     {
+        if (Camera.main == null || Player == null || Player.GetSprite() == null)
+        {
+            return true;
+        }
+
         var viewPosition = Camera.main.WorldToViewportPoint(Player.GetSprite().GetComponent<Renderer>().bounds.center);
 
         return viewPosition.x <= 0 || viewPosition.x >= 1 || viewPosition.y <= 0 || viewPosition.y >= 1;
     }
 
+    private bool PlayerNearCameraEdge()
+    {
+        switch (_currentCameraPosition)
+        {
+            case CameraPosition.Left:
+                if (Player.CurrentPosition.x > _playerPositionRangesForCameraPosition[CameraPosition.Left][1])
+                {
+                    return true;
+                }
+                break;
+            case CameraPosition.Center:
+                if (Player.CurrentPosition.x < _playerPositionRangesForCameraPosition[CameraPosition.Center][0] ||
+                    Player.CurrentPosition.x > _playerPositionRangesForCameraPosition[CameraPosition.Center][1])
+                {
+                    return true;
+                }
+                break;
+            case CameraPosition.Right:
+                if (Player.CurrentPosition.x < _playerPositionRangesForCameraPosition[CameraPosition.Right][0])
+                {
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+
     private void MoveCameraToPlayer()
     {
-        //todo make this smoother by setting min max settings for x and y for camera
-        Camera.main.transform.localPosition = new Vector3(Player.CurrentPosition.x + .5f, Player.CurrentPosition.y + .5f, -10);
+        switch (_currentCameraPosition)
+        {
+            case CameraPosition.Left:
+                if (Player.CurrentPosition.x >= _playerPositionRangesForCameraPosition[CameraPosition.Left][1])
+                {
+                    ChangeCameraPosition(CameraPosition.Center);
+                }
+                break;
+            case CameraPosition.Center:
+                if (Player.CurrentPosition.x <= _playerPositionRangesForCameraPosition[CameraPosition.Center][0])
+                {
+                    ChangeCameraPosition(CameraPosition.Left);
+                }
+                if(Player.CurrentPosition.x >= _playerPositionRangesForCameraPosition[CameraPosition.Center][1])
+                {
+                    ChangeCameraPosition(CameraPosition.Right);
+                }
+                break;
+            case CameraPosition.Right:
+                if (Player.CurrentPosition.x <= _playerPositionRangesForCameraPosition[CameraPosition.Right][0])
+                {
+                    ChangeCameraPosition(CameraPosition.Center);
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private void ChangeCameraPosition(CameraPosition newPosition)
+    {
+        switch (newPosition)
+        {
+            case CameraPosition.Left:
+                Camera.main.transform.localPosition = new Vector3(LeftCameraX, CameraY, -10);
+                _currentCameraPosition = CameraPosition.Left;
+                break;
+            case CameraPosition.Center:
+                Camera.main.transform.localPosition = new Vector3(CenterCameraX, CameraY, -10);
+                _currentCameraPosition = CameraPosition.Center;
+                break;
+            case CameraPosition.Right:
+                Camera.main.transform.localPosition = new Vector3(RightCameraX, CameraY, -10);
+                _currentCameraPosition = CameraPosition.Right;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(newPosition), newPosition, null);
+        }
     }
 }
