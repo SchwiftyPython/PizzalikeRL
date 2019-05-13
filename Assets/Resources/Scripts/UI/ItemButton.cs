@@ -1,6 +1,6 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ItemButton : MonoBehaviour
 {
@@ -8,10 +8,7 @@ public class ItemButton : MonoBehaviour
     {
         if (FilteredInventoryWindowPopUp.Instance.FilteredInventoryWindow.activeSelf)
         {
-            Guid itemToEquipId;
-            Guid.TryParse(transform.GetComponentsInChildren<Text>(true)[2].text, out itemToEquipId);
-
-            //Debug.Log(transform.GetComponentsInChildren<Text>(true)[2].text + "    " + itemToEquipId);
+            Guid.TryParse(transform.GetComponentsInChildren<TextMeshProUGUI>(true)[2].text, out var itemToEquipId);
 
             var player = GameManager.Instance.Player;
 
