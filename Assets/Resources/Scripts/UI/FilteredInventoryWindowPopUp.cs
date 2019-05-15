@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -86,7 +87,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
             sectionHeader.transform.SetParent(_sectionParent);
             _itemSections.Add(sectionHeader);
 
-            var sectionHeaderText = sectionHeader.GetComponent<Text>();
+            var sectionHeaderText = sectionHeader.GetComponent<TextMeshProUGUI>();
             sectionHeaderText.text = FirstCharToUpper(section) + "s";
 
             var itemButtonsParent = sectionHeader.transform;
@@ -97,7 +98,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
                 itemButton.transform.SetParent(itemButtonsParent);
                 _buttons.Add(_keyMapLetter, itemButton);
 
-                var textFields = itemButton.GetComponentsInChildren<Text>(true);
+                var textFields = itemButton.GetComponentsInChildren<TextMeshProUGUI>(true);
 
                 //todo come up with some kind of naming system based on material or legend
                 if (item.ItemCategory.Equals("weapon"))
