@@ -137,19 +137,6 @@ public class CharacterCreation : MonoBehaviour
 
         WorldData.Instance.Entities.Add(_player.Id, _player);
 
-        //TESTING /////////// //TESTING /////////// //TESTING ///////////
-
-        var item = ItemStore.Instance.GetRandomItem();
-        _player.Inventory.Add(item.Id, item);
-
-        item = ItemStore.Instance.GetRandomItem();
-        _player.Inventory.Add(item.Id, item);
-
-        item = ItemStore.Instance.GetRandomItem();
-        _player.Inventory.Add(item.Id, item);
-
-        //TESTING /////////// //TESTING /////////// //TESTING ///////////
-
         SceneManager.LoadScene(WorldGenerationSetupScene);
     }
 
