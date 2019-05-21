@@ -157,10 +157,8 @@ public class Generator : MonoBehaviour
     private void Generate()
     {
         Debug.Log("World Generation Started...");
-
-        // Build the maps
+        
         GetData();
-        // Build our final objects based on our data
         LoadCells();
         UpdateNeighbors();
 
@@ -183,16 +181,6 @@ public class Generator : MonoBehaviour
         HistoryGenerator.Instance.Generate();
 
         Debug.Log("World Generation Complete!");
-
-        //RarityCapper = new Capper();
-
-        // Render a texture representation of our map
-        /*
-        _heightMapRenderer.materials[0].mainTexture = TextureGenerator.GetHeightMapTexture(_width, _height, _cells);
-        _heatMapRenderer.materials[0].mainTexture = TextureGenerator.GetHeatMapTexture(_width, _height, _cells);
-        _moistureMapRenderer.materials[0].mainTexture = TextureGenerator.GetMoistureMapTexture(_width, _height, _cells);
-        _biomeMapRenderer.materials[0].mainTexture = TextureGenerator.GetBiomeMapTexture(_width, _height, _cells, _coldestValue, _colderValue, _coldValue);
-        */
     }
 
     private void GenerateBiomeMap()

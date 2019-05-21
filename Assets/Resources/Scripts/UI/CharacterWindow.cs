@@ -1,22 +1,21 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using TMPro;
+using UnityEngine;
 
 public class CharacterWindow : MonoBehaviour
 {
-    public Text NameValue;
+    public TextMeshProUGUI NameValue;
 
-    public Text StrengthValue;
-    public Text AgilityValue;
-    public Text ConstitutionValue;
-    public Text IntelligenceValue;
+    public TextMeshProUGUI StrengthValue;
+    public TextMeshProUGUI AgilityValue;
+    public TextMeshProUGUI ConstitutionValue;
+    public TextMeshProUGUI IntelligenceValue;
 
-    public Text SpeedValue;
-    public Text DefenseValue;
+    public TextMeshProUGUI SpeedValue;
+    public TextMeshProUGUI DefenseValue;
 
-    public Text LevelValue;
-    public Text XpValue;
-    public Text CurrentHpValue;
-    public Text MaxHpValue;
+    public TextMeshProUGUI LevelValue;
+    public TextMeshProUGUI XpValue;
+    public TextMeshProUGUI HpValue;
 
     private Entity _player;
 
@@ -47,7 +46,6 @@ public class CharacterWindow : MonoBehaviour
 
         LevelValue.text = _player.Level.ToString();
         XpValue.text = _player.Xp.ToString();
-        CurrentHpValue.text = _player.CurrentHp.ToString();
-        MaxHpValue.text = "/" + _player.MaxHp;
+        HpValue.text = _player.CurrentHp + "/" + _player.MaxHp;
     }
 }

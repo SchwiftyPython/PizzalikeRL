@@ -1,12 +1,12 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BodyPartButton : MonoBehaviour
 {
     public void DisplayAvailableEquipmentForSelectedBodyPart()
     {
-        var bodyPartIdClicked = Guid.Parse(transform.GetComponentsInChildren<Text>(true)[3].text);
+        var bodyPartIdClicked = Guid.Parse(transform.GetComponentsInChildren<TextMeshProUGUI>(true)[3].text);
         var bodyPart = GameManager.Instance.Player.Body[bodyPartIdClicked];
 
         FilteredInventoryWindowPopUp.Instance.DisplayAvailableEquipmentForSelectedBodyPart(bodyPart);

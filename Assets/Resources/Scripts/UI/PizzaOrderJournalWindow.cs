@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +32,7 @@ public class PizzaOrderJournalWindow : MonoBehaviour
     private void Start()
     {
         _activeOrders = GameManager.Instance.ActiveOrders;
+        OrderDescription.SetActive(false);
         PopulateWindow();
     }
 
@@ -41,7 +43,7 @@ public class PizzaOrderJournalWindow : MonoBehaviour
             var orderButton = Instantiate(PizzaOrderPrefab, new Vector3(0, 0), Quaternion.identity);
             orderButton.transform.SetParent(OrderButtonParent.transform);
             
-            var orderTitle = orderButton.GetComponentInChildren<Text>();
+            var orderTitle = orderButton.GetComponentInChildren<TextMeshProUGUI>();
             orderTitle.text = $"{order.Customer.Fluff.Name}";
 
             _requiredToppingCounts = new Dictionary<Toppings, int>();
@@ -104,7 +106,7 @@ public class PizzaOrderJournalWindow : MonoBehaviour
             }
         }
 
-        OrderDescription.transform.GetComponent<Text>().text = message;
+        OrderDescription.transform.GetComponent<TextMeshProUGUI>().text = message;
         OrderDescription.SetActive(true);
 
         var currentToppingCounts = GameManager.Instance.Player.ToppingCounts;
@@ -118,7 +120,7 @@ public class PizzaOrderJournalWindow : MonoBehaviour
             
             ingredient.GetComponentsInChildren<Image>()[1].sprite = ingredientSpritePrefab.GetComponent<SpriteRenderer>().sprite;
 
-            var textFields = ingredient.GetComponentInChildren<Image>().GetComponentsInChildren<Text>();
+            var textFields = ingredient.GetComponentInChildren<Image>().GetComponentsInChildren<TextMeshProUGUI>();
 
             textFields[0].text = topping.Key.ToString();
             textFields[1].text = $"{currentToppingCounts[topping.Key]}/{topping.Value}";
