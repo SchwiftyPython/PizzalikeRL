@@ -7,7 +7,7 @@ public class AstarAI : MonoBehaviour
     public Path Path;
     public bool PathCalculated;
 
-    Seeker _seeker;
+    private Seeker _seeker;
 
     private void Start()
     {

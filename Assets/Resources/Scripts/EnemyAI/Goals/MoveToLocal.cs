@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MoveToLocal : Goal
@@ -64,7 +65,7 @@ public class MoveToLocal : Goal
         }
 
         ParentController.FindPathToTarget(
-            new Vector2(ParentController.Self.CurrentTile.X, ParentController.Self.CurrentTile.Y), new Vector2(_x, _y));
+            new Vector2(ParentController.Self.CurrentPosition.x, ParentController.Self.CurrentPosition.y), new Vector2(_y, _x));
 
         if (ParentController.Path.vectorPath.Count > 1)
         {
@@ -91,6 +92,8 @@ public class MoveToLocal : Goal
     {
         var translatedPath = new List<GoalDirection>();
         var path = ParentController.Path.vectorPath;
+
+        path = RoundPath(path);
 
         for (var i = 0; i < path.Count - 1; i++)
         {
@@ -138,6 +141,42 @@ public class MoveToLocal : Goal
         }
         FailToParent();
         return GoalDirection.North;
+    }
+
+    private List<Vector3> RoundPath(IReadOnlyList<Vector3> path)
+    {
+        var roundedPath = new List<Vector3> {path.First()};
+
+        for (var i = 1; i < path.Count; i++)
+        {
+            var startX = path[i - 1].x;
+            var startY = path[i - 1].y;
+
+            var endX = path[i].x;
+            var endY = path[i].y;
+
+            if (Mathf.Abs(startX - endX) > 1)
+            {
+                endX = Mathf.Floor(endX);
+            }
+            else
+            {
+                endX = Mathf.Ceil(endX);
+            }
+
+            if (Mathf.Abs(startY - endY) > 1)
+            {
+                endY = Mathf.Floor(endY);
+            }
+            else
+            {
+                endY = Mathf.Ceil(endY);
+            }
+
+            roundedPath.Add(new Vector3(endX, endY, -0.1f));
+        }
+
+        return roundedPath;
     }
 
     internal class MonoHelper : MonoBehaviour
