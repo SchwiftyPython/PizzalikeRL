@@ -97,60 +97,67 @@ public class MoveToLocal : Goal
 
         for (var i = 0; i < path.Count - 1; i++)
         {
-            translatedPath.Add(GetDirectionFromTwoPoints(path[i], path[i+1]));
+            var direction = GetDirectionFromTwoPoints(path[i], path[i + 1]);
+
+            if (direction == null)
+            {
+                continue;
+            }
+
+            translatedPath.Add((GoalDirection) direction);
         }
         translatedPath.Reverse(0, translatedPath.Count);
         return translatedPath;
     }
 
-    private GoalDirection GetDirectionFromTwoPoints(Vector2 startPoint, Vector2 endPoint)
+    private GoalDirection? GetDirectionFromTwoPoints(Vector2 startPoint, Vector2 endPoint)
     {
         var difference = endPoint - startPoint;
 
-        if (difference == new Vector2(0, 1))
+        if (difference.x >= 1 && (int)difference.y == 0)
         {
             return GoalDirection.East;
         }
-        if (difference == new Vector2(1, 1))
+        if (difference.x >= 1 && (int)difference.y >= 1)
         {
             return GoalDirection.NorthEast;
         }
-        if (difference == new Vector2(0, 1))
+        if ((int)difference.x == 0 && (int)difference.y >= 1)
         {
-            return GoalDirection.East;
+            return GoalDirection.North;
         }
-        if (difference == new Vector2(-1, 1))
-        {
-            return GoalDirection.SouthEast;
-        }
-        if (difference == new Vector2(-1, 0))
-        {
-            return GoalDirection.South;
-        }
-        if (difference == new Vector2(-1, -1))
-        {
-            return GoalDirection.SouthWest;
-        }
-        if (difference == new Vector2(0, -1))
-        {
-            return GoalDirection.West;
-        }
-        if (difference == new Vector2(1, -1))
+        if (difference.x <= -1 && (int)difference.y >= 1)
         {
             return GoalDirection.NorthWest;
         }
-        FailToParent();
-        return GoalDirection.North;
+        if (difference.x <= -1 && (int)difference.y == 0)
+        {
+            return GoalDirection.West;
+        }
+        if (difference.x <= -1 && (int)difference.y <= -1)
+        {
+            return GoalDirection.SouthWest;
+        }
+        if ((int)difference.x == 0 && (int)difference.y <= -1)
+        {
+            return GoalDirection.South;
+        }
+        if ((int)difference.x >= 1 && (int)difference.y <= -1)
+        {
+            return GoalDirection.SouthEast;
+        }
+        //FailToParent();
+        return null;
     }
 
-    private List<Vector3> RoundPath(IReadOnlyList<Vector3> path)
+    private static List<Vector3> RoundPath(IReadOnlyList<Vector3> path)
     {
         var roundedPath = new List<Vector3> {path.First()};
 
         for (var i = 1; i < path.Count; i++)
         {
-            var startX = path[i - 1].x;
-            var startY = path[i - 1].y;
+            var startX = roundedPath[i - 1].x;
+            var startY = roundedPath[i - 1].y;
 
             var endX = path[i].x;
             var endY = path[i].y;
