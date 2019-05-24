@@ -5,10 +5,14 @@ using UnityEngine;
 
 public class MoveToLocal : Goal
 {
+    private const int MaxVisits = 3;
+
     private readonly int _x;
     private readonly int _y;
     private readonly int _maxTurns;
     private readonly Area _area;
+
+    private int _numVisits;
 
     private MonoHelper _monoHelper;
 
@@ -38,7 +42,7 @@ public class MoveToLocal : Goal
                 (int) self.CurrentPosition.x];
         }
 
-        return !ParentController.IsMobile() || self.CurrentTile.X == _x &&
+        return !ParentController.IsMobile() || _numVisits > MaxVisits || self.CurrentTile.X == _x &&
                self.CurrentTile.Y == _y;
     }
 
@@ -85,15 +89,13 @@ public class MoveToLocal : Goal
         {
             FailToParent();
         }
-
+        _numVisits++;
     }
 
     private IEnumerable<GoalDirection> TranslatePathToDirections()
     {
         var translatedPath = new List<GoalDirection>();
         var path = ParentController.Path.vectorPath;
-
-        path = RoundPath(path);
 
         for (var i = 0; i < path.Count - 1; i++)
         {
@@ -114,39 +116,38 @@ public class MoveToLocal : Goal
     {
         var difference = endPoint - startPoint;
 
-        if (difference.x >= 1 && (int)difference.y == 0)
+        if (difference.x > 0 && difference.y == 0)
         {
             return GoalDirection.East;
         }
-        if (difference.x >= 1 && (int)difference.y >= 1)
+        if (difference.x > 0 && difference.y > 0)
         {
             return GoalDirection.NorthEast;
         }
-        if ((int)difference.x == 0 && (int)difference.y >= 1)
+        if (difference.x == 0 && difference.y > 0)
         {
             return GoalDirection.North;
         }
-        if (difference.x <= -1 && (int)difference.y >= 1)
+        if (difference.x < 0 && difference.y > 0)
         {
             return GoalDirection.NorthWest;
         }
-        if (difference.x <= -1 && (int)difference.y == 0)
+        if (difference.x < 0 && difference.y == 0)
         {
             return GoalDirection.West;
         }
-        if (difference.x <= -1 && (int)difference.y <= -1)
+        if (difference.x < 0 && difference.y < 0)
         {
             return GoalDirection.SouthWest;
         }
-        if ((int)difference.x == 0 && (int)difference.y <= -1)
+        if (difference.x == 0 && difference.y < 0)
         {
             return GoalDirection.South;
         }
-        if ((int)difference.x >= 1 && (int)difference.y <= -1)
+        if (difference.x > 0 && difference.y < 0)
         {
             return GoalDirection.SouthEast;
         }
-        //FailToParent();
         return null;
     }
 

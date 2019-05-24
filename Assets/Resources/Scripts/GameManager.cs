@@ -227,8 +227,7 @@ public class GameManager : MonoBehaviour
         }
         var lastTurn = CurrentArea.TurnOrder.Dequeue();
         CurrentArea.TurnOrder.Enqueue(lastTurn);
-
-        //Remove any entities that were removed from play
+        
         while (!CurrentArea.PresentEntities.Contains(CurrentArea.TurnOrder.Peek()))
         {
             CurrentArea.TurnOrder.Dequeue();
@@ -314,6 +313,8 @@ public class GameManager : MonoBehaviour
                     return true;
                 }
                 break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
         return false;
     }
