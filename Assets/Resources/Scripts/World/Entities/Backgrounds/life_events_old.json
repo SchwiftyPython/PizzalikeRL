@@ -1,0 +1,142 @@
+{
+  "winSomeLoseSome": [
+    "#powerfulConnection#, #loseMoney#, #gainMoney#, #findTeacher#, #increaseFactionRep#, #decreaseFactionRep#, #imprisoned#, #illness#, #addiction#, #betrayal#, #accident#, #lostSomeone#, #falseAccusation#, #hunted#, #mutation#"
+  ],
+  "friendsAndEnemies": [
+    "#makeFriend#, #makeEnemy#"
+  ],
+  "makeFriend": [
+    "#likeOlderSibling#, #likeYoungerSibling#, #mentor#, #coworkerFriend#, #oldLover#, #oldEnemy#, #relativeFriend#, #childhoodFriend#, #commonInterest#"
+  ],
+  "likeOlderSibling": [
+    "You had a friend that was like an older brother to you.",
+    "You had a friend that was like an older sister to you."
+  ],
+  "likeYoungerSibling": [
+    "You had a friend that was like an younger brother to you.",
+    "You had a friend that was like an younger sister to you."
+  ],
+  "mentor": [
+    "You found a mentor to guide you through life's obstacles."
+  ],
+  "coworker": [
+    "You and a co-worker became close friends."
+  ],
+  "oldLover": [
+    "On chance, you ran into an old lover and became friends again."
+  ],
+  "oldEnemy": [
+    "You enocuntered a past enemy and resolved your differences. You became good friends."
+  ],
+  "relative": [
+    "One of your cousins came to stay with you. You became friends."
+  ],
+  "childhoodFriend": [
+    "A friend from childhood returned one day. You two picked up where you left off."
+  ],
+  "commonInterest": [
+    "You meet a friend playing tennis."
+  ],
+  "makeEnemy": [
+    "#exFriend#, #exLover#, #relativeEnemy#, #childhoodEnemy#, #employer#, #employee#, #gangMember#, #coworkerEnemy#, #governmentOfficial#"
+  ],
+  "exFriend": [
+    "You get into a fight with a friend."
+  ],
+  "exLover": [
+    "You and a lover fight."
+  ],
+  "relativeEnemy": [
+    "You and your father get into a heated arguement."
+  ],
+  "childhoodEnemy": [
+    "A childhood rival makes trouble for you."
+  ],
+  "employer": [
+    "You get into trouble with your boss."
+  ],
+  "employee": [
+    "Someone that works for you crosses you."
+  ],
+  "gangMember": [
+    "You and a gang member become enemies."
+  ],
+  "coworkerEnemy": [
+    "A rivalry starts with a co-worker"
+  ],
+  "governmentOfficial": [
+    "A government official set their sights on you."
+  ],
+  "cause": [
+    "#ruinedReputation#"
+  ],
+  "romance": [
+    "#happyLoveAffair#, #tragicLoveAffair#, #complicatedAffair# "
+  ],
+  "happyLoveAffair": [
+    "You had a happy love affair."
+  ],
+  "tragicLoveAffair": [
+    "#loverDiedInAccident#, #loverVanished#, #didNotWork#, #goalConflict#, #loverKidnapped#, #loverInsane#, #loverSuicide#, #loverKilled#, #stolenByRival#, #loverImprisoned#"
+  ],
+  "loverDiedInAccident": [
+    "Your lover died in an accident."
+  ],
+  "loverVanished": [
+    "Your lover vanished without a trace."
+  ],
+  "didNotWork": [
+    "You had an okay relationship, but it wasn't meant to be."
+  ],
+  "goalConflict": [
+    "You two had different goals in life and went your seperate ways."
+  ],
+  "loverKidnapped": [
+    "Your lover was kidnapped and never seen again."
+  ],
+  "loverInsane": [
+    "Your lover went insane and had to be locked away."
+  ],
+  "loverSuicide": [
+    "Your lover comitted suicide."
+  ],
+  "loverKilled": [
+    "Your lover was killed in cold blood."
+  ],
+  "stolenByRival": [
+    "Your lover was stolen away by a rival."
+  ],
+  "loverImprisoned": [
+    "Your lover was arrested and locked up."
+  ],
+  "complicatedAffair": [
+    " #friendsAndFamilyHateYou#, #friendsAndFamilyHateThem#, #romanticRival#, #separated#, #coupleFight#, #jealousy#, #cheating#, #cultureConflict# "
+  ],
+  "friendsAndFamilyHateYou": [
+    "Your lover's family and friends hated you."
+  ],
+  "friendsAndFamilyHateThem": [
+    "Your family hated your lover."
+  ],
+  "romanticRival": [
+    "A rival lover put strain on your relationship."
+  ],
+  "separated": [
+    "You were separated during a war."
+  ],
+  "coupleFight": [
+    "You had an unhealthy relationship and fought constantly."
+  ],
+  "jealousy": [
+    "You were jealous and ruined the relationship."
+  ],
+  "cheating": [
+    "You got greedy and cheated on your lover."
+  ],
+  "cultureConflict": [
+    "You loved eachother, but the cultural differences were too large to ignore."
+  ],
+  "origin": [
+    "#winSomeLoseSome#, #friendsAndEnemies#, #romance#"
+  ]
+}
