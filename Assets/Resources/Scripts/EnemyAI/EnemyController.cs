@@ -34,11 +34,12 @@ public class EnemyController : AstarAI
             //Debug.Log(Self + " is bored.");
             new Bored().Push(this);
             Goals.Peek().TakeAction();
-        }
 
-        if (Goals.Count > 0)
-        {
-            Goals.Peek().TakeAction();
+            //Find path
+            if (Goals.Peek().GetType() == typeof(MoveToLocal))
+            {
+                Goals.Peek().TakeAction();
+            }
         }
 
         while (Goals.Count > 0 && Goals.Peek().Finished())

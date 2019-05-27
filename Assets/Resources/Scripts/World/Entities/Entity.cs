@@ -652,7 +652,7 @@ public class Entity
             }
         }
 
-        //Debug.Log("entity.currentPosition after move: " + CurrentPosition.x + " " + CurrentPosition.y);
+        //Debug.Log("entity.currentPosition after move: " + CurrentTile.X + " " + CurrentTile.Y);
         //Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
     }
 

@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MoveToLocal : Goal
 {
+    private const int MaxVisits = 3;
+
     private readonly int _x;
     private readonly int _y;
     private readonly int _maxTurns;
     private readonly Area _area;
+
+    private int _numVisits;
 
     private MonoHelper _monoHelper;
 
@@ -37,7 +42,7 @@ public class MoveToLocal : Goal
                 (int) self.CurrentPosition.x];
         }
 
-        return !ParentController.IsMobile() || self.CurrentTile.X == _x &&
+        return !ParentController.IsMobile() || _numVisits > MaxVisits || self.CurrentTile.X == _x &&
                self.CurrentTile.Y == _y;
     }
 
@@ -64,7 +69,7 @@ public class MoveToLocal : Goal
         }
 
         ParentController.FindPathToTarget(
-            new Vector2(ParentController.Self.CurrentTile.X, ParentController.Self.CurrentTile.Y), new Vector2(_x, _y));
+            new Vector2(ParentController.Self.CurrentPosition.x, ParentController.Self.CurrentPosition.y), new Vector2(_y, _x));
 
         if (ParentController.Path.vectorPath.Count > 1)
         {
@@ -84,7 +89,7 @@ public class MoveToLocal : Goal
         {
             FailToParent();
         }
-
+        _numVisits++;
     }
 
     private IEnumerable<GoalDirection> TranslatePathToDirections()
@@ -94,50 +99,92 @@ public class MoveToLocal : Goal
 
         for (var i = 0; i < path.Count - 1; i++)
         {
-            translatedPath.Add(GetDirectionFromTwoPoints(path[i], path[i+1]));
+            var direction = GetDirectionFromTwoPoints(path[i], path[i + 1]);
+
+            if (direction == null)
+            {
+                continue;
+            }
+
+            translatedPath.Add((GoalDirection) direction);
         }
         translatedPath.Reverse(0, translatedPath.Count);
         return translatedPath;
     }
 
-    private GoalDirection GetDirectionFromTwoPoints(Vector2 startPoint, Vector2 endPoint)
+    private GoalDirection? GetDirectionFromTwoPoints(Vector2 startPoint, Vector2 endPoint)
     {
         var difference = endPoint - startPoint;
 
-        if (difference == new Vector2(0, 1))
+        if (difference.x > 0 && difference.y == 0)
         {
             return GoalDirection.East;
         }
-        if (difference == new Vector2(1, 1))
+        if (difference.x > 0 && difference.y > 0)
         {
             return GoalDirection.NorthEast;
         }
-        if (difference == new Vector2(0, 1))
+        if (difference.x == 0 && difference.y > 0)
         {
-            return GoalDirection.East;
+            return GoalDirection.North;
         }
-        if (difference == new Vector2(-1, 1))
-        {
-            return GoalDirection.SouthEast;
-        }
-        if (difference == new Vector2(-1, 0))
-        {
-            return GoalDirection.South;
-        }
-        if (difference == new Vector2(-1, -1))
-        {
-            return GoalDirection.SouthWest;
-        }
-        if (difference == new Vector2(0, -1))
-        {
-            return GoalDirection.West;
-        }
-        if (difference == new Vector2(1, -1))
+        if (difference.x < 0 && difference.y > 0)
         {
             return GoalDirection.NorthWest;
         }
-        FailToParent();
-        return GoalDirection.North;
+        if (difference.x < 0 && difference.y == 0)
+        {
+            return GoalDirection.West;
+        }
+        if (difference.x < 0 && difference.y < 0)
+        {
+            return GoalDirection.SouthWest;
+        }
+        if (difference.x == 0 && difference.y < 0)
+        {
+            return GoalDirection.South;
+        }
+        if (difference.x > 0 && difference.y < 0)
+        {
+            return GoalDirection.SouthEast;
+        }
+        return null;
+    }
+
+    private static List<Vector3> RoundPath(IReadOnlyList<Vector3> path)
+    {
+        var roundedPath = new List<Vector3> {path.First()};
+
+        for (var i = 1; i < path.Count; i++)
+        {
+            var startX = roundedPath[i - 1].x;
+            var startY = roundedPath[i - 1].y;
+
+            var endX = path[i].x;
+            var endY = path[i].y;
+
+            if (Mathf.Abs(startX - endX) > 1)
+            {
+                endX = Mathf.Floor(endX);
+            }
+            else
+            {
+                endX = Mathf.Ceil(endX);
+            }
+
+            if (Mathf.Abs(startY - endY) > 1)
+            {
+                endY = Mathf.Floor(endY);
+            }
+            else
+            {
+                endY = Mathf.Ceil(endY);
+            }
+
+            roundedPath.Add(new Vector3(endX, endY, -0.1f));
+        }
+
+        return roundedPath;
     }
 
     internal class MonoHelper : MonoBehaviour
