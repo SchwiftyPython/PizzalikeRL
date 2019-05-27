@@ -137,13 +137,14 @@ public class HistoryGenerator : MonoBehaviour
                 // Also need to consider that at least one parent is spoken for from previous player
                 // so will have to watch out with the parent stories. Maybe let it run like normal and
                 // overwrite with information that was already available.
-                if (CurrentTurn >= turnsTilNextLifeEvent)
-                {
-                    GameManager.Instance.Player.Fluff.AddToBackground(
-                        BackgroundGenerator.Instance.GenerateLifeEvent());
-
-                    turnsTilNextLifeEvent = Random.Range(TurnsPerDay * DaysPerMonth, TurnsPerDay * DaysPerYear);
-                }
+                // todo nice to have, but may be difficult to make interesting. Maybe make simpler version tailored to selected background
+//                if (CurrentTurn >= turnsTilNextLifeEvent)
+//                {
+//                    GameManager.Instance.Player.Fluff.AddToBackground(
+//                        BackgroundGenerator.Instance.GenerateLifeEvent());
+//
+//                    turnsTilNextLifeEvent = Random.Range(TurnsPerDay * DaysPerMonth, TurnsPerDay * DaysPerYear);
+//                }
 
                 if (ActiveSituations.Any())
                 {
