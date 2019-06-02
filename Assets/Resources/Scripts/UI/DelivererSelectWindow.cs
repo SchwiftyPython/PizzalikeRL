@@ -142,7 +142,7 @@ public class DelivererSelectWindow : MonoBehaviour
             }
 
             var descendantTitle = descendantButton.GetComponentInChildren<TextMeshProUGUI>();
-            descendantTitle.text = $"{descendant.Fluff.Name}, {Capitalize(descendant.Fluff.BackgroundType.Name)}";
+            descendantTitle.text = $"{descendant.Fluff.Name}, {GlobalHelper.Capitalize(descendant.Fluff.BackgroundType.Name)}";
 
             var id = descendantButton.GetComponentInChildren<Text>(true);
             id.text = descendant.Id.ToString();
@@ -150,14 +150,5 @@ public class DelivererSelectWindow : MonoBehaviour
             var playerSprite = descendantButton.GetComponentsInChildren<Image>()[1];
             playerSprite.sprite = descendant.GetSpritePrefab().GetComponent<SpriteRenderer>().sprite;
         }
-    }
-
-    private static string Capitalize(string s)
-    {
-        if (string.IsNullOrEmpty(s))
-        {
-            return string.Empty;
-        }
-        return char.ToUpper(s[0]) + s.Substring(1);
     }
 }
