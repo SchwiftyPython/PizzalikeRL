@@ -16,7 +16,7 @@ public class CharacterCreation : MonoBehaviour
     };
 
     private const string MainMenuScene = "MainMenu";
-    private const string WorldGenerationSetupScene = "WorldGenerationSetup";
+    private const string WorldGenerationScene = "WorldGeneration";
 
     private const int MinBaseStat = 8;
     private const int MaxBaseStat = 16;
@@ -75,6 +75,9 @@ public class CharacterCreation : MonoBehaviour
     public GameObject SummaryIntelligenceBox;
     public GameObject SummaryConstitutionBox;
 
+    public GameObject WorldSeedPopup;
+    public TMP_InputField SeedInputField;
+
     public static CharacterCreation Instance;
 
     private void Awake()
@@ -92,6 +95,7 @@ public class CharacterCreation : MonoBehaviour
         StatPointAllocationPage.SetActive(false);
         ChooseBackgroundPage.SetActive(false);
         SummaryPage.SetActive(false);
+        WorldSeedPopup.SetActive(false);
     }
 
     private void Start()
@@ -184,20 +188,29 @@ public class CharacterCreation : MonoBehaviour
 
     public void OnNextFromSummaryPage()
     {
-        _player = new Entity(_playerTemplate, null, true);
-        _player.SetStats(_strength, _agility, _constitution, _intelligence);
+        WorldSeedPopup.SetActive(true);
+    }
 
-        _player.CreateFluff(_playerTemplate);
-        _player.Fluff.BackgroundType = _selectedBackground;
-        _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
-        _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
-        _player.Fluff.Name = NameBox.GetComponent<TextMeshProUGUI>().text.Trim();
+    public void OnBackFromSeedPopup()
+    {
+        WorldSeedPopup.SetActive(false);
+    }
 
-        GameManager.Instance.Player = _player;
+    public void OnStartGame()
+    {
+        PreparePlayerForPlay();
 
-        WorldData.Instance.Entities.Add(_player.Id, _player);
+        if (string.IsNullOrEmpty(SeedInputField.text) || string.IsNullOrWhiteSpace(SeedInputField.text))
+        {
+            WorldData.Instance.Seed = (UnityEngine.Random.Range(int.MinValue, int.MaxValue) +
+                                       (int)DateTime.Now.Ticks).ToString();
+        }
+        else
+        {
+            WorldData.Instance.Seed = SeedInputField.text;
+        }
 
-        SceneManager.LoadScene(WorldGenerationSetupScene);
+        SceneManager.LoadScene(WorldGenerationScene);
     }
 
     #endregion Navigation Buttons
@@ -417,8 +430,8 @@ public class CharacterCreation : MonoBehaviour
     {
         IncreaseStrengthButton.GetComponent<Button>().interactable = true;
         IncreaseAgilityButton.GetComponent<Button>().interactable = true;
-        IncreaseIntelligenceButton.GetComponent<Button>().interactable = true;
         IncreaseConstitutionButton.GetComponent<Button>().interactable = true;
+        IncreaseIntelligenceButton.GetComponent<Button>().interactable = true;
 
         _remainingPoints++;
         RemainingPointsValue.GetComponent<TextMeshProUGUI>().text = _remainingPoints.ToString();
@@ -434,8 +447,8 @@ public class CharacterCreation : MonoBehaviour
 
             IncreaseStrengthButton.GetComponent<Button>().interactable = false;
             IncreaseAgilityButton.GetComponent<Button>().interactable = false;
-            IncreaseIntelligenceButton.GetComponent<Button>().interactable = false;
             IncreaseConstitutionButton.GetComponent<Button>().interactable = false;
+            IncreaseIntelligenceButton.GetComponent<Button>().interactable = false;
         }
 
         RemainingPointsValue.GetComponent<TextMeshProUGUI>().text = _remainingPoints.ToString();
@@ -449,8 +462,30 @@ public class CharacterCreation : MonoBehaviour
         _intelligence = StartingBaseStat;
 
         StrengthValueBox.GetComponent<TextMeshProUGUI>().text = _strength.ToString();
-        StrengthValueBox.GetComponent<TextMeshProUGUI>().text = _strength.ToString();
-        StrengthValueBox.GetComponent<TextMeshProUGUI>().text = _strength.ToString();
-        StrengthValueBox.GetComponent<TextMeshProUGUI>().text = _strength.ToString();
+        AgilityValueBox.GetComponent<TextMeshProUGUI>().text = _agility.ToString();
+        ConstitutionValueBox.GetComponent<TextMeshProUGUI>().text = _constitution.ToString();
+        IntelligenceValueBox.GetComponent<TextMeshProUGUI>().text = _intelligence.ToString();
+    }
+
+    private void PreparePlayerForPlay()
+    {
+        _player = new Entity(_playerTemplate, null, true);
+        _player.SetStats(_strength, _agility, _constitution, _intelligence);
+
+        _player.CreateFluff(_playerTemplate);
+        _player.Fluff.BackgroundType = _selectedBackground;
+        _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
+        _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
+
+        var enteredName = NameBox.GetComponent<TextMeshProUGUI>().text.Trim();
+
+        if (!string.IsNullOrEmpty(enteredName) && !string.IsNullOrWhiteSpace(enteredName) && !enteredName.Equals(""))
+        {
+            _player.Fluff.Name = enteredName;
+        }
+
+        GameManager.Instance.Player = _player;
+
+        WorldData.Instance.Entities.Add(_player.Id, _player);
     }
 }
