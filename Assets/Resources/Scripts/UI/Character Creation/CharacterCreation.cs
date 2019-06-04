@@ -479,7 +479,7 @@ public class CharacterCreation : MonoBehaviour
 
         var enteredName = NameBox.GetComponent<TextMeshProUGUI>().text.Trim();
 
-        if (!string.IsNullOrEmpty(enteredName) && !string.IsNullOrWhiteSpace(enteredName) && !enteredName.Equals(""))
+        if (enteredName.Length > 1 && !string.IsNullOrEmpty(enteredName) && !string.IsNullOrWhiteSpace(enteredName))
         {
             _player.Fluff.Name = enteredName;
         }
