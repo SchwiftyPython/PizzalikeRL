@@ -4,17 +4,11 @@ using Random = UnityEngine.Random;
 
 public class Faction
 {
-    [Serializable]
-    public class RelationshipDictionary : SerializableDictionary<string, int> { }
-
     public enum PopulationType
     {
         Monospecies,
         MixedSpecies
     }
-
-    private const int MaxRelationshipLevel = 1000;
-    private const int MinRelationshipLevel = MaxRelationshipLevel * -1;
 
     private const int CitizenPopulationValue = 50;
 
@@ -22,7 +16,7 @@ public class Faction
 
     public string Type;
 
-    public RelationshipDictionary Relationships; //<Faction Name, Affection Level>
+    public Reputation FactionReputation; 
     public Dictionary<string, int> Religions;     //<Religion Name, Number of Believers>
 
     public string Name;
@@ -41,7 +35,7 @@ public class Faction
 
     public Faction()
     {
-        Relationships = new RelationshipDictionary();
+        FactionReputation = new Reputation();
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
@@ -52,12 +46,12 @@ public class Faction
 
     public Faction(FactionSdo sdo)
     {
-        Relationships = new RelationshipDictionary();
+        FactionReputation = new Reputation();
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
         PopType = sdo.PopType;
-        Relationships = sdo.Relationships;
+        FactionReputation = sdo.FactionReputation;
         Citizens = new List<Entity>();
         EntitiesWithFluff = new List<Entity>();
         Leader = WorldData.Instance.Entities[sdo.LeaderId];
@@ -90,7 +84,7 @@ public class Faction
 
     public Faction(FactionTemplate factionTemplate)
     {
-        Relationships = new RelationshipDictionary();
+        FactionReputation = new Reputation();
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
@@ -105,21 +99,6 @@ public class Faction
         WorldData.Instance.FactionLeaders.Add(Leader);
 
         //Debug.Log("Leader name: " + Leader.Fluff.Name);
-    }
-
-    public void ChangeRelationshipValue(Faction otherFaction, int relationshipChange)
-    {
-        Relationships[otherFaction.Name] += relationshipChange;
-
-        if (Relationships[otherFaction.Name] > MaxRelationshipLevel)
-        {
-            Relationships[otherFaction.Name] = MaxRelationshipLevel;
-            return;
-        }
-        if (Relationships[otherFaction.Name] < MinRelationshipLevel)
-        {
-            Relationships[otherFaction.Name] = MinRelationshipLevel;
-        }
     }
 
     public bool IsFanaticOfReligion(string religionName)

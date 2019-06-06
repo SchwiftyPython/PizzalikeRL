@@ -341,6 +341,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplatesContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Names\NameStore.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\EntityGroup.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\Faction.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplateContainer.cs" />
@@ -354,6 +355,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Weapon.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Reputation.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\Building.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\BuildingPrefab.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\BuildingPrefabStore.cs" />

@@ -46,6 +46,8 @@ public class Entity
     private bool _isHostile;
     private bool _isWild;
 
+    private Reputation EntityReputation;
+
     public Entity BirthFather { get; set; }
     public Entity BirthMother { get; set; }
     public List<Entity> Children { get; set; }
