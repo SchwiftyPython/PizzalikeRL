@@ -35,18 +35,20 @@ public class Faction
 
     public Faction()
     {
-        FactionReputation = new Reputation();
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
         Name = FactionTemplateLoader.GenerateFactionName();
         GeneratePopulation();
         CreateLeader();
+
+        var group = new EntityGroup(this);
+
+        FactionReputation = new Reputation(group);
     }
 
     public Faction(FactionSdo sdo)
     {
-        FactionReputation = new Reputation();
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
@@ -84,7 +86,6 @@ public class Faction
 
     public Faction(FactionTemplate factionTemplate)
     {
-        FactionReputation = new Reputation();
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
@@ -98,7 +99,9 @@ public class Faction
 
         WorldData.Instance.FactionLeaders.Add(Leader);
 
-        //Debug.Log("Leader name: " + Leader.Fluff.Name);
+        var group = new EntityGroup(this);
+
+        FactionReputation = new Reputation(group);
     }
 
     public bool IsFanaticOfReligion(string religionName)

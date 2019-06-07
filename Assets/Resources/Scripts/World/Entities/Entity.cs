@@ -205,6 +205,10 @@ public class Entity
         var template = EntityTemplateLoader.GetEntityTemplate(EntityType);
 
         Classification = template.Classification;
+
+        var group = new EntityGroup(EntityType);
+
+        EntityReputation = new Reputation(group);
         
         PrefabPath = template.SpritePath;
         Prefab = Resources.Load(template.SpritePath) as GameObject;
@@ -275,6 +279,12 @@ public class Entity
 
         PrefabPath = template.SpritePath;
         Prefab = Resources.Load(template.SpritePath) as GameObject;
+
+        Classification = template.Classification;
+
+        var group = new EntityGroup(EntityType);
+
+        EntityReputation = new Reputation(group);
 
         BuildBody(template);
         CalculateTotalBodyPartCoverage();

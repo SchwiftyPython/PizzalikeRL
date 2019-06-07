@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public enum ReputationState
 {
     Loved,
     Liked,
+    Neutral,
     Disliked,
     Hated
 }
@@ -17,7 +16,7 @@ public class Reputation
     private const int MaxRelationshipLevel = 1000;
     private const int MinRelationshipLevel = MaxRelationshipLevel * -1;
 
-    private readonly ReputationStateDictionary _reputationStateThresholds = new ReputationStateDictionary
+    private readonly Dictionary<ReputationState, int> _reputationStateThresholds = new Dictionary<ReputationState, int>
     {
         {ReputationState.Loved, 500},
         {ReputationState.Liked, 250},
@@ -26,15 +25,24 @@ public class Reputation
     };
 
     [Serializable]
-    public class ReputationStateDictionary : SerializableDictionary<ReputationState, int> { }
-
-    [Serializable]
     public class ReputationDictionary : SerializableDictionary<EntityGroup, int> { }
 
     public ReputationDictionary Relationships;
 
+    public Reputation(EntityGroup group)
+    {
+        //todo choose alignment
+        //loop through all entitygroups of matching type
+        //add to worlddata
+    }
+
     public void ChangeReputationValue(EntityGroup otherGroup, int reputationChange)
     {
+        if (!Relationships.ContainsKey(otherGroup))
+        {
+            return;
+        }
+
         Relationships[otherGroup] += reputationChange;
 
         if (Relationships[otherGroup] > MaxRelationshipLevel)
@@ -46,5 +54,28 @@ public class Reputation
         {
             Relationships[otherGroup] = MinRelationshipLevel;
         }
+    }
+
+    public ReputationState GetReputationState(EntityGroup otherGroup)
+    {
+        var relationshipValue = Relationships[otherGroup];
+
+        if (relationshipValue >= _reputationStateThresholds[ReputationState.Loved])
+        {
+            return ReputationState.Loved;
+        }
+        if (relationshipValue >= _reputationStateThresholds[ReputationState.Liked])
+        {
+            return ReputationState.Liked;
+        }
+        if (relationshipValue > _reputationStateThresholds[ReputationState.Disliked])
+        {
+            return ReputationState.Neutral;
+        }
+        if (relationshipValue > _reputationStateThresholds[ReputationState.Hated])
+        {
+            return ReputationState.Disliked;
+        }
+        return ReputationState.Hated;
     }
 }
