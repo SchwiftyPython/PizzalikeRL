@@ -206,7 +206,7 @@ public class Entity
 
         Classification = template.Classification;
 
-        EntityReputation = new Reputation(EntityGroupType.EntityType);
+        EntityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
 
         WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
 
@@ -282,9 +282,16 @@ public class Entity
 
         Classification = template.Classification;
 
-        EntityReputation = new Reputation(EntityGroupType.EntityType);
+        if (WorldData.Instance.EntityGroupRelationships.ContainsKey(EntityType))
+        {
+            EntityReputation = WorldData.Instance.EntityGroupRelationships[EntityType];
+        }
+        else
+        {
+            EntityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
 
-        WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
+            WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
+        }
 
         BuildBody(template);
         CalculateTotalBodyPartCoverage();

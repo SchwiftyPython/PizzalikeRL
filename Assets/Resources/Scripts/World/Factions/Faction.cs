@@ -42,7 +42,7 @@ public class Faction
         GeneratePopulation();
         CreateLeader();
 
-        FactionReputation = new Reputation(EntityGroupType.Faction);
+        FactionReputation = new Reputation(EntityGroupType.Faction, Name);
 
         WorldData.Instance.EntityGroupRelationships.Add(Name, FactionReputation);
     }
@@ -99,7 +99,7 @@ public class Faction
 
         WorldData.Instance.FactionLeaders.Add(Leader);
 
-        FactionReputation = new Reputation(EntityGroupType.Faction);
+        FactionReputation = new Reputation(EntityGroupType.Faction, Name);
 
         WorldData.Instance.EntityGroupRelationships.Add(Name, FactionReputation);
     }
