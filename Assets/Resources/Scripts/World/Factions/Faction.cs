@@ -42,9 +42,9 @@ public class Faction
         GeneratePopulation();
         CreateLeader();
 
-        var group = new EntityGroup(this);
+        FactionReputation = new Reputation(EntityGroupType.Faction);
 
-        FactionReputation = new Reputation(group);
+        WorldData.Instance.EntityGroupRelationships.Add(Name, FactionReputation);
     }
 
     public Faction(FactionSdo sdo)
@@ -99,9 +99,9 @@ public class Faction
 
         WorldData.Instance.FactionLeaders.Add(Leader);
 
-        var group = new EntityGroup(this);
+        FactionReputation = new Reputation(EntityGroupType.Faction);
 
-        FactionReputation = new Reputation(group);
+        WorldData.Instance.EntityGroupRelationships.Add(Name, FactionReputation);
     }
 
     public bool IsFanaticOfReligion(string religionName)

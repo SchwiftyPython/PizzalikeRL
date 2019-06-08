@@ -206,10 +206,10 @@ public class Entity
 
         Classification = template.Classification;
 
-        var group = new EntityGroup(EntityType);
+        EntityReputation = new Reputation(EntityGroupType.EntityType);
 
-        EntityReputation = new Reputation(group);
-        
+        WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
+
         PrefabPath = template.SpritePath;
         Prefab = Resources.Load(template.SpritePath) as GameObject;
 
@@ -282,9 +282,9 @@ public class Entity
 
         Classification = template.Classification;
 
-        var group = new EntityGroup(EntityType);
+        EntityReputation = new Reputation(EntityGroupType.EntityType);
 
-        EntityReputation = new Reputation(group);
+        WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
 
         BuildBody(template);
         CalculateTotalBodyPartCoverage();

@@ -341,7 +341,6 @@
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\EntityTemplatesContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Entities\Names\NameStore.cs" />
-    <Compile Include="Assets\Resources\Scripts\World\EntityGroup.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\Faction.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplateContainer.cs" />

@@ -10,6 +10,12 @@ public enum ReputationState
     Hated
 }
 
+public enum EntityGroupType
+{
+    Faction,
+    EntityType
+}
+
 [Serializable]
 public class Reputation
 {
@@ -24,19 +30,22 @@ public class Reputation
         {ReputationState.Hated, -500}
     };
 
+    private EntityGroupType _groupType;
+
     [Serializable]
-    public class ReputationDictionary : SerializableDictionary<EntityGroup, int> { }
+    public class ReputationDictionary : SerializableDictionary<string, int> { }
 
     public ReputationDictionary Relationships;
 
-    public Reputation(EntityGroup group)
+    public Reputation(EntityGroupType groupType)
     {
+        _groupType = groupType;
         //todo choose alignment
         //loop through all entitygroups of matching type
         //add to worlddata
     }
 
-    public void ChangeReputationValue(EntityGroup otherGroup, int reputationChange)
+    public void ChangeReputationValue(string otherGroup, int reputationChange)
     {
         if (!Relationships.ContainsKey(otherGroup))
         {
@@ -56,7 +65,7 @@ public class Reputation
         }
     }
 
-    public ReputationState GetReputationState(EntityGroup otherGroup)
+    public ReputationState GetReputationState(string otherGroup)
     {
         var relationshipValue = Relationships[otherGroup];
 
