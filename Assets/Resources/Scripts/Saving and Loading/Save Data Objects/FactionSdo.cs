@@ -7,7 +7,7 @@ public class FactionSdo
 {
     public Faction.PopulationType PopType;
 
-    public Faction.RelationshipDictionary Relationships; 
+    public Reputation FactionReputation; 
 
     public string Name;
 
@@ -29,7 +29,7 @@ public class FactionSdo
         var sdo = new FactionSdo
         {
             PopType = faction.PopType,
-            Relationships = faction.Relationships,
+            FactionReputation = faction.FactionReputation,
             CitizenIds = new List<Guid>(),
             EntitiesWithFluffIds = new List<Guid>(),
             LeaderId = faction.Leader.Id,

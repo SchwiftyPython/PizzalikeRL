@@ -9,7 +9,6 @@ public class SituationStore
 {
     private readonly Dictionary<string, Action<SituationContainer>> _allSituations = new Dictionary<string, Action<SituationContainer>>
     {
-        {"heretic nation", HereticNation},
         {"plague outbreak", PlagueOutbreak},
         {"plague continues", PlagueContinues},
         {"plague ends naturally", PlagueEndsNaturally},
@@ -110,39 +109,6 @@ public class SituationStore
     }
 
     #region Situations
-
-    // TODO needs to be redone without prereqs
-    private static void HereticNation(SituationContainer sc = null)
-    {
-        return;
-
-        if (WorldData.Instance.Factions.Count < 2)
-        {
-            return;
-        }
-
-        var unselectedFactions = WorldData.Instance.Factions.Values.ToList();
-
-        var index = Random.Range(0, unselectedFactions.Count);
-        var factionA = unselectedFactions[index];
-        unselectedFactions.Remove(unselectedFactions[index]);
-
-        index = Random.Range(0, unselectedFactions.Count);
-        var factionB = unselectedFactions[index];
-
-        foreach (var religion in factionA.Religions)
-        {
-            if (!factionA.IsFanaticOfReligion(religion.Key))
-            {
-                continue;
-            }
-
-            if (factionB.IsHereticOfReligion(religion.Key))
-            {
-                factionA.ChangeRelationshipValue(factionB, -100);
-            }
-        }
-    }
 
     private static void PlagueOutbreak(SituationContainer sc = null)
     {

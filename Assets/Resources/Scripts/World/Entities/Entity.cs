@@ -46,6 +46,8 @@ public class Entity
     private bool _isHostile;
     private bool _isWild;
 
+    private Reputation EntityReputation;
+
     public Entity BirthFather { get; set; }
     public Entity BirthMother { get; set; }
     public List<Entity> Children { get; set; }
@@ -203,7 +205,11 @@ public class Entity
         var template = EntityTemplateLoader.GetEntityTemplate(EntityType);
 
         Classification = template.Classification;
-        
+
+        EntityReputation = new Reputation(EntityGroupType.EntityType);
+
+        WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
+
         PrefabPath = template.SpritePath;
         Prefab = Resources.Load(template.SpritePath) as GameObject;
 
@@ -273,6 +279,12 @@ public class Entity
 
         PrefabPath = template.SpritePath;
         Prefab = Resources.Load(template.SpritePath) as GameObject;
+
+        Classification = template.Classification;
+
+        EntityReputation = new Reputation(EntityGroupType.EntityType);
+
+        WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
 
         BuildBody(template);
         CalculateTotalBodyPartCoverage();

@@ -13,6 +13,7 @@ public class WorldData : MonoBehaviour
     public Dictionary<Guid, Entity> Entities { get; set; }
     public Dictionary<Guid, Item> Items { get; set; }
     public Dictionary<string, Faction> Factions { get; set; }
+    public Dictionary<string, Reputation> EntityGroupRelationships { get; set; }
     public List<Entity> FactionLeaders { get; set; }
     public List<Entity> OtherNamedNpcs { get; set; }
     public Dictionary<int, River> Rivers { get; set; }
@@ -132,6 +133,7 @@ public class WorldData : MonoBehaviour
             Destroy(gameObject);
         }
         Factions = new Dictionary<string, Faction>();
+        EntityGroupRelationships = new Dictionary<string, Reputation>();
         FactionLeaders = new List<Entity>();
         OtherNamedNpcs = new List<Entity>();
         Entities = new Dictionary<Guid, Entity>();

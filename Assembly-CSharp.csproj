@@ -354,6 +354,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Weapon.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Reputation.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\Building.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\BuildingPrefab.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\BuildingPrefabStore.cs" />
