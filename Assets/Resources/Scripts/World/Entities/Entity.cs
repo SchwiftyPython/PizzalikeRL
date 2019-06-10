@@ -46,7 +46,7 @@ public class Entity
     private bool _isHostile;
     private bool _isWild;
 
-    private Reputation EntityReputation;
+    private Reputation _entityReputation;
 
     public Entity BirthFather { get; set; }
     public Entity BirthMother { get; set; }
@@ -206,9 +206,16 @@ public class Entity
 
         Classification = template.Classification;
 
-        EntityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
+        if (WorldData.Instance.EntityGroupRelationships.ContainsKey(EntityType))
+        {
+            _entityReputation = WorldData.Instance.EntityGroupRelationships[EntityType];
+        }
+        else
+        {
+            _entityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
 
-        WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
+            WorldData.Instance.EntityGroupRelationships.Add(EntityType, _entityReputation);
+        }
 
         PrefabPath = template.SpritePath;
         Prefab = Resources.Load(template.SpritePath) as GameObject;
@@ -284,13 +291,13 @@ public class Entity
 
         if (WorldData.Instance.EntityGroupRelationships.ContainsKey(EntityType))
         {
-            EntityReputation = WorldData.Instance.EntityGroupRelationships[EntityType];
+            _entityReputation = WorldData.Instance.EntityGroupRelationships[EntityType];
         }
         else
         {
-            EntityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
+            _entityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
 
-            WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
+            WorldData.Instance.EntityGroupRelationships.Add(EntityType, _entityReputation);
         }
 
         BuildBody(template);
@@ -1006,6 +1013,46 @@ public class Entity
     {
         var equippedRangedWeapon = GetEquippedRangedWeapon();
         return equippedRangedWeapon != null && CalculateDistanceToTarget(target) <= equippedRangedWeapon.Range;
+    }
+
+    public Attitude GetAttitudeTowardsTarget(Entity target)
+    {
+        if (target == null)
+        {
+            return Attitude.Neutral;
+        }
+        if (target == this)
+        {
+            return Attitude.Allied;
+        }
+
+        var reputation = GetReputationStateForTarget(target);
+
+        if (reputation == ReputationState.Loved)
+        {
+            return Attitude.Allied;
+        }
+        if (reputation == ReputationState.Hated)
+        {
+            return Attitude.Hostile;
+        }
+
+        return Attitude.Neutral;
+    }
+
+    private ReputationState GetReputationStateForTarget(Entity target)
+    {
+        var factionReputationValue = 0;
+        if (Faction != null && target.Faction != null)
+        {
+            factionReputationValue = Faction.FactionReputation.GetReputationValueForGroup(target.Faction.Name);
+        }
+
+        var entityTypeReputationValue = _entityReputation.GetReputationValueForGroup(target.EntityType);
+
+        var reputationValueTotal = factionReputationValue + entityTypeReputationValue;
+
+        return _entityReputation.GetReputationStateForValue(reputationValueTotal);
     }
 
     private static bool MeleeRollHit(Entity target)
