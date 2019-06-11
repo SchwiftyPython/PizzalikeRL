@@ -248,6 +248,7 @@
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AIEvent.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Attack.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Bored.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Goal.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\GoalStore.cs" />
