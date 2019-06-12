@@ -52,6 +52,39 @@ public class Attack : Goal
         }
     }
 
+    private bool TryRangedWeapon()
+    {
+        //todo apply los via raycast. Probably in Entity. Make RangedWeaponCanHit method. Include range check
+        if (!Self.HasRangedWeaponEquipped() || !Self.EquippedWeaponInRangeOfTarget(_target))
+        {
+            return false;
+        }
+        Self.RangedAttack(_target);
+        return true;
+    }
+
+    private bool TryMeleeWeapon()
+    {
+        //todo make IsTargetAdjacent method in Entity
+        if (Self.CalculateDistanceToTarget(_target) > 1)
+        {
+            return false;
+        }
+        Self.MeleeAttack(_target);
+        return true;
+    }
+
+    private bool TryMovingToTarget()
+    {
+        //todo can pursue player outside of current area once MoveToGlobal goal is created
+        if (GameManager.Instance.IsWorldMapSceneActive() || Self.CurrentArea != _target.CurrentArea)
+        {
+            return false;
+        }
+        //todo add goal
+        return true;
+    }
+
     private Entity FindSomethingToAttack()
     {
         const int minSearchRadius = 4;
@@ -59,18 +92,17 @@ public class Attack : Goal
 
         var searchRadius = Random.Range(minSearchRadius, maxSearchRadius);
 
-        var area = ParentController.Self.CurrentArea;
+        var area = Self.CurrentArea;
 
         Entity target = null;
 
         foreach (var entity in area.PresentEntities)
         {
-            var distance = ParentController.Self.CalculateDistanceToTarget(entity);
-
-            //todo add fov if enemy seems too smart
+            var distance = Self.CalculateDistanceToTarget(entity);
+            
             if (distance <= searchRadius)
             {
-                var attitude = ParentController.Self.GetAttitudeTowardsTarget(entity);
+                var attitude = Self.GetAttitudeTowardsTarget(entity);
 
                 if (attitude == Attitude.Hostile)
                 {
