@@ -1,24 +1,32 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Attack : Goal
 {
+    private enum AttackMove
+    {
+        RangedWeapon,
+        MeleeWeapon,
+        MoveToTarget
+    }
+
+    private Dictionary<AttackMove, Func<bool>> _allAttackMoves;
+
     private Entity _target;
 
     public Attack()
     {
-        _target = FindSomethingToAttack();
-
-        if (_target == null)
-        {
-            FailToParent();
-        }
+        InitializeAllAttackMoves();
     }
 
     public Attack(Entity target)
     {
         _target = target;
+        InitializeAllAttackMoves();
     }
 
     public override bool Finished()
@@ -32,16 +40,21 @@ public class Attack : Goal
         {
             return;
         }
-        base.Push(ParentController);
+        base.Push(parentController);
     }
 
     public override void TakeAction()
     {
         if (_target == null)
         {
-            Debug.Log(ParentController.Self + " lost target!");
-            FailToParent();
-            return;
+            _target = FindSomethingToAttack();
+
+            if (_target == null)
+            {
+                Debug.Log(Self + " lost target!");
+                FailToParent();
+                return;
+            }
         }
         if (_target.IsDead())
         {
@@ -50,6 +63,25 @@ public class Attack : Goal
             FailToParent();
             return;
         }
+
+        var remainingMoves = new Dictionary<AttackMove, Func<bool>>(_allAttackMoves);
+
+        for (var i = 0; i < _allAttackMoves.Count; i++)
+        {
+            var index = Random.Range(0, remainingMoves.Count);
+
+            var selectedMove = remainingMoves.ElementAt(index);
+
+            if (selectedMove.Value.Invoke())
+            {
+                return;
+            }
+
+            remainingMoves.Remove(selectedMove.Key);
+        }
+
+        Debug.Log(Self + " can't attack!");
+        FailToParent();
     }
 
     private bool TryRangedWeapon()
@@ -81,7 +113,10 @@ public class Attack : Goal
         {
             return false;
         }
-        //todo add goal
+
+        var targetLocation = _target.CurrentTile;
+
+        PushChildGoal(new MoveToLocal(_target.CurrentArea, targetLocation.X, targetLocation.Y));
         return true;
     }
 
@@ -102,6 +137,15 @@ public class Attack : Goal
             
             if (distance <= searchRadius)
             {
+                //TESTING /////////////////////////////////////////
+                if (entity == Self)
+                {
+                    continue;
+                }
+                target = entity;
+                break;
+                //TESTING /////////////////////////////////////////
+
                 var attitude = Self.GetAttitudeTowardsTarget(entity);
 
                 if (attitude == Attitude.Hostile)
@@ -113,5 +157,15 @@ public class Attack : Goal
         }
 
         return target;
+    }
+
+    private void InitializeAllAttackMoves()
+    {
+        _allAttackMoves = new Dictionary<AttackMove, Func<bool>>
+        {
+            {AttackMove.RangedWeapon, TryRangedWeapon},
+            {AttackMove.MeleeWeapon, TryMeleeWeapon},
+            {AttackMove.MoveToTarget, TryMovingToTarget}
+        };
     }
 }

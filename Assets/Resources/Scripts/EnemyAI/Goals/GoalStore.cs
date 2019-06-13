@@ -9,7 +9,7 @@ public class GoalStore
         {"bored", () => new Bored()},
         {"wander", () => new Wander()},
         {"wait", () => new Wait()},
-        {"kill", ()=> new Attack()}
+        {"attack", ()=> new Attack()}
     };
 
     public List<string> GoalKeys { get; set; }
