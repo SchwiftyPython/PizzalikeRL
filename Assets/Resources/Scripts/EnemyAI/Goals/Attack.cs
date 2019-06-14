@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -51,7 +50,7 @@ public class Attack : Goal
 
             if (_target == null)
             {
-                Debug.Log(Self + " lost target!");
+                Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " lost target!");
                 FailToParent();
                 return;
             }
@@ -80,7 +79,7 @@ public class Attack : Goal
             remainingMoves.Remove(selectedMove.Key);
         }
 
-        Debug.Log(Self + " can't attack!");
+        Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " can't attack!");
         FailToParent();
     }
 
@@ -109,7 +108,8 @@ public class Attack : Goal
     private bool TryMovingToTarget()
     {
         //todo can pursue player outside of current area once MoveToGlobal goal is created
-        if (GameManager.Instance.IsWorldMapSceneActive() || Self.CurrentArea != _target.CurrentArea)
+        if (GameManager.Instance.IsWorldMapSceneActive() || Self.CurrentArea != _target.CurrentArea || !Self.Mobile ||
+            Self.CalculateDistanceToTarget(_target) <= 1)
         {
             return false;
         }
@@ -129,34 +129,12 @@ public class Attack : Goal
 
         var area = Self.CurrentArea;
 
-        Entity target = null;
-
-        foreach (var entity in area.PresentEntities)
-        {
-            var distance = Self.CalculateDistanceToTarget(entity);
-            
-            if (distance <= searchRadius)
-            {
-                //TESTING /////////////////////////////////////////
-                if (entity == Self)
-                {
-                    continue;
-                }
-                target = entity;
-                break;
-                //TESTING /////////////////////////////////////////
-
-                var attitude = Self.GetAttitudeTowardsTarget(entity);
-
-                if (attitude == Attitude.Hostile)
-                {
-                    target = entity;
-                    break;
-                }
-            }
-        }
-
-        return target;
+        return (from entity in area.PresentEntities
+            let distance = Self.CalculateDistanceToTarget(entity)
+            where distance <= searchRadius
+            let attitude = Self.GetAttitudeTowardsTarget(entity)
+            where attitude == Attitude.Hostile
+            select entity).FirstOrDefault();
     }
 
     private void InitializeAllAttackMoves()
