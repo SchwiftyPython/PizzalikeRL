@@ -6,7 +6,8 @@ public class Bored : Goal
     private readonly List<string> _goals = new List<string>
     {
         "wander",
-        "wait"
+        "wait",
+        "attack"
     };
 
     public override bool Finished()

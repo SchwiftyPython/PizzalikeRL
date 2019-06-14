@@ -12,6 +12,13 @@ public enum ReputationState
     Hated
 }
 
+public enum Attitude
+{
+    Allied,
+    Neutral,
+    Hostile
+}
+
 public enum EntityGroupType
 {
     Faction,
@@ -114,10 +121,20 @@ public class Reputation
         }
     }
 
-    public ReputationState GetReputationState(string otherGroup)
+    public ReputationState GetReputationStateForGroup(string otherGroup)
     {
-        var relationshipValue = Relationships[otherGroup];
+        var relationshipValue = GetReputationValueForGroup(otherGroup);
 
+        return GetReputationStateForValue(relationshipValue);
+    }
+
+    public int GetReputationValueForGroup(string otherGroup)
+    {
+        return Relationships[otherGroup];
+    }
+
+    public ReputationState GetReputationStateForValue(int relationshipValue)
+    {
         if (relationshipValue >= _reputationStateThresholds[ReputationState.Loved])
         {
             return ReputationState.Loved;
@@ -141,8 +158,8 @@ public class Reputation
     {
         var entityGroupRelationships = WorldData.Instance.EntityGroupRelationships;
 
-        var groupsOfSameType = entityGroupRelationships.Where(@group => @group.Value._groupType == _groupType)
-            .ToDictionary(@group => @group.Key, @group => @group.Value);
+        var groupsOfSameType = entityGroupRelationships.Where(group => group.Value._groupType == _groupType)
+            .ToDictionary(group => group.Key, group => group.Value);
 
         var alignment = GetRandomAlignment<Alignment>();
 
@@ -167,6 +184,7 @@ public class Reputation
         }
     }
 
+    //todo move contents to global helper and use this as wrapper
     private static T GetRandomAlignment<T>()
     {
         var values = Enum.GetValues(typeof(T));

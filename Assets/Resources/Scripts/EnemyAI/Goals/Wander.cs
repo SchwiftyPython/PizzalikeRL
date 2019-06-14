@@ -10,16 +10,16 @@ public class Wander : Goal
     {
         Pop();
 
-        var area = ParentController.Self.CurrentArea;
-        var areaWidth = area.Width;
+        var area = Self.CurrentArea;
         var areaHeight = area.Height;
+        var areaWidth = area.Width;
 
         var x = Random.Range(0, areaHeight);
         var y = Random.Range(0, areaWidth);
 
         const int maxTries = 40;
         var numTries = 0;
-        while (!ParentController.Self.AreaMapCanMoveLocal(new Vector2(x, y)) ||
+        while (!Self.AreaMapCanMoveLocal(new Vector2(x, y)) ||
                DistanceToTarget(new Vector2(x, y)) > MaxWanderDistance)
         {
             numTries++;
@@ -40,8 +40,8 @@ public class Wander : Goal
 
     private int DistanceToTarget(Vector2 target)
     {
-        var a = target.x - ParentController.Self.CurrentTile.X;
-        var b = target.y - ParentController.Self.CurrentTile.Y;
+        var a = target.x - Self.CurrentTile.X;
+        var b = target.y - Self.CurrentTile.Y;
 
         return (int)Math.Sqrt(a * a + b * b);
     }

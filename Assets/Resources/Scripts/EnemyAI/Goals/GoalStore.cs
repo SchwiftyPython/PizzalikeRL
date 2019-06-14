@@ -8,7 +8,8 @@ public class GoalStore
     {
         {"bored", () => new Bored()},
         {"wander", () => new Wander()},
-        {"wait", () => new Wait()}
+        {"wait", () => new Wait()},
+        {"attack", ()=> new Attack()}
     };
 
     public List<string> GoalKeys { get; set; }

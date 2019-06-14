@@ -163,7 +163,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case GameState.EndTurn:
-                if (CurrentScene.name.Equals(WorldMapSceneName))
+                if (IsWorldMapSceneActive())
                 {
                     InputController.Instance.ActionTaken = false;
                     CurrentState = GameState.Playerturn;
@@ -211,6 +211,11 @@ public class GameManager : MonoBehaviour
         PlayerDeathRoutineComplete = true;
     }
 
+    public bool IsWorldMapSceneActive()
+    {
+        return CurrentScene.name.Equals(WorldMapSceneName);
+    }
+
     private static void RunPlayerDeathRoutine()
     {
         HistoryGenerator.Instance.Generate();
@@ -220,7 +225,7 @@ public class GameManager : MonoBehaviour
 
     private GameState WhoseTurn()
     {
-        if (CurrentScene.name.Equals(WorldMapSceneName) || !CurrentArea.EntitiesPresent())
+        if (IsWorldMapSceneActive() || !CurrentArea.EntitiesPresent())
         {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;
