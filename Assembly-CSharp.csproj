@@ -257,6 +257,7 @@
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Wait.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Wander.cs" />
     <Compile Include="Assets\Resources\Scripts\EntityInfo.cs" />
+    <Compile Include="Assets\Resources\Scripts\EventMediator.cs" />
     <Compile Include="Assets\Resources\Scripts\Fov.cs" />
     <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\GlobalHelper.cs" />
