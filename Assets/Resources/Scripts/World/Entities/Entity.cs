@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class Entity
+public class Entity : ISubscriber
 {
     public enum EntityClassification
     {
@@ -47,6 +47,8 @@ public class Entity
     private bool _isWild;
 
     private Reputation _entityReputation;
+
+    private EventMediator eventMediator;
 
     public Entity BirthFather { get; set; }
     public Entity BirthMother { get; set; }
@@ -151,6 +153,8 @@ public class Entity
                 {Toppings.Sausage, 0 }
             };
         }
+
+        SubscribeToBaseEvents();
     }
     
     public Entity(Entity parent, Faction faction = null, bool isPlayer = false)
@@ -232,6 +236,7 @@ public class Entity
             ToppingDropped = new Topping(template.Topping);
         }
 
+        SubscribeToBaseEvents();
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
@@ -308,6 +313,8 @@ public class Entity
         {
             ToppingDropped = new Topping(template.Topping);
         }
+
+        SubscribeToBaseEvents();
     }
 
     public void SetStats(int strength, int agility, int constitution, int intelligence)
@@ -954,6 +961,29 @@ public class Entity
         return CurrentHp <= 0;
     }
 
+    public void OnNotify(string eventName, object broadcaster)
+    {
+        if (eventMediator == null)
+        {
+            eventMediator = EventMediator.Instance;
+        }
+
+        if (eventName.Equals("UnderAttack"))
+        {
+            if (!(broadcaster is Entity victim) || victim.CurrentArea != CurrentArea)
+            {
+                return;
+            }
+
+            var attitude = GetAttitudeTowardsTarget(victim);
+
+            if (attitude == Attitude.Allied)
+            {
+                //todo join fight against attacker if able
+            }
+        }
+    }
+
     public void CreateFluff(EntityTemplate template)
     {
         Fluff = new EntityFluff(template.Type, template.NameFiles);
@@ -1190,5 +1220,20 @@ public class Entity
         }
 
         CurrentTile.PresentTopping = null;
+    }
+
+    private void SubscribeToBaseEvents()
+    {
+        var baseEvents = new List<string>
+        {
+            "UnderAttack" //not going to be actual base event as wildlife shouldn't be concerened in a lot of cases
+        };
+
+        eventMediator = EventMediator.Instance;
+
+        foreach (var baseEvent in baseEvents)
+        {
+            eventMediator.SubscribeToEvent(baseEvent, this);
+        }
     }
 }
