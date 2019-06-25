@@ -132,7 +132,7 @@ public class Attack : Goal
         return (from entity in area.PresentEntities
             let distance = Self.CalculateDistanceToTarget(entity)
             where distance <= searchRadius
-            let attitude = Self.GetAttitudeTowardsTarget(entity)
+            let attitude = Self.GetAttitudeTowards(entity)
             where attitude == Attitude.Hostile
             select entity).FirstOrDefault();
     }

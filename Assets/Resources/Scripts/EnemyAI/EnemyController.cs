@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EnemyController : AstarAI
 {
@@ -62,5 +63,40 @@ public class EnemyController : AstarAI
     public bool IsMobile()
     {
         return Self.Mobile;
+    }
+
+    public void GetAngryAt(Entity target)
+    {
+        Self.Goals = new Stack<Goal>();
+
+        new Attack(target).Push(this);
+    }
+
+    public void ReactToAttacker(Entity attacker)
+    {
+        if (attacker == Self)
+        {
+            return;
+        }
+
+        const int fleeChance = 1;
+
+        var roll = Random.Range(0, 100);
+
+        if (roll <= fleeChance)
+        {
+            //todo flee when flee goal added
+        }
+        else
+        {
+            if (Goals.Peek().GetType() == typeof(Attack))
+            {
+                return;
+            }
+
+            GetAngryAt(attacker);
+        }
+
+        EventMediator.Instance.Broadcast("UnderAttack", Self, attacker);
     }
 }

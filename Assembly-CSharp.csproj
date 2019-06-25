@@ -275,6 +275,7 @@
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Tracery\Modifiers.cs" />
     <Compile Include="Assets\Resources\Scripts\HistoryGeneration\Tracery\Properties\AssemblyInfo.cs" />
     <Compile Include="Assets\Resources\Scripts\InputController.cs" />
+    <Compile Include="Assets\Resources\Scripts\ISubscriber.cs" />
     <Compile Include="Assets\Resources\Scripts\LoadWorldMapScene.cs" />
     <Compile Include="Assets\Resources\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\Messenger.cs" />

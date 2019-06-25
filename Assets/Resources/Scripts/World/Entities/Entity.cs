@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class Entity
+public class Entity : ISubscriber
 {
     public enum EntityClassification
     {
@@ -47,6 +47,8 @@ public class Entity
     private bool _isWild;
 
     private Reputation _entityReputation;
+
+    private EventMediator eventMediator;
 
     public Entity BirthFather { get; set; }
     public Entity BirthMother { get; set; }
@@ -151,6 +153,8 @@ public class Entity
                 {Toppings.Sausage, 0 }
             };
         }
+
+        SubscribeToBaseEvents();
     }
     
     public Entity(Entity parent, Faction faction = null, bool isPlayer = false)
@@ -232,6 +236,7 @@ public class Entity
             ToppingDropped = new Topping(template.Topping);
         }
 
+        SubscribeToBaseEvents();
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
@@ -308,6 +313,8 @@ public class Entity
         {
             ToppingDropped = new Topping(template.Topping);
         }
+
+        SubscribeToBaseEvents();
     }
 
     public void SetStats(int strength, int agility, int constitution, int intelligence)
@@ -825,6 +832,7 @@ public class Entity
             ApplyMeleeDamage(target);
             if (!target.IsDead())
             {
+                TargetReactToAttacker(target);
                 return;
             }
             var message = EntityType + " killed " + target.EntityType + "!";
@@ -832,6 +840,7 @@ public class Entity
         }
         else
         {
+            TargetReactToAttacker(target);
             var message = EntityType + " missed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
         }
@@ -954,6 +963,45 @@ public class Entity
         return CurrentHp <= 0;
     }
 
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventMediator == null)
+        {
+            eventMediator = EventMediator.Instance;
+        }
+
+        if (eventName.Equals("UnderAttack"))
+        {
+            if (IsPlayer() || !(broadcaster is Entity victim) || victim.CurrentArea != CurrentArea)
+            {
+                return;
+            }
+
+            var controller = _sprite.GetComponent<EnemyController>();
+
+            if (controller == null)
+            {
+                return;
+            }
+
+            if (!(parameter is Entity attacker))
+            {
+                return;
+            }
+
+            var attitude = GetAttitudeTowards(victim);
+
+            if (attitude == Attitude.Allied)
+            {
+                controller.GetAngryAt(attacker);
+            }
+            else if (attitude == Attitude.Hostile)
+            {
+                controller.GetAngryAt(victim);
+            }
+        }
+    }
+
     public void CreateFluff(EntityTemplate template)
     {
         Fluff = new EntityFluff(template.Type, template.NameFiles);
@@ -993,10 +1041,16 @@ public class Entity
     {
         if (RangedHit(target))
         {
+            if (!target.IsDead())
+            {
+                TargetReactToAttacker(target);
+                return;
+            }
             ApplyRangedDamage(target);
         }
         else
         {
+            TargetReactToAttacker(target);
             //todo make this missed with weapon used
             var message = EntityType + " missed " + target.EntityType + " with ranged attack!";
             GameManager.Instance.Messages.Add(message);
@@ -1015,7 +1069,7 @@ public class Entity
         return equippedRangedWeapon != null && CalculateDistanceToTarget(target) <= equippedRangedWeapon.Range;
     }
 
-    public Attitude GetAttitudeTowardsTarget(Entity target)
+    public Attitude GetAttitudeTowards(Entity target)
     {
         if (target == null)
         {
@@ -1159,6 +1213,11 @@ public class Entity
         GameManager.Instance.Messages.Add(message);
     }
 
+    private void TargetReactToAttacker(Entity target)
+    {
+        target.GetSprite().GetComponent<EnemyController>()?.ReactToAttacker(this);
+    }
+
     private Weapon GetEquippedRangedWeapon()
     {
         //This should work as long as we only allow one melee and one ranged weapon to be equipped
@@ -1190,5 +1249,20 @@ public class Entity
         }
 
         CurrentTile.PresentTopping = null;
+    }
+
+    private void SubscribeToBaseEvents()
+    {
+        var baseEvents = new List<string>
+        {
+            "UnderAttack" //not going to be actual base event as wildlife shouldn't be concerened in a lot of cases
+        };
+
+        eventMediator = EventMediator.Instance;
+
+        foreach (var baseEvent in baseEvents)
+        {
+            eventMediator.SubscribeToEvent(baseEvent, this);
+        }
     }
 }

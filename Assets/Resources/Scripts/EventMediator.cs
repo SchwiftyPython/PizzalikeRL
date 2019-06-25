@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EventMediator : MonoBehaviour
 {
-    private Dictionary<string, List<object>> _eventSubscriptions;
+    private Dictionary<string, List<ISubscriber>> _eventSubscriptions;
 
     public static EventMediator Instance;
 
@@ -19,10 +19,10 @@ public class EventMediator : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        _eventSubscriptions = new Dictionary<string, List<object>> ();
+        _eventSubscriptions = new Dictionary<string, List<ISubscriber>> ();
     }
 
-    public void SubscribeToEvent(string eventName, object subscriber)
+    public void SubscribeToEvent(string eventName, ISubscriber subscriber)
     {
         if (_eventSubscriptions.ContainsKey(eventName))
         {
@@ -30,11 +30,11 @@ public class EventMediator : MonoBehaviour
         }
         else
         {
-            _eventSubscriptions.Add(eventName, new List<object>{subscriber});
+            _eventSubscriptions.Add(eventName, new List<ISubscriber> {subscriber});
         }
     }
 
-    public void UnsubscribeFromEvent(string eventName, object subscriber)
+    public void UnsubscribeFromEvent(string eventName, ISubscriber subscriber)
     {
         if (!_eventSubscriptions.ContainsKey(eventName))
         {
@@ -44,7 +44,7 @@ public class EventMediator : MonoBehaviour
         _eventSubscriptions[eventName].Remove(subscriber);
     }
 
-    public void Broadcast(string eventName, object broadcaster)
+    public void Broadcast(string eventName, object broadcaster, object parameter = null)
     {
         if (!_eventSubscriptions.ContainsKey(eventName))
         {
@@ -55,12 +55,12 @@ public class EventMediator : MonoBehaviour
 
         foreach (var sub in subscribers)
         {
-            NotifySubscriber(eventName, broadcaster, sub);
+            NotifySubscriber(eventName, broadcaster, sub, parameter);
         }
     }
 
-    private void NotifySubscriber(string eventName, object broadcaster, object subscriber)
+    private void NotifySubscriber(string eventName, object broadcaster, ISubscriber subscriber, object parameter = null)
     {
-        //todo going to have to figure out if we're going to attempt to cast to classes with OnNotify method
+        subscriber.OnNotify(eventName, broadcaster, parameter);
     }
 }
