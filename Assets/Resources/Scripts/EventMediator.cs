@@ -44,7 +44,7 @@ public class EventMediator : MonoBehaviour
         _eventSubscriptions[eventName].Remove(subscriber);
     }
 
-    public void Broadcast(string eventName, object broadcaster)
+    public void Broadcast(string eventName, object broadcaster, object parameter = null)
     {
         if (!_eventSubscriptions.ContainsKey(eventName))
         {
@@ -55,12 +55,12 @@ public class EventMediator : MonoBehaviour
 
         foreach (var sub in subscribers)
         {
-            NotifySubscriber(eventName, broadcaster, sub);
+            NotifySubscriber(eventName, broadcaster, sub, parameter);
         }
     }
 
-    private void NotifySubscriber(string eventName, object broadcaster, ISubscriber subscriber)
+    private void NotifySubscriber(string eventName, object broadcaster, ISubscriber subscriber, object parameter = null)
     {
-        subscriber.OnNotify(eventName, broadcaster);
+        subscriber.OnNotify(eventName, broadcaster, parameter);
     }
 }

@@ -832,6 +832,7 @@ public class Entity : ISubscriber
             ApplyMeleeDamage(target);
             if (!target.IsDead())
             {
+                TargetReactToAttacker(target);
                 return;
             }
             var message = EntityType + " killed " + target.EntityType + "!";
@@ -839,6 +840,7 @@ public class Entity : ISubscriber
         }
         else
         {
+            TargetReactToAttacker(target);
             var message = EntityType + " missed " + target.EntityType + "!";
             GameManager.Instance.Messages.Add(message);
         }
@@ -961,7 +963,7 @@ public class Entity : ISubscriber
         return CurrentHp <= 0;
     }
 
-    public void OnNotify(string eventName, object broadcaster)
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         if (eventMediator == null)
         {
@@ -970,16 +972,32 @@ public class Entity : ISubscriber
 
         if (eventName.Equals("UnderAttack"))
         {
-            if (!(broadcaster is Entity victim) || victim.CurrentArea != CurrentArea)
+            if (IsPlayer() || !(broadcaster is Entity victim) || victim.CurrentArea != CurrentArea)
             {
                 return;
             }
 
-            var attitude = GetAttitudeTowardsTarget(victim);
+            var controller = _sprite.GetComponent<EnemyController>();
+
+            if (controller == null)
+            {
+                return;
+            }
+
+            if (!(parameter is Entity attacker))
+            {
+                return;
+            }
+
+            var attitude = GetAttitudeTowards(victim);
 
             if (attitude == Attitude.Allied)
             {
-                //todo join fight against attacker if able
+                controller.GetAngryAt(attacker);
+            }
+            else if (attitude == Attitude.Hostile)
+            {
+                controller.GetAngryAt(victim);
             }
         }
     }
@@ -1023,10 +1041,16 @@ public class Entity : ISubscriber
     {
         if (RangedHit(target))
         {
+            if (!target.IsDead())
+            {
+                TargetReactToAttacker(target);
+                return;
+            }
             ApplyRangedDamage(target);
         }
         else
         {
+            TargetReactToAttacker(target);
             //todo make this missed with weapon used
             var message = EntityType + " missed " + target.EntityType + " with ranged attack!";
             GameManager.Instance.Messages.Add(message);
@@ -1045,7 +1069,7 @@ public class Entity : ISubscriber
         return equippedRangedWeapon != null && CalculateDistanceToTarget(target) <= equippedRangedWeapon.Range;
     }
 
-    public Attitude GetAttitudeTowardsTarget(Entity target)
+    public Attitude GetAttitudeTowards(Entity target)
     {
         if (target == null)
         {
@@ -1187,6 +1211,11 @@ public class Entity : ISubscriber
 
         var message = EntityType + " hits " + target.EntityType + "'s " + hitBodyPart.Name + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
+    }
+
+    private void TargetReactToAttacker(Entity target)
+    {
+        target.GetSprite().GetComponent<EnemyController>()?.ReactToAttacker(this);
     }
 
     private Weapon GetEquippedRangedWeapon()
