@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case GameState.Playerturn:
-                if (PlayerInvisible() || PlayerNearCameraEdge())
+                if (!IsWorldMapSceneActive() && (PlayerInvisible() || PlayerNearCameraEdge()))
                 {
                     MoveCameraToPlayer();
                 }
