@@ -25,7 +25,7 @@ public class WorldMap : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        //Destroy(AreaMap.Instance?.Camera);
+        
         DrawMap();
         PlacePlayer();
     }
@@ -64,7 +64,5 @@ public class WorldMap : MonoBehaviour
 
         GameManager.Instance.Player.CurrentPosition =
             new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
-
-        //_playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
     }
 }
