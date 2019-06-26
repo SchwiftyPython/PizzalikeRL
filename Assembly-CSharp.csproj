@@ -250,6 +250,7 @@
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Attack.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Bored.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Flee.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\Goal.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\GoalStore.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\Goals\MoveToLocal.cs" />

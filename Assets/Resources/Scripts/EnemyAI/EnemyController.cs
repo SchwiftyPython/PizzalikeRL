@@ -85,7 +85,7 @@ public class EnemyController : AstarAI
 
         if (roll <= fleeChance)
         {
-            //todo flee when flee goal added
+            new Flee().Push(this);
         }
         else
         {
