@@ -227,6 +227,7 @@ public class AreaMap : MonoBehaviour
         entity.CurrentTile.SetBlocksMovement(false);
         entity.CurrentTile.SetPresentEntity(null);
         _currentArea.PresentEntities.Remove(entity);
+        entity.UnsubscribeFromAllEvents();
     }
 
     //<Summary>
@@ -439,7 +440,9 @@ public class AreaMap : MonoBehaviour
     {
         foreach (var e in _currentArea.PresentEntities.ToArray())
         {
-            RemoveEntity(e);
+            Destroy(e.GetSprite());
+            e.CurrentTile.SetBlocksMovement(false);
+            e.CurrentTile.SetPresentEntity(null);
         }
         Destroy(NpcSpriteHolder);
     }

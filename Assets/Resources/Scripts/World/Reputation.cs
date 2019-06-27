@@ -182,6 +182,8 @@ public class Reputation
             SetReputationForState(ReputationState.Neutral, groupsOfSameType.Count, groupsOfSameType,
                 entityGroupRelationships);
         }
+
+        Relationships.Add(_name, _reputationStateThresholds[ReputationState.Loved]);
     }
 
     //todo move contents to global helper and use this as wrapper

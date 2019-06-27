@@ -89,7 +89,7 @@ public class EnemyController : AstarAI
         }
         else
         {
-            if (Goals.Peek().GetType() == typeof(Attack))
+            if (Goals.Count > 0 && Goals.Peek().GetType() == typeof(Attack))
             {
                 return;
             }

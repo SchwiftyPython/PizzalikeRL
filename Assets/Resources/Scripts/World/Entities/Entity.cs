@@ -1265,4 +1265,14 @@ public class Entity : ISubscriber
             eventMediator.SubscribeToEvent(baseEvent, this);
         }
     }
+
+    public void UnsubscribeFromAllEvents()
+    {
+        if (eventMediator == null)
+        {
+            eventMediator = EventMediator.Instance;
+        }
+
+        eventMediator.UnsubscribeFromAllEvents(this);
+    }
 }
