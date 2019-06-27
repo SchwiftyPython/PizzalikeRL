@@ -59,6 +59,19 @@ public class EventMediator : MonoBehaviour
         }
     }
 
+    public void UnsubscribeFromAllEvents(ISubscriber subscriber)
+    {
+        foreach (var eventName in _eventSubscriptions.Keys)
+        {
+            var subscribers = _eventSubscriptions[eventName];
+
+            if (subscribers.Contains(subscriber))
+            {
+                subscribers.Remove(subscriber);
+            }
+        }
+    }
+
     private void NotifySubscriber(string eventName, object broadcaster, ISubscriber subscriber, object parameter = null)
     {
         subscriber.OnNotify(eventName, broadcaster, parameter);
