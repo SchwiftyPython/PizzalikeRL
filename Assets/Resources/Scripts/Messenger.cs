@@ -27,7 +27,6 @@ public class Messenger : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
 
         _messagesOnScreen = new Queue<GameObject>();
     }
