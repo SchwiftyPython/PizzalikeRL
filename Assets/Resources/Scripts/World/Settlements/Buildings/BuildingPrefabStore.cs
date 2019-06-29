@@ -17,6 +17,10 @@ public class BuildingPrefabStore : MonoBehaviour
     public static IDictionary<string, GameObject> BrickWallTiles;
     public static IDictionary<string, GameObject> WoodenWallTiles;
 
+    public static IDictionary<string, GameObject> StoneDoorTiles;
+    public static IDictionary<string, GameObject> BrickDoorTiles;
+    public static IDictionary<string, GameObject> WoodenDoorTiles;
+
     public static List<GameObject> WoodenFloorTiles;
     public static List<GameObject> StoneFloorTiles;
 
@@ -113,7 +117,11 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_lower_right_corner", null},
             { "wall_lower_left_corner", null},
             { "wall_horizontal_straight_top", null},
-            { "wall_horizontal_straight_bottom", null}
+            { "wall_horizontal_straight_bottom", null},
+            { "wall_horizontal_door_closed", null},
+            { "wall_horizontal_door_open", null},
+            { "wall_vertical_door_closed", null},
+            { "wall_vertical_door_open", null}
         };
 
         var i = 0;
@@ -132,7 +140,11 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_lower_right_corner", null},
             { "wall_lower_left_corner", null},
             { "wall_horizontal_straight_top", null},
-            { "wall_horizontal_straight_bottom", null}
+            { "wall_horizontal_straight_bottom", null},
+            { "wall_horizontal_door_closed", null},
+            { "wall_horizontal_door_open", null},
+            { "wall_vertical_door_closed", null},
+            { "wall_vertical_door_open", null}
         };
 
         i = 0;
@@ -151,7 +163,11 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_lower_right_corner", null},
             { "wall_lower_left_corner", null},
             { "wall_horizontal_straight_top", null},
-            { "wall_horizontal_straight_bottom", null}
+            { "wall_horizontal_straight_bottom", null},
+            { "wall_horizontal_door_closed", null},
+            { "wall_horizontal_door_open", null},
+            { "wall_vertical_door_closed", null},
+            { "wall_vertical_door_open", null}
         };
 
         i = 0;

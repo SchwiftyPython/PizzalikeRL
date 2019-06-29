@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Building
 {
@@ -82,6 +84,8 @@ public class Building
                 }
             }
         }
+
+        PlaceExteriorDoorOnRandomSide();
     }
 
     private void PickTilePrefabs()
@@ -96,5 +100,48 @@ public class Building
     private GameObject GetRandomFloorTilePrefab()
     {
         return FloorTilePrefabs[Random.Range(0, FloorTilePrefabs.Count)];
+    }
+
+    private void PlaceExteriorDoorOnRandomSide()
+    {
+        var sides = new List<string>
+        {
+            "north",
+            "south",
+            "east",
+            "west"
+        };
+
+        var side = sides[Random.Range(0, sides.Count)];
+
+        var targetRow = 0;
+        var targetColumn = 0;
+        GameObject doorPrefab = null;
+
+        switch (side)
+        {
+            case "north":
+                targetRow = 0;
+                targetColumn = Random.Range(1, Width - 2);
+                doorPrefab = WallTilePrefabs["wall_horizontal_door_closed"];
+                break;
+            case "south":
+                targetRow = Height - 1;
+                targetColumn = Random.Range(1, Width - 2);
+                doorPrefab = WallTilePrefabs["wall_horizontal_door_closed"];
+                break;
+            case "east":
+                targetRow = Random.Range(1, Height - 2);
+                targetColumn = Width - 1;
+                doorPrefab = WallTilePrefabs["wall_vertical_door_closed"];
+                break;
+            case "west":
+                targetRow = Random.Range(1, Height - 2);
+                targetColumn = 0;
+                doorPrefab = WallTilePrefabs["wall_vertical_door_closed"];
+                break;
+        }
+
+        WallTiles[targetRow, targetColumn] = doorPrefab;
     }
 }

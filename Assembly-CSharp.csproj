@@ -362,6 +362,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\Building.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\BuildingPrefab.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\BuildingPrefabStore.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\Door.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Lot.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Settlement.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\SettlementPrefab.cs" />

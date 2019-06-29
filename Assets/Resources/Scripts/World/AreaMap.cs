@@ -191,7 +191,17 @@ public class AreaMap : MonoBehaviour
 
                         tile = building.WallTiles[currentRow, currentColumn];
 
-                        _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
+                        if (tile.name.Contains("door"))
+                        {
+                            _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(false);
+
+                            tile.GetComponent<Door>().CurrentTile = _currentArea.AreaTiles[areaX, areaY];
+                        }
+                        else
+                        {
+                            _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
+                        }
+                        
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(true);
                         instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         _currentArea.AreaTiles[areaX, areaY].PresentWallTile = instance;
