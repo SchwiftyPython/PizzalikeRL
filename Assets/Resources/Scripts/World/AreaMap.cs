@@ -187,6 +187,7 @@ public class AreaMap : MonoBehaviour
                         }
 
                         var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
+                        _currentArea.AreaTiles[areaX, areaY].TextureInstance = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
 
                         tile = building.WallTiles[currentRow, currentColumn];
@@ -218,7 +219,9 @@ public class AreaMap : MonoBehaviour
                             Destroy(_currentArea.AreaTiles[areaX, areaY].TextureInstance);
                         }
 
+                        _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(false);
                         var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
+                        _currentArea.AreaTiles[areaX, areaY].TextureInstance = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
                     _currentArea.AreaTiles[areaX, areaY].Lot = lot;

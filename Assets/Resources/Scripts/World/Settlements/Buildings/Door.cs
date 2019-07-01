@@ -29,6 +29,9 @@ public class Door : MonoBehaviour
         transform.GetComponent<SpriteRenderer>().sprite =
             OpenPrefab.GetComponent<SpriteRenderer>().sprite;
 
+        Destroy(transform.GetComponent<Collider2D>());
+        Destroy(transform.GetComponent<Rigidbody2D>());
+
         CurrentTile.SetBlocksLight(false);
 
         _currentState = DoorState.Open;
