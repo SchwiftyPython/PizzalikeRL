@@ -96,6 +96,11 @@ public class Settlement
                 var x = Random.Range(0, _cell.GetCellHeight());
                 var y = Random.Range(0, _cell.GetCellWidth());
 
+                if (_areas.Count > 0 && !AreaIsAdjacentToAnotherSettlementArea(x, y))
+                {
+                    continue;
+                }
+
                 var area = _cell.Areas[x, y];
 
                 if (area.Settlement != null)
@@ -115,6 +120,26 @@ public class Settlement
                 settlementPlaced = true;
             }
         }
+    }
+
+    private bool AreaIsAdjacentToAnotherSettlementArea(int x, int y)
+    {
+        foreach (var area in _areas)
+        {
+            var xDelta = Math.Abs(area.X - x);
+            var yDelta = Math.Abs(area.Y - y);
+
+            if (xDelta <= 1 && yDelta <= 1)
+            {
+                //no diagonals
+                if (xDelta > 0 && yDelta > 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     private void BuildAreas()

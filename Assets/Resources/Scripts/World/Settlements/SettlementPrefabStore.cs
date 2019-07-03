@@ -282,6 +282,8 @@ public class SettlementPrefabStore : MonoBehaviour
         {
             case "outpost":
                 return SettlementSize.Outpost;
+            case "hamlet":
+                return SettlementSize.Hamlet;
                 default:
                     return SettlementSize.Outpost; 
         }
