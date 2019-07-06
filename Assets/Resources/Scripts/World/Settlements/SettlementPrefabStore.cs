@@ -128,6 +128,7 @@ public class SettlementPrefabStore : MonoBehaviour
     private void Start ()
     {
 		LoadPrefabsFromFile();
+        FinishPopulatingPrefabs();
         LoadNamesFromFile();
         PopulateTileDictionaries();
 	}
@@ -276,6 +277,30 @@ public class SettlementPrefabStore : MonoBehaviour
         return new Lot(upperLeftCorner, height, width);
     }
 
+    private void FinishPopulatingPrefabs()
+    {
+        var sizeObjects = Enum.GetValues(typeof(SettlementSize));
+
+        foreach (var sizeObject in sizeObjects)
+        {
+            var size = (SettlementSize) sizeObject;
+
+            if (!SettlementPrefabs.ContainsKey(size))
+            {
+                continue;
+            }
+
+            foreach (var prefab in SettlementPrefabs.Keys)
+            {
+                if (prefab > (int) SettlementSize.Outpost && (int) prefab < (int) size)
+                {
+                    SettlementPrefabs[size].AddRange(SettlementPrefabs[prefab]);
+                }
+            }
+        }
+        Debug.Log("Settlement prefabs populated");
+    }
+
     private static SettlementSize GetSettlementSize(string size)
     {
         switch (size)
@@ -284,6 +309,8 @@ public class SettlementPrefabStore : MonoBehaviour
                 return SettlementSize.Outpost;
             case "hamlet":
                 return SettlementSize.Hamlet;
+            case "village":
+                return SettlementSize.Village;
                 default:
                     return SettlementSize.Outpost; 
         }
@@ -456,6 +483,8 @@ public class SettlementPrefabStore : MonoBehaviour
 
     public static SettlementPrefab GetSettlementPrefab(SettlementSize size)
     {
-        return SettlementPrefabs[size][Random.Range(0, SettlementPrefabs[size].Count)];
+        var prefab = SettlementPrefabs[size][Random.Range(0, SettlementPrefabs[size].Count)];
+
+        return new SettlementPrefab(prefab);
     }
 }

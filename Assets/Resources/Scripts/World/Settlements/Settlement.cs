@@ -19,12 +19,10 @@ public class Settlement
     private int _yearFounded;
     private string _history;
     private List<Entity> _citizens;
-    private List<Area> _areas;
-    private List<Building> _buildings;
+    private IDictionary<Area, SettlementSection> _areas;
 
     public string Name;
     public readonly SettlementSize Size;
-    public List<Lot> Lots;
     public Faction Faction;
 
     public Settlement(Faction faction, SettlementSize size, Cell cell, int population)
@@ -62,7 +60,7 @@ public class Settlement
             Population = _population,
             FactionName = Faction.Name,
             History = _history,
-            LotSdos = LotSdo.ConvertToLotSdos(Lots),
+            //todo LotSdos = LotSdo.ConvertToLotSdos(Lots),
             BuildingSdos = new List<BuildingSdo>(),
             Name = Name, 
             CitizenIds = new List<Guid>(),
@@ -87,7 +85,7 @@ public class Settlement
 
     private void PickAreas()
     {
-        _areas = new List<Area>();
+        _areas = new Dictionary<Area, SettlementSection>();
         for (var i = 0; i < _numAreasForSettlementSize[Size]; i++)
         {
             var settlementPlaced = false;
@@ -103,12 +101,13 @@ public class Settlement
 
                 var area = _cell.Areas[x, y];
 
-                if (area.Settlement != null)
+                if (_areas.ContainsKey(area))
                 {
                     continue;
                 }
 
                 area.Settlement = this;
+                area.SettlementSection = new SettlementSection();
 
                 if (area.PresentFactions == null)
                 {
@@ -116,7 +115,7 @@ public class Settlement
                 }
 
                 area.PresentFactions.Add(Faction);
-                _areas.Add(area);
+                _areas.Add(area, area.SettlementSection);
                 settlementPlaced = true;
             }
         }
@@ -124,7 +123,7 @@ public class Settlement
 
     private bool AreaIsAdjacentToAnotherSettlementArea(int x, int y)
     {
-        foreach (var area in _areas)
+        foreach (var area in _areas.Keys)
         {
             var xDelta = Math.Abs(area.X - x);
             var yDelta = Math.Abs(area.Y - y);
@@ -144,7 +143,7 @@ public class Settlement
 
     private void BuildAreas()
     {
-        foreach (var area in _areas)
+        foreach (var area in _areas.Keys)
         {
             area.Build();
         }

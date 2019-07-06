@@ -159,14 +159,14 @@ public class AreaMap : MonoBehaviour
 
     public void PlaceBuildings()
     {
-        if (_currentArea.Settlement?.Lots == null)
+        if (_currentArea.SettlementSection?.Lots == null)
         {
             return;
         }
 
-        var settlement = _currentArea.Settlement;
+        var settlementSection = _currentArea.SettlementSection;
 
-        foreach (var lot in settlement.Lots)
+        foreach (var lot in settlementSection.Lots)
         {
             var areaY = (int)lot.LowerLeftCorner.y;
             var areaX = (int)lot.LowerLeftCorner.x;
@@ -574,8 +574,8 @@ public class AreaMap : MonoBehaviour
 
     private bool CanPlaceWaterTile(Tile tile)
     {
-        return _currentArea.Settlement == null ||
-               _currentArea.Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y)));
+        return _currentArea.SettlementSection == null ||
+               _currentArea.SettlementSection.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y)));
     }
 
     private Dictionary<string, GameObject> GetWaterTiles()

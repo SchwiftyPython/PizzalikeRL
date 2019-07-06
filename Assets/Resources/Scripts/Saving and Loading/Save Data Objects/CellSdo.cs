@@ -53,7 +53,7 @@ public class CellSdo
         {
             foreach (var areaSdo in sdo.AreaSdos)
             {
-                if (cell.Areas[areaSdo.X, areaSdo.Y].Settlement != null)
+                if (cell.Areas[areaSdo.X, areaSdo.Y].SettlementSection != null)
                 {
                     areaSdo.SettlementSdo = sdo.SettlementSdo;
                 }

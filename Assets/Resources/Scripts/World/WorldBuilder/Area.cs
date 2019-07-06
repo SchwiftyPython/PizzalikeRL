@@ -31,6 +31,7 @@ public class Area
     public Queue<Entity> TurnOrder { get; set; }
 
     public Settlement Settlement;
+    public SettlementSection SettlementSection;
 
     public string Id;
 
@@ -113,7 +114,7 @@ public class Area
 
     private void PrepareSettlement()
     {
-        if (Settlement == null)
+        if (SettlementSection == null)
         {
             return;
         }
@@ -122,7 +123,7 @@ public class Area
 
         SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
 
-        Settlement.Lots = settlementPrefab.Lots;
+        SettlementSection.Lots = settlementPrefab.Lots;
 
         var settlementBluePrint = settlementPrefab.Blueprint;
 
@@ -169,7 +170,7 @@ public class Area
 
             int maxNpcs;
 
-            if (Settlement != null && Settlement.Faction.Name.Equals(faction.Name))
+            if (SettlementSection != null && Settlement.Faction.Name.Equals(faction.Name))
             {
                 maxNpcs = Math.Min(faction.RemainingCitizensToPlace.Count,
                               SettlementPrefabStore.SettlementSizePopulationCaps[Settlement.Size]) + 1;
@@ -298,7 +299,7 @@ public class Area
                     }
                     catch (Exception e)
                     {
-                        Debug.Log(e.Message);
+                        Debug.Log("Water placement error: " + e.Message);
                         return;
                     }
                     if (waterTilePrefab == null)
@@ -341,8 +342,8 @@ public class Area
 
     private bool CanPlaceWaterTile(Tile tile)
     {
-        return !tile.GetBlocksMovement() && (Settlement == null ||
-               Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y))));
+        return !tile.GetBlocksMovement() && (SettlementSection == null ||
+               SettlementSection.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y))));
     }
 
     private Dictionary<string, GameObject> GetWaterTiles()

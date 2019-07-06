@@ -367,6 +367,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Settlement.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\SettlementPrefab.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\SettlementPrefabStore.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Settlements\SettlementSection.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\SettlementSize.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Area.cs" />
     <Compile Include="Assets\Resources\Scripts\World\WorldBuilder\Cell.cs" />
