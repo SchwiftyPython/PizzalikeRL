@@ -32,6 +32,11 @@ public class BuildingSdo
         };
     }
 
+    public static List<Building> ConvertToBuildings(List<BuildingSdo> sdos)
+    {
+        return sdos.Select(ConvertToBuilding).ToList();
+    }
+
     public static Building ConvertToBuilding(BuildingSdo sdo)
     {
         return new Building(sdo);

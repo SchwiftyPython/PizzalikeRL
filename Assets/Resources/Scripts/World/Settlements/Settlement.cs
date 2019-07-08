@@ -50,6 +50,17 @@ public class Settlement
         _cell = WorldData.Instance.MapDictionary[sdo.CellId];
         _population = sdo.Population;
         _history = sdo.History;
+
+        _areas = new Dictionary<Area, SettlementSection>();
+
+        foreach (var id in sdo.AreaIds)
+        {
+            var splitId = id.Split(' ');
+
+            var area = _cell.Areas[int.Parse(splitId[0]), int.Parse(splitId[1])];
+
+            _areas.Add(new KeyValuePair<Area, SettlementSection>(area, area.SettlementSection));
+        }
     }
 
     public SettlementSdo GetSettlementSdo()
@@ -60,12 +71,16 @@ public class Settlement
             Population = _population,
             FactionName = Faction.Name,
             History = _history,
-            //todo LotSdos = LotSdo.ConvertToLotSdos(Lots),
-            BuildingSdos = new List<BuildingSdo>(),
             Name = Name, 
             CitizenIds = new List<Guid>(),
-            Size = Size
+            Size = Size,
+            AreaIds = new List<string>()
         };
+
+        foreach (var area in _areas.Keys)
+        {
+            sdo.AreaIds.Add(area.Id);
+        }
 
         foreach (var lotSdo in sdo.LotSdos)
         {
