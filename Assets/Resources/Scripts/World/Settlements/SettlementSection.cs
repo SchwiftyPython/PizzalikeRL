@@ -6,6 +6,10 @@ public class SettlementSection
 
     public List<Building> Buildings;
 
+    public SettlementSection()
+    {
+    }
+
     public SettlementSection(SettlementSectionSdo sdo)
     {
         Lots = LotSdo.ConvertToLots(sdo.LotSdos);

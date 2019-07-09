@@ -117,6 +117,8 @@ public class WorldData : MonoBehaviour
     public GameObject[] PizzaToppingsUiView;
     public GameObject[] ItemPrefabsWorldView;
 
+    public GameObject[] Furniture;
+
     public GameObject SmallChest;
     
     public static WorldData Instance;
