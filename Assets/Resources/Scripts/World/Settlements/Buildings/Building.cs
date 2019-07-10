@@ -7,6 +7,7 @@ public class Building
 {
     public GameObject[,] FloorTiles;
     public GameObject[,] WallTiles;
+    public GameObject[,] Props;
 
     public int WallTypeIndex;
     public IDictionary<string, GameObject> WallTilePrefabs;
@@ -21,11 +22,12 @@ public class Building
 
     public Building(BuildingPrefab prefab)
     {
-        Width = prefab.Width;
         Height = prefab.Height;
+        Width = prefab.Width;
 
         FloorTiles = new GameObject[Height, Width];
         WallTiles = new GameObject[Height, Width];
+        Props = new GameObject[Height, Width];
 
         PickTilePrefabs();
 
@@ -86,6 +88,7 @@ public class Building
         }
 
         PlaceExteriorDoorOnRandomSide();
+        Furnish();
     }
 
     private void PickTilePrefabs()
@@ -143,5 +146,47 @@ public class Building
         }
 
         WallTiles[targetRow, targetColumn] = doorPrefab;
+    }
+
+    private void Furnish()
+    {
+        var maxItems = Height * Width / 20;
+
+        var minItems = Height * Width / 60;
+
+        if (minItems < 1)
+        {
+            minItems = 1;
+        }
+
+        var numItemsToPlace = Random.Range(minItems, maxItems);
+
+        var tilesAdjacentToWall = FindAllTilesAdjacentToWall();
+    }
+
+    private bool[,] FindAllTilesAdjacentToWall()
+    {
+        var tilesAdjacentToWall = new bool[Height, Width];
+
+        for (var currentRow = 0; currentRow < Height; currentRow++)
+        {
+            for (var currentColumn = 0; currentColumn < Width; currentColumn++)
+            {
+                tilesAdjacentToWall[currentRow, currentColumn] = TileAdjacentToWall(currentRow, currentColumn);
+            }
+        }
+
+        return tilesAdjacentToWall;
+    }
+
+    private bool TileAdjacentToWall(int currentRow, int currentColumn)
+    {
+        //todo exclude doors somehow
+
+        //todo check if current tile is wall
+        //todo check all directions
+        //todo if no walls or adjacent to door on non-diagonal then false
+
+        return false;
     }
 }

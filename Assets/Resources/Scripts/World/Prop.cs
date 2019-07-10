@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Prop {
+public class Prop
+{
+    public GameObject Prefab { get; }
 
-	GameObject texture;
+    public GameObject Texture;
 
-	public Prop(){
-		
+	public Prop(GameObject prefab)
+	{
+	    Prefab = prefab;
 	}
 }

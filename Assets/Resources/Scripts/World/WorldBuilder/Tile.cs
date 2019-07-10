@@ -14,7 +14,6 @@ public class Tile
     private Visibilities _visibility;
 
     private Entity _presentEntity;
-    private Prop _presentProp;
     private List<Item> _presentItems;
 
     private Rarities _rarity;
@@ -42,6 +41,7 @@ public class Tile
     public GameObject PresentWallTile { get; set; }
 
     public Topping PresentTopping { get; set; }
+    public Prop PresentProp { get; set; }
 
     public Visibilities Visibility
     {

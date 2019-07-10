@@ -129,10 +129,18 @@ public class AreaMap : MonoBehaviour
             {
                 var tile = _currentArea.AreaTiles[currentRow, currentColumn];
 
-                var texture = tile.GetPrefabTileTexture();
-                var instance = Instantiate(texture, new Vector2(currentColumn, currentRow), Quaternion.identity);
+                var prefab = tile.GetPrefabTileTexture();
+                var instance = Instantiate(prefab, new Vector2(currentColumn, currentRow), Quaternion.identity);
                 tile.TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
+
+                if (tile.PresentProp != null)
+                {
+                    prefab = tile.PresentProp.Prefab;
+                    instance = Instantiate(prefab, new Vector2(currentColumn, currentRow), Quaternion.identity);
+                    tile.PresentProp.Texture = instance;
+                    instance.transform.SetParent(tile.TextureInstance.transform);
+                }
 
                 tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(currentColumn, currentRow, -4), Quaternion.identity);
                 tile.FovTile.transform.SetParent(FovHolder.transform);

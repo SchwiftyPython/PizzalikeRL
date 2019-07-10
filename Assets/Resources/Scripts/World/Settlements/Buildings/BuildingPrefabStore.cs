@@ -13,6 +13,8 @@ public class BuildingPrefabStore : MonoBehaviour
 
     private static readonly IDictionary<string, BuildingPrefab> BuildingPrefabs = new Dictionary<string, BuildingPrefab>();
 
+    private static IDictionary<string, GameObject> _allFurniture;
+
     public static IDictionary<string, GameObject> StoneWallTiles;
     public static IDictionary<string, GameObject> BrickWallTiles;
     public static IDictionary<string, GameObject> WoodenWallTiles;
@@ -27,6 +29,7 @@ public class BuildingPrefabStore : MonoBehaviour
     public static List<IDictionary<string, GameObject>> WallTileTypes;
 
     public static List<List<GameObject>> FloorTileTypes;
+
 
     public static IDictionary<char, string> WallTileKeys = new Dictionary<char, string>
     {
@@ -46,7 +49,8 @@ public class BuildingPrefabStore : MonoBehaviour
     {
 		LoadPrefabsFromFile();
         PopulateTileDictionaries();
-	}
+        PopulateFurnitureDictionary();
+    }
 
     private void LoadPrefabsFromFile()
     {
@@ -203,6 +207,44 @@ public class BuildingPrefabStore : MonoBehaviour
             WoodenFloorTiles,
             StoneFloorTiles
         };
+    }
+
+    private static void PopulateFurnitureDictionary()
+    {
+       _allFurniture = new Dictionary<string, GameObject>
+       {
+           {"bed", null},
+           {"bookcase_empty", null},
+           {"bookcase_full", null},
+           {"chest_1", null},
+           {"chest_2", null},
+           {"chest_3", null},
+           {"couch_horizontal", null},
+           {"couch_diagonal", null},
+           {"easy_chair", null},
+           {"lantern_off", null},
+           {"lantern_on", null},
+           {"lamp_off", null},
+           {"lamp_on", null},
+           {"store_counter_clutter_1", null},
+           {"store_counter_clutter_2", null},
+           {"store_counter_empty_1", null},
+           {"store_counter_empty_2", null},
+           {"torture_table", null},
+           {"torture_iron_maiden", null},
+           {"torture_rack_1", null},
+           {"torture_rack_2", null},
+           {"weapon_rack_1", null},
+           {"weapon_rack_2", null},
+           {"weapon_rack_empty", null}
+       };
+
+        var i = 0;
+        foreach (var furniture in _allFurniture.Keys.ToArray())
+        {
+            _allFurniture[furniture] = WorldData.Instance.Furniture[i];
+            i++;
+        }
     }
 
     public static char[,] GetBuildingPrefab(string buildingType)
