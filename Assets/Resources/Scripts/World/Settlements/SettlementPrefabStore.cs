@@ -19,7 +19,7 @@ public class SettlementPrefabStore : MonoBehaviour
 
     private static List<string> _rawNames;
 
-    public static IDictionary<char, string> GrassDirtPathTileKeys = new Dictionary<char, string>
+    public static readonly IDictionary<char, string> GrassDirtPathTileKeys = new Dictionary<char, string>
     {
         {'0', "path_dirt_vertical_straight_left" },
         {'1', "path_dirt_vertical_straight_right" },

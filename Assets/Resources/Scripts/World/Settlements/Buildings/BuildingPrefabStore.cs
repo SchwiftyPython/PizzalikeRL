@@ -279,4 +279,9 @@ public class BuildingPrefabStore : MonoBehaviour
     {
         return FloorTileTypes[index];
     }
+
+    public static GameObject GetRandomFurniturePrefab()
+    {
+        return _allFurniture.ElementAt(Random.Range(0, _allFurniture.Count)).Value;
+    }
 }

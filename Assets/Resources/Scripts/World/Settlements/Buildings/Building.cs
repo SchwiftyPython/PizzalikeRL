@@ -5,6 +5,10 @@ using Random = UnityEngine.Random;
 
 public class Building
 {
+    private const int MaxTriesToPlaceObject = 3;
+
+    //todo make list of keys for specific room types
+
     public GameObject[,] FloorTiles;
     public GameObject[,] WallTiles;
     public GameObject[,] Props;
@@ -150,18 +154,37 @@ public class Building
 
     private void Furnish()
     {
-        var maxItems = Height * Width / 20;
+        var maxFurniture = Height * Width / 20;
 
-        var minItems = Height * Width / 60;
+        var minFurniture = Height * Width / 60;
 
-        if (minItems < 1)
+        if (minFurniture < 1)
         {
-            minItems = 1;
+            minFurniture = 1;
         }
 
-        var numItemsToPlace = Random.Range(minItems, maxItems);
+        var numFurnitureToPlace = Random.Range(minFurniture, maxFurniture);
 
         var tilesAdjacentToWall = FindAllTilesAdjacentToWall();
+
+        for (var i = 0; i < numFurnitureToPlace; i++)
+        {
+            var row = Random.Range(0, Height);
+            var column = Random.Range(0, Width);
+
+            if (tilesAdjacentToWall[row, column] && Props[row, column] == null)
+            {
+                //todo pick furniture based on room type
+
+                var furniturePrefab = BuildingPrefabStore.GetRandomFurniturePrefab();
+
+                Props[row, column] = furniturePrefab;
+            }
+        }
+        
+        //todo else increment failure, try again
+
+        
     }
 
     private bool[,] FindAllTilesAdjacentToWall()
@@ -172,21 +195,92 @@ public class Building
         {
             for (var currentColumn = 0; currentColumn < Width; currentColumn++)
             {
-                tilesAdjacentToWall[currentRow, currentColumn] = TileAdjacentToWall(currentRow, currentColumn);
+                tilesAdjacentToWall[currentRow, currentColumn] = IsFloorTileAdjacentToWall(currentRow, currentColumn);
             }
         }
 
         return tilesAdjacentToWall;
     }
 
-    private bool TileAdjacentToWall(int currentRow, int currentColumn)
+    private bool IsFloorTileAdjacentToWall(int currentRow, int currentColumn)
     {
-        //todo exclude doors somehow
+        if (IsWall(currentRow, currentColumn))
+        {
+            return false;
+        }
 
-        //todo check if current tile is wall
-        //todo check all directions
-        //todo if no walls or adjacent to door on non-diagonal then false
+        if (WallNorth(currentRow, currentColumn))
+        {
+            return true;
+        }
+
+        if (WallEast(currentRow, currentColumn))
+        {
+            return true;
+        }
+
+        if (WallSouth(currentRow, currentColumn))
+        {
+            return true;
+        }
+
+        if (WallWest(currentRow, currentColumn))
+        {
+            return true;
+        }
 
         return false;
+    }
+
+    private bool IsDoor(int row, int column)
+    {
+        var doorComponent = WallTiles[row, column].GetComponent<Door>();
+
+        return doorComponent != null;
+    }
+
+    private bool IsWall(int currentRow, int currentColumn)
+    {
+        return WallTiles[currentRow, currentColumn] != null;
+    }
+
+    private bool WallNorth(int currentRow, int currentColumn)
+    {
+        if (currentRow - 1 < 0)
+        {
+            return false;
+        }
+
+        return IsWall(currentRow - 1, currentColumn) && !IsDoor(currentRow - 1, currentColumn);
+    }
+
+    private bool WallEast(int currentRow, int currentColumn)
+    {
+        if (currentColumn + 1 >= Width)
+        {
+            return false;
+        }
+
+        return IsWall(currentRow, currentColumn + 1) && !IsDoor(currentRow, currentColumn + 1);
+    }
+
+    private bool WallSouth(int currentRow, int currentColumn)
+    {
+        if (currentRow + 1 >= Height)
+        {
+            return false;
+        }
+
+        return IsWall(currentRow + 1, currentColumn) && !IsDoor(currentRow + 1, currentColumn);
+    }
+
+    private bool WallWest(int currentRow, int currentColumn)
+    {
+        if (currentColumn - 1 < 0)
+        {
+            return false;
+        }
+
+        return IsWall(currentRow, currentColumn - 1) && !IsDoor(currentRow, currentColumn - 1);
     }
 }

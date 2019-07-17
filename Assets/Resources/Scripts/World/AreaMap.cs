@@ -231,6 +231,19 @@ public class AreaMap : MonoBehaviour
                         var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         _currentArea.AreaTiles[areaX, areaY].TextureInstance = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
+
+                        if (building.Props[currentRow, currentColumn] != null)
+                        {
+                            _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                                new Prop(building.Props[currentRow, currentColumn]);
+
+                            instance = Instantiate(_currentArea.AreaTiles[areaX, areaY].PresentProp.Prefab,
+                                new Vector2(areaY, areaX), Quaternion.identity);
+
+                            _currentArea.AreaTiles[areaX, areaY].PresentProp.Texture = instance;
+
+                            instance.transform.SetParent(_areaMapHolderTransform);
+                        }
                     }
                     _currentArea.AreaTiles[areaX, areaY].Lot = lot;
                     areaY++;
