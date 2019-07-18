@@ -1,4 +1,12 @@
 
+building_tiny
+5 5
+26663
+1aaa0
+1aaa0
+1aaa0
+57774
+
 building_small
 10 10
 2666666663

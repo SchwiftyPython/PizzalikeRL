@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Building
 {
     private const int MaxTriesToPlaceObject = 3;
 
-    //todo make list of keys for specific room types
-
-    public GameObject[,] FloorTiles;
-    public GameObject[,] WallTiles;
-    public GameObject[,] Props;
+    public readonly GameObject[,] FloorTiles;
+    public readonly GameObject[,] WallTiles;
+    public readonly GameObject[,] Props;
 
     public int WallTypeIndex;
-    public IDictionary<string, GameObject> WallTilePrefabs;
+    private IDictionary<string, GameObject> _wallTilePrefabs;
 
     public int FloorTypeIndex;
-    public List<GameObject> FloorTilePrefabs;
+    private List<GameObject> _floorTilePrefabs;
 
-    public int Width;
-    public int Height;
+    public readonly int Width;
+    public readonly int Height;
 
-    public char[,] Blueprint;
+    public readonly char[,] Blueprint;
 
     public Building(BuildingPrefab prefab)
     {
@@ -50,8 +46,8 @@ public class Building
         WallTypeIndex = sdo.WallTypeIndex;
         FloorTypeIndex = sdo.FloorTypeIndex;
 
-        WallTilePrefabs = BuildingPrefabStore.GetWallTileTypeAt(WallTypeIndex);
-        FloorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
+        _wallTilePrefabs = BuildingPrefabStore.GetWallTileTypeAt(WallTypeIndex);
+        _floorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
 
         Blueprint = BuildingSdo.ConvertBlueprintForLoading(sdo.Blueprint);
 
@@ -73,7 +69,7 @@ public class Building
                     FloorTiles[currentRow, currentColumn] = tile;
 
                     var tileType = BuildingPrefabStore.WallTileKeys[tileCode];
-                    tile = WallTilePrefabs[tileType];
+                    tile = _wallTilePrefabs[tileType];
 
                     WallTiles[currentRow, currentColumn] = tile;
                 }
@@ -98,15 +94,15 @@ public class Building
     private void PickTilePrefabs()
     {
         WallTypeIndex = BuildingPrefabStore.GetRandomWallTypeIndex();
-        WallTilePrefabs = BuildingPrefabStore.GetWallTileTypeAt(WallTypeIndex);
+        _wallTilePrefabs = BuildingPrefabStore.GetWallTileTypeAt(WallTypeIndex);
 
         FloorTypeIndex = BuildingPrefabStore.GetRandomFloorTypeIndex();
-        FloorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
+        _floorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
     }
 
     private GameObject GetRandomFloorTilePrefab()
     {
-        return FloorTilePrefabs[Random.Range(0, FloorTilePrefabs.Count)];
+        return _floorTilePrefabs[Random.Range(0, _floorTilePrefabs.Count)];
     }
 
     private void PlaceExteriorDoorOnRandomSide()
@@ -130,22 +126,22 @@ public class Building
             case "north":
                 targetRow = 0;
                 targetColumn = Random.Range(1, Width - 2);
-                doorPrefab = WallTilePrefabs["wall_horizontal_door_closed"];
+                doorPrefab = _wallTilePrefabs["wall_horizontal_door_closed"];
                 break;
             case "south":
                 targetRow = Height - 1;
                 targetColumn = Random.Range(1, Width - 2);
-                doorPrefab = WallTilePrefabs["wall_horizontal_door_closed"];
+                doorPrefab = _wallTilePrefabs["wall_horizontal_door_closed"];
                 break;
             case "east":
                 targetRow = Random.Range(1, Height - 2);
                 targetColumn = Width - 1;
-                doorPrefab = WallTilePrefabs["wall_vertical_door_closed"];
+                doorPrefab = _wallTilePrefabs["wall_vertical_door_closed"];
                 break;
             case "west":
                 targetRow = Random.Range(1, Height - 2);
                 targetColumn = 0;
-                doorPrefab = WallTilePrefabs["wall_vertical_door_closed"];
+                doorPrefab = _wallTilePrefabs["wall_vertical_door_closed"];
                 break;
         }
 
@@ -158,9 +154,9 @@ public class Building
 
         var minFurniture = Height * Width / 60;
 
-        if (minFurniture < 1)
+        if (minFurniture < 2)
         {
-            minFurniture = 1;
+            minFurniture = 2;
         }
 
         var numFurnitureToPlace = Random.Range(minFurniture, maxFurniture);
@@ -169,22 +165,22 @@ public class Building
 
         for (var i = 0; i < numFurnitureToPlace; i++)
         {
-            var row = Random.Range(0, Height);
-            var column = Random.Range(0, Width);
-
-            if (tilesAdjacentToWall[row, column] && Props[row, column] == null)
+            for (var numTries = 0; numTries < MaxTriesToPlaceObject; numTries++)
             {
-                //todo pick furniture based on room type
+                var row = Random.Range(0, Height);
+                var column = Random.Range(0, Width);
 
-                var furniturePrefab = BuildingPrefabStore.GetRandomFurniturePrefab();
+                if (tilesAdjacentToWall[row, column] && Props[row, column] == null)
+                {
+                    //todo pick furniture based on room type
 
-                Props[row, column] = furniturePrefab;
+                    var furniturePrefab = BuildingPrefabStore.GetRandomBasicFurniturePrefab();
+
+                    Props[row, column] = furniturePrefab;
+                    break;
+                }
             }
         }
-        
-        //todo else increment failure, try again
-
-        
     }
 
     private bool[,] FindAllTilesAdjacentToWall()

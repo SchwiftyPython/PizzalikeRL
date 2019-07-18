@@ -13,11 +13,31 @@ public class BuildingPrefabStore : MonoBehaviour
 
     private static readonly IDictionary<string, BuildingPrefab> BuildingPrefabs = new Dictionary<string, BuildingPrefab>();
 
+    private static readonly List<string> BasicRoomFurnitureKeys = new List<string>
+    {
+        "bed",
+        "bookcase_empty",
+        "bookcase_full",
+        "chest_1",
+        "chest_2",
+        "chest_3",
+        "couch_horizontal",
+        "couch_diagonal",
+        "easy_chair",
+        "lantern_off",
+        "lantern_on",
+        "lamp_off",
+        "lamp_on",
+        "weapon_rack_1",
+        "weapon_rack_2",
+        "weapon_rack_empty"
+    };
+
     private static IDictionary<string, GameObject> _allFurniture;
 
-    public static IDictionary<string, GameObject> StoneWallTiles;
-    public static IDictionary<string, GameObject> BrickWallTiles;
-    public static IDictionary<string, GameObject> WoodenWallTiles;
+    private static IDictionary<string, GameObject> _stoneWallTiles;
+    private static IDictionary<string, GameObject> _brickWallTiles;
+    private static IDictionary<string, GameObject> _woodenWallTiles;
 
     public static IDictionary<string, GameObject> StoneDoorTiles;
     public static IDictionary<string, GameObject> BrickDoorTiles;
@@ -112,7 +132,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
     private static void PopulateTileDictionaries()
     {
-        StoneWallTiles = new Dictionary<string, GameObject>
+        _stoneWallTiles = new Dictionary<string, GameObject>
         {
             { "wall_vertical_straight_right", null},
             { "wall_vertical_straight_left", null},
@@ -129,13 +149,13 @@ public class BuildingPrefabStore : MonoBehaviour
         };
 
         var i = 0;
-        foreach (var tile in StoneWallTiles.Keys.ToArray())
+        foreach (var tile in _stoneWallTiles.Keys.ToArray())
         {
-            StoneWallTiles[tile] = WorldData.Instance.StoneWallTiles[i];
+            _stoneWallTiles[tile] = WorldData.Instance.StoneWallTiles[i];
             i++;
         }
 
-        BrickWallTiles = new Dictionary<string, GameObject>
+        _brickWallTiles = new Dictionary<string, GameObject>
         {
             { "wall_vertical_straight_right", null},
             { "wall_vertical_straight_left", null},
@@ -152,13 +172,13 @@ public class BuildingPrefabStore : MonoBehaviour
         };
 
         i = 0;
-        foreach (var tile in BrickWallTiles.Keys.ToArray())
+        foreach (var tile in _brickWallTiles.Keys.ToArray())
         {
-            BrickWallTiles[tile] = WorldData.Instance.BrickWallTiles[i];
+            _brickWallTiles[tile] = WorldData.Instance.BrickWallTiles[i];
             i++;
         }
 
-        WoodenWallTiles = new Dictionary<string, GameObject>
+        _woodenWallTiles = new Dictionary<string, GameObject>
         {
             { "wall_vertical_straight_right", null},
             { "wall_vertical_straight_left", null},
@@ -175,9 +195,9 @@ public class BuildingPrefabStore : MonoBehaviour
         };
 
         i = 0;
-        foreach (var tile in WoodenWallTiles.Keys.ToArray())
+        foreach (var tile in _woodenWallTiles.Keys.ToArray())
         {
-            WoodenWallTiles[tile] = WorldData.Instance.WoodenWallTiles[i];
+            _woodenWallTiles[tile] = WorldData.Instance.WoodenWallTiles[i];
             i++;
         }
 
@@ -197,9 +217,9 @@ public class BuildingPrefabStore : MonoBehaviour
 
         WallTileTypes = new List<IDictionary<string, GameObject>>
         {
-            StoneWallTiles,
-            BrickWallTiles,
-            WoodenWallTiles
+            _stoneWallTiles,
+            _brickWallTiles,
+            _woodenWallTiles
         };
 
         FloorTileTypes = new List<List<GameObject>>
@@ -283,5 +303,12 @@ public class BuildingPrefabStore : MonoBehaviour
     public static GameObject GetRandomFurniturePrefab()
     {
         return _allFurniture.ElementAt(Random.Range(0, _allFurniture.Count)).Value;
+    }
+
+    public static GameObject GetRandomBasicFurniturePrefab()
+    {
+        var prefabKey = BasicRoomFurnitureKeys[Random.Range(0, BasicRoomFurnitureKeys.Count)];
+
+        return _allFurniture[prefabKey];
     }
 }
