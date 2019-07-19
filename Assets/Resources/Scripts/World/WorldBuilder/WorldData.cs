@@ -118,6 +118,7 @@ public class WorldData : MonoBehaviour
     public GameObject[] ItemPrefabsWorldView;
 
     public GameObject[] Furniture;
+    public GameObject[] MiscExteriorProps;
 
     public GameObject SmallChest;
     
