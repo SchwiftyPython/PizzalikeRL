@@ -20,6 +20,8 @@ public class Building
 
     public readonly char[,] Blueprint;
 
+    public List<Room> Rooms;
+
     public Building(BuildingPrefab prefab)
     {
         Height = prefab.Height;
@@ -50,6 +52,8 @@ public class Building
         _floorTilePrefabs = BuildingPrefabStore.GetFloorTileTypeAt(FloorTypeIndex);
 
         Blueprint = BuildingSdo.ConvertBlueprintForLoading(sdo.Blueprint);
+
+        //todo need room sdo -- maybe
 
         Build();
     }
@@ -180,6 +184,19 @@ public class Building
                     break;
                 }
             }
+        }
+    }
+
+    private void CreateRooms()
+    {
+        var minRoomWidthAndHeight = 2;
+        var maxTriesPerRoom = 2;
+
+        var maxRooms = Height * Width / 25;
+
+        for (var i = 0; i < maxRooms; i++)
+        {
+            
         }
     }
 

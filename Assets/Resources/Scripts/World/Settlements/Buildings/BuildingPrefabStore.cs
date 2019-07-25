@@ -145,7 +145,11 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_horizontal_door_closed", null},
             { "wall_horizontal_door_open", null},
             { "wall_vertical_door_closed", null},
-            { "wall_vertical_door_open", null}
+            { "wall_vertical_door_open", null},
+            { "3_way_bottom", null},
+            { "3_way_left", null},
+            { "3_way_right", null},
+            { "3_way_top", null}
         };
 
         var i = 0;
@@ -168,7 +172,11 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_horizontal_door_closed", null},
             { "wall_horizontal_door_open", null},
             { "wall_vertical_door_closed", null},
-            { "wall_vertical_door_open", null}
+            { "wall_vertical_door_open", null},
+            { "3_way_bottom", null},
+            { "3_way_left", null},
+            { "3_way_right", null},
+            { "3_way_top", null}
         };
 
         i = 0;
@@ -191,7 +199,11 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_horizontal_door_closed", null},
             { "wall_horizontal_door_open", null},
             { "wall_vertical_door_closed", null},
-            { "wall_vertical_door_open", null}
+            { "wall_vertical_door_open", null},
+            { "3_way_bottom", null},
+            { "3_way_left", null},
+            { "3_way_right", null},
+            { "3_way_top", null}
         };
 
         i = 0;
