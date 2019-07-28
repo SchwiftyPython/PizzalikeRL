@@ -202,6 +202,8 @@ public class AreaMap : MonoBehaviour
 
                         if (tile.name.Contains("door"))
                         {
+                            //todo check for obstacle in front of door and replace
+
                             _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(false);
 
                             tile.GetComponent<Door>().CurrentTile = _currentArea.AreaTiles[areaX, areaY];
@@ -216,7 +218,7 @@ public class AreaMap : MonoBehaviour
                         _currentArea.AreaTiles[areaX, areaY].PresentWallTile = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
-                    else
+                    else if(building.FloorTiles[currentRow, currentColumn] != null)
                     {
                         var tile = building.FloorTiles[currentRow, currentColumn];
 
@@ -475,8 +477,8 @@ public class AreaMap : MonoBehaviour
         foreach (var e in _currentArea.PresentEntities.ToArray())
         {
             Destroy(e.GetSprite());
-            e.CurrentTile.SetBlocksMovement(false);
-            e.CurrentTile.SetPresentEntity(null);
+            e.CurrentTile?.SetBlocksMovement(false);
+            e.CurrentTile?.SetPresentEntity(null);
         }
         Destroy(NpcSpriteHolder);
     }

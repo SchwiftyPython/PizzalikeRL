@@ -4,6 +4,7 @@ using UnityEngine;
 public class Building
 {
     private const int MaxTriesToPlaceObject = 3;
+    private const char FloorTileKey = 'a';
 
     public readonly GameObject[,] FloorTiles;
     public readonly GameObject[,] WallTiles;
@@ -79,8 +80,10 @@ public class Building
                 }
                 else
                 {
-                    if (tileCode != 'a')
+                    if (tileCode != FloorTileKey)
                     {
+                        WallTiles[currentRow, currentColumn] = null;
+                        FloorTiles[currentRow, currentColumn] = null;
                         continue;
                     }
 
@@ -119,34 +122,67 @@ public class Building
             "west"
         };
 
-        var side = sides[Random.Range(0, sides.Count)];
-
         var targetRow = 0;
         var targetColumn = 0;
         GameObject doorPrefab = null;
 
-        switch (side)
+        var wallPlaced = false;
+        while (!wallPlaced)
         {
-            case "north":
-                targetRow = 0;
-                targetColumn = Random.Range(1, Width - 2);
-                doorPrefab = _wallTilePrefabs["wall_horizontal_door_closed"];
-                break;
-            case "south":
-                targetRow = Height - 1;
-                targetColumn = Random.Range(1, Width - 2);
-                doorPrefab = _wallTilePrefabs["wall_horizontal_door_closed"];
-                break;
-            case "east":
-                targetRow = Random.Range(1, Height - 2);
-                targetColumn = Width - 1;
-                doorPrefab = _wallTilePrefabs["wall_vertical_door_closed"];
-                break;
-            case "west":
-                targetRow = Random.Range(1, Height - 2);
-                targetColumn = 0;
-                doorPrefab = _wallTilePrefabs["wall_vertical_door_closed"];
-                break;
+            var side = sides[Random.Range(0, sides.Count)];
+
+            switch (side)
+            {
+                case "north":
+                    targetRow = 0;
+                    targetColumn = Random.Range(1, Width - 2);
+
+                    if (WallSouth(targetRow, targetColumn))
+                    {
+                        break;
+                    }
+
+                    doorPrefab = _wallTilePrefabs["wall_horizontal_door_closed"];
+
+                    wallPlaced = true;
+                    break;
+                case "south":
+                    targetRow = Height - 1;
+                    targetColumn = Random.Range(1, Width - 2);
+
+                    if (WallNorth(targetRow, targetColumn))
+                    {
+                        break;
+                    }
+
+                    doorPrefab = _wallTilePrefabs["wall_horizontal_door_closed"];
+                    wallPlaced = true;
+                    break;
+                case "east":
+                    targetRow = Random.Range(1, Height - 2);
+                    targetColumn = Width - 1;
+
+                    if (WallWest(targetRow, targetColumn))
+                    {
+                        break;
+                    }
+
+                    doorPrefab = _wallTilePrefabs["wall_vertical_door_closed"];
+                    wallPlaced = true;
+                    break;
+                case "west":
+                    targetRow = Random.Range(1, Height - 2);
+                    targetColumn = 0;
+
+                    if (WallEast(targetRow, targetColumn))
+                    {
+                        break;
+                    }
+
+                    doorPrefab = _wallTilePrefabs["wall_vertical_door_closed"];
+                    wallPlaced = true;
+                    break;
+            }
         }
 
         WallTiles[targetRow, targetColumn] = doorPrefab;
@@ -156,11 +192,11 @@ public class Building
     {
         var maxFurniture = Height * Width / 20;
 
-        var minFurniture = Height * Width / 60;
+        var minFurniture = Height * Width / 40;
 
-        if (minFurniture < 2)
+        if (minFurniture < 4)
         {
-            minFurniture = 2;
+            minFurniture = 4;
         }
 
         var numFurnitureToPlace = Random.Range(minFurniture, maxFurniture);
@@ -187,6 +223,7 @@ public class Building
         }
     }
 
+    //todo next iteration
     private void CreateRooms()
     {
         var minRoomWidthAndHeight = 2;

@@ -10,9 +10,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
-    <ProjectGuid>{9F05303E-CE4C-7A4D-3D37-89B1892463B8}</ProjectGuid>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{6937BEF7-5FC0-1924-A6FE-755F68E94C1A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -448,6 +447,7 @@
     <None Include="Assets\AstarPathfindingProject\Plugins\dependencies.txt" />
     <None Include="Assets\BayatGames\SaveGameFree\Documentation\Save Game Free Documentation - Plain Text Version.txt" />
     <None Include="Assets\AstarPathfindingProject\ExampleScenes\_Example Scenes.txt" />
+    <None Include="Assets\Resources\Scripts\World\Settlements\SettlementPropBlueprints.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
     <None Include="Assets\Resources\Scripts\World\Entities\Names\mammal_first_names_female.txt" />
     <None Include="Assets\Resources\Scripts\World\Entities\Names\mammal_last_names.txt" />

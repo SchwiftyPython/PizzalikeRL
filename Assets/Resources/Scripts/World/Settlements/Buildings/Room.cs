@@ -4,14 +4,10 @@ public class Room
 {
     //todo room type
 
-    public int Height;
-    public int Width;
-
     //todo room coordinates
 
-    public Room(int height, int width)
+    public Room()
     {
-        Height = height;
-        Width = width;
+        
     }
 }

@@ -60,7 +60,13 @@ public class BuildingPrefabStore : MonoBehaviour
         {'4', "wall_lower_right_corner" },
         {'5', "wall_lower_left_corner" },
         {'6', "wall_horizontal_straight_top" },
-        {'7', "wall_horizontal_straight_bottom" }
+        {'7', "wall_horizontal_straight_bottom" },
+        {'8', "wall_horizontal_door_closed" },
+        {'9', "wall_vertical_door_closed" },
+        {'A', "3_way_bottom" },
+        {'B', "3_way_left" },
+        {'C', "3_way_right" },
+        {'D', "3_way_top" }
     };
 
     public TextAsset BuildingPrefabFile;
