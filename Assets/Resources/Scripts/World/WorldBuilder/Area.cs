@@ -142,16 +142,36 @@ public class Area
                     continue;
                 }
 
-                //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
-                //Debug.Log($"x: {currentRow}  y: {currentColumn}");
-                //Debug.Log($"tilecode: {tileCode}");
-
                 var tile = GetTilePrefab(tileCode);
 
                 AreaTiles[currentRow, currentColumn] =
                     new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
             }
         }
+        PlaceSettlementProps();
+    }
+
+    private void PlaceSettlementProps()
+    {
+        //todo determine some start chance
+        //todo roll
+        //todo if roll < start chance place prop, decrease chance, roll again
+        //todo else stop placing props
+
+        //todo pick a prop type using weighted dict
+        //todo pick single prop or blueprint
+
+        //TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING ///////////////////////////
+        var propType = SettlementPrefabStore.SettlementPropType.Graveyard;
+
+        var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
+
+        var startingRow = Random.Range(0, Height);
+        var startingColumn = Random.Range(0, Width);
+       
+        //todo get dimensions of blueprint
+        //todo for each tile in blueprint, place if tile not obstacle and not road
+
     }
 
     private void AssignFactionCitizensToArea()

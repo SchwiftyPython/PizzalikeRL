@@ -75,49 +75,50 @@ public class WorldData : MonoBehaviour
     public GameObject DesertMountainTile;
     public GameObject MountainPassTile;
 
-    public GameObject[] AreaGrassLandTilesCommon = new GameObject[1];
-    public GameObject[] AreaDesertTilesCommon = new GameObject[1];
-    public GameObject[] AreaWastelandTilesCommon = new GameObject[1];
-    public GameObject[] AreaSwampTilesCommon = new GameObject[1];
-    public GameObject[] AreaIceTilesCommon = new GameObject[1];
+    public GameObject[] AreaGrassLandTilesCommon;
+    public GameObject[] AreaDesertTilesCommon;
+    public GameObject[] AreaWastelandTilesCommon;
+    public GameObject[] AreaSwampTilesCommon;
+    public GameObject[] AreaIceTilesCommon;
 
-    public GameObject[] AreaGrassLandTilesUnCommon = new GameObject[1];
-    public GameObject[] AreaDesertTilesUnCommon = new GameObject[1];
-    public GameObject[] AreaWastelandTilesUnCommon = new GameObject[1];
-    public GameObject[] AreaSwampTilesUnCommon = new GameObject[1];
-    public GameObject[] AreaIceTilesUnCommon = new GameObject[1];
+    public GameObject[] AreaGrassLandTilesUnCommon;
+    public GameObject[] AreaDesertTilesUnCommon;
+    public GameObject[] AreaWastelandTilesUnCommon;
+    public GameObject[] AreaSwampTilesUnCommon;
+    public GameObject[] AreaIceTilesUnCommon;
 
-    public GameObject[] AreaGrassLandTilesRare = new GameObject[1];
-    public GameObject[] AreaDesertTilesRare = new GameObject[1];
-    public GameObject[] AreaWastelandTilesRare = new GameObject[1];
-    public GameObject[] AreaSwampTilesRare = new GameObject[1];
-    public GameObject[] AreaIceTilesRare = new GameObject[1];
+    public GameObject[] AreaGrassLandTilesRare;
+    public GameObject[] AreaDesertTilesRare;
+    public GameObject[] AreaWastelandTilesRare;
+    public GameObject[] AreaSwampTilesRare;
+    public GameObject[] AreaIceTilesRare;
 
-    public GameObject[] WoodenFloorTiles = new GameObject[1];
-    public GameObject[] StoneFloorTiles = new GameObject[1];
+    public GameObject[] WoodenFloorTiles;
+    public GameObject[] StoneFloorTiles;
 
-    public GameObject[] WoodenWallTiles = new GameObject[1];
-    public GameObject[] StoneWallTiles = new GameObject[1];
-    public GameObject[] BrickWallTiles = new GameObject[1];
-    public GameObject[] SingleTileBrickWallTiles = new GameObject[1];
+    public GameObject[] WoodenWallTiles;
+    public GameObject[] StoneWallTiles;
+    public GameObject[] BrickWallTiles;
+    public GameObject[] SingleTileBrickWallTiles;
 
-    public GameObject[] GrassDirtPathTiles = new GameObject[1];
-    public GameObject[] DesertAsphaltRoadTiles = new GameObject[1];
-    public GameObject[] SwampDirtPathTiles = new GameObject[1];
-    public GameObject[] IceAsphaltRoadTiles = new GameObject[1];
-    public GameObject[] WastelandDirtPathTiles = new GameObject[1];
+    public GameObject[] GrassDirtPathTiles;
+    public GameObject[] DesertAsphaltRoadTiles;
+    public GameObject[] SwampDirtPathTiles;
+    public GameObject[] IceAsphaltRoadTiles;
+    public GameObject[] WastelandDirtPathTiles;
 
-    public GameObject[] GrassWaterTiles = new GameObject[1];
-    public GameObject[] DesertWaterTiles = new GameObject[1];
-    public GameObject[] SwampWaterTiles = new GameObject[1];
-    public GameObject[] IceWaterTiles = new GameObject[1];
-    public GameObject[] WastelandWaterTiles = new GameObject[1];
+    public GameObject[] GrassWaterTiles;
+    public GameObject[] DesertWaterTiles;
+    public GameObject[] SwampWaterTiles;
+    public GameObject[] IceWaterTiles;
+    public GameObject[] WastelandWaterTiles;
 
     public GameObject[] PizzaToppingsWorldView;
     public GameObject[] PizzaToppingsUiView;
     public GameObject[] ItemPrefabsWorldView;
 
     public GameObject[] Furniture;
+    public GameObject[] GraveyardProps;
     public GameObject[] MiscExteriorProps;
 
     public GameObject SmallChest;

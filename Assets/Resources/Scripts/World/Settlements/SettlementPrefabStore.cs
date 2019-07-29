@@ -9,31 +9,26 @@ public class SettlementPrefabStore : MonoBehaviour
     private const int NumColumns = 80;
     private const int NumRows = 25;
 
-    private enum SettlementBlueprintLoadingSteps
-    {
-        NewPrefab,
-        Template
-    }
-
-    private enum SettlementPropBlueprintLoadingSteps
+    private enum LoadingSteps
     {
         NewBlueprint,
         Dimensions,
         Template
     }
 
-    private enum SettlementPropBlueprintKeys
+    private static readonly IDictionary<SettlementSize, List<SettlementPrefab>> SettlementPrefabs = new Dictionary<SettlementSize, List<SettlementPrefab>>();
+
+    private static IDictionary<SettlementPropType, List<char[,]>> _settlementPropBlueprints;
+
+    private static List<string> _rawNames;
+
+    public enum SettlementPropType
     {
         Field,
         Graveyard,
-        Security
+        Security,
+        Fence
     }
-
-    private static readonly IDictionary<SettlementSize, List<SettlementPrefab>> SettlementPrefabs = new Dictionary<SettlementSize, List<SettlementPrefab>>();
-
-    private static IDictionary<SettlementPropBlueprintKeys, List<char[,]>> _settlementPropBlueprints;
-
-    private static List<string> _rawNames;
 
     public static readonly IDictionary<char, string> GrassDirtPathTileKeys = new Dictionary<char, string>
     {
@@ -148,21 +143,22 @@ public class SettlementPrefabStore : MonoBehaviour
         FinishPopulatingPrefabs();
         LoadNamesFromFile();
         PopulateTileDictionaries();
+        LoadPropBlueprintsFromFile();
 	}
 
     private void LoadPropBlueprintsFromFile()
     {
-        _settlementPropBlueprints = new Dictionary<SettlementPropBlueprintKeys, List<char[,]>>();
+        _settlementPropBlueprints = new Dictionary<SettlementPropType, List<char[,]>>();
 
         var blueprintFile = SettlementPropBlueprintsFile.text.Split("\r\n"[0]).ToList();
 
-        var currentStep = SettlementPropBlueprintLoadingSteps.NewBlueprint;
+        var currentStep = LoadingSteps.NewBlueprint;
 
         var numColumns = 0;
 
         var x = 0;
 
-        var currentPreFab = SettlementPropBlueprintKeys.Field;
+        var currentPreFab = SettlementPropType.Field;
 
         foreach (var line in blueprintFile)
         {
@@ -170,22 +166,35 @@ public class SettlementPrefabStore : MonoBehaviour
 
             if (string.IsNullOrEmpty(trimmedLine))
             {
-                currentStep = SettlementPropBlueprintLoadingSteps.NewBlueprint;
-                //todo determine blueprint type
+                currentStep = LoadingSteps.NewBlueprint;
                 continue;
             }
 
-            if (currentStep == SettlementPropBlueprintLoadingSteps.Dimensions)
+            if (currentStep == LoadingSteps.NewBlueprint)
+            {
+                currentPreFab = GetKeyForCurrentPrefab(trimmedLine);
+
+                if (!_settlementPropBlueprints.ContainsKey(currentPreFab))
+                {
+                    _settlementPropBlueprints.Add(currentPreFab, new List<char[,]>());
+                }
+
+                currentStep = LoadingSteps.Dimensions;
+                x = 0;
+                continue;
+            }
+
+            if (currentStep == LoadingSteps.Dimensions)
             {
                 var dimensions = trimmedLine.Split(' ');
                 var numRows = int.Parse(dimensions[0]);
                 numColumns = int.Parse(dimensions[1]);
                 _settlementPropBlueprints[currentPreFab].Add(new char[numRows, numColumns]);
-                currentStep = SettlementPropBlueprintLoadingSteps.Template;
+                currentStep = LoadingSteps.Template;
                 continue;
             }
 
-            if (currentStep == SettlementPropBlueprintLoadingSteps.Template)
+            if (currentStep == LoadingSteps.Template)
             {
                 for (var currentColumn = 0; currentColumn < numColumns; currentColumn++)
                 {
@@ -196,6 +205,19 @@ public class SettlementPrefabStore : MonoBehaviour
                 x++;
             }
         }
+    }
+
+    private SettlementPropType GetKeyForCurrentPrefab(string trimmedLine)
+    {
+        if (trimmedLine.Contains("field"))
+        {
+            return SettlementPropType.Field;
+        }
+        if (trimmedLine.Contains("graveyard"))
+        {
+            return SettlementPropType.Graveyard;
+        }
+        return SettlementPropType.Security;
     }
 
     private void LoadNamesFromFile()
@@ -215,7 +237,7 @@ public class SettlementPrefabStore : MonoBehaviour
     {
         var rawPrefabInfo = SettlementPrefabFile.text.Split("\r\n"[0]).ToList();
 
-        var currentStep = SettlementBlueprintLoadingSteps.NewPrefab;
+        var currentStep = LoadingSteps.NewBlueprint;
 
         var currentPreFab = SettlementSize.Outpost;
 
@@ -226,11 +248,11 @@ public class SettlementPrefabStore : MonoBehaviour
             var trimmedLine = line.Trim('\n');
             if (string.IsNullOrEmpty(trimmedLine))
             {
-                currentStep = SettlementBlueprintLoadingSteps.NewPrefab;
+                currentStep = LoadingSteps.NewBlueprint;
                 continue;
             }
 
-            if (currentStep == SettlementBlueprintLoadingSteps.NewPrefab)
+            if (currentStep == LoadingSteps.NewBlueprint)
             {
                 currentPreFab = GetSettlementSize(trimmedLine);
                 if (!SettlementPrefabs.ContainsKey(currentPreFab))
@@ -239,12 +261,12 @@ public class SettlementPrefabStore : MonoBehaviour
                 }
                 SettlementPrefabs[currentPreFab].Add(new SettlementPrefab(new char[NumRows, NumColumns]));
 
-                currentStep = SettlementBlueprintLoadingSteps.Template;
+                currentStep = LoadingSteps.Template;
                 currentRow = 0;
                 continue;
             }
 
-            if (currentStep == SettlementBlueprintLoadingSteps.Template)
+            if (currentStep == LoadingSteps.Template)
             {
                 var charArray = trimmedLine.ToCharArray();
                 Array.Reverse(charArray);
@@ -551,5 +573,14 @@ public class SettlementPrefabStore : MonoBehaviour
         var prefab = SettlementPrefabs[size][Random.Range(0, SettlementPrefabs[size].Count)];
 
         return new SettlementPrefab(prefab);
+    }
+
+    public static char[,] GetPropBlueprintByType(SettlementPropType propType)
+    {
+        var blueprints = _settlementPropBlueprints[propType];
+
+        var index = Random.Range(0, blueprints.Count);
+
+        return blueprints[index];
     }
 }
