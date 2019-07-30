@@ -89,7 +89,8 @@ public class Area
 
         if (ParentCell.Rivers?.Count > 0 || BiomeType == BiomeType.Swamp)
         {
-            PlaceWaterTiles();
+            //todo fix
+            //PlaceWaterTiles();
         }
         
         GenerateWildlife();
@@ -166,11 +167,48 @@ public class Area
 
         var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
 
-        var startingRow = Random.Range(0, Height);
-        var startingColumn = Random.Range(0, Width);
-       
-        //todo get dimensions of blueprint
+        var areaRow = Random.Range(0, Height);
+        var areaColumn = Random.Range(0, Width);
+
+        var blueprintHeight = propBlueprint.GetLength(0);
+        var blueprintWidth = propBlueprint.GetLength(1);
+
+        var propPrefabs = new Dictionary<char, List<GameObject>>();
+
         //todo for each tile in blueprint, place if tile not obstacle and not road
+        for (var currentRow = 0; currentRow < blueprintHeight; currentRow++)
+        {
+            for (var currentColumn = 0; currentColumn < blueprintWidth; currentColumn++)
+            {
+                var currentTile = AreaTiles[areaRow, areaColumn];
+
+                //todo should probably make tile type enum because this is trash
+                if (currentTile.PresentWallTile != null || currentTile.GetPrefabTileTexture().name.Contains("floor") ||
+                    currentTile.GetPrefabTileTexture().name.Contains("road") ||
+                    currentTile.GetPrefabTileTexture().name.Contains("path") || 
+                    currentTile.GetBlocksMovement())
+                {
+                    continue;
+                }
+
+                var currentKey = propBlueprint[currentRow, currentColumn];
+
+                if (!propPrefabs.ContainsKey(currentKey))
+                {
+                    var prefabsForCurrentKey = SettlementPrefabStore.GetPropPrefabsByKey(currentKey);
+
+                    propPrefabs.Add(currentKey, prefabsForCurrentKey);
+                }
+
+                //todo check if prefab list is null for key
+                //todo get random prefab
+                //todo place
+
+                areaColumn++;
+            }
+            areaRow++;
+            areaColumn = 0;
+        }
 
     }
 

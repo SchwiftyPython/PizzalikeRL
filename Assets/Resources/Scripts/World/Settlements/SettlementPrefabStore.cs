@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,6 +9,8 @@ public class SettlementPrefabStore : MonoBehaviour
 {
     private const int NumColumns = 80;
     private const int NumRows = 25;
+
+    private const char GraveyardKey = 'g';
 
     private enum LoadingSteps
     {
@@ -19,6 +22,11 @@ public class SettlementPrefabStore : MonoBehaviour
     private static readonly IDictionary<SettlementSize, List<SettlementPrefab>> SettlementPrefabs = new Dictionary<SettlementSize, List<SettlementPrefab>>();
 
     private static IDictionary<SettlementPropType, List<char[,]>> _settlementPropBlueprints;
+
+    private static IDictionary<char, List<GameObject>> _propPrefabs = new Dictionary<char, List<GameObject>>
+    {
+        { GraveyardKey, null }
+    };
 
     private static List<string> _rawNames;
 
@@ -582,5 +590,11 @@ public class SettlementPrefabStore : MonoBehaviour
         var index = Random.Range(0, blueprints.Count);
 
         return blueprints[index];
+    }
+
+    [CanBeNull]
+    public static List<GameObject> GetPropPrefabsByKey(char key)
+    {
+        return _propPrefabs.ContainsKey(key) ? _propPrefabs[key] : null;
     }
 }
