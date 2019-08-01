@@ -168,21 +168,26 @@ public class Area
         var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
 
         var areaRow = Random.Range(0, Height);
-        var areaColumn = Random.Range(0, Width);
+        var startingAreaColumn = Random.Range(0, Width);
+        var currentAreaColumn = startingAreaColumn;
 
         var blueprintHeight = propBlueprint.GetLength(0);
         var blueprintWidth = propBlueprint.GetLength(1);
 
         var propPrefabs = new Dictionary<char, List<GameObject>>();
-
-        //todo for each tile in blueprint, place if tile not obstacle and not road
+        
         for (var currentRow = 0; currentRow < blueprintHeight; currentRow++)
         {
             for (var currentColumn = 0; currentColumn < blueprintWidth; currentColumn++)
             {
-                var currentTile = AreaTiles[areaRow, areaColumn];
+                if (areaRow < 0 || areaRow >= Height || currentAreaColumn < 0 || currentAreaColumn >= Width)
+                {
+                    continue;
+                }
 
-                //todo should probably make tile type enum because this is trash
+                var currentTile = AreaTiles[areaRow, currentAreaColumn];
+
+                //todo should probably make a tile type enum because this is trash
                 if (currentTile.PresentWallTile != null || currentTile.GetPrefabTileTexture().name.Contains("floor") ||
                     currentTile.GetPrefabTileTexture().name.Contains("road") ||
                     currentTile.GetPrefabTileTexture().name.Contains("path") || 
@@ -199,17 +204,21 @@ public class Area
 
                     propPrefabs.Add(currentKey, prefabsForCurrentKey);
                 }
+                
+                if (propPrefabs[currentKey] == null || propPrefabs[currentKey].Count < 1)
+                {
+                    continue;
+                }
+                
+                var prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
+               
+                currentTile.PresentProp = new Prop(prefab);
 
-                //todo check if prefab list is null for key
-                //todo get random prefab
-                //todo place
-
-                areaColumn++;
+                currentAreaColumn++;
             }
             areaRow++;
-            areaColumn = 0;
+            currentAreaColumn = startingAreaColumn;
         }
-
     }
 
     private void AssignFactionCitizensToArea()

@@ -147,11 +147,12 @@ public class SettlementPrefabStore : MonoBehaviour
 
     private void Start()
     {
-		LoadPrefabsFromFile();
-        FinishPopulatingPrefabs();
-        LoadNamesFromFile();
+		LoadSettlementPrefabsFromFile();
+        FinishPopulatingSettlementPrefabs();
+        LoadSettlementNamesFromFile();
         PopulateTileDictionaries();
         LoadPropBlueprintsFromFile();
+        PopulatePropPrefabsDictionary();
 	}
 
     private void LoadPropBlueprintsFromFile()
@@ -228,7 +229,20 @@ public class SettlementPrefabStore : MonoBehaviour
         return SettlementPropType.Security;
     }
 
-    private void LoadNamesFromFile()
+    private void PopulatePropPrefabsDictionary()
+    {
+        foreach (var prefabKey in _propPrefabs.Keys.ToArray())
+        {
+            switch (prefabKey)
+            {
+                case GraveyardKey:
+                    _propPrefabs[prefabKey] = new List<GameObject>(WorldData.Instance.GraveyardProps);
+                    break;
+            }
+        }
+    }
+
+    private void LoadSettlementNamesFromFile()
     {
         _rawNames = new List<string>();
 
@@ -241,7 +255,7 @@ public class SettlementPrefabStore : MonoBehaviour
         }
     }
 
-    private void LoadPrefabsFromFile()
+    private void LoadSettlementPrefabsFromFile()
     {
         var rawPrefabInfo = SettlementPrefabFile.text.Split("\r\n"[0]).ToList();
 
@@ -372,7 +386,7 @@ public class SettlementPrefabStore : MonoBehaviour
         return new Lot(upperLeftCorner, height, width);
     }
 
-    private void FinishPopulatingPrefabs()
+    private void FinishPopulatingSettlementPrefabs()
     {
         var sizeObjects = Enum.GetValues(typeof(SettlementSize));
 
