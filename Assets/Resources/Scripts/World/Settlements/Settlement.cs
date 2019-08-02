@@ -19,12 +19,10 @@ public class Settlement
     private int _yearFounded;
     private string _history;
     private List<Entity> _citizens;
-    private List<Area> _areas;
-    private List<Building> _buildings;
+    private IDictionary<Area, SettlementSection> _areas;
 
     public string Name;
     public readonly SettlementSize Size;
-    public List<Lot> Lots;
     public Faction Faction;
 
     public Settlement(Faction faction, SettlementSize size, Cell cell, int population)
@@ -52,6 +50,17 @@ public class Settlement
         _cell = WorldData.Instance.MapDictionary[sdo.CellId];
         _population = sdo.Population;
         _history = sdo.History;
+
+        _areas = new Dictionary<Area, SettlementSection>();
+
+        foreach (var id in sdo.AreaIds)
+        {
+            var splitId = id.Split(' ');
+
+            var area = _cell.Areas[int.Parse(splitId[0]), int.Parse(splitId[1])];
+
+            _areas.Add(new KeyValuePair<Area, SettlementSection>(area, area.SettlementSection));
+        }
     }
 
     public SettlementSdo GetSettlementSdo()
@@ -62,12 +71,16 @@ public class Settlement
             Population = _population,
             FactionName = Faction.Name,
             History = _history,
-            LotSdos = LotSdo.ConvertToLotSdos(Lots),
-            BuildingSdos = new List<BuildingSdo>(),
             Name = Name, 
             CitizenIds = new List<Guid>(),
-            Size = Size
+            Size = Size,
+            AreaIds = new List<string>()
         };
+
+        foreach (var area in _areas.Keys)
+        {
+            sdo.AreaIds.Add(area.Id);
+        }
 
         foreach (var lotSdo in sdo.LotSdos)
         {
@@ -87,7 +100,7 @@ public class Settlement
 
     private void PickAreas()
     {
-        _areas = new List<Area>();
+        _areas = new Dictionary<Area, SettlementSection>();
         for (var i = 0; i < _numAreasForSettlementSize[Size]; i++)
         {
             var settlementPlaced = false;
@@ -96,14 +109,20 @@ public class Settlement
                 var x = Random.Range(0, _cell.GetCellHeight());
                 var y = Random.Range(0, _cell.GetCellWidth());
 
+                if (_areas.Count > 0 && !AreaIsAdjacentToAnotherSettlementArea(x, y))
+                {
+                    continue;
+                }
+
                 var area = _cell.Areas[x, y];
 
-                if (area.Settlement != null)
+                if (_areas.ContainsKey(area))
                 {
                     continue;
                 }
 
                 area.Settlement = this;
+                area.SettlementSection = new SettlementSection();
 
                 if (area.PresentFactions == null)
                 {
@@ -111,15 +130,35 @@ public class Settlement
                 }
 
                 area.PresentFactions.Add(Faction);
-                _areas.Add(area);
+                _areas.Add(area, area.SettlementSection);
                 settlementPlaced = true;
             }
         }
     }
 
+    private bool AreaIsAdjacentToAnotherSettlementArea(int x, int y)
+    {
+        foreach (var area in _areas.Keys)
+        {
+            var xDelta = Math.Abs(area.X - x);
+            var yDelta = Math.Abs(area.Y - y);
+
+            if (xDelta <= 1 && yDelta <= 1)
+            {
+                //no diagonals
+                if (xDelta > 0 && yDelta > 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void BuildAreas()
     {
-        foreach (var area in _areas)
+        foreach (var area in _areas.Keys)
         {
             area.Build();
         }

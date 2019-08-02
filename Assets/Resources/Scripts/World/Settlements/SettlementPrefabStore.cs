@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,17 +10,37 @@ public class SettlementPrefabStore : MonoBehaviour
     private const int NumColumns = 80;
     private const int NumRows = 25;
 
+    private const char GraveyardKey = 'g';
+    private const char FieldKey = 'f';
+
     private enum LoadingSteps
     {
-        NewPrefab,
+        NewBlueprint,
+        Dimensions,
         Template
     }
 
     private static readonly IDictionary<SettlementSize, List<SettlementPrefab>> SettlementPrefabs = new Dictionary<SettlementSize, List<SettlementPrefab>>();
 
+    private static IDictionary<SettlementPropType, List<char[,]>> _settlementPropBlueprints;
+
+    private static readonly IDictionary<char, List<GameObject>> PropPrefabs = new Dictionary<char, List<GameObject>>
+    {
+        { GraveyardKey, null },
+        { FieldKey, null }
+    };
+
     private static List<string> _rawNames;
 
-    public static IDictionary<char, string> GrassDirtPathTileKeys = new Dictionary<char, string>
+    public enum SettlementPropType
+    {
+        Field,
+        Graveyard,
+        Security,
+        Fence
+    }
+
+    public static readonly IDictionary<char, string> GrassDirtPathTileKeys = new Dictionary<char, string>
     {
         {'0', "path_dirt_vertical_straight_left" },
         {'1', "path_dirt_vertical_straight_right" },
@@ -114,6 +135,7 @@ public class SettlementPrefabStore : MonoBehaviour
 
     public TextAsset SettlementPrefabFile;
     public TextAsset SettlementNames;
+    public TextAsset SettlementPropBlueprintsFile;
 
     public static IDictionary<SettlementSize, int> SettlementSizePopulationCaps { get; } = new Dictionary<SettlementSize, int>
     {
@@ -125,14 +147,107 @@ public class SettlementPrefabStore : MonoBehaviour
         { SettlementSize.LargeCity, 1000 }
     };
 
-    private void Start ()
+    private void Start()
     {
-		LoadPrefabsFromFile();
-        LoadNamesFromFile();
+		LoadSettlementPrefabsFromFile();
+        FinishPopulatingSettlementPrefabs();
+        LoadSettlementNamesFromFile();
         PopulateTileDictionaries();
+        LoadPropBlueprintsFromFile();
+        PopulatePropPrefabsDictionary();
 	}
 
-    private void LoadNamesFromFile()
+    private void LoadPropBlueprintsFromFile()
+    {
+        _settlementPropBlueprints = new Dictionary<SettlementPropType, List<char[,]>>();
+
+        var blueprintFile = SettlementPropBlueprintsFile.text.Split("\r\n"[0]).ToList();
+
+        var currentStep = LoadingSteps.NewBlueprint;
+
+        var numColumns = 0;
+
+        var x = 0;
+
+        var currentPreFab = SettlementPropType.Field;
+
+        foreach (var line in blueprintFile)
+        {
+            var trimmedLine = line.Trim('\n');
+
+            if (string.IsNullOrEmpty(trimmedLine))
+            {
+                currentStep = LoadingSteps.NewBlueprint;
+                continue;
+            }
+
+            if (currentStep == LoadingSteps.NewBlueprint)
+            {
+                currentPreFab = GetKeyForCurrentPrefab(trimmedLine);
+
+                if (!_settlementPropBlueprints.ContainsKey(currentPreFab))
+                {
+                    _settlementPropBlueprints.Add(currentPreFab, new List<char[,]>());
+                }
+
+                currentStep = LoadingSteps.Dimensions;
+                x = 0;
+                continue;
+            }
+
+            if (currentStep == LoadingSteps.Dimensions)
+            {
+                var dimensions = trimmedLine.Split(' ');
+                var numRows = int.Parse(dimensions[0]);
+                numColumns = int.Parse(dimensions[1]);
+                _settlementPropBlueprints[currentPreFab].Add(new char[numRows, numColumns]);
+                currentStep = LoadingSteps.Template;
+                continue;
+            }
+
+            if (currentStep == LoadingSteps.Template)
+            {
+                for (var currentColumn = 0; currentColumn < numColumns; currentColumn++)
+                {
+                    var row = _settlementPropBlueprints[currentPreFab].Last();
+
+                    row[x, currentColumn] = trimmedLine[currentColumn];
+                }
+                x++;
+            }
+        }
+    }
+
+    private static SettlementPropType GetKeyForCurrentPrefab(string trimmedLine)
+    {
+        if (trimmedLine.Contains("field"))
+        {
+            return SettlementPropType.Field;
+        }
+        if (trimmedLine.Contains("graveyard"))
+        {
+            return SettlementPropType.Graveyard;
+        }
+        return SettlementPropType.Security;
+    }
+
+    private static void PopulatePropPrefabsDictionary()
+    {
+        foreach (var prefabKey in PropPrefabs.Keys.ToArray())
+        {
+            switch (prefabKey)
+            {
+                case GraveyardKey:
+                    PropPrefabs[prefabKey] = new List<GameObject>(WorldData.Instance.GraveyardProps);
+                    break;
+                case FieldKey:
+                    PropPrefabs[prefabKey] = new List<GameObject>(WorldData.Instance.WheatFieldTiles);
+                    break;
+            }
+        }
+    }
+
+    private void LoadSettlementNamesFromFile()
     {
         _rawNames = new List<string>();
 
@@ -145,11 +260,11 @@ public class SettlementPrefabStore : MonoBehaviour
         }
     }
 
-    private void LoadPrefabsFromFile()
+    private void LoadSettlementPrefabsFromFile()
     {
         var rawPrefabInfo = SettlementPrefabFile.text.Split("\r\n"[0]).ToList();
 
-        var currentStep = LoadingSteps.NewPrefab;
+        var currentStep = LoadingSteps.NewBlueprint;
 
         var currentPreFab = SettlementSize.Outpost;
 
@@ -160,11 +275,11 @@ public class SettlementPrefabStore : MonoBehaviour
             var trimmedLine = line.Trim('\n');
             if (string.IsNullOrEmpty(trimmedLine))
             {
-                currentStep = LoadingSteps.NewPrefab;
+                currentStep = LoadingSteps.NewBlueprint;
                 continue;
             }
 
-            if (currentStep == LoadingSteps.NewPrefab)
+            if (currentStep == LoadingSteps.NewBlueprint)
             {
                 currentPreFab = GetSettlementSize(trimmedLine);
                 if (!SettlementPrefabs.ContainsKey(currentPreFab))
@@ -276,12 +391,40 @@ public class SettlementPrefabStore : MonoBehaviour
         return new Lot(upperLeftCorner, height, width);
     }
 
+    private void FinishPopulatingSettlementPrefabs()
+    {
+        var sizeObjects = Enum.GetValues(typeof(SettlementSize));
+
+        foreach (var sizeObject in sizeObjects)
+        {
+            var size = (SettlementSize) sizeObject;
+
+            if (!SettlementPrefabs.ContainsKey(size))
+            {
+                continue;
+            }
+
+            foreach (var prefab in SettlementPrefabs.Keys)
+            {
+                if (prefab > (int) SettlementSize.Outpost && (int) prefab < (int) size)
+                {
+                    SettlementPrefabs[size].AddRange(SettlementPrefabs[prefab]);
+                }
+            }
+        }
+        Debug.Log("Settlement prefabs populated");
+    }
+
     private static SettlementSize GetSettlementSize(string size)
     {
         switch (size)
         {
             case "outpost":
                 return SettlementSize.Outpost;
+            case "hamlet":
+                return SettlementSize.Hamlet;
+            case "village":
+                return SettlementSize.Village;
                 default:
                     return SettlementSize.Outpost; 
         }
@@ -454,6 +597,23 @@ public class SettlementPrefabStore : MonoBehaviour
 
     public static SettlementPrefab GetSettlementPrefab(SettlementSize size)
     {
-        return SettlementPrefabs[size][Random.Range(0, SettlementPrefabs[size].Count)];
+        var prefab = SettlementPrefabs[size][Random.Range(0, SettlementPrefabs[size].Count)];
+
+        return new SettlementPrefab(prefab);
+    }
+
+    public static char[,] GetPropBlueprintByType(SettlementPropType propType)
+    {
+        var blueprints = _settlementPropBlueprints[propType];
+
+        var index = Random.Range(0, blueprints.Count);
+
+        return blueprints[index];
+    }
+
+    [CanBeNull]
+    public static List<GameObject> GetPropPrefabsByKey(char key)
+    {
+        return PropPrefabs.ContainsKey(key) ? PropPrefabs[key] : null;
     }
 }

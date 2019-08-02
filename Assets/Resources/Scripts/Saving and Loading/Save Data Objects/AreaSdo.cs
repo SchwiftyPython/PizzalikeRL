@@ -16,6 +16,8 @@ public class AreaSdo
 
     public SettlementSdo SettlementSdo;
 
+    public SettlementSectionSdo SettlementSectionSdo;
+
     public string ParentCellId;
 
     public int X;
@@ -77,7 +79,9 @@ public class AreaSdo
             TurnOrderIds = new Queue<Guid>(),
             X = area.X,
             Y = area.Y,
-            ParentCellId = area.ParentCell.Id
+            ParentCellId = area.ParentCell.Id,
+            SettlementSdo = area.Settlement.GetSettlementSdo(),
+            SettlementSectionSdo = new SettlementSectionSdo(area.SettlementSection)
         };
 
         if (area.PresentEntities != null)

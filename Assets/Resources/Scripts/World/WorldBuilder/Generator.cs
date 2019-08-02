@@ -1149,17 +1149,21 @@ public class Generator : MonoBehaviour
 
         var values = Enum.GetValues(typeof(SettlementSize));
 
-        var size = (SettlementSize)values.GetValue(Random.Range(0, values.Length));
+        SettlementSize size;
+        int settlementPopulation;
 
-//        if (currentPopulation < _settlementSizePopulationCaps[size])
-//        {
-//            var settlementPopulation = currentPopulation - _settlementSizePopulationCaps[size];
-//            
-//            cell.Settlement = new Settlement(faction, size, cell, settlementPopulation);
-//        }
+        do
+        {
+            size = (SettlementSize) values.GetValue(Random.Range(0, values.Length));
+
+            settlementPopulation = currentPopulation - SettlementPrefabStore.SettlementSizePopulationCaps[size];
+
+        } while (currentPopulation < SettlementPrefabStore.SettlementSizePopulationCaps[size]);
+
+        //cell.Settlement = new Settlement(faction, size, cell, settlementPopulation);
 
         //testing todo change to size appropriate for population
-        cell.Settlement = new Settlement(faction, SettlementSize.Outpost, cell, 5);
+        cell.Settlement = new Settlement(faction, SettlementSize.Village, cell, 10);
     }
     #endregion
 

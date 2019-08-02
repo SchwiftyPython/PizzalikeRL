@@ -31,6 +31,7 @@ public class Area
     public Queue<Entity> TurnOrder { get; set; }
 
     public Settlement Settlement;
+    public SettlementSection SettlementSection;
 
     public string Id;
 
@@ -88,7 +89,8 @@ public class Area
 
         if (ParentCell.Rivers?.Count > 0 || BiomeType == BiomeType.Swamp)
         {
-            PlaceWaterTiles();
+            //todo fix
+            //PlaceWaterTiles();
         }
         
         GenerateWildlife();
@@ -113,7 +115,7 @@ public class Area
 
     private void PrepareSettlement()
     {
-        if (Settlement == null)
+        if (SettlementSection == null)
         {
             return;
         }
@@ -122,7 +124,7 @@ public class Area
 
         SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
 
-        Settlement.Lots = settlementPrefab.Lots;
+        SettlementSection.Lots = settlementPrefab.Lots;
 
         var settlementBluePrint = settlementPrefab.Blueprint;
 
@@ -141,15 +143,81 @@ public class Area
                     continue;
                 }
 
-                //Debug.Log($"1: {settlementBluePrint.GetLength(1)}  0: {settlementBluePrint.GetLength(0)}");
-                //Debug.Log($"x: {currentRow}  y: {currentColumn}");
-                //Debug.Log($"tilecode: {tileCode}");
-
                 var tile = GetTilePrefab(tileCode);
 
                 AreaTiles[currentRow, currentColumn] =
                     new Tile(tile, new Vector2(currentRow, currentColumn), false, false);
             }
+        }
+        PlaceSettlementProps();
+    }
+
+    private void PlaceSettlementProps()
+    {
+        //todo determine some start chance
+        //todo roll
+        //todo if roll < start chance place prop, decrease chance, roll again
+        //todo else stop placing props
+
+        //todo pick a prop type using weighted dict
+        //todo pick single prop or blueprint
+
+        //TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING ///////////////////////////
+        var propType = SettlementPrefabStore.SettlementPropType.Field;
+
+        var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
+
+        var areaRow = Random.Range(0, Height);
+        var startingAreaColumn = Random.Range(0, Width);
+        var currentAreaColumn = startingAreaColumn;
+
+        var blueprintHeight = propBlueprint.GetLength(0);
+        var blueprintWidth = propBlueprint.GetLength(1);
+
+        var propPrefabs = new Dictionary<char, List<GameObject>>();
+        
+        for (var currentRow = 0; currentRow < blueprintHeight; currentRow++)
+        {
+            for (var currentColumn = 0; currentColumn < blueprintWidth; currentColumn++)
+            {
+                if (areaRow < 0 || areaRow >= Height || currentAreaColumn < 0 || currentAreaColumn >= Width)
+                {
+                    continue;
+                }
+
+                var currentTile = AreaTiles[areaRow, currentAreaColumn];
+
+                //todo should probably make a tile type enum because this is trash
+                if (currentTile.PresentWallTile != null || currentTile.GetPrefabTileTexture().name.Contains("floor") ||
+                    currentTile.GetPrefabTileTexture().name.Contains("road") ||
+                    currentTile.GetPrefabTileTexture().name.Contains("path") || 
+                    currentTile.GetBlocksMovement())
+                {
+                    continue;
+                }
+
+                var currentKey = propBlueprint[currentRow, currentColumn];
+
+                if (!propPrefabs.ContainsKey(currentKey))
+                {
+                    var prefabsForCurrentKey = SettlementPrefabStore.GetPropPrefabsByKey(currentKey);
+
+                    propPrefabs.Add(currentKey, prefabsForCurrentKey);
+                }
+                
+                if (propPrefabs[currentKey] == null || propPrefabs[currentKey].Count < 1)
+                {
+                    continue;
+                }
+                
+                var prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
+               
+                currentTile.PresentProp = new Prop(prefab);
+
+                currentAreaColumn++;
+            }
+            areaRow++;
+            currentAreaColumn = startingAreaColumn;
         }
     }
 
@@ -169,7 +237,7 @@ public class Area
 
             int maxNpcs;
 
-            if (Settlement != null && Settlement.Faction.Name.Equals(faction.Name))
+            if (SettlementSection != null && Settlement.Faction.Name.Equals(faction.Name))
             {
                 maxNpcs = Math.Min(faction.RemainingCitizensToPlace.Count,
                               SettlementPrefabStore.SettlementSizePopulationCaps[Settlement.Size]) + 1;
@@ -298,7 +366,7 @@ public class Area
                     }
                     catch (Exception e)
                     {
-                        Debug.Log(e.Message);
+                        Debug.Log("Water placement error: " + e.Message);
                         return;
                     }
                     if (waterTilePrefab == null)
@@ -341,8 +409,8 @@ public class Area
 
     private bool CanPlaceWaterTile(Tile tile)
     {
-        return !tile.GetBlocksMovement() && (Settlement == null ||
-               Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y))));
+        return !tile.GetBlocksMovement() && (SettlementSection == null ||
+               SettlementSection.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y))));
     }
 
     private Dictionary<string, GameObject> GetWaterTiles()

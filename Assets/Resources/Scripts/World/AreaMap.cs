@@ -129,10 +129,18 @@ public class AreaMap : MonoBehaviour
             {
                 var tile = _currentArea.AreaTiles[currentRow, currentColumn];
 
-                var texture = tile.GetPrefabTileTexture();
-                var instance = Instantiate(texture, new Vector2(currentColumn, currentRow), Quaternion.identity);
+                var prefab = tile.GetPrefabTileTexture();
+                var instance = Instantiate(prefab, new Vector2(currentColumn, currentRow), Quaternion.identity);
                 tile.TextureInstance = instance;
                 instance.transform.SetParent(_areaMapHolderTransform);
+
+                if (tile.PresentProp != null)
+                {
+                    prefab = tile.PresentProp.Prefab;
+                    instance = Instantiate(prefab, new Vector2(currentColumn, currentRow), Quaternion.identity);
+                    tile.PresentProp.Texture = instance;
+                    instance.transform.SetParent(tile.TextureInstance.transform);
+                }
 
                 tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(currentColumn, currentRow, -4), Quaternion.identity);
                 tile.FovTile.transform.SetParent(FovHolder.transform);
@@ -159,14 +167,14 @@ public class AreaMap : MonoBehaviour
 
     public void PlaceBuildings()
     {
-        if (_currentArea.Settlement?.Lots == null)
+        if (_currentArea.SettlementSection?.Lots == null)
         {
             return;
         }
 
-        var settlement = _currentArea.Settlement;
+        var settlementSection = _currentArea.SettlementSection;
 
-        foreach (var lot in settlement.Lots)
+        foreach (var lot in settlementSection.Lots)
         {
             var areaY = (int)lot.LowerLeftCorner.y;
             var areaX = (int)lot.LowerLeftCorner.x;
@@ -187,17 +195,30 @@ public class AreaMap : MonoBehaviour
                         }
 
                         var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
+                        _currentArea.AreaTiles[areaX, areaY].TextureInstance = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
 
                         tile = building.WallTiles[currentRow, currentColumn];
 
-                        _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
+                        if (tile.name.Contains("door"))
+                        {
+                            //todo check for obstacle in front of door and replace
+
+                            _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(false);
+
+                            tile.GetComponent<Door>().CurrentTile = _currentArea.AreaTiles[areaX, areaY];
+                        }
+                        else
+                        {
+                            _currentArea.AreaTiles[areaX, areaY].SetBlocksMovement(true);
+                        }
+                        
                         _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(true);
                         instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
                         _currentArea.AreaTiles[areaX, areaY].PresentWallTile = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
                     }
-                    else
+                    else if(building.FloorTiles[currentRow, currentColumn] != null)
                     {
                         var tile = building.FloorTiles[currentRow, currentColumn];
 
@@ -208,8 +229,23 @@ public class AreaMap : MonoBehaviour
                             Destroy(_currentArea.AreaTiles[areaX, areaY].TextureInstance);
                         }
 
+                        _currentArea.AreaTiles[areaX, areaY].SetBlocksLight(false);
                         var instance = Instantiate(tile, new Vector2(areaY, areaX), Quaternion.identity);
+                        _currentArea.AreaTiles[areaX, areaY].TextureInstance = instance;
                         instance.transform.SetParent(_areaMapHolderTransform);
+
+                        if (building.Props[currentRow, currentColumn] != null)
+                        {
+                            _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                                new Prop(building.Props[currentRow, currentColumn]);
+
+                            instance = Instantiate(_currentArea.AreaTiles[areaX, areaY].PresentProp.Prefab,
+                                new Vector2(areaY, areaX), Quaternion.identity);
+
+                            _currentArea.AreaTiles[areaX, areaY].PresentProp.Texture = instance;
+
+                            instance.transform.SetParent(_areaMapHolderTransform);
+                        }
                     }
                     _currentArea.AreaTiles[areaX, areaY].Lot = lot;
                     areaY++;
@@ -441,8 +477,8 @@ public class AreaMap : MonoBehaviour
         foreach (var e in _currentArea.PresentEntities.ToArray())
         {
             Destroy(e.GetSprite());
-            e.CurrentTile.SetBlocksMovement(false);
-            e.CurrentTile.SetPresentEntity(null);
+            e.CurrentTile?.SetBlocksMovement(false);
+            e.CurrentTile?.SetPresentEntity(null);
         }
         Destroy(NpcSpriteHolder);
     }
@@ -561,8 +597,8 @@ public class AreaMap : MonoBehaviour
 
     private bool CanPlaceWaterTile(Tile tile)
     {
-        return _currentArea.Settlement == null ||
-               _currentArea.Settlement.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y)));
+        return _currentArea.SettlementSection == null ||
+               _currentArea.SettlementSection.Lots.All(lot => !lot.IsPartOfLot(new Vector2(tile.GridPosition.x, tile.GridPosition.y)));
     }
 
     private Dictionary<string, GameObject> GetWaterTiles()

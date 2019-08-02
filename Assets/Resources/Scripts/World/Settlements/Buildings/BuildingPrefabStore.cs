@@ -13,9 +13,35 @@ public class BuildingPrefabStore : MonoBehaviour
 
     private static readonly IDictionary<string, BuildingPrefab> BuildingPrefabs = new Dictionary<string, BuildingPrefab>();
 
-    public static IDictionary<string, GameObject> StoneWallTiles;
-    public static IDictionary<string, GameObject> BrickWallTiles;
-    public static IDictionary<string, GameObject> WoodenWallTiles;
+    private static readonly List<string> BasicRoomFurnitureKeys = new List<string>
+    {
+        "bed",
+        "bookcase_empty",
+        "bookcase_full",
+        "chest_1",
+        "chest_2",
+        "chest_3",
+        "couch_horizontal",
+        "couch_diagonal",
+        "easy_chair",
+        "lantern_off",
+        "lantern_on",
+        "lamp_off",
+        "lamp_on",
+        "weapon_rack_1",
+        "weapon_rack_2",
+        "weapon_rack_empty"
+    };
+
+    private static IDictionary<string, GameObject> _allFurniture;
+
+    private static IDictionary<string, GameObject> _stoneWallTiles;
+    private static IDictionary<string, GameObject> _brickWallTiles;
+    private static IDictionary<string, GameObject> _woodenWallTiles;
+
+    public static IDictionary<string, GameObject> StoneDoorTiles;
+    public static IDictionary<string, GameObject> BrickDoorTiles;
+    public static IDictionary<string, GameObject> WoodenDoorTiles;
 
     public static List<GameObject> WoodenFloorTiles;
     public static List<GameObject> StoneFloorTiles;
@@ -23,6 +49,7 @@ public class BuildingPrefabStore : MonoBehaviour
     public static List<IDictionary<string, GameObject>> WallTileTypes;
 
     public static List<List<GameObject>> FloorTileTypes;
+
 
     public static IDictionary<char, string> WallTileKeys = new Dictionary<char, string>
     {
@@ -33,7 +60,13 @@ public class BuildingPrefabStore : MonoBehaviour
         {'4', "wall_lower_right_corner" },
         {'5', "wall_lower_left_corner" },
         {'6', "wall_horizontal_straight_top" },
-        {'7', "wall_horizontal_straight_bottom" }
+        {'7', "wall_horizontal_straight_bottom" },
+        {'8', "wall_horizontal_door_closed" },
+        {'9', "wall_vertical_door_closed" },
+        {'A', "3_way_bottom" },
+        {'B', "3_way_left" },
+        {'C', "3_way_right" },
+        {'D', "3_way_top" }
     };
 
     public TextAsset BuildingPrefabFile;
@@ -42,7 +75,8 @@ public class BuildingPrefabStore : MonoBehaviour
     {
 		LoadPrefabsFromFile();
         PopulateTileDictionaries();
-	}
+        PopulateFurnitureDictionary();
+    }
 
     private void LoadPrefabsFromFile()
     {
@@ -104,7 +138,7 @@ public class BuildingPrefabStore : MonoBehaviour
 
     private static void PopulateTileDictionaries()
     {
-        StoneWallTiles = new Dictionary<string, GameObject>
+        _stoneWallTiles = new Dictionary<string, GameObject>
         {
             { "wall_vertical_straight_right", null},
             { "wall_vertical_straight_left", null},
@@ -113,17 +147,25 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_lower_right_corner", null},
             { "wall_lower_left_corner", null},
             { "wall_horizontal_straight_top", null},
-            { "wall_horizontal_straight_bottom", null}
+            { "wall_horizontal_straight_bottom", null},
+            { "wall_horizontal_door_closed", null},
+            { "wall_horizontal_door_open", null},
+            { "wall_vertical_door_closed", null},
+            { "wall_vertical_door_open", null},
+            { "3_way_bottom", null},
+            { "3_way_left", null},
+            { "3_way_right", null},
+            { "3_way_top", null}
         };
 
         var i = 0;
-        foreach (var tile in StoneWallTiles.Keys.ToArray())
+        foreach (var tile in _stoneWallTiles.Keys.ToArray())
         {
-            StoneWallTiles[tile] = WorldData.Instance.StoneWallTiles[i];
+            _stoneWallTiles[tile] = WorldData.Instance.StoneWallTiles[i];
             i++;
         }
 
-        BrickWallTiles = new Dictionary<string, GameObject>
+        _brickWallTiles = new Dictionary<string, GameObject>
         {
             { "wall_vertical_straight_right", null},
             { "wall_vertical_straight_left", null},
@@ -132,17 +174,25 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_lower_right_corner", null},
             { "wall_lower_left_corner", null},
             { "wall_horizontal_straight_top", null},
-            { "wall_horizontal_straight_bottom", null}
+            { "wall_horizontal_straight_bottom", null},
+            { "wall_horizontal_door_closed", null},
+            { "wall_horizontal_door_open", null},
+            { "wall_vertical_door_closed", null},
+            { "wall_vertical_door_open", null},
+            { "3_way_bottom", null},
+            { "3_way_left", null},
+            { "3_way_right", null},
+            { "3_way_top", null}
         };
 
         i = 0;
-        foreach (var tile in BrickWallTiles.Keys.ToArray())
+        foreach (var tile in _brickWallTiles.Keys.ToArray())
         {
-            BrickWallTiles[tile] = WorldData.Instance.BrickWallTiles[i];
+            _brickWallTiles[tile] = WorldData.Instance.BrickWallTiles[i];
             i++;
         }
 
-        WoodenWallTiles = new Dictionary<string, GameObject>
+        _woodenWallTiles = new Dictionary<string, GameObject>
         {
             { "wall_vertical_straight_right", null},
             { "wall_vertical_straight_left", null},
@@ -151,13 +201,21 @@ public class BuildingPrefabStore : MonoBehaviour
             { "wall_lower_right_corner", null},
             { "wall_lower_left_corner", null},
             { "wall_horizontal_straight_top", null},
-            { "wall_horizontal_straight_bottom", null}
+            { "wall_horizontal_straight_bottom", null},
+            { "wall_horizontal_door_closed", null},
+            { "wall_horizontal_door_open", null},
+            { "wall_vertical_door_closed", null},
+            { "wall_vertical_door_open", null},
+            { "3_way_bottom", null},
+            { "3_way_left", null},
+            { "3_way_right", null},
+            { "3_way_top", null}
         };
 
         i = 0;
-        foreach (var tile in WoodenWallTiles.Keys.ToArray())
+        foreach (var tile in _woodenWallTiles.Keys.ToArray())
         {
-            WoodenWallTiles[tile] = WorldData.Instance.WoodenWallTiles[i];
+            _woodenWallTiles[tile] = WorldData.Instance.WoodenWallTiles[i];
             i++;
         }
 
@@ -177,9 +235,9 @@ public class BuildingPrefabStore : MonoBehaviour
 
         WallTileTypes = new List<IDictionary<string, GameObject>>
         {
-            StoneWallTiles,
-            BrickWallTiles,
-            WoodenWallTiles
+            _stoneWallTiles,
+            _brickWallTiles,
+            _woodenWallTiles
         };
 
         FloorTileTypes = new List<List<GameObject>>
@@ -187,6 +245,44 @@ public class BuildingPrefabStore : MonoBehaviour
             WoodenFloorTiles,
             StoneFloorTiles
         };
+    }
+
+    private static void PopulateFurnitureDictionary()
+    {
+       _allFurniture = new Dictionary<string, GameObject>
+       {
+           {"bed", null},
+           {"bookcase_empty", null},
+           {"bookcase_full", null},
+           {"chest_1", null},
+           {"chest_2", null},
+           {"chest_3", null},
+           {"couch_horizontal", null},
+           {"couch_diagonal", null},
+           {"easy_chair", null},
+           {"lantern_off", null},
+           {"lantern_on", null},
+           {"lamp_off", null},
+           {"lamp_on", null},
+           {"store_counter_clutter_1", null},
+           {"store_counter_clutter_2", null},
+           {"store_counter_empty_1", null},
+           {"store_counter_empty_2", null},
+           {"torture_table", null},
+           {"torture_iron_maiden", null},
+           {"torture_rack_1", null},
+           {"torture_rack_2", null},
+           {"weapon_rack_1", null},
+           {"weapon_rack_2", null},
+           {"weapon_rack_empty", null}
+       };
+
+        var i = 0;
+        foreach (var furniture in _allFurniture.Keys.ToArray())
+        {
+            _allFurniture[furniture] = WorldData.Instance.Furniture[i];
+            i++;
+        }
     }
 
     public static char[,] GetBuildingPrefab(string buildingType)
@@ -220,5 +316,17 @@ public class BuildingPrefabStore : MonoBehaviour
     public static List<GameObject> GetFloorTileTypeAt(int index)
     {
         return FloorTileTypes[index];
+    }
+
+    public static GameObject GetRandomFurniturePrefab()
+    {
+        return _allFurniture.ElementAt(Random.Range(0, _allFurniture.Count)).Value;
+    }
+
+    public static GameObject GetRandomBasicFurniturePrefab()
+    {
+        var prefabKey = BasicRoomFurnitureKeys[Random.Range(0, BasicRoomFurnitureKeys.Count)];
+
+        return _allFurniture[prefabKey];
     }
 }
