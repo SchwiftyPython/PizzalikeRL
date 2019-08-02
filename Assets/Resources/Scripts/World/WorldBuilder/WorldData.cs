@@ -119,6 +119,8 @@ public class WorldData : MonoBehaviour
 
     public GameObject[] Furniture;
     public GameObject[] GraveyardProps;
+    public GameObject[] WheatFieldTiles;
+    public GameObject[] LegumeFieldTiles;
     public GameObject[] MiscExteriorProps;
 
     public GameObject SmallChest;

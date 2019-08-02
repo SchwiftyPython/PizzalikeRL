@@ -11,6 +11,7 @@ public class SettlementPrefabStore : MonoBehaviour
     private const int NumRows = 25;
 
     private const char GraveyardKey = 'g';
+    private const char FieldKey = 'f';
 
     private enum LoadingSteps
     {
@@ -23,9 +24,10 @@ public class SettlementPrefabStore : MonoBehaviour
 
     private static IDictionary<SettlementPropType, List<char[,]>> _settlementPropBlueprints;
 
-    private static IDictionary<char, List<GameObject>> _propPrefabs = new Dictionary<char, List<GameObject>>
+    private static readonly IDictionary<char, List<GameObject>> PropPrefabs = new Dictionary<char, List<GameObject>>
     {
-        { GraveyardKey, null }
+        { GraveyardKey, null },
+        { FieldKey, null }
     };
 
     private static List<string> _rawNames;
@@ -216,7 +218,7 @@ public class SettlementPrefabStore : MonoBehaviour
         }
     }
 
-    private SettlementPropType GetKeyForCurrentPrefab(string trimmedLine)
+    private static SettlementPropType GetKeyForCurrentPrefab(string trimmedLine)
     {
         if (trimmedLine.Contains("field"))
         {
@@ -229,14 +231,17 @@ public class SettlementPrefabStore : MonoBehaviour
         return SettlementPropType.Security;
     }
 
-    private void PopulatePropPrefabsDictionary()
+    private static void PopulatePropPrefabsDictionary()
     {
-        foreach (var prefabKey in _propPrefabs.Keys.ToArray())
+        foreach (var prefabKey in PropPrefabs.Keys.ToArray())
         {
             switch (prefabKey)
             {
                 case GraveyardKey:
-                    _propPrefabs[prefabKey] = new List<GameObject>(WorldData.Instance.GraveyardProps);
+                    PropPrefabs[prefabKey] = new List<GameObject>(WorldData.Instance.GraveyardProps);
+                    break;
+                case FieldKey:
+                    PropPrefabs[prefabKey] = new List<GameObject>(WorldData.Instance.WheatFieldTiles);
                     break;
             }
         }
@@ -609,6 +614,6 @@ public class SettlementPrefabStore : MonoBehaviour
     [CanBeNull]
     public static List<GameObject> GetPropPrefabsByKey(char key)
     {
-        return _propPrefabs.ContainsKey(key) ? _propPrefabs[key] : null;
+        return PropPrefabs.ContainsKey(key) ? PropPrefabs[key] : null;
     }
 }

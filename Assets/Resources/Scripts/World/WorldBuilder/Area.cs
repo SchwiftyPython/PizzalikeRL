@@ -163,7 +163,7 @@ public class Area
         //todo pick single prop or blueprint
 
         //TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING ///////////////////////////
-        var propType = SettlementPrefabStore.SettlementPropType.Graveyard;
+        var propType = SettlementPrefabStore.SettlementPropType.Field;
 
         var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
 
