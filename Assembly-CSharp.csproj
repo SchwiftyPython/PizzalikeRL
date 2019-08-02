@@ -350,6 +350,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplateContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplateLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Field.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Armor.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Item.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemRarity.cs" />

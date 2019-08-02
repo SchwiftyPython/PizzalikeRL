@@ -6,8 +6,16 @@ public class Prop
 
     public GameObject Texture;
 
-	public Prop(GameObject prefab)
+    public bool IsContainer;
+
+	public Prop(GameObject prefab, bool isContainer = false)
 	{
 	    Prefab = prefab;
+	    IsContainer = isContainer;
 	}
+
+    protected Prop()
+    {
+        throw new System.NotImplementedException();
+    }
 }

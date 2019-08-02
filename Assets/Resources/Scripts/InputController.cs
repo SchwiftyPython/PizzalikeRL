@@ -222,6 +222,7 @@ public class InputController : MonoBehaviour
                     !AreaMap.Instance.DroppedItemPopUp.activeSelf)
                 {
                     DroppedItemPopup.Instance.DisplayDroppedItems();
+                    //todo check for containers in props
                 }
             }
             //Starts Look interaction
