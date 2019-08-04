@@ -66,7 +66,7 @@ public class ItemStore : MonoBehaviour
     //</Summary>
     public Item GetRandomItem()
     {
-        var rarity = GetRandomRarity<ItemRarity>();
+        var rarity = GetRandomRarity();
 
         var itemTemplate = GetRandomBaseItemTemplate();
         
@@ -83,6 +83,23 @@ public class ItemStore : MonoBehaviour
             default:
                 return new Item(itemTemplate, rarity);
         }
+    }
+
+    public List<Item> GetRandomItems(int numItems = 0)
+    {
+        if (numItems < 1)
+        {
+            numItems = Random.Range(1, 6);
+        }
+
+        var items = new List<Item>();
+
+        for (var i = 0; i < numItems; i++)
+        {
+            items.Add(GetRandomItem());
+        }
+
+        return items;
     }
 
     //<Summary>
@@ -130,11 +147,9 @@ public class ItemStore : MonoBehaviour
     //<Summary>
     //    Returns a random rarity 
     //</Summary>
-    private static T GetRandomRarity<T>()
+    private static ItemRarity GetRandomRarity()
     {
-        var values = Enum.GetValues(typeof(T));
-
-        return (T)values.GetValue(Random.Range(0, values.Length));
+        return DebugHelper.Instance.GetRandomEnumValue<ItemRarity>();
     }
 
     //<Summary>
