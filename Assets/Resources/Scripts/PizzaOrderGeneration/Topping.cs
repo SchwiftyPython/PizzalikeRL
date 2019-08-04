@@ -30,7 +30,7 @@ public class Topping
         InventorySpritePrefab = topping.InventorySpritePrefab;
     }
 
-    private Toppings GetToppingType(string topping)
+    private static Toppings GetToppingType(string topping)
     {
         var enumTopping = (Toppings)Enum.Parse(typeof(Toppings), topping, true);
         return  enumTopping;
@@ -41,4 +41,6 @@ public class Topping
         WorldSpritePrefab = WorldData.Instance.GetToppingWorldViewSpriteByType(Type);
         //todo get inventory view
     }
+
+    //todo should be able to script topping picked up event here
 }

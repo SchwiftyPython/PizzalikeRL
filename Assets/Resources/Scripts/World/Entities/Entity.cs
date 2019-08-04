@@ -1233,9 +1233,15 @@ public class Entity : ISubscriber
     //</Summary>
     private void AutoPickupToppingsInCurrentTile()
     {
-        if (CurrentTile.PresentTopping == null)
+        if (CurrentTile.PresentTopping == null && CurrentTile.PresentProp == null &&
+            (Field) CurrentTile.PresentProp == null)
         {
             return;
+        }
+
+        if (CurrentTile.PresentTopping == null)
+        {
+            CurrentTile.PresentTopping = new Topping(((Field) CurrentTile.PresentProp).Type.ToString());
         }
 
         ToppingCounts[CurrentTile.PresentTopping.Type] += 1;
@@ -1243,9 +1249,15 @@ public class Entity : ISubscriber
         var message = "Picked up " + CurrentTile.PresentTopping.Type;
         GameManager.Instance.Messages.Add(message);
 
-        if (CurrentTile.PresentItems.Count < 1)
+        if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
         {
             UnityEngine.Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
+        }
+
+        if ((Field) CurrentTile.PresentProp != null)
+        {
+            UnityEngine.Object.Destroy(CurrentTile.PresentProp.Texture);
+            CurrentTile.PresentProp = null;
         }
 
         CurrentTile.PresentTopping = null;

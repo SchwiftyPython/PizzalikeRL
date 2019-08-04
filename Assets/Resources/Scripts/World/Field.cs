@@ -1,13 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+public enum FieldType
+{
+    Wheat
+}
 
 public class Field : Prop
 {
-    //todo make some kind of wheat item
+    public FieldType Type;
 
-    public Field(GameObject prefab) : base(prefab, true)
+    public Field(FieldType type, GameObject prefab) : base(prefab, true)
     {
-        
+        Type = type;
     }
 }

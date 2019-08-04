@@ -10,8 +10,8 @@ public class SettlementPrefabStore : MonoBehaviour
     private const int NumColumns = 80;
     private const int NumRows = 25;
 
-    private const char GraveyardKey = 'g';
-    private const char FieldKey = 'f';
+    public const char GraveyardKey = 'g';
+    public const char FieldKey = 'f';
 
     private enum LoadingSteps
     {

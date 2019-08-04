@@ -190,7 +190,7 @@ public class Area
                 //todo should probably make a tile type enum because this is trash
                 if (currentTile.PresentWallTile != null || currentTile.GetPrefabTileTexture().name.Contains("floor") ||
                     currentTile.GetPrefabTileTexture().name.Contains("road") ||
-                    currentTile.GetPrefabTileTexture().name.Contains("path") || 
+                    currentTile.GetPrefabTileTexture().name.Contains("path") ||
                     currentTile.GetBlocksMovement())
                 {
                     continue;
@@ -204,17 +204,25 @@ public class Area
 
                     propPrefabs.Add(currentKey, prefabsForCurrentKey);
                 }
-                
+
                 if (propPrefabs[currentKey] == null || propPrefabs[currentKey].Count < 1)
                 {
                     continue;
                 }
-                
-                var prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
-               
-                currentTile.PresentProp = new Prop(prefab);
 
-                currentAreaColumn++;
+                var prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
+
+                if (currentKey == SettlementPrefabStore.FieldKey)
+                {
+                    //todo pick field type
+                    currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                }
+                else
+                { 
+                    currentTile.PresentProp = new Prop(prefab);
+                }
+
+            currentAreaColumn++;
             }
             areaRow++;
             currentAreaColumn = startingAreaColumn;
