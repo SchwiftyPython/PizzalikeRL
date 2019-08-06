@@ -318,6 +318,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\EquipmentWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\FilteredInventoryWindowPopUp.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\GameMenuWindow.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\InteractDirectionPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\InventoryWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ItemButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\LoadWindowPopup.cs" />

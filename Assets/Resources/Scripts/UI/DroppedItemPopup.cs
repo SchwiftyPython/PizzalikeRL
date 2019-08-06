@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,8 +40,7 @@ public class DroppedItemPopup : MonoBehaviour
         if (Input.anyKeyDown && !_processingInput)
         {
             _processingInput = true;
-            char keyPressed;
-            char.TryParse(Input.inputString, out keyPressed);
+            char.TryParse(Input.inputString, out var keyPressed);
             if (Buttons.ContainsKey(keyPressed))
             {
                 var pressedButton = Buttons[keyPressed].transform.GetComponent<Button>();

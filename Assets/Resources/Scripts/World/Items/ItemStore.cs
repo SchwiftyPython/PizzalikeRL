@@ -149,7 +149,7 @@ public class ItemStore : MonoBehaviour
     //</Summary>
     private static ItemRarity GetRandomRarity()
     {
-        return DebugHelper.Instance.GetRandomEnumValue<ItemRarity>();
+        return GlobalHelper.GetRandomEnumValue<ItemRarity>();
     }
 
     //<Summary>

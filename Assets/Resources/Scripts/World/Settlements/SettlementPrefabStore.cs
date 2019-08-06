@@ -226,7 +226,7 @@ public class SettlementPrefabStore : MonoBehaviour
 
     private static SettlementPropType GetRandomSettlementPropType()
     {
-        return DebugHelper.Instance.GetRandomEnumValue<SettlementPropType>();
+        return GlobalHelper.GetRandomEnumValue<SettlementPropType>();
     }
 
     private static SettlementPropType GetKeyForCurrentPrefab(string trimmedLine)

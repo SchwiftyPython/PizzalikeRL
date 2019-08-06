@@ -222,8 +222,13 @@ public class InputController : MonoBehaviour
                     !AreaMap.Instance.DroppedItemPopUp.activeSelf)
                 {
                     DroppedItemPopup.Instance.DisplayDroppedItems();
-                    //todo check for containers in props
                 }
+            }
+            //Interact 
+            else if (Input.GetKeyDown(KeyCode.Space))
+            {
+                //todo prompt for direction
+                //todo get tile from direction
             }
             //Starts Look interaction
             else if (Input.GetKeyDown(KeyCode.L))

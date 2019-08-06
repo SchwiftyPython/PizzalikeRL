@@ -19,7 +19,7 @@ public class Chest : Prop
     {
         if (_contents.ContainsKey(item.Id))
         {
-            Debug.Log($"Chest contents already has this key!\n{item.ItemType}: {item.Id}");
+            Debug.Log($"Chest contents already has this key! {item.ItemType}: {item.Id}");
             return;
         }
         _contents.Add(item.Id, item);

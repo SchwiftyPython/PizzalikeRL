@@ -164,7 +164,7 @@ public class Area
 
             var propType = SettlementPrefabStore.GetRandomPropType();
 
-            // TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING
+            // todo not implemented
             while (propType == SettlementPrefabStore.SettlementPropType.Fence ||
                 propType == SettlementPrefabStore.SettlementPropType.Security)
             {
