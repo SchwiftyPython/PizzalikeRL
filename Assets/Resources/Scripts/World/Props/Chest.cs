@@ -30,6 +30,11 @@ public class Chest : Prop
         _contents.Remove(item.Id);
     }
 
+    public IEnumerable<Item> GetContents()
+    {
+        return _contents.Values;
+    }
+
     private void FillWithRandomItems()
     {
         var numItems = Random.Range(0, ItemCap);

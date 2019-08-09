@@ -22,7 +22,7 @@ public class Step : Goal
             return;
         }
 
-        var directionDictionary = GlobalHelper.DirectionVectorDictionary;
+        var directionDictionary = GlobalHelper.GetVectorDictionary();
 
         var currentPosition = new Vector2(ParentController.Self.CurrentTile.X, ParentController.Self.CurrentTile.Y);
         var targetposition = new Vector2(

@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 public class GlobalHelper : MonoBehaviour
 {
-    public static Dictionary<GoalDirection, Vector2> DirectionVectorDictionary = new Dictionary<GoalDirection, Vector2>
+    private static readonly Dictionary<GoalDirection, Vector2> DirectionVectorDictionary = new Dictionary<GoalDirection, Vector2>
     {
         {GoalDirection.North, new Vector2(1, 0)},
         {GoalDirection.NorthEast, new Vector2(1, 1)},
@@ -42,5 +42,15 @@ public class GlobalHelper : MonoBehaviour
         var values = Enum.GetValues(typeof(T));
 
         return (T)values.GetValue(Random.Range(0, values.Length));
+    }
+
+    public static Vector2 GetVectorForDirection(GoalDirection direction)
+    {
+        return DirectionVectorDictionary[direction];
+    }
+
+    public static Dictionary<GoalDirection, Vector2> GetVectorDictionary()
+    {
+        return DirectionVectorDictionary;
     }
 }

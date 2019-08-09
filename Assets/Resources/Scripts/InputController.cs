@@ -227,8 +227,7 @@ public class InputController : MonoBehaviour
             //Interact 
             else if (Input.GetKeyDown(KeyCode.Space))
             {
-                //todo prompt for direction
-                //todo get tile from direction
+                EventMediator.Instance.Broadcast("Interact", this);
             }
             //Starts Look interaction
             else if (Input.GetKeyDown(KeyCode.L))

@@ -214,6 +214,7 @@ public class Building
                 {
                     //todo pick furniture based on room type
 
+                    //todo choose between furniture and container
                     var furniturePrefab = BuildingPrefabStore.GetRandomBasicFurniturePrefab();
 
                     Props[row, column] = furniturePrefab;

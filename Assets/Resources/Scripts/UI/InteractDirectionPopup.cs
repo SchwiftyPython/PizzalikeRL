@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 {
-    private IDictionary<KeyCode, GoalDirection> _keypadDirections = new Dictionary<KeyCode, GoalDirection>
+    private readonly IDictionary<KeyCode, GoalDirection> _keypadDirections = new Dictionary<KeyCode, GoalDirection>
     {
         { KeyCode.Keypad7, GoalDirection.NorthWest },
         { KeyCode.Keypad8, GoalDirection.North },
@@ -19,7 +17,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 
     private bool _listeningForInput;
 
-    private void Awake()
+    private void Start()
     {
         EventMediator.Instance.SubscribeToEvent("Interact", this);
 
@@ -36,23 +34,41 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
         {
             _listeningForInput = false;
 
+            GoalDirection chosenDirection = GoalDirection.North;
+            bool validDirectionChosen = false;
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Hide();
+                return;
             }
-
-            GoalDirection chosenDirection;
 
             foreach (var keypadDirection in _keypadDirections)
             {
                 if (Input.GetKeyDown(keypadDirection.Key))
                 {
                     chosenDirection = keypadDirection.Value;
+                    validDirectionChosen = true;
                     break;
                 }
             }
 
-            //todo get vector from globalhelper and get tile in selected direction
+            if (!validDirectionChosen)
+            {
+                _listeningForInput = true;
+                return;
+            }
+
+            var currentTile = GameManager.Instance.Player.CurrentTile;
+            var directionVector = GlobalHelper.GetVectorForDirection(chosenDirection);
+
+            var targetVector = new Vector2(currentTile.X + directionVector.x, currentTile.Y + directionVector.y);
+
+            var targetTile = GameManager.Instance.CurrentArea.AreaTiles[(int) targetVector.x, (int) targetVector.y];
+
+            DroppedItemPopup.Instance.DisplayItemsInTargetTile(targetTile);
+
+            Hide();
         }
     }
 
@@ -66,6 +82,11 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
     {
         gameObject.SetActive(false);
         _listeningForInput = false;
+    }
+
+    private void OnDestroy()
+    {
+        EventMediator.Instance.UnsubscribeFromEvent("Interact", this);
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)

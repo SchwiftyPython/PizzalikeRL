@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EventMediator : MonoBehaviour
@@ -53,9 +54,17 @@ public class EventMediator : MonoBehaviour
 
         var subscribers = _eventSubscriptions[eventName];
 
-        foreach (var sub in subscribers)
+        foreach (var sub in subscribers.ToArray())
         {
-            NotifySubscriber(eventName, broadcaster, sub, parameter);
+            try
+            {
+                NotifySubscriber(eventName, broadcaster, sub, parameter);
+            }
+            catch (Exception e)
+            {
+                subscribers.Remove(sub);
+                Debug.Log(e);
+            }
         }
     }
 
@@ -72,7 +81,7 @@ public class EventMediator : MonoBehaviour
         }
     }
 
-    private void NotifySubscriber(string eventName, object broadcaster, ISubscriber subscriber, object parameter = null)
+    private static void NotifySubscriber(string eventName, object broadcaster, ISubscriber subscriber, object parameter = null)
     {
         subscriber.OnNotify(eventName, broadcaster, parameter);
     }
