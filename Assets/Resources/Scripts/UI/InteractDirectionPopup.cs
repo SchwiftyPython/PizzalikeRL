@@ -76,23 +76,28 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
     {
         gameObject.SetActive(true);
         _listeningForInput = true;
+        GameManager.Instance.AddActiveWindow(gameObject);
     }
 
     private void Hide()
     {
         gameObject.SetActive(false);
         _listeningForInput = false;
+        GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 
     private void OnDestroy()
     {
         EventMediator.Instance.UnsubscribeFromEvent("Interact", this);
+        GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
-        //todo check for open windows like game menu and whatnot
-        //todo we'll keep a list of windows in Game manager, loop through for any active
+        if (GameManager.Instance.AnyActiveWindows())
+        {
+            return;
+        }
 
         Show();
     }

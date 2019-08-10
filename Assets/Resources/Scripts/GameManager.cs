@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -26,6 +27,8 @@ public class GameManager : MonoBehaviour
         {CameraPosition.Center, new[] {34, 44} },
         {CameraPosition.Right, new[] {44, 79} }
     };
+
+    private List<GameObject> _activeWindows;
 
     public const string WorldMapSceneName = "WorldMap";
     public const string AreaMapSceneName = "Area";
@@ -90,6 +93,8 @@ public class GameManager : MonoBehaviour
         ActiveOrders = new Dictionary<string, PizzaOrder>();
 
         _currentCameraPosition = CameraPosition.Right;
+
+        _activeWindows = new List<GameObject>();
     }
 
     private void Update()
@@ -214,6 +219,34 @@ public class GameManager : MonoBehaviour
     public bool IsWorldMapSceneActive()
     {
         return CurrentScene.name.Equals(WorldMapSceneName);
+    }
+
+    public void AddActiveWindow(GameObject window)
+    {
+        if (_activeWindows.Contains(window))
+        {
+            return;
+        }
+        _activeWindows.Add(window);
+    }
+
+    public void RemoveActiveWindow(GameObject window)
+    {
+        if (!_activeWindows.Contains(window))
+        {
+            return;
+        }
+        _activeWindows.Remove(window);
+    }
+
+    public List<GameObject> GetActiveWindows()
+    {
+        return _activeWindows;
+    }
+
+    public bool AnyActiveWindows()
+    {
+        return _activeWindows.Any();
     }
 
     private static void RunPlayerDeathRoutine()
