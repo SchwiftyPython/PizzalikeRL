@@ -880,6 +880,11 @@ public class Entity : ISubscriber
 
     public bool AreaMapCanMove(Vector2 target)
     {
+        if (GameManager.Instance.AnyActiveWindows())
+        {
+            return false;
+        }
+
         var currentArea = GameManager.Instance.CurrentArea;
         var currentCell = GameManager.Instance.CurrentCell;
         if (!TileOutOfBounds(target))
