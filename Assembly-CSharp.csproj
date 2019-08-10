@@ -318,6 +318,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\EquipmentWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\FilteredInventoryWindowPopUp.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\GameMenuWindow.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\InteractDirectionPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\InventoryWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ItemButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\LoadWindowPopup.cs" />
@@ -350,7 +351,6 @@
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplateContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Factions\FactionTemplateLoader.cs" />
-    <Compile Include="Assets\Resources\Scripts\World\Field.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Armor.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Item.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemRarity.cs" />
@@ -359,7 +359,9 @@
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Weapon.cs" />
-    <Compile Include="Assets\Resources\Scripts\World\Prop.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Props\Chest.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Props\Field.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Props\Prop.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Reputation.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\Building.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\BuildingPrefab.cs" />

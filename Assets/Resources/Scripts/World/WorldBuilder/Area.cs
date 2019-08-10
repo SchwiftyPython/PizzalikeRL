@@ -154,78 +154,95 @@ public class Area
 
     private void PlaceSettlementProps()
     {
-        //todo determine some start chance
-        //todo roll
-        //todo if roll < start chance place prop, decrease chance, roll again
-        //todo else stop placing props
+        var propChance = 99;
 
-        //todo pick a prop type using weighted dict
-        //todo pick single prop or blueprint
+        var roll = Random.Range(1, 101);
 
-        //TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING ///////////////////////////
-        var propType = SettlementPrefabStore.SettlementPropType.Field;
-
-        var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
-
-        var areaRow = Random.Range(0, Height);
-        var startingAreaColumn = Random.Range(0, Width);
-        var currentAreaColumn = startingAreaColumn;
-
-        var blueprintHeight = propBlueprint.GetLength(0);
-        var blueprintWidth = propBlueprint.GetLength(1);
-
-        var propPrefabs = new Dictionary<char, List<GameObject>>();
-        
-        for (var currentRow = 0; currentRow < blueprintHeight; currentRow++)
+        while (roll <= propChance)
         {
-            for (var currentColumn = 0; currentColumn < blueprintWidth; currentColumn++)
+            //todo pick single prop or blueprint
+
+            var propType = SettlementPrefabStore.GetRandomPropType();
+
+            // todo not implemented
+            while (propType == SettlementPrefabStore.SettlementPropType.Fence ||
+                propType == SettlementPrefabStore.SettlementPropType.Security)
             {
-                if (areaRow < 0 || areaRow >= Height || currentAreaColumn < 0 || currentAreaColumn >= Width)
-                {
-                    continue;
-                }
-
-                var currentTile = AreaTiles[areaRow, currentAreaColumn];
-
-                //todo should probably make a tile type enum because this is trash
-                if (currentTile.PresentWallTile != null || currentTile.GetPrefabTileTexture().name.Contains("floor") ||
-                    currentTile.GetPrefabTileTexture().name.Contains("road") ||
-                    currentTile.GetPrefabTileTexture().name.Contains("path") ||
-                    currentTile.GetBlocksMovement())
-                {
-                    continue;
-                }
-
-                var currentKey = propBlueprint[currentRow, currentColumn];
-
-                if (!propPrefabs.ContainsKey(currentKey))
-                {
-                    var prefabsForCurrentKey = SettlementPrefabStore.GetPropPrefabsByKey(currentKey);
-
-                    propPrefabs.Add(currentKey, prefabsForCurrentKey);
-                }
-
-                if (propPrefabs[currentKey] == null || propPrefabs[currentKey].Count < 1)
-                {
-                    continue;
-                }
-
-                var prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
-
-                if (currentKey == SettlementPrefabStore.FieldKey)
-                {
-                    //todo pick field type
-                    currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
-                }
-                else
-                { 
-                    currentTile.PresentProp = new Prop(prefab);
-                }
-
-            currentAreaColumn++;
+                propType = SettlementPrefabStore.GetRandomPropType(); 
             }
-            areaRow++;
-            currentAreaColumn = startingAreaColumn;
+
+            var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
+
+            var areaRow = Random.Range(0, Height);
+            var startingAreaColumn = Random.Range(0, Width);
+            var currentAreaColumn = startingAreaColumn;
+
+            var blueprintHeight = propBlueprint.GetLength(0);
+            var blueprintWidth = propBlueprint.GetLength(1);
+
+            var propPrefabs = new Dictionary<char, List<GameObject>>();
+
+            for (var currentRow = 0; currentRow < blueprintHeight; currentRow++)
+            {
+                for (var currentColumn = 0; currentColumn < blueprintWidth; currentColumn++)
+                {
+                    if (areaRow < 0 || areaRow >= Height || currentAreaColumn < 0 || currentAreaColumn >= Width)
+                    {
+                        continue;
+                    }
+
+                    var currentTile = AreaTiles[areaRow, currentAreaColumn];
+
+                    //todo should probably make a tile type enum because this is trash
+                    if (currentTile.PresentWallTile != null ||
+                        currentTile.GetPrefabTileTexture().name.Contains("floor") ||
+                        currentTile.GetPrefabTileTexture().name.Contains("road") ||
+                        currentTile.GetPrefabTileTexture().name.Contains("path") ||
+                        currentTile.GetBlocksMovement())
+                    {
+                        continue;
+                    }
+
+                    var currentKey = propBlueprint[currentRow, currentColumn];
+
+                    if (!propPrefabs.ContainsKey(currentKey))
+                    {
+                        var prefabsForCurrentKey = SettlementPrefabStore.GetPropPrefabsByKey(currentKey);
+
+                        propPrefabs.Add(currentKey, prefabsForCurrentKey);
+                    }
+
+                    if (propPrefabs[currentKey] == null || propPrefabs[currentKey].Count < 1)
+                    {
+                        continue;
+                    }
+
+                    var prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
+
+                    if (currentKey == SettlementPrefabStore.FieldKey)
+                    {
+                        //todo pick field type
+                        currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                    }
+                    else
+                    {
+                        currentTile.PresentProp = new Prop(prefab);
+                    }
+
+                    currentAreaColumn++;
+                }
+                areaRow++;
+                currentAreaColumn = startingAreaColumn;
+            }
+
+            propChance -= 25;
+
+            if (propChance < 1)
+            {
+                propChance = 1;
+            }
+
+            roll = Random.Range(1, 101);
         }
     }
 

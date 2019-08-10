@@ -30,6 +30,12 @@ public class SettlementPrefabStore : MonoBehaviour
         { FieldKey, null }
     };
 
+    private static IDictionary<SettlementPropType, int> _weightedPropPrefabKeys = new Dictionary<SettlementPropType, int>
+    {
+        { SettlementPropType.Graveyard, 45 },
+        { SettlementPropType.Field, 55 }
+    };
+
     private static List<string> _rawNames;
 
     public enum SettlementPropType
@@ -216,6 +222,11 @@ public class SettlementPrefabStore : MonoBehaviour
                 x++;
             }
         }
+    }
+
+    private static SettlementPropType GetRandomSettlementPropType()
+    {
+        return GlobalHelper.GetRandomEnumValue<SettlementPropType>();
     }
 
     private static SettlementPropType GetKeyForCurrentPrefab(string trimmedLine)
@@ -615,5 +626,30 @@ public class SettlementPrefabStore : MonoBehaviour
     public static List<GameObject> GetPropPrefabsByKey(char key)
     {
         return PropPrefabs.ContainsKey(key) ? PropPrefabs[key] : null;
+    }
+
+    public static SettlementPropType GetRandomPropType()
+    {
+        var selection = GetRandomSettlementPropType();
+
+        var totalWeight = _weightedPropPrefabKeys.Values.Sum();
+
+        var roll = Random.Range(0, totalWeight); 
+
+        foreach (var propType in _weightedPropPrefabKeys.OrderByDescending(pt => pt.Value))
+        {
+            var weightedValue = propType.Value;
+
+            if (roll >= weightedValue)
+            {
+                roll -= weightedValue;
+            }
+            else
+            {
+                selection = propType.Key;
+                break;
+            }
+        }
+        return selection;
     }
 }

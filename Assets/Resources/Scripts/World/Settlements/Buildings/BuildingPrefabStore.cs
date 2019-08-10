@@ -18,22 +18,17 @@ public class BuildingPrefabStore : MonoBehaviour
         "bed",
         "bookcase_empty",
         "bookcase_full",
-        "chest_1",
-        "chest_2",
-        "chest_3",
         "couch_horizontal",
         "couch_diagonal",
         "easy_chair",
         "lantern_off",
         "lantern_on",
         "lamp_off",
-        "lamp_on",
-        "weapon_rack_1",
-        "weapon_rack_2",
-        "weapon_rack_empty"
+        "lamp_on"
     };
 
     private static IDictionary<string, GameObject> _allFurniture;
+    private static IDictionary<string, GameObject> _containers;
 
     private static IDictionary<string, GameObject> _stoneWallTiles;
     private static IDictionary<string, GameObject> _brickWallTiles;
@@ -76,6 +71,7 @@ public class BuildingPrefabStore : MonoBehaviour
 		LoadPrefabsFromFile();
         PopulateTileDictionaries();
         PopulateFurnitureDictionary();
+        PopulateContainersDictionary();
     }
 
     private void LoadPrefabsFromFile()
@@ -254,33 +250,36 @@ public class BuildingPrefabStore : MonoBehaviour
            {"bed", null},
            {"bookcase_empty", null},
            {"bookcase_full", null},
-           {"chest_1", null},
-           {"chest_2", null},
-           {"chest_3", null},
            {"couch_horizontal", null},
            {"couch_diagonal", null},
            {"easy_chair", null},
            {"lantern_off", null},
            {"lantern_on", null},
            {"lamp_off", null},
-           {"lamp_on", null},
-           {"store_counter_clutter_1", null},
-           {"store_counter_clutter_2", null},
-           {"store_counter_empty_1", null},
-           {"store_counter_empty_2", null},
-           {"torture_table", null},
-           {"torture_iron_maiden", null},
-           {"torture_rack_1", null},
-           {"torture_rack_2", null},
-           {"weapon_rack_1", null},
-           {"weapon_rack_2", null},
-           {"weapon_rack_empty", null}
+           {"lamp_on", null}
        };
 
         var i = 0;
         foreach (var furniture in _allFurniture.Keys.ToArray())
         {
             _allFurniture[furniture] = WorldData.Instance.Furniture[i];
+            i++;
+        }
+    }
+
+    private static void PopulateContainersDictionary()
+    {
+        _containers = new Dictionary<string, GameObject>
+        {
+            { "chest_1", null },
+            { "chest_2", null },
+            { "chest_3", null }
+        };
+
+        var i = 0;
+        foreach (var container in _containers.Keys.ToArray())
+        {
+            _containers[container] = WorldData.Instance.Containers[i];
             i++;
         }
     }
@@ -328,5 +327,17 @@ public class BuildingPrefabStore : MonoBehaviour
         var prefabKey = BasicRoomFurnitureKeys[Random.Range(0, BasicRoomFurnitureKeys.Count)];
 
         return _allFurniture[prefabKey];
+    }
+
+    public static Chest GetChest()
+    {
+        var prefab = GetChestPrefab();
+
+        return new Chest(prefab);
+    }
+
+    public static GameObject GetChestPrefab()
+    {
+        return _containers.ElementAt(Random.Range(0, _containers.Count)).Value;
     }
 }

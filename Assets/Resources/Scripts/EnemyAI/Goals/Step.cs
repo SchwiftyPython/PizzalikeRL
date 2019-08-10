@@ -1,20 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Step : Goal
 {
-    public Dictionary<GoalDirection, Vector2> DirectionDictionary = new Dictionary<GoalDirection, Vector2>
-    {
-        {GoalDirection.North, new Vector2(1, 0)},
-        {GoalDirection.NorthEast, new Vector2(1, 1)},
-        {GoalDirection.East, new Vector2(0, 1)},
-        {GoalDirection.SouthEast, new Vector2(-1, 1)},
-        {GoalDirection.South, new Vector2(-1, 0)},
-        {GoalDirection.SouthWest, new Vector2(-1, -1)},
-        {GoalDirection.West, new Vector2(0, -1)},
-        {GoalDirection.NorthWest, new Vector2(1, -1)}
-    };
-
     public GoalDirection StepDirection;
 
     public Step(GoalDirection direction)
@@ -35,10 +22,12 @@ public class Step : Goal
             return;
         }
 
+        var directionDictionary = GlobalHelper.GetVectorDictionary();
+
         var currentPosition = new Vector2(ParentController.Self.CurrentTile.X, ParentController.Self.CurrentTile.Y);
         var targetposition = new Vector2(
-            (int) (currentPosition.x + DirectionDictionary[StepDirection].x),
-            (int) (currentPosition.y + DirectionDictionary[StepDirection].y));
+            (int) (currentPosition.x + directionDictionary[StepDirection].x),
+            (int) (currentPosition.y + directionDictionary[StepDirection].y));
 
         if (!ParentController.Self.AreaMapCanMoveLocal(targetposition))
         {

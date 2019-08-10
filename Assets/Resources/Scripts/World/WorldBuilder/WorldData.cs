@@ -122,6 +122,7 @@ public class WorldData : MonoBehaviour
     public GameObject[] WheatFieldTiles;
     public GameObject[] LegumeFieldTiles;
     public GameObject[] MiscExteriorProps;
+    public GameObject[] Containers;
 
     public GameObject SmallChest;
     
