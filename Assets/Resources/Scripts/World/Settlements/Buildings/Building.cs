@@ -214,10 +214,19 @@ public class Building
                 {
                     //todo pick furniture based on room type
 
-                    //todo choose between furniture and container
-                    var furniturePrefab = BuildingPrefabStore.GetRandomBasicFurniturePrefab();
+                    var roll = Random.Range(0, 100);
 
-                    Props[row, column] = furniturePrefab;
+                    if (roll < 58)
+                    {
+                        var furniturePrefab = BuildingPrefabStore.GetRandomBasicFurniturePrefab();
+                        Props[row, column] = furniturePrefab;
+                    }
+                    else
+                    {
+                        var chestPrefab = BuildingPrefabStore.GetChestPrefab();
+                        Props[row, column] = chestPrefab;
+                    }
+
                     break;
                 }
             }

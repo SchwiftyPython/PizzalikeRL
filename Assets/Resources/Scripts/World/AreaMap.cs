@@ -236,8 +236,16 @@ public class AreaMap : MonoBehaviour
 
                         if (building.Props[currentRow, currentColumn] != null)
                         {
-                            _currentArea.AreaTiles[areaX, areaY].PresentProp =
-                                new Prop(building.Props[currentRow, currentColumn]);
+                            if (building.Props[currentRow, currentColumn].name.Contains("chest"))
+                            {
+                                _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                                    new Chest(building.Props[currentRow, currentColumn]);
+                            }
+                            else
+                            {
+                                _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                                    new Prop(building.Props[currentRow, currentColumn]);
+                            }
 
                             instance = Instantiate(_currentArea.AreaTiles[areaX, areaY].PresentProp.Prefab,
                                 new Vector2(areaY, areaX), Quaternion.identity);

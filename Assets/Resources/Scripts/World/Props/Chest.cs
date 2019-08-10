@@ -39,12 +39,12 @@ public class Chest : Prop
     {
         var numItems = Random.Range(0, ItemCap);
 
-        if (numItems < 1)
+        var items = ItemStore.Instance.GetRandomItems(numItems);
+
+        if (items.Count < 1)
         {
             return;
         }
-
-        var items = ItemStore.Instance.GetRandomItems();
 
         for (var i = 0; i < numItems; i++)
         {

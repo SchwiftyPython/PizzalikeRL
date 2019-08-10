@@ -331,8 +331,13 @@ public class BuildingPrefabStore : MonoBehaviour
 
     public static Chest GetChest()
     {
-        var prefab = _containers.ElementAt(Random.Range(0, _containers.Count)).Value;
+        var prefab = GetChestPrefab();
 
         return new Chest(prefab);
+    }
+
+    public static GameObject GetChestPrefab()
+    {
+        return _containers.ElementAt(Random.Range(0, _containers.Count)).Value;
     }
 }

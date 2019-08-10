@@ -1233,8 +1233,8 @@ public class Entity : ISubscriber
     //</Summary>
     private void AutoPickupToppingsInCurrentTile()
     {
-        if (CurrentTile.PresentTopping == null && CurrentTile.PresentProp == null &&
-            (Field) CurrentTile.PresentProp == null)
+        if (CurrentTile.PresentTopping == null && CurrentTile.PresentProp == null ||
+            !(CurrentTile.PresentProp is Field))
         {
             return;
         }

@@ -30,7 +30,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
     
     private void Update()
     {
-        if (Input.anyKeyDown && _listeningForInput)
+        if (Input.anyKeyDown && _listeningForInput) 
         {
             _listeningForInput = false;
 
