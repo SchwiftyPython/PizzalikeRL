@@ -172,56 +172,18 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.Escape))
             {
-                var mainWindow = GameMenuWindow.Instance.MainWindow;
-
-                if (mainWindow.activeSelf && !GameMenuWindow.Instance.FilteredInventoryWindow.activeSelf)
-                {
-                    GameMenuWindow.Instance.HideMainWindow();
-                    _popupWindowOpen = false;
-                }
-                else if (ActionWindow.Instance.Window.activeSelf)
-                {
-                    ActionWindow.Instance.Window.SetActive(false);
-                    ClearHighlights();
-                }
-                else
-                {
-                    GameMenuWindow.Instance.ShowMainWindow();
-                    _popupWindowOpen = true;
-                }
+                EventMediator.Instance.Broadcast("GameMenuPopup", this);
             }
             else if (Input.GetKeyDown(KeyCode.J))
             {
-                if (GameMenuWindow.Instance.MainWindow.activeSelf)
-                {
-                    if (GameMenuWindow.Instance.CurrentWindow == GameMenuWindow.Instance.PizzaOrderJournal)
-                    {
-                        GameMenuWindow.Instance.HideMainWindow();
-                        _popupWindowOpen = false;
-                    }
-                    else
-                    {
-                        GameMenuWindow.Instance.OnTabSelected(GameMenuWindow.Instance.PizzaOrderJournalTab);
-                    }
-                }
-                else
-                {
-                    GameMenuWindow.Instance.ShowMainWindow();
-                    _popupWindowOpen = true;
-                    if (GameMenuWindow.Instance.CurrentWindow != GameMenuWindow.Instance.PizzaOrderJournal)
-                    {
-                        GameMenuWindow.Instance.OnTabSelected(GameMenuWindow.Instance.PizzaOrderJournalTab);
-                    }
-                }
+                EventMediator.Instance.Broadcast("PizzaJournal", this);
             }
             //Open dropped item popup for player's current tile
             else if (Input.GetKeyDown(KeyCode.G))
             {
-                if (currentScene.Equals(_areaMapSceneName) && !ActionWindow.Instance.isActiveAndEnabled &&
-                    !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf &&
-                    !AreaMap.Instance.DroppedItemPopUp.activeSelf)
+                if (currentScene.Equals(_areaMapSceneName) && !GameManager.Instance.AnyActiveWindows())
                 {
-                    DroppedItemPopup.Instance.DisplayDroppedItems();
+                   EventMediator.Instance.Broadcast("DroppedItemPopup", this);
                 }
             }
             //Interact 
@@ -236,8 +198,7 @@ public class InputController : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                if (currentScene.Equals(_areaMapSceneName) && !ActionWindow.Instance.isActiveAndEnabled &&
-                    !GameMenuWindow.Instance.MainWindow.activeSelf && !AreaMap.Instance.ObjectInfoWindow.activeSelf && !IsUiClicked())
+                if (currentScene.Equals(_areaMapSceneName) && !GameManager.Instance.AnyActiveWindows() && !IsUiClicked())
                 {
                     var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -252,7 +213,7 @@ public class InputController : MonoBehaviour
                     //highlight tile and path to it
                     StartCoroutine(HighlightPathToTarget(_player, selectedTile.GetGridPosition()));
 
-                    ActionWindow.Instance.OnTileSelected(selectedTile);
+                    EventMediator.Instance.Broadcast("ActionPopup", this, selectedTile);
                 }
 
             }

@@ -1,38 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DroppedItemPopup : MonoBehaviour
+public class DroppedItemPopup : MonoBehaviour, ISubscriber
 {
+    private const string DroppedItemPopupEventName = "DroppedItemPopup";
+    private const string GetItemEventName = "GetItem";
+    private const string TakeAllEventName = "TakeAll";
+
+    private readonly IList<string> _subscribedEvents = new List<string>
+    {
+        DroppedItemPopupEventName,
+        GetItemEventName,
+        TakeAllEventName
+    };
+
     private bool _processingInput;
     public IDictionary<char, GameObject> Buttons { get; private set; }
     private char _keyMapLetter;
 
     private List<Item> _items;
 
-    public GameObject DroppedItemWindow;
     public GameObject ActionBar;
 
     public GameObject CloseButton;
     public GameObject DroppedItemButtonPrefab;
     public GameObject TakeAllButton;
 
-    public static DroppedItemPopup Instance;
-
     private void Start()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-
-        DroppedItemWindow.SetActive(false);
-        ActionBar.SetActive(false);
+        SubscribeToEvents();
+        Hide();
     }
 
     private void Update()
@@ -51,17 +51,37 @@ public class DroppedItemPopup : MonoBehaviour
             {
                 Hide();
             }
-            Debug.Log("Button Pressed: " + Input.inputString);
-            Debug.Log("_buttons count: " + Buttons.Count);
+            
             _processingInput = false;
         }
     }
 
-    public void Hide()
+    private void SubscribeToEvents()
+    {
+        foreach (var eventName in _subscribedEvents)
+        {
+            EventMediator.Instance.SubscribeToEvent(eventName, this);
+        }
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        EventMediator.Instance.UnsubscribeFromAllEvents(this);
+    }
+
+    private void Hide()
     {
         DestroyOldItemButtons();
-        DroppedItemWindow.SetActive(false);
+        gameObject.SetActive(false);
         ActionBar.SetActive(false);
+        GameManager.Instance.RemoveActiveWindow(gameObject);
+    }
+
+    private void Show()
+    {
+        gameObject.SetActive(true);
+        ActionBar.SetActive(true);
+        GameManager.Instance.AddActiveWindow(gameObject);
     }
 
     public void Refresh()
@@ -108,8 +128,7 @@ public class DroppedItemPopup : MonoBehaviour
             NextKeyMapLetter();
         }
 
-        DroppedItemWindow.SetActive(true);
-        ActionBar.SetActive(true);
+        Show();
     }
 
     public void DisplayItemsInTargetTile(Tile target)
@@ -164,8 +183,7 @@ public class DroppedItemPopup : MonoBehaviour
             NextKeyMapLetter();
         }
 
-        DroppedItemWindow.SetActive(true);
-        ActionBar.SetActive(true);
+        Show();
     }
 
     private void NextKeyMapLetter()
@@ -186,10 +204,81 @@ public class DroppedItemPopup : MonoBehaviour
 
     private void DestroyOldItemButtons()
     {
+        if (Buttons == null)
+        {
+            return;
+        }
+
         foreach (var button in Buttons.Values.ToArray())
         {
             Destroy(button);
         }
         Buttons.Clear();
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals(DroppedItemPopupEventName))
+        {
+            if (parameter == null || !(parameter is Tile tile))
+            {
+                DisplayDroppedItems();
+                return;
+            }
+
+            DisplayItemsInTargetTile(tile);
+        }
+        else if (eventName.Equals(GetItemEventName))
+        {
+            if (!gameObject.activeSelf || parameter == null || !(parameter is Tile tile))
+            {
+                return;
+            }
+
+            if (tile.PresentItems.Count <= 0)
+            {
+                Hide();
+            }
+            else
+            {
+                Refresh();
+            }
+        }
+        else if (eventName.Equals(TakeAllEventName))
+        {
+            if (!gameObject.activeSelf)
+            {
+                return;
+            }
+
+            var player = GameManager.Instance.Player;
+            var selectedTile = player.CurrentTile;
+
+            GameObject itemSprite = null;
+            foreach (var itemButton in Buttons.Values)
+            {
+                Guid.TryParse(itemButton.transform.GetComponentsInChildren<Text>(true)[2].text, out var itemId);
+
+                var item = WorldData.Instance.Items[itemId];
+
+                player.Inventory.Add(itemId, item);
+
+                selectedTile.PresentItems.Remove(item);
+
+                var message = "Picked up " + item.ItemType; //todo change to item name
+                GameManager.Instance.Messages.Add(message);
+
+                itemSprite = item.WorldSprite;
+            }
+
+            Destroy(itemSprite);
+            Hide();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromEvents();
+        GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 }
