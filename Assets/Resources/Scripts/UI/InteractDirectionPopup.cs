@@ -66,7 +66,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 
             var targetTile = GameManager.Instance.CurrentArea.AreaTiles[(int) targetVector.x, (int) targetVector.y];
 
-            DroppedItemPopup.Instance.DisplayItemsInTargetTile(targetTile);
+            EventMediator.Instance.Broadcast("DroppedItemPopup", this, targetTile);
 
             Hide();
         }

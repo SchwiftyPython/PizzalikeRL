@@ -858,6 +858,7 @@ public class Entity : ISubscriber
                 var v = new Vinteger(CurrentTile.X, CurrentTile.Y);
                 AreaMap.Instance.Fov.Refresh(v);
                 AutoPickupToppingsInCurrentTile();
+                AutoHarvestFields();
                 return true;
             }
             if (!EntityPresent(target))
@@ -1238,15 +1239,9 @@ public class Entity : ISubscriber
     //</Summary>
     private void AutoPickupToppingsInCurrentTile()
     {
-        if (CurrentTile.PresentTopping == null && CurrentTile.PresentProp == null ||
-            !(CurrentTile.PresentProp is Field))
-        {
-            return;
-        }
-
         if (CurrentTile.PresentTopping == null)
         {
-            CurrentTile.PresentTopping = new Topping(((Field) CurrentTile.PresentProp).Type.ToString());
+            return;
         }
 
         ToppingCounts[CurrentTile.PresentTopping.Type] += 1;
@@ -1258,13 +1253,32 @@ public class Entity : ISubscriber
         {
             UnityEngine.Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
         }
+        CurrentTile.PresentTopping = null;
+    }
 
-        if ((Field) CurrentTile.PresentProp != null)
+    private void AutoHarvestFields()
+    {
+        if (!(CurrentTile.PresentProp is Field))
         {
-            UnityEngine.Object.Destroy(CurrentTile.PresentProp.Texture);
-            CurrentTile.PresentProp = null;
+            return;
         }
 
+        var field = (Field) CurrentTile.PresentProp;
+        
+        CurrentTile.PresentTopping = new Topping(field.Type.ToString());
+
+        ToppingCounts[CurrentTile.PresentTopping.Type] += 1;
+
+        var message = "Picked up " + CurrentTile.PresentTopping.Type;
+        GameManager.Instance.Messages.Add(message);
+
+        if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
+        {
+            UnityEngine.Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
+        }
+
+        UnityEngine.Object.Destroy(CurrentTile.PresentProp.Texture);
+        CurrentTile.PresentProp = null;
         CurrentTile.PresentTopping = null;
     }
 

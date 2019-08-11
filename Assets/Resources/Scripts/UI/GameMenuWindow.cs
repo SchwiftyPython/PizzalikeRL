@@ -1,8 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class GameMenuWindow : MonoBehaviour
+public class GameMenuWindow : MonoBehaviour, ISubscriber
 {
+    private const string GameMenuEventName = "GameMenuPopup";
+    private const string JournalEventName = "PizzaJournal";
+
+    private readonly IList<string> _subscribedEvents = new List<string>
+    {
+        GameMenuEventName,
+        JournalEventName
+    };
+
     private readonly Color _inactiveTabColor = new Color(255, 255, 255, .5f);
     private readonly Color _activeTabColor = new Color(255, 255, 255, .9f);
 
@@ -24,18 +34,8 @@ public class GameMenuWindow : MonoBehaviour
     public Button CharacterTab;
     public Button SystemTab;
 
-    public static GameMenuWindow Instance;
-
-    public void Awake()
+    private void Start()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
         MainWindow.SetActive(false);
         PizzaOrderJournalTab.GetComponent<Image>().color = _inactiveTabColor;
         EquipmentTab.GetComponent<Image>().color = _inactiveTabColor;
@@ -44,21 +44,36 @@ public class GameMenuWindow : MonoBehaviour
         SystemTab.GetComponent<Image>().color = _inactiveTabColor;
 
         CurrentWindowTab.GetComponent<Image>().color = _activeTabColor;
+
+        SubscribeToEvents();
     }
 
-    public void ShowMainWindow()
+    private void Update()
+    {
+        if (gameObject.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                HideMainWindow();
+            }
+        }
+    }
+
+    private void ShowMainWindow()
     {
         MainWindow.SetActive(true);
         ShowInnerWindow(CurrentWindow, CurrentWindowTab);
+        GameManager.Instance.AddActiveWindow(gameObject);
     }
 
-    public void HideMainWindow()
+    private void HideMainWindow()
     {
         MainWindow.SetActive(false);
         HideInnerWindow(CurrentWindow, CurrentWindowTab);
+        GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 
-    public void ShowInnerWindow(GameObject window, Button tab)
+    private void ShowInnerWindow(GameObject window, Button tab)
     {
         if (window != CurrentWindow)
         {
@@ -71,7 +86,7 @@ public class GameMenuWindow : MonoBehaviour
         CurrentWindow.SetActive(true);
     }
 
-    public void HideInnerWindow(GameObject window, Button tab)
+    private void HideInnerWindow(GameObject window, Button tab)
     {
         tab.GetComponent<Image>().color = _inactiveTabColor;
         window.SetActive(false);
@@ -97,5 +112,43 @@ public class GameMenuWindow : MonoBehaviour
                 ShowInnerWindow(SystemWindow, tab);
                 break;
         }
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (GameManager.Instance.AnyActiveWindows())
+        {
+            return;
+        }
+
+        if (eventName.Equals(GameMenuEventName))
+        {
+            ShowMainWindow();
+        }
+        else if (eventName.Equals(JournalEventName))
+        {
+            ShowMainWindow();
+            OnTabSelected(PizzaOrderJournalTab);
+        }
+        
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromEvents();
+        GameManager.Instance.RemoveActiveWindow(gameObject);
+    }
+
+    private void SubscribeToEvents()
+    {
+        foreach (var eventName in _subscribedEvents)
+        {
+            EventMediator.Instance.SubscribeToEvent(eventName, this);
+        }
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        EventMediator.Instance.UnsubscribeFromAllEvents(this);
     }
 }

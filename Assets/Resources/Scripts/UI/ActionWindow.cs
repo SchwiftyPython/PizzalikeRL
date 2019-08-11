@@ -4,31 +4,39 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActionWindow : MonoBehaviour
+public class ActionWindow : MonoBehaviour, ISubscriber
 {
     private Entity _player;
     private Tile _selectedTile;
-
-    public GameObject Window;
 
     public GameObject MoveHereButton;
     public GameObject RangedAttackButton;
     public GameObject MeleeAttackButton;
     public GameObject DeliverButton;
-
-    public static ActionWindow Instance;
     
-    private void Awake()
+    private void Start()
     {
-        if (Instance == null)
+        EventMediator.Instance.SubscribeToEvent("ActionPopup", this);
+
+        gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (gameObject.activeSelf)
         {
-            Instance = this;
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Hide();
+            }
         }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        Window.SetActive(false);
+    }
+
+    private void Hide()
+    {
+        gameObject.SetActive(false);
+        GameManager.Instance.RemoveActiveWindow(gameObject);
+        InputController.Instance.ClearHighlights();
     }
 
     //todo make buttons prefab and display only relevant actions
@@ -73,9 +81,10 @@ public class ActionWindow : MonoBehaviour
 
         var pos = Input.mousePosition;
 
-        Window.transform.position = new Vector2(pos.x + 60f, pos.y + 50f);
+        gameObject.transform.position = new Vector2(pos.x + 60f, pos.y + 50f);
 
-        Window.SetActive(true);
+        gameObject.SetActive(true);
+        GameManager.Instance.AddActiveWindow(gameObject);
     }
 
     public void OnMoveHereButtonClicked()
@@ -103,10 +112,7 @@ public class ActionWindow : MonoBehaviour
         GameManager.Instance.ActiveOrders.Remove(presentEntity.Fluff.Name);
 
         //Remove marker from customer
-        for (var i = 0; i < presentEntity.GetSprite().transform.childCount; i++)
-        {
-            Destroy(presentEntity.GetSprite().transform.GetChild(i).gameObject);
-        }
+        GlobalHelper.DestroyAllChildren(presentEntity.GetSprite());
 
         //todo popup sucking off player for delivering pizza
         //todo award whatever skill point currency
@@ -117,9 +123,8 @@ public class ActionWindow : MonoBehaviour
 
     private void AfterActionCleanup()
     {
-        InputController.Instance.ClearHighlights();
-        Window.SetActive(false);
         GameManager.Instance.CurrentState = GameManager.GameState.EndTurn;
+        Hide();
     }
 
     private static bool OrderReadyForDelivery(Entity presentEntity)
@@ -153,5 +158,26 @@ public class ActionWindow : MonoBehaviour
         var currentToppingCounts = GameManager.Instance.Player.ToppingCounts;
 
         return requiredToppingCounts.All(topping => currentToppingCounts[topping.Key] >= topping.Value);
+    }
+
+    private void OnDestroy()
+    {
+        EventMediator.Instance.UnsubscribeFromEvent("ActionPopup", this);
+        GameManager.Instance.RemoveActiveWindow(gameObject);
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (GameManager.Instance.AnyActiveWindows())
+        {
+            return;
+        }
+
+        if (!(parameter is Tile tile))
+        {
+            return;
+        }
+
+        OnTileSelected(tile);
     }
 }
