@@ -234,6 +234,28 @@
             <MaxChildrenBodyParts> 10 </MaxChildrenBodyParts>  			
 		</BodyPart>
 		
+		<BodyPart name = "medium mammal body">
+			<Type>torso</Type>
+			<MaxHP> 65 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart/>
+			<AttackVerb/>
+			<Coverage> 95 </Coverage>
+            <MaxChildrenBodyParts> 10 </MaxChildrenBodyParts>  			
+		</BodyPart>
+		
+		<BodyPart name = "large mammal body">
+			<Type>torso</Type>
+			<MaxHP> 95 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart/>
+			<AttackVerb/>
+			<Coverage> 145 </Coverage>
+            <MaxChildrenBodyParts> 10 </MaxChildrenBodyParts>  			
+		</BodyPart>
+		
 		<BodyPart name = "skunk head">
 			<Type>head</Type>
 			<MaxHP> 20 </MaxHP>
@@ -256,16 +278,82 @@
             <MaxChildrenBodyParts> 1 </MaxChildrenBodyParts>  			
 		</BodyPart> 		
 		
+		<BodyPart name = "medium mammal leg">
+			<Type>leg</Type>
+			<MaxHP> 25 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb> kick </AttackVerb>
+			<Coverage> 20 </Coverage>
+            <MaxChildrenBodyParts> 1 </MaxChildrenBodyParts>  			
+		</BodyPart> 	
+		
+		<BodyPart name = "large mammal leg">
+			<Type>leg</Type>
+			<MaxHP> 45 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb> kick </AttackVerb>
+			<Coverage> 30 </Coverage>
+            <MaxChildrenBodyParts> 1 </MaxChildrenBodyParts>  			
+		</BodyPart> 
+		
 		<BodyPart name = "small mammal clawed foot">
 			<Type>foot</Type>
 			<MaxHP> 10 </MaxHP>
 			<CanEquipWeapon> true </CanEquipWeapon>
 			<CanEquipArmor> true </CanEquipArmor>
 			<NeedsPart>leg</NeedsPart>
-			<AttackVerb> kick </AttackVerb>
+			<AttackVerb> claw </AttackVerb>
 			<Coverage> 5 </Coverage>
             <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
+		</BodyPart>	
+
+        <BodyPart name = "medium mammal clawed foot">
+			<Type>foot</Type>
+			<MaxHP> 20 </MaxHP>
+			<CanEquipWeapon> true </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>leg</NeedsPart>
+			<AttackVerb> claw </AttackVerb>
+			<Coverage> 10 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
 		</BodyPart>		
+		
+		<BodyPart name = "medium mammal foot">
+			<Type>foot</Type>
+			<MaxHP> 20 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>leg</NeedsPart>
+			<AttackVerb> kick </AttackVerb>
+			<Coverage> 10 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
+		</BodyPart>
+
+        <BodyPart name = "large mammal foot">
+			<Type>foot</Type>
+			<MaxHP> 30 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>leg</NeedsPart>
+			<AttackVerb> kick </AttackVerb>
+			<Coverage> 15 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
+		</BodyPart>			
+		
+		<BodyPart name = "large mammal clawed foot">
+			<Type>foot</Type>
+			<MaxHP> 30 </MaxHP>
+			<CanEquipWeapon> true </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>leg</NeedsPart>
+			<AttackVerb> claw </AttackVerb>
+			<Coverage> 15 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
+		</BodyPart>	
 		
 		<BodyPart name = "skunk tail">
 			<Type>tail</Type>
@@ -333,7 +421,29 @@
             <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
 		</BodyPart>
 		
+		<BodyPart name = "large bird tail">
+			<Type>tail</Type>
+			<MaxHP> 10 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> false </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb/>
+			<Coverage> 20 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
+		</BodyPart>
+		
 		<BodyPart name = "turkey head">
+			<Type>head</Type>
+			<MaxHP> 20 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb> bite </AttackVerb>
+			<Coverage> 20 </Coverage>
+            <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
+		</BodyPart>
+		
+		<BodyPart name = "large bird head">
 			<Type>head</Type>
 			<MaxHP> 20 </MaxHP>
 			<CanEquipWeapon> false </CanEquipWeapon>
@@ -353,6 +463,72 @@
 			<AttackVerb> bite </AttackVerb>
 			<Coverage> 20 </Coverage>
             <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
+		</BodyPart>
+		
+		<BodyPart name = "bear head">
+			<Type>head</Type>
+			<MaxHP> 45 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb> bite </AttackVerb>
+			<Coverage> 35 </Coverage>
+            <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
+		</BodyPart>
+		
+		<BodyPart name = "cougar head">
+			<Type>head</Type>
+			<MaxHP> 30 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb> bite </AttackVerb>
+			<Coverage> 25 </Coverage>
+            <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
+		</BodyPart>
+		
+		<BodyPart name = "boar head">
+			<Type>head</Type>
+			<MaxHP> 35 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb> bite </AttackVerb>
+			<Coverage> 30 </Coverage>
+            <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
+		</BodyPart>
+		
+		<BodyPart name = "cow head">
+			<Type>head</Type>
+			<MaxHP> 40 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb> bite </AttackVerb>
+			<Coverage> 35 </Coverage>
+            <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
+		</BodyPart>
+		
+		<BodyPart name = "camel head">
+			<Type>head</Type>
+			<MaxHP> 40 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart>torso</NeedsPart>
+			<AttackVerb> bite </AttackVerb>
+			<Coverage> 35 </Coverage>
+            <MaxChildrenBodyParts> 5 </MaxChildrenBodyParts>			
+		</BodyPart>
+		
+		<BodyPart name = "tusks">
+			<Type>special</Type>
+			<MaxHP> 50 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> false </CanEquipArmor>
+			<NeedsPart>head</NeedsPart>
+			<AttackVerb> gore </AttackVerb>
+			<Coverage> 15 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>			
 		</BodyPart>
 
 	</BodyParts>

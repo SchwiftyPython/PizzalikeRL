@@ -386,7 +386,8 @@ public class CharacterCreation : MonoBehaviour
     {
         var allSpecies = EntityTemplateLoader.GetAllEntityTemplateTypes().ToList();
 
-        _playableSpecies = allSpecies.Where(species => !_nonPlayableSpecies.Contains(species)).ToList();
+        _playableSpecies = allSpecies.Where(species => !_nonPlayableSpecies.Contains(species)).OrderBy(t => t)
+            .ToList();
 
         foreach (var species in _playableSpecies)
         {
