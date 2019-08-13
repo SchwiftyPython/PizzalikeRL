@@ -171,6 +171,64 @@
 			<Topping></Topping>
         </EntityTemplate>
 		
+		<EntityTemplate type = "giant centipede">
+            <Description> 
+			Creepy critter.
+			</Description>
+            <Classification>NonHumanoid</Classification>			
+			<MinStrength> 2 </MinStrength>
+			<MaxStrength> 4 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 1 </MinIntelligence>	
+            <MaxIntelligence> 2 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> true </IsHostile>     		 
+			<SpritePath>Prefabs/Sprites/Creatures/giant_centipede_1</SpritePath>			
+			<BodyParts>				
+				<Part>worm body</Part>
+                <Part>pincher</Part>				
+				<Part>centipede head</Part>
+				<Part>insect antennae</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+                <Part>insect leg</Part> 
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+                <Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+                <Part>insect leg</Part> 
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>
+				<Part>insect leg</Part>					
+			</BodyParts>
+			<PossibleBiomes>			    
+			    <Biome>Wasteland</Biome>
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>			   
+			    <Biome>Desert</Biome>	
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
 		<EntityTemplate type = "goose">
             <Description> 
 			A common waterbird identified in flight by its distinctive "V"-shaped flock formation.
@@ -184,7 +242,7 @@
 			<MaxConstitution> 3 </MaxConstitution>
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 4 </MaxIntelligence>				
-			<Playable> false </Playable>			
+			<Playable> true </Playable>			
 			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>  			 
 			<SpritePath>Prefabs/Sprites/Creatures/goose_1</SpritePath>			
@@ -228,7 +286,7 @@
 			<MaxConstitution> 3 </MaxConstitution>
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 4 </MaxIntelligence>				
-			<Playable> false </Playable>			
+			<Playable> true </Playable>			
 			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>  			
 			<SpritePath>Prefabs/Sprites/Creatures/skunk_1</SpritePath>			
@@ -274,7 +332,7 @@
 			<MaxConstitution> 3 </MaxConstitution>
             <MinIntelligence> 3 </MinIntelligence>	
             <MaxIntelligence> 4 </MaxIntelligence>				
-			<Playable> false </Playable>			
+			<Playable> true </Playable>			
 			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>  			
 			<SpritePath>Prefabs/Sprites/Creatures/spider_1</SpritePath>			
@@ -311,18 +369,18 @@
 		    A crustacean with a poor disposition.
 			</Description>		
 			<Classification>NonHumanoid</Classification>
-			<MinStrength> 2 </MinStrength>
-			<MaxStrength> 3 </MaxStrength>
-			<MinAgility> 3 </MinAgility>
-			<MaxAgility> 4 </MaxAgility>
-			<MinConstitution> 2 </MinConstitution>
-			<MaxConstitution> 3 </MaxConstitution>
-            <MinIntelligence> 3 </MinIntelligence>	
-            <MaxIntelligence> 4 </MaxIntelligence>				
-			<Playable> false </Playable>			
+			<MinStrength> 4 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 4 </MinConstitution>
+			<MaxConstitution> 6 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
 			<Wild> true </Wild>
 			<IsHostile> false </IsHostile>  			
-			<SpritePath>Prefabs/Sprites/Creatures/spider_1</SpritePath>			
+			<SpritePath>Prefabs/Sprites/Creatures/crab_1</SpritePath>			
 			<BodyParts>		
                 <Part>crab body</Part>                 								
 				<Part>crab leg</Part>
@@ -337,11 +395,8 @@
                 <Part>pincher</Part>   				
 			</BodyParts>
 			<PossibleBiomes>		   
-			    <Biome>Swamp</Biome>
-			    <Biome>Grassland</Biome>
-			    <Biome>Woodland</Biome>			    
-                <Biome>Desert</Biome>	
-                <Biome>Wasteland</Biome> 				
+			    <Biome>Swamp</Biome>			    	    
+                <Biome>Desert</Biome>	                				
 			</PossibleBiomes>
 			<NameFiles>
 			    <NameFile>human_male_first_names</NameFile>
@@ -530,6 +585,51 @@
 			<Topping></Topping>
         </EntityTemplate>
 		
+		<EntityTemplate type = "gibbon">
+            <Description> 
+		    Slap box champion.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 4 </MaxStrength>
+			<MinAgility> 4 </MinAgility>
+			<MaxAgility> 5 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 3 </MinIntelligence>	
+            <MaxIntelligence> 5 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/gibbon_1</SpritePath>			
+			<BodyParts>		
+                <Part>small mammal body</Part>                		
+				<Part>monkey head</Part>				
+				<Part>monkey arm</Part>
+				<Part>monkey arm</Part>
+				<Part>small mammal leg</Part>
+				<Part>small mammal leg</Part>
+				<Part>small mammal hand</Part>
+				<Part>small mammal hand</Part>	
+                <Part>small mammal hand</Part>
+				<Part>small mammal hand</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>                				
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
 		<EntityTemplate type = "boar">
             <Description> 
 		    A dangerous tasty.
@@ -551,6 +651,99 @@
                 <Part>medium mammal body</Part>                		
 				<Part>boar head</Part>
                 <Part>tusks</Part>				
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal foot</Part>
+				<Part>medium mammal foot</Part>
+				<Part>medium mammal foot</Part>	
+				<Part>medium mammal foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+                <Biome>Ice</Biome>					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "giant rat">
+            <Description> 
+		    Out of the sewer and into the wasteland.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 2 </MinStrength>
+			<MaxStrength> 3 </MaxStrength>
+			<MinAgility> 3 </MinAgility>
+			<MaxAgility> 5 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 4 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> true </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/giant_rat_1</SpritePath>			
+			<BodyParts>		
+                <Part>medium mammal body</Part>                		
+				<Part>rat head</Part>                				
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal clawed foot</Part>
+				<Part>medium mammal clawed foot</Part>
+				<Part>medium mammal clawed foot</Part>	
+				<Part>medium mammal clawed foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+				<Biome>Desert</Biome>
+                <Biome>Ice</Biome>					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "deer">
+            <Description> 
+		    A tasty tasty.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 2 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 3 </MinConstitution>
+			<MaxConstitution> 5 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/deer_1</SpritePath>			
+			<BodyParts>		
+                <Part>medium mammal body</Part>                		
+				<Part>deer head</Part>                			
 				<Part>medium mammal leg</Part>
 				<Part>medium mammal leg</Part>
 				<Part>medium mammal leg</Part>
@@ -711,6 +904,47 @@
                 <NameFile>mammal_male_first_names</NameFile>
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>                				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "gator">
+            <Description> 
+		    Chomper.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 4 </MinConstitution>
+			<MaxConstitution> 5 </MaxConstitution>
+            <MinIntelligence> 1 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> true </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/gator_1</SpritePath>			
+			<BodyParts>		
+                <Part>large reptile body</Part>                		
+				<Part>gator head</Part>                			
+				<Part>large reptile leg</Part>
+				<Part>large reptile leg</Part>
+				<Part>large reptile leg</Part>
+				<Part>large reptile leg</Part>
+				<Part>large reptile foot</Part>
+				<Part>large reptile foot</Part>
+				<Part>large reptile foot</Part>	
+				<Part>large reptile foot</Part>	
+                <Part>large reptile tail</Part>					
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>                               					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>                		
 			</NameFiles>
 			<Topping></Topping>
         </EntityTemplate>
