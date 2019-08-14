@@ -79,6 +79,40 @@
 			<Topping>pepperoni</Topping>
         </EntityTemplate>
 		
+		<EntityTemplate type = "snake">
+            <Description> Cute and cuddly</Description>
+            <Classification>NonHumanoid</Classification>			
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> true </IsHostile> 			
+			<SpritePath>Prefabs/Sprites/Creatures/snake_1</SpritePath>			
+			<BodyParts>				
+				<Part>snake body</Part>				
+				<Part>snake head</Part>
+			</BodyParts>
+			<PossibleBiomes>			    
+			    <Biome>Wasteland</Biome>
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>			   
+			    <Biome>Desert</Biome>	
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
 		<EntityTemplate type = "beetle">
             <Description> 
 			A beagle-sized beetle. Powerful mandibles protrude from
@@ -450,6 +484,47 @@
 			<Topping></Topping>
         </EntityTemplate>
 		
+		<EntityTemplate type = "penguin">
+            <Description> 
+		    Ice pigeon.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 1 </MinStrength>
+			<MaxStrength> 3 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/penguin_1</SpritePath>			
+			<BodyParts>		
+                <Part>large bird body</Part>                		
+				<Part>penguin head</Part>				
+				<Part>large bird leg</Part>
+				<Part>large bird leg</Part>
+				<Part>large bird foot</Part>
+				<Part>large bird foot</Part>				
+				<Part>large bird wing</Part>
+				<Part>large bird wing</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Ice</Biome>			                  				
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>
+				<NameFile>bird_male_first_names</NameFile>
+				<NameFile>bird_female_first_names</NameFile>
+				<NameFile>bird_last_names</NameFile>
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
 		<EntityTemplate type = "bustard">
             <Description> 
 		    Fat flyer.
@@ -567,6 +642,189 @@
 				<Part>medium mammal clawed foot</Part>
 				<Part>medium mammal clawed foot</Part>	
 				<Part>medium mammal clawed foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+                <Biome>Ice</Biome>					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "hyena">
+            <Description> 
+		     Funny dog.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 4 </MaxStrength>
+			<MinAgility> 3 </MinAgility>
+			<MaxAgility> 4 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 4 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> true </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/hyena_1</SpritePath>			
+			<BodyParts>		
+                <Part>medium mammal body</Part>                		
+				<Part>hyena head</Part>				
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal clawed foot</Part>
+				<Part>medium mammal clawed foot</Part>
+				<Part>medium mammal clawed foot</Part>	
+				<Part>medium mammal clawed foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+                <Biome>Wasteland</Biome>					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "lion">
+            <Description> 
+		    Ferocious feline
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 4 </MinAgility>
+			<MaxAgility> 5 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 4 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> true </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/lion_1</SpritePath>			
+			<BodyParts>		
+                <Part>medium mammal body</Part>                		
+				<Part>lion head</Part>				
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal clawed foot</Part>
+				<Part>medium mammal clawed foot</Part>
+				<Part>medium mammal clawed foot</Part>	
+				<Part>medium mammal clawed foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>			    
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>                					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "goat">
+            <Description> 
+		    Billy, Billy, Billy...
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 4 </MinAgility>
+			<MaxAgility> 5 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/goat_1</SpritePath>			
+			<BodyParts>		
+                <Part>medium mammal body</Part>                		
+				<Part>goat head</Part>
+                <Part>horns</Part>				
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal foot</Part>
+				<Part>medium mammal foot</Part>
+				<Part>medium mammal foot</Part>	
+				<Part>medium mammal foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+                <Biome>Ice</Biome>					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "llama">
+            <Description> 
+		    Superior animal to all.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 2 </MinStrength>
+			<MaxStrength> 3 </MaxStrength>
+			<MinAgility> 3 </MinAgility>
+			<MaxAgility> 4 </MaxAgility>
+			<MinConstitution> 2 </MinConstitution>
+			<MaxConstitution> 3 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/llama_1</SpritePath>			
+			<BodyParts>		
+                <Part>medium mammal body</Part>                		
+				<Part>llama head</Part>                				
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal foot</Part>
+				<Part>medium mammal foot</Part>
+				<Part>medium mammal foot</Part>	
+				<Part>medium mammal foot</Part>				
 			</BodyParts>
 			<PossibleBiomes>		   
 			    <Biome>Swamp</Biome>
@@ -770,6 +1028,52 @@
 			<Topping></Topping>
         </EntityTemplate>
 		
+		<EntityTemplate type = "horse">
+            <Description> 
+		    A horse is a horse of course of course.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 2 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 3 </MinConstitution>
+			<MaxConstitution> 5 </MaxConstitution>
+            <MinIntelligence> 2 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/horse_1</SpritePath>			
+			<BodyParts>		
+                <Part>medium mammal body</Part>                		
+				<Part>horse head</Part>                			
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal leg</Part>
+				<Part>medium mammal foot</Part>
+				<Part>medium mammal foot</Part>
+				<Part>medium mammal foot</Part>	
+				<Part>medium mammal foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+                <Biome>Ice</Biome>					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
 		<EntityTemplate type = "buffalo">
             <Description> 
 		    Free range patties.
@@ -813,6 +1117,144 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>
                 <NameFile>cow_first_names</NameFile> 				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "rhino">
+            <Description> 
+		    Tough and horny.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 4 </MinConstitution>
+			<MaxConstitution> 5 </MaxConstitution>
+            <MinIntelligence> 1 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/rhino_1</SpritePath>			
+			<BodyParts>		
+                <Part>large mammal body</Part>                		
+				<Part>rhino head</Part> 
+                <Part>horns</Part>				
+				<Part>large mammal leg</Part>
+				<Part>large mammal leg</Part>
+				<Part>large mammal leg</Part>
+				<Part>large mammal leg</Part>
+				<Part>large mammal foot</Part>
+				<Part>large mammal foot</Part>
+				<Part>large mammal foot</Part>	
+				<Part>large mammal foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>
+                <Biome>Ice</Biome>					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>
+                <NameFile>cow_first_names</NameFile> 				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "gorilla">
+            <Description> 
+		    Does whatever it wants.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 4 </MinConstitution>
+			<MaxConstitution> 5 </MaxConstitution>
+            <MinIntelligence> 1 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/gorilla_1</SpritePath>			
+			<BodyParts>		
+                <Part>large mammal body</Part>                		
+				<Part>monkey head</Part>                			
+				<Part>gorilla arm</Part>
+				<Part>gorilla arm</Part>
+				<Part>large mammal leg</Part>
+				<Part>large mammal leg</Part>
+				<Part>large mammal hand</Part>
+				<Part>large mammal hand</Part>
+				<Part>large mammal foot</Part>	
+				<Part>large mammal foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>                					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>                 				
+			</NameFiles>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "hippo">
+            <Description> 
+		    Fatty McFatFat
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 4 </MinConstitution>
+			<MaxConstitution> 5 </MaxConstitution>
+            <MinIntelligence> 1 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> true </Playable>			
+			<Wild> true </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Creatures/hippo_1</SpritePath>			
+			<BodyParts>		
+                <Part>large mammal body</Part>                		
+				<Part>hippo head</Part> 				
+				<Part>large mammal leg</Part>
+				<Part>large mammal leg</Part>
+				<Part>large mammal leg</Part>
+				<Part>large mammal leg</Part>
+				<Part>large mammal foot</Part>
+				<Part>large mammal foot</Part>
+				<Part>large mammal foot</Part>	
+				<Part>large mammal foot</Part>				
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>
+			    <Biome>Grassland</Biome>
+			    <Biome>Woodland</Biome>                					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>		
+                <NameFile>mammal_male_first_names</NameFile>
+				<NameFile>mammal_female_first_names</NameFile>
+				<NameFile>mammal_last_names</NameFile>                 				
 			</NameFiles>
 			<Topping></Topping>
         </EntityTemplate>
