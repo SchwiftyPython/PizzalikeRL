@@ -8,12 +8,7 @@ using UnityEngine.UI;
 
 public class CharacterCreation : MonoBehaviour
 {
-    private readonly List<string> _nonPlayableSpecies = new List<string>
-    {
-        "pepperoni worm",
-        "giant moth",
-        "beetle"
-    };
+    private readonly List<string> _nonPlayableSpecies;
 
     private const string MainMenuScene = "MainMenu";
     private const string WorldGenerationScene = "WorldGeneration";
@@ -105,8 +100,6 @@ public class CharacterCreation : MonoBehaviour
         LoadCharacterBackgrounds();
 
         SetStatsToStartingBaseValue();
-
-        _playerTemplate = EntityTemplateLoader.GetEntityTemplate(_playableSpecies.First());
 
         DisplaySpeciesDescription(_playerTemplate.Description);
 
@@ -384,12 +377,15 @@ public class CharacterCreation : MonoBehaviour
 
     private void LoadPlayableSpeciesList()
     {
-        var allSpecies = EntityTemplateLoader.GetAllEntityTemplateTypes().ToList();
+        var allSpecies = EntityTemplateLoader.GetAllEntityTemplateTypes().OrderBy(s => s).ToList();
 
-        _playableSpecies = allSpecies.Where(species => !_nonPlayableSpecies.Contains(species)).ToList();
-
-        foreach (var species in _playableSpecies)
+        foreach (var species in allSpecies)
         {
+            if (!EntityTemplateLoader.GetEntityTemplate(species).Playable)
+            {
+                continue;
+            }
+
             var option = Instantiate(SpeciesOptionPrefab, SpeciesOptionPrefab.transform.position, Quaternion.identity);
 
             option.transform.SetParent(SpeciesOptionParent);
@@ -397,9 +393,16 @@ public class CharacterCreation : MonoBehaviour
             option.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
 
             option.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = species;
+
+            if (species != allSpecies.First())
+            {
+                continue;
+            }
+
+            option.GetComponent<Button>().Select();
         }
 
-        SelectSpeciesOption(EntityTemplateLoader.GetEntityTemplate(_playableSpecies.First()));
+        SelectSpeciesOption(EntityTemplateLoader.GetEntityTemplate(allSpecies.First()));
     }
 
     private void DisplayCharacterBackgroundDescription(string description)

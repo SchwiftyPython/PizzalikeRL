@@ -482,6 +482,11 @@ public class AreaMap : MonoBehaviour
 
     private void RemoveAllNpcs()
     {
+        if (_currentArea == null)
+        {
+            return;
+        }
+
         foreach (var e in _currentArea.PresentEntities.ToArray())
         {
             Destroy(e.GetSprite());
