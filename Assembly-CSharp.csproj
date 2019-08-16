@@ -359,6 +359,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\ItemTemplateLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Items\Weapon.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Props\CheeseTree.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Props\Chest.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Props\Field.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Props\Prop.cs" />
@@ -469,6 +470,7 @@
     <None Include="Assets\Resources\Scripts\World\Entities\Names\mammal_first_names_male.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\Resources\Scripts\World\Props\MiscPropBlueprints.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\Resources\Scripts\World\Entities\Names\bird_nicknames.txt" />
     <None Include="Assets\Resources\Scripts\World\Entities\Backgrounds\characterbackgrounds.xml" />
