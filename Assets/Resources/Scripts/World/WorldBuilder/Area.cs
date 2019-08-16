@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,6 +17,40 @@ public class Area
         "vertical_right",
         "upper_right"
     };
+
+    private enum LoadingSteps
+    {
+        NewBlueprint,
+        Dimensions,
+        Template
+    }
+
+    private static IDictionary<MiscPropType, List<char[,]>> _miscPropBlueprints;
+
+    private static readonly IDictionary<char, List<GameObject>> PropPrefabs = new Dictionary<char, List<GameObject>>
+    {
+        { GraveyardKey, null },
+        { FieldKey, null },
+        { CheeseKey, null}
+    };
+
+    private static IDictionary<MiscPropType, int> _weightedPropPrefabKeys = new Dictionary<MiscPropType, int>
+    {
+        { MiscPropType.Graveyard, 45 },
+        { MiscPropType.Field, 55 },
+        { MiscPropType.Cheese, 60 }
+    };
+
+    public const char GraveyardKey = 'g';
+    public const char FieldKey = 'f';
+    public const char CheeseKey = 'c';
+
+    public enum MiscPropType
+    {
+        Field,
+        Graveyard,
+        Cheese
+    }
 
     public List<Entity> PresentEntities { get; set; }
     public List<Faction> PresentFactions { get; set; }
@@ -59,6 +94,8 @@ public class Area
         {
             return;
         }
+
+        LoadPropBlueprintsFromFile();
         
         PresentEntities = new List<Entity>();
         
@@ -84,6 +121,7 @@ public class Area
         }
 
         PrepareSettlement();
+        PlaceMiscProps();
 
         UpdateNeighbors();
 
@@ -244,6 +282,245 @@ public class Area
 
             roll = Random.Range(1, 101);
         }
+    }
+
+    private void PlaceMiscProps()
+    {
+        var propChance = 75;
+
+        var roll = Random.Range(1, 101);
+
+        while (roll <= propChance)
+        {
+            var propType = GetRandomMiscPropType();
+
+            var blueprintChance = 17;
+
+            roll = Random.Range(1, 101);
+
+            if (roll <= blueprintChance)
+            {
+                var propBlueprint = GetPropBlueprintByType(propType);
+
+                var areaRow = Random.Range(0, Height);
+                var startingAreaColumn = Random.Range(0, Width);
+                var currentAreaColumn = startingAreaColumn;
+
+                var blueprintHeight = propBlueprint.GetLength(0);
+                var blueprintWidth = propBlueprint.GetLength(1);
+
+                var propPrefabs = new Dictionary<char, List<GameObject>>();
+
+                for (var currentRow = 0; currentRow < blueprintHeight; currentRow++)
+                {
+                    for (var currentColumn = 0; currentColumn < blueprintWidth; currentColumn++)
+                    {
+                        if (areaRow < 0 || areaRow >= Height || currentAreaColumn < 0 || currentAreaColumn >= Width)
+                        {
+                            continue;
+                        }
+
+                        var currentTile = AreaTiles[areaRow, currentAreaColumn];
+
+                        //todo should probably make a tile type enum because this is trash
+                        if (currentTile.PresentWallTile != null ||
+                            currentTile.GetPrefabTileTexture().name.Contains("floor") ||
+                            currentTile.GetPrefabTileTexture().name.Contains("road") ||
+                            currentTile.GetPrefabTileTexture().name.Contains("path") ||
+                            currentTile.GetBlocksMovement())
+                        {
+                            continue;
+                        }
+
+                        var currentKey = propBlueprint[currentRow, currentColumn];
+
+                        if (!propPrefabs.ContainsKey(currentKey))
+                        {
+                            var prefabsForCurrentKey = GetPropPrefabsByKey(currentKey);
+                            propPrefabs.Add(currentKey, prefabsForCurrentKey);
+                        }
+
+                        if (propPrefabs[currentKey] == null || propPrefabs[currentKey].Count < 1)
+                        {
+                            continue;
+                        }
+
+                        var prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
+
+                        if (currentKey == FieldKey)
+                        {
+                            //todo pick field type
+                            currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                        }
+                        else
+                        {
+                            currentTile.PresentProp = new Prop(prefab);
+                        }
+
+                        currentAreaColumn++;
+                    }
+                    areaRow++;
+                    currentAreaColumn = startingAreaColumn;
+                }
+            }
+            else
+            {
+                var prefabs = GetPropPrefabByType(propType);
+
+                if (prefabs == null)
+                {
+                    continue;
+                }
+
+                var areaRow = Random.Range(0, Height);
+                var areaColumn = Random.Range(0, Width);
+
+                var currentTile = AreaTiles[areaRow, areaColumn];
+
+                //todo should probably make a tile type enum because this is trash
+                if (currentTile.PresentWallTile != null ||
+                    currentTile.GetPrefabTileTexture().name.Contains("floor") ||
+                    currentTile.GetPrefabTileTexture().name.Contains("road") ||
+                    currentTile.GetPrefabTileTexture().name.Contains("path") ||
+                    currentTile.GetBlocksMovement())
+                {
+                    continue;
+                }
+
+                if (propType == MiscPropType.Field)
+                {
+                    currentTile.PresentProp = new Field(FieldType.Wheat, prefabs[Random.Range(0, prefabs.Count)]);
+                }
+                else if (propType == MiscPropType.Cheese)
+                {
+                    currentTile.PresentProp = new CheeseTree(prefabs[Random.Range(0, prefabs.Count)]);
+                }
+                else
+                {
+                    currentTile.PresentProp = new Prop(prefabs[Random.Range(0, prefabs.Count)]);
+                }
+            }
+
+            propChance -= 5;
+
+            if (propChance < 1)
+            {
+                propChance = 1;
+            }
+
+            roll = Random.Range(1, 101);
+        }
+    }
+
+    private char[,] GetPropBlueprintByType(MiscPropType propType)
+    {
+        var blueprints = _miscPropBlueprints[propType];
+
+        var index = Random.Range(0, blueprints.Count);
+
+        return blueprints[index];
+    }
+
+    [CanBeNull]
+    private List<GameObject> GetPropPrefabsByKey(char key)
+    {
+        return PropPrefabs.ContainsKey(key) ? PropPrefabs[key] : null;
+    }
+
+    [CanBeNull]
+    private List<GameObject> GetPropPrefabByType(MiscPropType propType)
+    {
+        switch (propType)
+        {
+            case MiscPropType.Cheese:
+                return new List<GameObject>{WorldData.Instance.CheeseTreePrefab};
+            case MiscPropType.Field:
+                return new List<GameObject>(WorldData.Instance.WheatFieldTiles);
+            case MiscPropType.Graveyard:
+                return new List<GameObject>(WorldData.Instance.GraveyardProps);
+            default:
+                return null;
+        }
+    }
+
+    private MiscPropType GetRandomMiscPropType()
+    {
+        return GlobalHelper.GetRandomEnumValue<MiscPropType>();
+    }
+
+    private void LoadPropBlueprintsFromFile()
+    {
+        _miscPropBlueprints = new Dictionary<MiscPropType, List<char[,]>>();
+
+        var blueprintFile = WorldData.Instance.MiscPropBlueprintsFile.text.Split("\r\n"[0]).ToList();
+
+        var currentStep = LoadingSteps.NewBlueprint;
+
+        var numColumns = 0;
+
+        var x = 0;
+
+        var currentPreFab = MiscPropType.Field;
+
+        foreach (var line in blueprintFile)
+        {
+            var trimmedLine = line.Trim('\n');
+
+            if (string.IsNullOrEmpty(trimmedLine))
+            {
+                currentStep = LoadingSteps.NewBlueprint;
+                continue;
+            }
+
+            if (currentStep == LoadingSteps.NewBlueprint)
+            {
+                currentPreFab = GetKeyForCurrentPrefab(trimmedLine);
+
+                if (!_miscPropBlueprints.ContainsKey(currentPreFab))
+                {
+                    _miscPropBlueprints.Add(currentPreFab, new List<char[,]>());
+                }
+
+                currentStep = LoadingSteps.Dimensions;
+                x = 0;
+                continue;
+            }
+
+            if (currentStep == LoadingSteps.Dimensions)
+            {
+                var dimensions = trimmedLine.Split(' ');
+                var numRows = int.Parse(dimensions[0]);
+                numColumns = int.Parse(dimensions[1]);
+                _miscPropBlueprints[currentPreFab].Add(new char[numRows, numColumns]);
+                currentStep = LoadingSteps.Template;
+                continue;
+            }
+
+            if (currentStep == LoadingSteps.Template)
+            {
+                for (var currentColumn = 0; currentColumn < numColumns; currentColumn++)
+                {
+                    var row = _miscPropBlueprints[currentPreFab].Last();
+
+                    row[x, currentColumn] = trimmedLine[currentColumn];
+                }
+                x++;
+            }
+        }
+    }
+
+    private static MiscPropType GetKeyForCurrentPrefab(string trimmedLine)
+    {
+        if (trimmedLine.Contains("field"))
+        {
+            return MiscPropType.Field;
+        }
+        if (trimmedLine.Contains("graveyard"))
+        {
+            return MiscPropType.Graveyard;
+        }
+
+        return MiscPropType.Cheese;
     }
 
     private void AssignFactionCitizensToArea()

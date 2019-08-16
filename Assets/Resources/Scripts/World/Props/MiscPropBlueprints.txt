@@ -1,0 +1,43 @@
+field_1
+3 5
+fxfxfx
+fxfxfx
+fxfxfx
+
+field_2
+3 5
+fffff
+xxxxx
+fffff
+
+field_3
+3 5
+fffff
+fffff
+fffff
+
+graveyard_1
+3 5
+gxgxg
+gxgxg
+gxgxg
+
+graveyard_2
+3 5
+ggggg
+xxxxx
+ggggg
+
+cheese_1
+5 13
+cxcxcxccxcxcx
+cxcxcxcxcxcxc
+cxcxcxcxcxcxc
+cxcxcxcxcxcxc
+cxcxcxcxcxcxc
+
+cheese_2
+3 8
+cxxccxxc
+xcxcxcxc
+cxcxxcxc

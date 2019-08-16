@@ -859,6 +859,7 @@ public class Entity : ISubscriber
                 AreaMap.Instance.Fov.Refresh(v);
                 AutoPickupToppingsInCurrentTile();
                 AutoHarvestFields();
+                AutoHarvestCheeseTree();
                 return true;
             }
             if (!EntityPresent(target))
@@ -1282,11 +1283,35 @@ public class Entity : ISubscriber
         CurrentTile.PresentTopping = null;
     }
 
+    private void AutoHarvestCheeseTree()
+    {
+        if (!(CurrentTile.PresentProp is CheeseTree))
+        {
+            return;
+        }
+
+        CurrentTile.PresentTopping = new Topping("Cheese");
+
+        ToppingCounts[CurrentTile.PresentTopping.Type] += 1;
+
+        var message = "Picked up " + CurrentTile.PresentTopping.Type;
+        GameManager.Instance.Messages.Add(message);
+
+        if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
+        {
+            UnityEngine.Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
+        }
+
+        UnityEngine.Object.Destroy(CurrentTile.PresentProp.Texture);
+        CurrentTile.PresentProp = null;
+        CurrentTile.PresentTopping = null;
+    }
+
     private void SubscribeToBaseEvents()
     {
         var baseEvents = new List<string>
         {
-            "UnderAttack" //not going to be actual base event as wildlife shouldn't be concerened in a lot of cases
+            "UnderAttack" //not going to be actual base event as wildlife shouldn't be concerned in a lot of cases
         };
 
         eventMediator = EventMediator.Instance;

@@ -50,6 +50,7 @@ public class WorldData : MonoBehaviour
     public string SaveGameId { get; set; }
 
     public TextAsset RawFactionNamesFile;
+    public TextAsset MiscPropBlueprintsFile;
 
     public GameObject WorldGrassLandTile;
     public GameObject WorldDesertTile;
@@ -124,6 +125,7 @@ public class WorldData : MonoBehaviour
     public GameObject[] MiscExteriorProps;
     public GameObject[] Containers;
 
+    public GameObject CheeseTreePrefab;
     public GameObject SmallChest;
     
     public static WorldData Instance;
