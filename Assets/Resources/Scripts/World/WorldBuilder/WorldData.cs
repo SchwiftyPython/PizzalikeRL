@@ -21,6 +21,8 @@ public class WorldData : MonoBehaviour
     public Dictionary<Toppings, GameObject> UiViewToppingsDictionary { get; set; }
     public Cell PlayerStartingPlace;
 
+    public Dictionary<Guid, Grave> Graves;
+
     public string Seed
     {
         get { return _seed; }
@@ -148,6 +150,7 @@ public class WorldData : MonoBehaviour
         Entities = new Dictionary<Guid, Entity>();
         Items = new Dictionary<Guid, Item>();
         Rivers = new Dictionary<int, River>();
+        Graves = new Dictionary<Guid, Grave>();
     }
 
     public void PopulateToppingsDictionaries()

@@ -362,6 +362,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Props\CheeseTree.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Props\Chest.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Props\Field.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Props\Grave.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Props\Prop.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Reputation.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\Building.cs" />

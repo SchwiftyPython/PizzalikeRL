@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[Serializable]
 public class Chest : Prop
 {
     private const int ItemCap = 5;

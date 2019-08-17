@@ -145,4 +145,27 @@ public class NameStore : MonoBehaviour
         var index = Random.Range(0, _firstNames.Count);
         return _firstNames[index].Trim('\n');
     }
+
+    public string GenerateFullName()
+    {
+        var nameFiles = new List<string>();
+
+        const int chanceToAddList = 79;
+        for (var i = 0; i < _nameFiles.Count; i++)
+        {
+            var roll = Random.Range(0, 101);
+
+            if (roll <= chanceToAddList)
+            {
+                nameFiles.Add(_nameFiles.ElementAt(i).Key);
+            }
+        }
+
+        const int sexChance = 50;
+        var sexRoll = Random.Range(0, 101);
+
+        var sex = sexRoll < sexChance ? "male" : "female";
+
+        return GenerateFullName(nameFiles, sex);
+    }
 }

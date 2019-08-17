@@ -262,6 +262,10 @@ public class Area
                         //todo pick field type
                         currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
                     }
+                    else if (currentKey == SettlementPrefabStore.GraveyardKey)
+                    {
+                        currentTile.PresentProp = new Grave(prefab);
+                    }
                     else
                     {
                         currentTile.PresentProp = new Prop(prefab);
@@ -351,6 +355,10 @@ public class Area
                         {
                             //todo pick field type
                             currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                        }
+                        else if (currentKey == GraveyardKey)
+                        {
+                            currentTile.PresentProp = new Grave(prefab);
                         }
                         else
                         {

@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public enum FieldType
 {
     Wheat
 }
 
+[Serializable]
 public class Field : Prop
 {
     public FieldType Type;
