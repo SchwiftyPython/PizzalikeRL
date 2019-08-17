@@ -66,6 +66,11 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 
             var targetTile = GameManager.Instance.CurrentArea.AreaTiles[(int) targetVector.x, (int) targetVector.y];
 
+            if (targetTile.PresentProp is Grave)
+            {
+                //todo show grave inscription
+            }
+
             EventMediator.Instance.Broadcast("DroppedItemPopup", this, targetTile);
 
             Hide();
