@@ -128,6 +128,7 @@ public class WorldData : MonoBehaviour
     public GameObject[] Containers;
 
     public GameObject CheeseTreePrefab;
+    public GameObject ConventionalTurretPrefab;
     public GameObject SmallChest;
     
     public static WorldData Instance;

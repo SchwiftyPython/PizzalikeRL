@@ -2,7 +2,7 @@
 
 public class Weapon : Item
 {
-    //todo might make value a struct once we define more enchancements and attributes.
+    //todo might make value a struct once we define more enhancements and attributes.
     private readonly Dictionary<ItemRarity, Dice> _weaponBaseDamageValues = new Dictionary<ItemRarity, Dice>
     {
         { ItemRarity.Common, new Dice(1, 3) },
@@ -14,7 +14,8 @@ public class Weapon : Item
     private readonly Dictionary<string, int> _weaponTypeBaseRanges = new Dictionary<string, int>
     {
         { "sword", 1 },
-        { "bow", 20 }
+        { "bow", 20 },
+        { "turret barrel", 20 }
     };
 
     public string Type;

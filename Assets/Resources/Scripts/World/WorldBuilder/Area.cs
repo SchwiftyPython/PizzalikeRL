@@ -198,86 +198,167 @@ public class Area
 
         while (roll <= propChance)
         {
-            //todo pick single prop or blueprint
-
             var propType = SettlementPrefabStore.GetRandomPropType();
 
-            // todo not implemented
-            while (propType == SettlementPrefabStore.SettlementPropType.Fence ||
-                propType == SettlementPrefabStore.SettlementPropType.Security)
+            var blueprintChance = 17;
+
+            roll = Random.Range(1, 101);
+
+            if (roll <= blueprintChance)
             {
-                propType = SettlementPrefabStore.GetRandomPropType(); 
-            }
 
-            var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
-
-            var areaRow = Random.Range(0, Height);
-            var startingAreaColumn = Random.Range(0, Width);
-            var currentAreaColumn = startingAreaColumn;
-
-            var blueprintHeight = propBlueprint.GetLength(0);
-            var blueprintWidth = propBlueprint.GetLength(1);
-
-            var propPrefabs = new Dictionary<char, List<GameObject>>();
-
-            for (var currentRow = 0; currentRow < blueprintHeight; currentRow++)
-            {
-                for (var currentColumn = 0; currentColumn < blueprintWidth; currentColumn++)
+                // todo not implemented
+                while (propType == SettlementPrefabStore.SettlementPropType.Fence)
                 {
-                    if (areaRow < 0 || areaRow >= Height || currentAreaColumn < 0 || currentAreaColumn >= Width)
-                    {
-                        continue;
-                    }
-
-                    var currentTile = AreaTiles[areaRow, currentAreaColumn];
-
-                    //todo should probably make a tile type enum because this is trash
-                    if (currentTile.PresentWallTile != null ||
-                        currentTile.GetPrefabTileTexture().name.Contains("floor") ||
-                        currentTile.GetPrefabTileTexture().name.Contains("road") ||
-                        currentTile.GetPrefabTileTexture().name.Contains("path") ||
-                        currentTile.GetBlocksMovement())
-                    {
-                        continue;
-                    }
-
-                    var currentKey = propBlueprint[currentRow, currentColumn];
-
-                    if (!propPrefabs.ContainsKey(currentKey))
-                    {
-                        var prefabsForCurrentKey = SettlementPrefabStore.GetPropPrefabsByKey(currentKey);
-
-                        propPrefabs.Add(currentKey, prefabsForCurrentKey);
-                    }
-
-                    if (propPrefabs[currentKey] == null || propPrefabs[currentKey].Count < 1)
-                    {
-                        continue;
-                    }
-
-                    var prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
-
-                    if (currentKey == SettlementPrefabStore.FieldKey)
-                    {
-                        //todo pick field type
-                        currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
-                    }
-                    else if (currentKey == SettlementPrefabStore.GraveyardKey)
-                    {
-                        currentTile.PresentProp = new Grave(prefab);
-                    }
-                    else
-                    {
-                        currentTile.PresentProp = new Prop(prefab);
-                    }
-
-                    currentAreaColumn++;
+                    propType = SettlementPrefabStore.GetRandomPropType();
                 }
-                areaRow++;
-                currentAreaColumn = startingAreaColumn;
+
+                var propBlueprint = SettlementPrefabStore.GetPropBlueprintByType(propType);
+
+                var areaRow = Random.Range(0, Height);
+                var startingAreaColumn = Random.Range(0, Width);
+                var currentAreaColumn = startingAreaColumn;
+
+                var blueprintHeight = propBlueprint.GetLength(0);
+                var blueprintWidth = propBlueprint.GetLength(1);
+
+                var propPrefabs = new Dictionary<char, List<GameObject>>();
+
+                for (var currentRow = 0; currentRow < blueprintHeight; currentRow++)
+                {
+                    for (var currentColumn = 0; currentColumn < blueprintWidth; currentColumn++)
+                    {
+                        if (areaRow < 0 || areaRow >= Height || currentAreaColumn < 0 || currentAreaColumn >= Width)
+                        {
+                            continue;
+                        }
+
+                        var currentTile = AreaTiles[areaRow, currentAreaColumn];
+
+                        //todo should probably make a tile type enum because this is trash
+                        if (currentTile.PresentWallTile != null ||
+                            currentTile.GetPrefabTileTexture().name.Contains("floor") ||
+                            currentTile.GetPrefabTileTexture().name.Contains("road") ||
+                            currentTile.GetPrefabTileTexture().name.Contains("path") ||
+                            currentTile.GetBlocksMovement())
+                        {
+                            continue;
+                        }
+
+                        var currentKey = propBlueprint[currentRow, currentColumn];
+
+                        if (!propPrefabs.ContainsKey(currentKey))
+                        {
+                            var prefabsForCurrentKey = SettlementPrefabStore.GetPropPrefabsByKey(currentKey);
+
+                            propPrefabs.Add(currentKey, prefabsForCurrentKey);
+                        }
+
+                        if (propPrefabs[currentKey] == null || propPrefabs[currentKey].Count < 1)
+                        {
+                            continue;
+                        }
+
+                        GameObject prefab = null;
+                        if (currentKey != SettlementPrefabStore.TurretKey)
+                        {
+                            prefab = propPrefabs[currentKey][Random.Range(0, propPrefabs[currentKey].Count)];
+                        }
+
+                        if (currentKey == SettlementPrefabStore.FieldKey)
+                        {
+                            //todo pick field type
+                            currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                        }
+                        else if (currentKey == SettlementPrefabStore.GraveyardKey)
+                        {
+                            currentTile.PresentProp = new Grave(prefab);
+                        }
+                        else if (currentKey == SettlementPrefabStore.TurretKey)
+                        {
+                            var template = EntityTemplateLoader.GetEntityTemplate("turret");
+
+                            var turret = new Entity(template, Settlement.Faction);
+
+                            var turretBarrel = new Weapon(ItemTemplateLoader.GetEntityTemplate("turret barrel"),
+                                GlobalHelper.GetRandomEnumValue<ItemRarity>());
+
+                            var part = turret.GetBodyPartsByType("special").FirstOrDefault();
+
+                            if (part != null)
+                            {
+                                turret.EquipItem(turretBarrel, part.Id);
+                            }
+
+                            currentTile.SetPresentEntity(turret);
+                        }
+                        else
+                        {
+                            currentTile.PresentProp = new Prop(prefab);
+                        }
+
+                        currentAreaColumn++;
+                    }
+
+                    areaRow++;
+                    currentAreaColumn = startingAreaColumn;
+                }
+            }
+            else
+            {
+                var prefabs = SettlementPrefabStore.GetPropPrefabByType(propType);
+
+                if (prefabs == null)
+                {
+                    continue;
+                }
+
+                var areaRow = Random.Range(0, Height);
+                var areaColumn = Random.Range(0, Width);
+
+                var currentTile = AreaTiles[areaRow, areaColumn];
+
+                //todo should probably make a tile type enum because this is trash
+                if (currentTile.PresentWallTile != null ||
+                    currentTile.GetPrefabTileTexture().name.Contains("floor") ||
+                    currentTile.GetPrefabTileTexture().name.Contains("road") ||
+                    currentTile.GetPrefabTileTexture().name.Contains("path") ||
+                    currentTile.GetBlocksMovement())
+                {
+                    continue;
+                }
+
+                if (propType == SettlementPrefabStore.SettlementPropType.Field)
+                {
+                    currentTile.PresentProp = new Field(FieldType.Wheat, prefabs[Random.Range(0, prefabs.Count)]);
+                }
+                else if (propType == SettlementPrefabStore.SettlementPropType.Security)
+                {
+                    var template = EntityTemplateLoader.GetEntityTemplate("turret");
+
+                    var turret = new Entity(template, Settlement.Faction);
+
+                    var turretBarrel = new Weapon(ItemTemplateLoader.GetEntityTemplate("turret barrel"),
+                        GlobalHelper.GetRandomEnumValue<ItemRarity>());
+
+                    var part = turret.GetBodyPartsByType("special").FirstOrDefault();
+
+                    if (part != null)
+                    {
+                        turret.EquipItem(turretBarrel, part.Id);
+                    }
+
+                    currentTile.SetPresentEntity(turret);
+
+                    //todo raise new entity event
+                }
+                else
+                {
+                    currentTile.PresentProp = new Prop(prefabs[Random.Range(0, prefabs.Count)]);
+                }
             }
 
-            propChance -= 25;
+            propChance -= 23;
 
             if (propChance < 1)
             {
