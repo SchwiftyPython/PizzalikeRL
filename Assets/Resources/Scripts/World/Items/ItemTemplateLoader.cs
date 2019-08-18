@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemTemplateLoader : MonoBehaviour {
@@ -7,12 +8,15 @@ public class ItemTemplateLoader : MonoBehaviour {
     private static List<string> _itemTemplateTypes;
     private static ItemTemplateContainer _ic;
 
+    public static Dictionary<ItemPrefabKeys, ItemTemplate> ItemTemplatesDictionary;
+
     private void Awake()
     {
         LoadTemplatesFromFile();
+        PopulateItemTemplatesDictionary();
     }
 
-    public static ItemTemplate GetEntityTemplate(string entityTemplateType)
+    public static ItemTemplate GetItemTemplate(string itemTemplateType)
     {
         if (_ic == null)
         {
@@ -23,13 +27,14 @@ public class ItemTemplateLoader : MonoBehaviour {
             return new ItemTemplate();
         }
 
-        var index = _ic.ItemTemplates.FindIndex(item => item.Type.Equals(entityTemplateType.ToLower()));
-        var it = _ic.ItemTemplates[index];
+        Enum.TryParse(itemTemplateType, true, out ItemPrefabKeys itemKey);
 
+        var it = ItemTemplatesDictionary[itemKey];
+        
         return it;
     }
 
-    public static List<string> GetEntityTemplateTypes()
+    public static List<string> GetItemTemplateTypes()
     {
         if (_itemTemplateTypes == null)
         {
@@ -45,9 +50,26 @@ public class ItemTemplateLoader : MonoBehaviour {
 
         _itemTemplateTypes = new List<string>();
 
-        foreach (var i in _ic.ItemTemplates)
+        foreach (var i in _ic.ItemTemplatesList)
         {
             _itemTemplateTypes.Add(i.Type);
+        }
+    }
+
+    private void PopulateItemTemplatesDictionary()
+    {
+        ItemTemplatesDictionary = new Dictionary<ItemPrefabKeys, ItemTemplate>();
+
+        foreach (var template in _ic.ItemTemplatesList)
+        {
+            Enum.TryParse(template.Type, true, out ItemPrefabKeys itemKey);
+
+            if (ItemTemplatesDictionary.ContainsKey(itemKey))
+            {
+                continue;
+            }
+
+            ItemTemplatesDictionary.Add(itemKey, template);
         }
     }
 }

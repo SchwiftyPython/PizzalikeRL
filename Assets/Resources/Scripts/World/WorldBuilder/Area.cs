@@ -280,7 +280,7 @@ public class Area
 
                             var turret = new Entity(template, Settlement.Faction);
 
-                            var turretBarrel = new Weapon(ItemTemplateLoader.GetEntityTemplate("turret barrel"),
+                            var turretBarrel = new Weapon(ItemTemplateLoader.GetItemTemplate("TurretBarrel"),
                                 GlobalHelper.GetRandomEnumValue<ItemRarity>());
 
                             var part = turret.GetBodyPartsByType("special").FirstOrDefault();
@@ -338,7 +338,7 @@ public class Area
 
                     var turret = new Entity(template, Settlement.Faction);
 
-                    var turretBarrel = new Weapon(ItemTemplateLoader.GetEntityTemplate("turret barrel"),
+                    var turretBarrel = new Weapon(ItemTemplateLoader.GetItemTemplate("TurretBarrel"),
                         GlobalHelper.GetRandomEnumValue<ItemRarity>());
 
                     var part = turret.GetBodyPartsByType("special").FirstOrDefault();
