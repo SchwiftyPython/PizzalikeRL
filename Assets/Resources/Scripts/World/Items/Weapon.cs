@@ -11,20 +11,16 @@ public class Weapon : Item
         { ItemRarity.Legendary, new Dice(3, 6) }
     };
 
-    private readonly Dictionary<string, int> _weaponTypeBaseRanges = new Dictionary<string, int>
-    {
-        { "sword", 1 },
-        { "bow", 20 },
-        { "turret barrel", 20 }
-    };
-
     public string Type;
     public int Range;
+    public bool IsRanged;
 
     public Weapon(ItemTemplate template, ItemRarity rarity) : base(template, rarity)
     {
         Type = template.Type;
         ItemDice = _weaponBaseDamageValues[rarity];
-        Range = _weaponTypeBaseRanges[template.Type];
+        Range = template.Range;
+
+        IsRanged = Range > 1;
     }
 }

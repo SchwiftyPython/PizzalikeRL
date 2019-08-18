@@ -11,4 +11,7 @@ public class ItemTemplate
 
     [XmlElement("BodyPartCategory")]
     public string BodyPartCategory;
+
+    [XmlElement("Range")]
+    public int Range;
 }

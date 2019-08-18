@@ -57,7 +57,7 @@ public class ItemStore : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        _baseItemTemplateTypes = ItemTemplateLoader.GetEntityTemplateTypes();
+        _baseItemTemplateTypes = ItemTemplateLoader.GetItemTemplateTypes();
         PopulatePrefabDictionaries();
     }
 
@@ -131,16 +131,27 @@ public class ItemStore : MonoBehaviour
     {
         //todo update this when weapon components added
 
-        switch (type.ToLower())
+        Enum.TryParse(type, true, out ItemPrefabKeys prefabKey);
+
+        return _itemPrefabsWorldView[prefabKey];
+    }
+
+    private Item CreateItemOfType(string itemType, ItemRarity rarity = ItemRarity.Common)
+    {
+        var itemTemplate = ItemTemplateLoader.GetItemTemplate(itemType);
+
+        switch (itemTemplate.Category.ToLower())
         {
-            case "helmet":
-                return _itemPrefabsWorldView[ItemPrefabKeys.BallisticHelmet];
-            case "sword":
-                return _itemPrefabsWorldView[ItemPrefabKeys.ShortSword];
-            case "bow":
-                return _itemPrefabsWorldView[ItemPrefabKeys.GreatBow];
+            case "armor":
+                return new Armor(itemTemplate, rarity);
+            case "weapon":
+                return new Weapon(itemTemplate, rarity);
+            case "consumable":
+                return GetRandomItem();
+            //todo need sprite 
+            //return new Item(itemTemplate, rarity);
             default:
-                return null;
+                return new Item(itemTemplate, rarity);
         }
     }
 
@@ -159,7 +170,7 @@ public class ItemStore : MonoBehaviour
     {
         var itemType = _baseItemTemplateTypes[Random.Range(0, _baseItemTemplateTypes.Count)];
 
-        return ItemTemplateLoader.GetEntityTemplate(itemType);
+        return ItemTemplateLoader.GetItemTemplate(itemType);
     }
 
     //<Summary>

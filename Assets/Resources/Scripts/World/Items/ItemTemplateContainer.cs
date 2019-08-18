@@ -8,7 +8,7 @@ public class ItemTemplateContainer
 {
     [XmlArray("ItemTemplates")]
     [XmlArrayItem("ItemTemplate")]
-    public List<ItemTemplate> ItemTemplates = new List<ItemTemplate>();
+    public List<ItemTemplate> ItemTemplatesList = new List<ItemTemplate>();
 
     public static ItemTemplateContainer Load(string path)
     {

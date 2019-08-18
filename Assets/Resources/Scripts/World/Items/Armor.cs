@@ -2,7 +2,7 @@
 
 public class Armor : Item
 {
-    //todo might make value a struct once we define more enchancements and attributes.
+    //todo might make value a struct once we define more enhancements and attributes.
     private readonly Dictionary<ItemRarity, Dice> _armorDefenseValues = new Dictionary<ItemRarity, Dice>
     {
         {ItemRarity.Common, new Dice(1, 3) },
