@@ -336,6 +336,51 @@ public class AreaMap : MonoBehaviour
         {
             entity.CurrentTile.PresentTopping = new Topping(entity.ToppingDropped);
         }
+        else
+        {
+            var toppingDropChance = GameManager.Instance.ToppingDropChance;
+
+            var roll = Random.Range(1, 101);
+
+            if (roll <= toppingDropChance)
+            {
+                var currentToppingCounts = GameManager.Instance.Player.ToppingCounts;
+
+                var requiredToppingCounts = new Dictionary<Toppings, int>();
+                foreach (var topping in GameManager.Instance.ActiveOrders.Values.SelectMany(order =>
+                    order.Pizzas.SelectMany(pizza => pizza.PizzaToppings)))
+                {
+                    if (requiredToppingCounts.ContainsKey(topping.Key))
+                    {
+                        requiredToppingCounts[topping.Key] += topping.Value;
+                    }
+                    else
+                    {
+                        requiredToppingCounts.Add(topping.Key, topping.Value);
+                    }
+
+                    requiredToppingCounts[topping.Key] -= currentToppingCounts[topping.Key];
+                }
+
+                var index = Random.Range(0, requiredToppingCounts.Count);
+
+                var chosenTopping = requiredToppingCounts.ElementAt(index);
+
+                if (chosenTopping.Value > 0)
+                {
+                    entity.CurrentTile.PresentTopping = new Topping(chosenTopping.Key.ToString());
+                    EventMediator.Instance.Broadcast("ToppingDropped", this);
+                }
+                else
+                {
+                    EventMediator.Instance.Broadcast("ToppingNotDropped", this);
+                }
+            }
+            else
+            {
+                EventMediator.Instance.Broadcast("ToppingNotDropped", this);
+            }
+        }
 
         if (entity.CurrentTile.PresentItems.Count > 1 ||
             entity.CurrentTile.PresentItems.Count > 0 && entity.CurrentTile.PresentTopping != null)
