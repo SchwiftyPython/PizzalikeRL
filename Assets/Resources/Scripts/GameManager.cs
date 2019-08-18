@@ -12,7 +12,7 @@ public enum CameraPosition
     Right
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, ISubscriber
 {
     private const float CameraY = 10.5f;
     private const float RightCameraX = 63f;
@@ -20,6 +20,15 @@ public class GameManager : MonoBehaviour
     private const float LeftCameraX = 29f;
 
     private CameraPosition _currentCameraPosition;
+
+    private const string ToppingDroppedEventName = "ToppingDropped";
+    private const string ToppingNotDroppedEventName = "ToppingNotDropped";
+
+    private readonly IList<string> _subscribedEvents = new List<string>
+    {
+        ToppingDroppedEventName,
+        ToppingNotDroppedEventName
+    };
 
     private readonly IDictionary<CameraPosition, int[]> _playerPositionRangesForCameraPosition = new Dictionary<CameraPosition, int[]>
     {
@@ -32,6 +41,8 @@ public class GameManager : MonoBehaviour
 
     public const string WorldMapSceneName = "WorldMap";
     public const string AreaMapSceneName = "Area";
+
+    public int ToppingDropChance;
 
     public bool WorldMapGenComplete;
     public bool PlayerInStartingArea;
@@ -95,6 +106,10 @@ public class GameManager : MonoBehaviour
         _currentCameraPosition = CameraPosition.Right;
 
         _activeWindows = new List<GameObject>();
+
+        SubscribeToEvents();
+
+        ResetToppingDropChance();
     }
 
     private void Update()
@@ -407,5 +422,38 @@ public class GameManager : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException(nameof(newPosition), newPosition, null);
         }
+    }
+
+    private void ResetToppingDropChance()
+    {
+        ToppingDropChance = 32;
+    }
+
+    private void IncreaseChanceOfToppingDrop()
+    {
+        ToppingDropChance += 3;
+    }
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals("ToppingDropped"))
+        {
+            ResetToppingDropChance();
+        }
+        else if (eventName.Equals("ToppingNotDropped"))
+        {
+            IncreaseChanceOfToppingDrop();
+        }
+    }
+    private void SubscribeToEvents()
+    {
+        foreach (var eventName in _subscribedEvents)
+        {
+            EventMediator.Instance.SubscribeToEvent(eventName, this);
+        }
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        EventMediator.Instance.UnsubscribeFromAllEvents(this);
     }
 }
