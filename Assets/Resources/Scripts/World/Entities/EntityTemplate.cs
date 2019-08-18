@@ -60,6 +60,9 @@ public class EntityTemplate
     [XmlArrayItem("NameFile")]
     public List<string> NameFiles;
 
+    [XmlElement("IsMobile")]
+    public bool IsMobile;
+
     [XmlElement("Topping")]
     public string Topping;
 }

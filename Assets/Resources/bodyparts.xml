@@ -497,6 +497,28 @@
             <MaxChildrenBodyParts> 10 </MaxChildrenBodyParts>  			
 		</BodyPart> 
 		
+		<BodyPart name = "turret body">
+			<Type>torso</Type>
+			<MaxHP> 75 </MaxHP>
+			<CanEquipWeapon> false </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart/>
+			<AttackVerb/>
+			<Coverage> 100 </Coverage>
+            <MaxChildrenBodyParts> 4 </MaxChildrenBodyParts>  			
+		</BodyPart> 
+		
+		<BodyPart name = "turret barrel">
+			<Type>special</Type>
+			<MaxHP> 50 </MaxHP>
+			<CanEquipWeapon> true </CanEquipWeapon>
+			<CanEquipArmor> true </CanEquipArmor>
+			<NeedsPart/>
+			<AttackVerb/>
+			<Coverage> 25 </Coverage>
+            <MaxChildrenBodyParts> 0 </MaxChildrenBodyParts>  			
+		</BodyPart> 
+		
 		<BodyPart name = "mushroom torso">
 			<Type>torso</Type>
 			<MaxHP> 20 </MaxHP>

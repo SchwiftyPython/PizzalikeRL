@@ -12,6 +12,7 @@ public class SettlementPrefabStore : MonoBehaviour
 
     public const char GraveyardKey = 'g';
     public const char FieldKey = 'f';
+    public const char TurretKey = 't';
 
     private enum LoadingSteps
     {
@@ -30,10 +31,11 @@ public class SettlementPrefabStore : MonoBehaviour
         { FieldKey, null }
     };
 
-    private static IDictionary<SettlementPropType, int> _weightedPropPrefabKeys = new Dictionary<SettlementPropType, int>
+    private static readonly IDictionary<SettlementPropType, int> WeightedPropPrefabKeys = new Dictionary<SettlementPropType, int>
     {
         { SettlementPropType.Graveyard, 45 },
-        { SettlementPropType.Field, 55 }
+        { SettlementPropType.Field, 55 },
+        { SettlementPropType.Security, 48 }
     };
 
     private static List<string> _rawNames;
@@ -628,15 +630,31 @@ public class SettlementPrefabStore : MonoBehaviour
         return PropPrefabs.ContainsKey(key) ? PropPrefabs[key] : null;
     }
 
+    [CanBeNull]
+    public static List<GameObject> GetPropPrefabByType(SettlementPropType propType)
+    {
+        switch (propType)
+        {
+            case SettlementPropType.Security:
+                return new List<GameObject> { WorldData.Instance.ConventionalTurretPrefab };
+            case SettlementPropType.Field:
+                return new List<GameObject>(WorldData.Instance.WheatFieldTiles);
+            case SettlementPropType.Graveyard:
+                return new List<GameObject>(WorldData.Instance.GraveyardProps);
+            default:
+                return null;
+        }
+    }
+
     public static SettlementPropType GetRandomPropType()
     {
         var selection = GetRandomSettlementPropType();
 
-        var totalWeight = _weightedPropPrefabKeys.Values.Sum();
+        var totalWeight = WeightedPropPrefabKeys.Values.Sum();
 
         var roll = Random.Range(0, totalWeight); 
 
-        foreach (var propType in _weightedPropPrefabKeys.OrderByDescending(pt => pt.Value))
+        foreach (var propType in WeightedPropPrefabKeys.OrderByDescending(pt => pt.Value))
         {
             var weightedValue = propType.Value;
 

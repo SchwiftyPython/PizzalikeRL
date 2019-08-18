@@ -42,6 +42,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -83,6 +84,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -124,6 +126,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -167,6 +170,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -206,6 +210,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -245,6 +250,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -288,6 +294,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -331,6 +338,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -374,6 +382,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -412,6 +421,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -455,6 +465,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -498,6 +509,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -540,6 +552,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -582,6 +595,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
 		</EntityTemplate>
 		
@@ -616,6 +630,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping>pepperoni</Topping>
         </EntityTemplate>
 		
@@ -650,6 +665,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -696,6 +712,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -742,6 +759,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -800,6 +818,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -844,6 +863,7 @@
 				<NameFile>bird_female_first_names</NameFile>
 				<NameFile>bird_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -890,6 +910,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -935,6 +956,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -977,6 +999,7 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1021,6 +1044,7 @@
 				<NameFile>bird_female_first_names</NameFile>
 				<NameFile>bird_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1062,6 +1086,7 @@
 				<NameFile>bird_female_first_names</NameFile>
 				<NameFile>bird_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1105,6 +1130,7 @@
 				<NameFile>bird_female_first_names</NameFile>
 				<NameFile>bird_last_names</NameFile>
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1151,6 +1177,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1197,6 +1224,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1244,6 +1272,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1289,6 +1318,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1335,6 +1365,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1381,6 +1412,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1425,6 +1457,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1472,6 +1505,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1518,6 +1552,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1563,6 +1598,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1610,6 +1646,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1657,6 +1694,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1703,6 +1741,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1749,6 +1788,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1796,6 +1836,7 @@
 				<NameFile>mammal_last_names</NameFile>
                 <NameFile>cow_first_names</NameFile> 				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1844,6 +1885,7 @@
 				<NameFile>mammal_last_names</NameFile>
                 <NameFile>cow_first_names</NameFile> 				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1889,6 +1931,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>                 				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1934,6 +1977,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>                 				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -1974,6 +2018,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>                 				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -2021,6 +2066,7 @@
 				<NameFile>mammal_last_names</NameFile>
                 <NameFile>cow_first_names</NameFile> 				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -2065,6 +2111,7 @@
 				<NameFile>mammal_female_first_names</NameFile>
 				<NameFile>mammal_last_names</NameFile>                				
 			</NameFiles>
+			<IsMobile>true</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 		
@@ -2106,6 +2153,40 @@
 				<NameFile>human_female_first_names</NameFile>
 				<NameFile>human_last_names</NameFile>                		
 			</NameFiles>
+			<IsMobile>true</IsMobile>
+			<Topping></Topping>
+        </EntityTemplate>
+		
+		<EntityTemplate type = "turret">
+            <Description> 
+		    An immobile assblaster.
+			</Description>		
+			<Classification>NonHumanoid</Classification>
+			<MinStrength> 3 </MinStrength>
+			<MaxStrength> 5 </MaxStrength>
+			<MinAgility> 2 </MinAgility>
+			<MaxAgility> 3 </MaxAgility>
+			<MinConstitution> 4 </MinConstitution>
+			<MaxConstitution> 5 </MaxConstitution>
+            <MinIntelligence> 1 </MinIntelligence>	
+            <MaxIntelligence> 3 </MaxIntelligence>				
+			<Playable> false </Playable>			
+			<Wild> false </Wild>
+			<IsHostile> false </IsHostile>   			
+			<SpritePath>Prefabs/Sprites/Turrets/turret_default</SpritePath>			
+			<BodyParts>		
+                <Part>turret body</Part>                		
+				<Part>turret barrel</Part>								
+			</BodyParts>
+			<PossibleBiomes>		   
+			    <Biome>Swamp</Biome>                               					
+			</PossibleBiomes>
+			<NameFiles>
+			    <NameFile>human_male_first_names</NameFile>
+				<NameFile>human_female_first_names</NameFile>
+				<NameFile>human_last_names</NameFile>                		
+			</NameFiles>
+			<IsMobile>false</IsMobile>
 			<Topping></Topping>
         </EntityTemplate>
 

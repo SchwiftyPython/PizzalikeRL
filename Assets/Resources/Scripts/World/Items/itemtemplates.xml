@@ -17,6 +17,11 @@
 		<BodyPartCategory>hand</BodyPartCategory>		
 	</ItemTemplate>
 	
+	<ItemTemplate type = "turret barrel">
+	    <Category>weapon</Category>
+		<BodyPartCategory>special</BodyPartCategory>		
+	</ItemTemplate>
+	
 	<ItemTemplate type = "bandage">
 	    <Category>consumable</Category>
 		<BodyPartCategory></BodyPartCategory>		

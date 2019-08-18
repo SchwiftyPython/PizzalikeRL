@@ -359,8 +359,9 @@ public class Entity : ISubscriber
 
         Equipped[bodyPart] = item;
 
-        EquipmentWindow.Instance.EquipmentChanged = true;
-        InventoryWindow.Instance.InventoryChanged = true;
+        //todo equipment changed and inventory changed events
+        if (EquipmentWindow.Instance != null) EquipmentWindow.Instance.EquipmentChanged = true;
+        if (InventoryWindow.Instance != null) InventoryWindow.Instance.InventoryChanged = true;
     }
 
     public void UnequipItem(Guid bodyPartKey)
@@ -542,6 +543,21 @@ public class Entity : ISubscriber
                 }
             }
         }
+    }
+
+    public List<BodyPart> GetBodyPartsByType(string type)
+    {
+        var parts = new List<BodyPart>();
+
+        foreach (var part in Body)
+        {
+            if (part.Value.Type.Equals(type))
+            {
+                parts.Add(part.Value);
+            }
+        }
+
+        return parts;
     }
 
     private void AddBodyPart(BodyPart part)
