@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EquipmentWindow : MonoBehaviour
+public class EquipmentWindow : MonoBehaviour, ISubscriber
 {
     public GameObject BodyPartPrefab;
 
@@ -36,20 +36,13 @@ public class EquipmentWindow : MonoBehaviour
         _parent = transform;
         _keyMapLetter = 'a';
         PopulateWindow();
+        EventMediator.Instance.SubscribeToEvent("EquipmentChanged", this);
     }
     
     private void Update()
     {
         if (isActiveAndEnabled && !FilteredInventoryWindowPopUp.Instance.FilteredInventoryWindow.activeSelf)
         {
-            if (EquipmentChanged)
-            {
-                EquipmentChanged = false;
-                _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
-
-                DestroyOldButtons();
-                PopulateWindow();
-            }
             if (Input.anyKeyDown)
             {
                 if (Input.inputString.Length < 1 || Input.inputString.Length > 1)
@@ -79,7 +72,10 @@ public class EquipmentWindow : MonoBehaviour
             bodyPartButton.transform.SetParent(_parent);
 
             var textFields = bodyPartButton.GetComponentsInChildren<TextMeshProUGUI>(true);
-            textFields[0].text = "-  " + bodyPart.Name;
+
+            var typeField = bodyPart.Type.Equals("special") ? bodyPart.Name : bodyPart.Type;
+
+            textFields[0].text = "-  " + GlobalHelper.Capitalize(typeField);
             textFields[1].text = _keyMapLetter.ToString();
             textFields[2].text = string.IsNullOrEmpty(_playerEquipment[bodyPart].ItemType) ? " :   -- " 
                 : ":   " + _playerEquipment[bodyPart].ItemType; //todo make this more descriptive of weapon like inventory screen
@@ -115,5 +111,25 @@ public class EquipmentWindow : MonoBehaviour
             }
             _bodyPartButtons = new Dictionary<char, GameObject>();
         }
+    }
+
+    private void Refresh()
+    {
+        _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
+        DestroyOldButtons();
+        PopulateWindow();
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals("EquipmentChanged"))
+        {
+            Refresh();
+        }
+    }
+
+    public void OnDestroy()
+    {
+        EventMediator.Instance.UnsubscribeFromEvent("EquipmentChanged", this);
     }
 }
