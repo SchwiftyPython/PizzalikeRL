@@ -46,7 +46,8 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         FilteredInventoryWindow.SetActive(false);
         TitleBar.SetActive(false);
         ActionBar.SetActive(false);
-        _sectionParent = transform;
+        gameObject.SetActive(false);
+        _sectionParent = FilteredInventoryWindow.transform;
     }
 
     private void Update()
@@ -122,6 +123,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         FilteredInventoryWindow.SetActive(true);
         TitleBar.SetActive(true);
         ActionBar.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     private void PopulateSectionDictionary(string bodyPartType)
@@ -199,5 +201,6 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         FilteredInventoryWindow.SetActive(false);
         TitleBar.SetActive(false);
         ActionBar.SetActive(false);
+        gameObject.SetActive(false);
     }
 }
