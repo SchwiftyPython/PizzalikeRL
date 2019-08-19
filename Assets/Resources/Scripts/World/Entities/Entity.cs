@@ -347,17 +347,36 @@ public class Entity : ISubscriber
 
     public void EquipItem(Item item, Guid bodyPartKey)
     {
+        var appliesToAllPartsOfSameType = new List<string>
+        {
+            "torso",
+            "arm",
+            "leg",
+            "feet"
+        };
+        
+        //todo hands if two handed
+
         Inventory.Remove(item.Id);
 
         var bodyPart = Body[bodyPartKey];
 
-        if (Equipped[bodyPart].Id != Guid.Empty)
+        var partsToEquip = new List<BodyPart> {bodyPart};
+        if (appliesToAllPartsOfSameType.Contains(bodyPart.Type.ToLower()))
         {
-            var oldItem = Equipped[bodyPart];
-            Inventory.Add(oldItem.Id, oldItem);
+            partsToEquip.AddRange(from part in Body where part.Value.Type.Equals(bodyPart.Type) select bodyPart);
         }
 
-        Equipped[bodyPart] = item;
+        foreach (var part in partsToEquip)
+        {
+            if (Equipped[part].Id != Guid.Empty)
+            {
+                var oldItem = Equipped[part];
+                Inventory.Add(oldItem.Id, oldItem);
+            }
+
+            Equipped[part] = item;
+        }
 
         //todo equipment changed and inventory changed events
         EventMediator.Instance.Broadcast("EquipmentChanged", this);
