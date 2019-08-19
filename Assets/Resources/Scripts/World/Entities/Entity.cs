@@ -360,7 +360,7 @@ public class Entity : ISubscriber
         Equipped[bodyPart] = item;
 
         //todo equipment changed and inventory changed events
-        if (EquipmentWindow.Instance != null) EquipmentWindow.Instance.EquipmentChanged = true;
+        EventMediator.Instance.Broadcast("EquipmentChanged", this);
         if (InventoryWindow.Instance != null) InventoryWindow.Instance.InventoryChanged = true;
     }
 
@@ -376,7 +376,7 @@ public class Entity : ISubscriber
 
         Equipped[bodyPart] = new Item();
 
-        EquipmentWindow.Instance.EquipmentChanged = true;
+        EventMediator.Instance.Broadcast("EquipmentChanged", this);
         InventoryWindow.Instance.InventoryChanged = true;
     }
 
