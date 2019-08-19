@@ -929,7 +929,7 @@
 		<BodyPart name = "arachnid leg">
 			<Type>leg</Type>
 			<MaxHP> 10 </MaxHP>
-			<CanEquipWeapon> true </CanEquipWeapon>
+			<CanEquipWeapon> false </CanEquipWeapon>
 			<CanEquipArmor> false </CanEquipArmor>
 			<NeedsPart>torso</NeedsPart>
 			<AttackVerb> kick </AttackVerb>
