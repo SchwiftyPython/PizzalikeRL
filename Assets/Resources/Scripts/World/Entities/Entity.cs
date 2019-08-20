@@ -1190,6 +1190,8 @@ public class Entity : ISubscriber
         var message = EntityType + " hits " + target.EntityType + " for " + damageRoll + " hit points.";
         GameManager.Instance.Messages.Add(message);
 
+        EventMediator.Instance.Broadcast("MeleeHit", this);
+
         //Debug.Log("Target remaining hp: " + target.CurrentHp);
     }
 

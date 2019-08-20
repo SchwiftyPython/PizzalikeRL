@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EventMediator : MonoBehaviour
@@ -70,14 +71,10 @@ public class EventMediator : MonoBehaviour
 
     public void UnsubscribeFromAllEvents(ISubscriber subscriber)
     {
-        foreach (var eventName in _eventSubscriptions.Keys)
+        foreach (var subscribers in _eventSubscriptions.Keys.Select(eventName => _eventSubscriptions[eventName])
+            .Where(subscribers => subscribers.Contains(subscriber)))
         {
-            var subscribers = _eventSubscriptions[eventName];
-
-            if (subscribers.Contains(subscriber))
-            {
-                subscribers.Remove(subscriber);
-            }
+            subscribers.Remove(subscriber);
         }
     }
 
