@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -34,7 +32,7 @@ public class Flee : Goal
             y = Random.Range(0, areaWidth);
         }
 
-        Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " fleeing!");
+        //Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " fleeing!");
 
         PushChildGoal(
             numTries - MinFleeDistance < 0

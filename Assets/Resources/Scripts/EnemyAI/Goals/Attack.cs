@@ -50,14 +50,14 @@ public class Attack : Goal
 
             if (_target == null)
             {
-                Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " lost target!");
+                //Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " lost target!");
                 FailToParent();
                 return;
             }
         }
         if (_target.IsDead())
         {
-            Debug.Log("Target is dead!");
+            //Debug.Log("Target is dead!");
             _target = null;
             FailToParent();
             return;
@@ -79,7 +79,7 @@ public class Attack : Goal
             remainingMoves.Remove(selectedMove.Key);
         }
 
-        Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " can't attack!");
+        //Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " can't attack!");
         FailToParent();
     }
 
