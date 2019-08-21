@@ -284,9 +284,9 @@ public class BuildingPrefabStore : MonoBehaviour
         }
     }
 
-    public static char[,] GetBuildingPrefab(string buildingType)
+    public static BuildingPrefab GetBuildingPrefab(string buildingType)
     {
-        return BuildingPrefabs[buildingType].Blueprint;
+        return BuildingPrefabs[buildingType];
     }
 
     public static BuildingPrefab GetBuildingPrefabForLot(Lot lot)

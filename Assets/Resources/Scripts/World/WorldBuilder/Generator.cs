@@ -119,20 +119,9 @@ public class Generator : MonoBehaviour
         Generate();
 
         WorldData.Instance.Map = _cells;
+
         
-        //todo don't want to start in hostile settlement either
-        do
-        {
-            var x = Random.Range(0, _height);
-            var y = Random.Range(0, _width);
 
-            GameManager.Instance.CurrentCell = _cells[x, y];
-
-        } while (GameManager.Instance.CurrentCell.BiomeType == BiomeType.Water ||
-                 GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain);
-
-        GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
-        WorldData.Instance.PlayerStartingPlace = GameManager.Instance.CurrentCell;
         GameManager.Instance.WorldMapGenComplete = true;
         SceneManager.LoadScene("Area");
     }
@@ -175,6 +164,7 @@ public class Generator : MonoBehaviour
 
         CreateFactions();
         PlaceSettlements();
+        PlaceStartingArea();
 
         Debug.Log("Generating History...");
 
@@ -1064,13 +1054,6 @@ public class Generator : MonoBehaviour
 
             WorldData.Instance.Factions.Add(newFaction.Name, newFaction);
         }
-
-//        var factionTypes = FactionTemplateLoader.GetFactionTypes();
-//
-//        foreach (var factionType in factionTypes)
-//        {
-//            WorldData.Instance.Factions.Add(factionType, new Faction(FactionTemplateLoader.GetFactionByType(factionType)));
-//        }
     }
 
     private void PlaceSettlements()
@@ -1165,6 +1148,43 @@ public class Generator : MonoBehaviour
         //testing todo change to size appropriate for population
         cell.Settlement = new Settlement(faction, SettlementSize.Village, cell, 10);
     }
+
+    private void PlaceStartingArea()
+    {
+        do
+        {
+            var x = Random.Range(0, _height);
+            var y = Random.Range(0, _width);
+
+            GameManager.Instance.CurrentCell = _cells[x, y];
+
+        } while (GameManager.Instance.CurrentCell.BiomeType == BiomeType.Water ||
+                 GameManager.Instance.CurrentCell.BiomeType == BiomeType.Mountain ||
+                 GameManager.Instance.CurrentCell.Settlement != null);
+
+        GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
+        WorldData.Instance.PlayerStartingPlace = GameManager.Instance.CurrentCell;
+
+        var startingArea = new Settlement(null, SettlementSize.Outpost, GameManager.Instance.CurrentCell, 0, true);
+
+        WorldData.Instance.PlayerStartingPlace.PresentFactions = null;
+
+        var settlementFloorTiles = WorldData.Instance.SettlementFloorTiles;
+        var settlementWallTiles = WorldData.Instance.SettlementWallTiles;
+
+        var index = Random.Range(0, settlementFloorTiles.Length);
+
+        WorldData.Instance.PlayerStartingPlace.WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementFloor] = index;
+
+        WorldData.Instance.PlayerStartingPlace.WorldMapSprite.Layers[WorldSpriteLayer.SettlementFloor] = settlementFloorTiles[index];
+
+        index = Random.Range(0, settlementWallTiles.Length);
+
+        WorldData.Instance.PlayerStartingPlace.WorldMapSprite.LayerPrefabIndexes[WorldSpriteLayer.SettlementWall] = index;
+
+        WorldData.Instance.PlayerStartingPlace.WorldMapSprite.Layers[WorldSpriteLayer.SettlementWall] = settlementWallTiles[index];
+    }
+
     #endregion
 
 }

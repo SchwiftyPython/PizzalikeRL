@@ -23,7 +23,7 @@ public class Building
 
     public List<Room> Rooms;
 
-    public Building(BuildingPrefab prefab)
+    public Building(BuildingPrefab prefab, bool isStartingBuilding = false)
     {
         Height = prefab.Height;
         Width = prefab.Width;
@@ -37,6 +37,17 @@ public class Building
         Blueprint = prefab.Blueprint;
 
         Build();
+        PlaceExteriorDoorOnRandomSide();
+
+        if (isStartingBuilding)
+        {
+            var ovenPrefab = WorldData.Instance.PizzaOven;
+            Props[2, 1] = ovenPrefab;
+        }
+        else
+        {
+            Furnish();
+        }
     }
 
     public Building(BuildingSdo sdo)
@@ -93,9 +104,6 @@ public class Building
                 }
             }
         }
-
-        PlaceExteriorDoorOnRandomSide();
-        Furnish();
     }
 
     private void PickTilePrefabs()

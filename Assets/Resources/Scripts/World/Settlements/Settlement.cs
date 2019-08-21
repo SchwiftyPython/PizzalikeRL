@@ -25,7 +25,7 @@ public class Settlement
     public readonly SettlementSize Size;
     public Faction Faction;
 
-    public Settlement(Faction faction, SettlementSize size, Cell cell, int population)
+    public Settlement(Faction faction, SettlementSize size, Cell cell, int population, bool isStartingArea = false)
     {
         Faction = faction;
         Size = size;
@@ -33,7 +33,19 @@ public class Settlement
         _cell = cell;
         _population = population;
 
-        PickAreas();
+        if (isStartingArea)
+        {
+            _areas = new Dictionary<Area, SettlementSection>();
+            var area = _cell.Areas[1, 1];
+            area.Settlement = this;
+            area.SettlementSection = new SettlementSection();
+            _areas.Add(area, area.SettlementSection);
+        }
+        else
+        {
+            PickAreas();
+        }
+
         BuildAreas();
     }
 

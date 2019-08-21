@@ -130,6 +130,7 @@ public class WorldData : MonoBehaviour
     public GameObject CheeseTreePrefab;
     public GameObject ConventionalTurretPrefab;
     public GameObject SmallChest;
+    public GameObject PizzaOven;
     
     public static WorldData Instance;
 

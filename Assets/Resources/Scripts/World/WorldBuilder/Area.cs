@@ -160,7 +160,14 @@ public class Area
 
         var settlementPrefab = SettlementPrefabStore.GetSettlementPrefab(Settlement.Size);
 
-        SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
+        if (PresentFactions == null || PresentFactions.Count < 1 || PresentFactions.First() == null)
+        {
+            SettlementPrefabStore.AssignBuildingToStartingArea(settlementPrefab);
+        }
+        else
+        {
+            SettlementPrefabStore.AssignBuildingToLots(settlementPrefab);
+        }
 
         SettlementSection.Lots = settlementPrefab.Lots;
 
@@ -614,14 +621,14 @@ public class Area
 
     private void AssignFactionCitizensToArea()
     {
-        if (PresentFactions == null)
+        if (PresentFactions == null || PresentFactions.Count < 1)
         {
             return;
         }
 
         foreach (var faction in PresentFactions)
         {
-            if (faction.RemainingCitizensToPlace.Count < 1)
+            if (faction?.RemainingCitizensToPlace == null || faction.RemainingCitizensToPlace.Count < 1)
             {
                 continue;
             }
