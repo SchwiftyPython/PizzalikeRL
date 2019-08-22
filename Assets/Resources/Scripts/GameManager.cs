@@ -142,8 +142,6 @@ public class GameManager : MonoBehaviour, ISubscriber
             case GameState.EnterArea:
                 if (AreaMap.Instance == null)
                 {
-                    //var areaMap = new GameObject();
-                    //areaMap.AddComponent<AreaMap>();
                     break;
                 }
 

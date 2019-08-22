@@ -179,6 +179,12 @@ public class AreaMap : MonoBehaviour
             var areaY = (int)lot.LowerLeftCorner.y;
             var areaX = (int)lot.LowerLeftCorner.x;
             var building = lot.AssignedBuilding;
+
+            if (building == null)
+            {
+                continue;
+            }
+
             for (var currentRow = 0; currentRow < building.Height; currentRow++)
             {
                 for (var currentColumn = 0; currentColumn < building.Width; currentColumn++)

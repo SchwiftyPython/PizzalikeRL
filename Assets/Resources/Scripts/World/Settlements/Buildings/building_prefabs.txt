@@ -125,3 +125,22 @@ building_large_3
 1aaaaaaaaaaaaaaaaaaaaaa0
 1aaaaaaaaaaaaaaaaaaaaaa0
 577777777777777777777774
+
+starting_building_1
+10 10
+2666666663
+1aaaaaaaa0
+1aaaaaaaa0
+1aaaaaaaa0
+1aaaaaaaa0
+1aaaaaaaa0
+1aaaaaaaa0
+1aaaaaaaa0
+1aaaaaaaa0
+5777777774
+
+
+
+
+
+

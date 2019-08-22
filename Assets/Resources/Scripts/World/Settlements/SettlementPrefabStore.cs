@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -340,6 +341,15 @@ public class SettlementPrefabStore : MonoBehaviour
             var buildingPrefab = BuildingPrefabStore.GetBuildingPrefabForLot(lot);
             lot.AssignedBuilding = new Building(buildingPrefab); 
         }
+    }
+
+    public static void AssignBuildingToStartingArea(SettlementPrefab prefab)
+    {
+        var lot = prefab.Lots[Random.Range(0, prefab.Lots.Count)];
+
+        var building = BuildingPrefabStore.GetBuildingPrefab("starting_building_1");
+
+        lot.AssignedBuilding = new Building(building, true);
     }
 
     private static void FindLotsInBlueprint(SettlementPrefab prefab)
