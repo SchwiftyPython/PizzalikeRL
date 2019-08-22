@@ -579,7 +579,6 @@ public class SettlementPrefabStore : MonoBehaviour
 
     public static string GenerateName()
     {
-        //todo generate name based on location name or landmark
         var index = Random.Range(0, _rawNames.Count);
         return _rawNames[index];
     }
