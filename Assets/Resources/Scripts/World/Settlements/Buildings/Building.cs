@@ -43,6 +43,7 @@ public class Building
         {
             var ovenPrefab = WorldData.Instance.PizzaOven;
             Props[2, 1] = ovenPrefab;
+            Furnish(true);
         }
         else
         {
@@ -196,7 +197,7 @@ public class Building
         WallTiles[targetRow, targetColumn] = doorPrefab;
     }
 
-    private void Furnish()
+    private void Furnish(bool isStartingBuilding = false)
     {
         var maxFurniture = Height * Width / 20;
 
@@ -217,6 +218,14 @@ public class Building
             {
                 var row = Random.Range(0, Height);
                 var column = Random.Range(0, Width);
+
+                if (isStartingBuilding)
+                {
+                    if ((row == 2 || row == 1) && (column == 1 || column == 2))
+                    {
+                        continue;
+                    }
+                }
 
                 if (tilesAdjacentToWall[row, column] && Props[row, column] == null)
                 {
