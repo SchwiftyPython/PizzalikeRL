@@ -109,10 +109,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
     {
         var presentEntity = _selectedTile.GetPresentEntity();
 
-        GameManager.Instance.ActiveOrders.Remove(presentEntity.Fluff.Name);
-
-        //Remove marker from customer
-        GlobalHelper.DestroyAllChildren(presentEntity.GetSprite());
+        EventMediator.Instance.Broadcast("Delivered", this, presentEntity);
 
         //todo popup sucking off player for delivering pizza
         //todo award whatever skill point currency

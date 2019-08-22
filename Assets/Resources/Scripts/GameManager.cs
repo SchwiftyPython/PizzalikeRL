@@ -19,15 +19,19 @@ public class GameManager : MonoBehaviour, ISubscriber
     private const float CenterCameraX = 36f;
     private const float LeftCameraX = 29f;
 
+    private const int PizzaOrderInterval = 500;
+
     private CameraPosition _currentCameraPosition;
 
     private const string ToppingDroppedEventName = "ToppingDropped";
     private const string ToppingNotDroppedEventName = "ToppingNotDropped";
+    private const string DeliveredEventName = "Delivered";
 
     private readonly IList<string> _subscribedEvents = new List<string>
     {
         ToppingDroppedEventName,
-        ToppingNotDroppedEventName
+        ToppingNotDroppedEventName,
+        DeliveredEventName
     };
 
     private readonly IDictionary<CameraPosition, int[]> _playerPositionRangesForCameraPosition = new Dictionary<CameraPosition, int[]>
@@ -64,6 +68,9 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     public List<string> Messages;
     private Messenger _messenger;
+
+    public int TurnNumber;
+    public int NextTurnNumberForOrder;
 
     public enum GameState
     {
@@ -110,6 +117,9 @@ public class GameManager : MonoBehaviour, ISubscriber
         SubscribeToEvents();
 
         ResetToppingDropChance();
+
+        TurnNumber = 0;
+        NextTurnNumberForOrder = PizzaOrderInterval;
     }
 
     private void Update()
@@ -150,13 +160,10 @@ public class GameManager : MonoBehaviour, ISubscriber
                 {
                     CurrentState = GameState.Playerturn;
 
+                    //todo find better spot to order first pizza
                     if (Instance.ActiveOrders.Count < 1)
                     {
-                        //todo create intelligent difficulty system - easy, medium, then whatever
-                        var order = new PizzaOrder((PizzaOrder.OrderDifficulty) Random.Range(0,
-                            Enum.GetNames(typeof(PizzaOrder.OrderDifficulty)).Length));
-
-                        Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
+                        OrderPizza();
                     }
                 }
                 break;
@@ -168,6 +175,17 @@ public class GameManager : MonoBehaviour, ISubscriber
                 if (InputController.Instance.ActionTaken)
                 {
                     CurrentState = GameState.EndTurn;
+                    TurnNumber++;
+
+                    if (TurnNumber >= NextTurnNumberForOrder)
+                    {
+                        NextTurnNumberForOrder += PizzaOrderInterval;
+
+                        if (ActiveOrders.Count < 3)
+                        {
+                            OrderPizza();
+                        }
+                    }
                 }
                 break;
             case GameState.Enemyturn:
@@ -441,6 +459,19 @@ public class GameManager : MonoBehaviour, ISubscriber
         {
             IncreaseChanceOfToppingDrop();
         }
+        else if (eventName.Equals("Delivered") && parameter != null)
+        {
+            var presentEntity = (Entity)parameter;
+
+            ActiveOrders.Remove(presentEntity.Fluff.Name);
+            
+            RemoveMarkerFromCustomer(presentEntity.GetSprite());
+
+            if (ActiveOrders.Count < 1)
+            {
+                OrderPizza();
+            }
+        }
     }
     private void SubscribeToEvents()
     {
@@ -453,5 +484,18 @@ public class GameManager : MonoBehaviour, ISubscriber
     private void UnsubscribeFromEvents()
     {
         EventMediator.Instance.UnsubscribeFromAllEvents(this);
+    }
+
+    private static void RemoveMarkerFromCustomer(GameObject customerSprite)
+    {
+        GlobalHelper.DestroyAllChildren(customerSprite);
+    }
+
+    private void OrderPizza()
+    {
+        var order = new PizzaOrder((PizzaOrder.OrderDifficulty)Random.Range(0,
+            Enum.GetNames(typeof(PizzaOrder.OrderDifficulty)).Length));
+
+        Instance.ActiveOrders.Add(order.Customer.Fluff.Name, order);
     }
 }
