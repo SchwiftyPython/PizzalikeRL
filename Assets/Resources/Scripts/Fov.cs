@@ -84,6 +84,11 @@ public class Fov : MonoBehaviour
                     }
                     else
                     {
+                        if (tile.Visibility != Visibilities.Visible && tile.GetPresentEntity() != null)
+                        {
+                            tile.GetPresentEntity().PositionRevealed();
+                        }
+
                         tile.Visibility = Visibilities.Visible;
                         tile.Revealed = true;
                     }

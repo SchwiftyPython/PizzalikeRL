@@ -65,6 +65,8 @@ public class Entity : ISubscriber
 
     private Vector3 _currentPosition; //on screen position
 
+    public Vector3 SpriteActualPosition;
+
     public string PrefabPath;
 
     public Guid Id;
@@ -117,12 +119,25 @@ public class Entity : ISubscriber
 
     public Vector3 CurrentPosition
     {
-        get { return _currentPosition; }
+        get => _currentPosition;
 
         set
         {
             _currentPosition = new Vector2(value.y, value.x);
-            SetSpritePosition(_currentPosition);
+
+            if (!IsPlayer())
+            {
+                if (CurrentTile.Revealed && CurrentTile.Visibility == Visibilities.Invisible)
+                {
+                    return;
+                }
+
+                SetSpritePosition(_currentPosition);
+            }
+            else
+            {
+                SetSpritePosition(_currentPosition);
+            }
         }
     }
 
@@ -1348,7 +1363,7 @@ public class Entity : ISubscriber
     {
         var baseEvents = new List<string>
         {
-            "UnderAttack" //not going to be actual base event as wildlife shouldn't be concerned in a lot of cases
+            "UnderAttack"
         };
 
         eventMediator = EventMediator.Instance;
@@ -1367,5 +1382,10 @@ public class Entity : ISubscriber
         }
 
         eventMediator.UnsubscribeFromAllEvents(this);
+    }
+
+    public void PositionRevealed()
+    {
+        SetSpritePosition(_currentPosition);
     }
 }
