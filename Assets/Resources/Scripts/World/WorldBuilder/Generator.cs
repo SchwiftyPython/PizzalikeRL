@@ -11,13 +11,13 @@ public class Generator : MonoBehaviour
     private int SeedHashCode { set; get; }
     
     private int _height; 
-    private int _width; 
+    private int _width;
 
     [Header("Height Map")]
     [SerializeField]
-    float _deepWater = 0.05f;
+    private const float DeepWater = 0.01f;
     [SerializeField]
-    float _shallowWater = 0.075f;
+    private const float ShallowWater = 0.03f;
     [SerializeField]
     float _sand = 0.5f;
     [SerializeField]
@@ -132,9 +132,9 @@ public class Generator : MonoBehaviour
         {
             case HeightType.DeepWater:
             case HeightType.ShallowWater:
-                return BiomeType.Water;
+                return BiomeType.Swamp;
             case HeightType.Rock:
-                return BiomeType.Mountain;
+                return BiomeType.Desert;
             default:
                 return _biomeTable[(int)cell.MoistureType, (int)cell.HeatType];
         }
@@ -295,12 +295,12 @@ public class Generator : MonoBehaviour
                 c.HeightValue = heightValue;
 
                 //HeightMap Analyze
-                if (heightValue < _deepWater)
+                if (heightValue < DeepWater)
                 {
                     c.HeightType = HeightType.DeepWater;
                     c.Collidable = false;
                 }
-                else if (heightValue < _shallowWater)
+                else if (heightValue < ShallowWater)
                 {
                     c.HeightType = HeightType.ShallowWater;
                     c.Collidable = false;
