@@ -6,9 +6,10 @@ public class BodyPartButton : MonoBehaviour
 {
     public void DisplayAvailableEquipmentForSelectedBodyPart()
     {
-        var bodyPartIdClicked = Guid.Parse(transform.GetComponentsInChildren<TextMeshProUGUI>(true)[3].text);
-        var bodyPart = GameManager.Instance.Player.Body[bodyPartIdClicked];
+        var slotClicked = Enum.Parse(typeof(Entity.EquipmentSlot),
+            transform.GetComponentsInChildren<TextMeshProUGUI>(true)[3].text.TrimStart('-').Replace(" ", ""));
 
-        FilteredInventoryWindowPopUp.Instance.DisplayAvailableEquipmentForSelectedBodyPart(bodyPart);
+        FilteredInventoryWindowPopUp.Instance.DisplayAvailableEquipmentForSelectedBodyPart(
+            (Entity.EquipmentSlot) slotClicked);
     }
 }

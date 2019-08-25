@@ -14,7 +14,7 @@ public class WeaponSdo : ItemSdo
             Type = weapon.Type,
             Range = weapon.Range,
             Rarity = weapon.Rarity,
-            BodyPartCategory = weapon.BodyPartCategory,
+            EquipmentSlotType = weapon.EquipmentSlotType,
             ItemType = weapon.ItemType,
             ItemCategory = weapon.ItemCategory,
             Id = weapon.Id,

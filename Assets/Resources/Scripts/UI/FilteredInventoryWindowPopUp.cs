@@ -27,7 +27,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
     public GameObject TitleBar;
     public GameObject ActionBar;
 
-    public string BodyPartFilter;
+    public Entity.EquipmentSlot EquipmentSlotFilter;
     public Guid BodyPartFilterId;
 
     public static FilteredInventoryWindowPopUp Instance;
@@ -73,13 +73,12 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         }
     }
 
-    public void DisplayAvailableEquipmentForSelectedBodyPart(BodyPart bodyPart)
+    public void DisplayAvailableEquipmentForSelectedBodyPart(Entity.EquipmentSlot slot)
     {
         _itemSections = new List<GameObject>();
         _buttons = new Dictionary<char, GameObject>();
 
-        PopulateSectionDictionary(bodyPart.Type);
-        BodyPartFilterId = bodyPart.Id;
+        PopulateSectionDictionary(slot);
 
         _keyMapLetter = 'a';
         foreach (var section in _sortedItems.Keys)
@@ -118,7 +117,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
             }
         }
 
-        UnequipButton.SetActive(GameManager.Instance.Player.Equipped[bodyPart].Id != Guid.Empty);
+        UnequipButton.SetActive(GameManager.Instance.Player.Equipped[slot] != null);
 
         FilteredInventoryWindow.SetActive(true);
         TitleBar.SetActive(true);
@@ -126,15 +125,15 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    private void PopulateSectionDictionary(string bodyPartType)
+    private void PopulateSectionDictionary(Entity.EquipmentSlot slot)
     {
-        BodyPartFilter = bodyPartType;
+        EquipmentSlotFilter = slot;
         _playerInventory = GameManager.Instance.Player.Inventory;
         _sortedItems = new Dictionary<string, List<Item>>();
 
         foreach (var item in _playerInventory.Values)
         {
-            if (BodyPartFilter.IndexOf(item.BodyPartCategory, StringComparison.Ordinal) == -1)
+            if (item.EquipmentSlotType != EquipmentSlotFilter)
             {
                 continue;
             }
