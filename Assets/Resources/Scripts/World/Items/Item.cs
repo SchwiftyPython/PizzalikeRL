@@ -11,9 +11,10 @@ public class Item
 
     public ItemRarity Rarity;
 
-    public string BodyPartCategory;
+    public Entity.EquipmentSlot EquipmentSlotType;
     public string ItemType;
     public string ItemCategory;
+    public bool MultiSlot;
 
     public Guid Id;
 
@@ -25,7 +26,7 @@ public class Item
     {
         ItemType = template.Type;
         ItemCategory = template.Category;
-        BodyPartCategory = template.BodyPartCategory;
+        EquipmentSlotType = template.EquipmentSlotType;
         Rarity = rarity;
         Id = Guid.NewGuid();
 

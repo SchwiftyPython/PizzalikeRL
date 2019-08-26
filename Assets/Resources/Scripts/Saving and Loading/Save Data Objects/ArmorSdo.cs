@@ -14,7 +14,7 @@ public class ArmorSdo : ItemSdo
             Type = armor.Type,
             Defense = armor.Defense,
             Rarity = armor.Rarity,
-            BodyPartCategory = armor.BodyPartCategory,
+            EquipmentSlotType = armor.EquipmentSlotType,
             ItemType = armor.ItemType,
             ItemCategory = armor.ItemCategory,
             Id = armor.Id,

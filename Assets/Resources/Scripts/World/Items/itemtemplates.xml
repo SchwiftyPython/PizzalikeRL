@@ -4,193 +4,225 @@
 	
 	<ItemTemplate type = "BallisticHelmet">
 	    <Category>armor</Category>
-		<BodyPartCategory>head</BodyPartCategory>		
+		<EquipmentSlotType>Head</EquipmentSlotType>
+        <MultiSlot>false</MultiSlot>		
         <Range>-1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Tuque">
 	    <Category>armor</Category>
-		<BodyPartCategory>head</BodyPartCategory>		
+		<EquipmentSlotType>Head</EquipmentSlotType>
+        <MultiSlot>false</MultiSlot>		
 		<Range>-1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "CowboyHat">
 	    <Category>armor</Category>
-		<BodyPartCategory>head</BodyPartCategory>
+		<EquipmentSlotType>Head</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>-1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "EnergyArmor">
 	    <Category>armor</Category>
-		<BodyPartCategory>torso</BodyPartCategory>
+		<EquipmentSlotType>Body</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>-1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "FlakArmor">
 	    <Category>armor</Category>
-		<BodyPartCategory>torso</BodyPartCategory>
+		<EquipmentSlotType>Body</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>-1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "LeatherArmor">
 	    <Category>armor</Category>
-		<BodyPartCategory>torso</BodyPartCategory>
+		<EquipmentSlotType>Body</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>-1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "PlateArmor">
 	    <Category>armor</Category>
-		<BodyPartCategory>torso</BodyPartCategory>
+		<EquipmentSlotType>Body</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>-1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "TrenchCoat">
 	    <Category>armor</Category>
-		<BodyPartCategory>torso</BodyPartCategory>
+		<EquipmentSlotType>Body</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>-1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "ShortSword">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "GreatBow">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>20</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "AssaultRifle">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>31</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "BattleAxe">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "BoltActionRifle">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>31</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Club">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "FoldingChair">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "FragGrenade">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>Thrown</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>5</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "GreatSword">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "EmpGrenade">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>Thrown</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>5</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "HandAxe">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Knife">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "LaserRifle">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>23</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "RocketLauncher">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>32</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "LightMachineGun">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>32</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Revolver">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>9</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "SemiAutoHandgun">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>9</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Shotgun">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>12</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "SniperRifle">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>36</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Spear">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Submachinegun">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>12</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Warhammer">
 	    <Category>weapon</Category>
-		<BodyPartCategory>hand</BodyPartCategory>
+		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>		
 	</ItemTemplate>	
 	
 	<ItemTemplate type = "TurretBarrel">
 	    <Category>weapon</Category>
-		<BodyPartCategory>special</BodyPartCategory>
+		<EquipmentSlotType>Special</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
 		<Range>23</Range>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Bandage">
 	    <Category>consumable</Category>
-		<BodyPartCategory></BodyPartCategory>
+		<EquipmentSlotType>Consumable</EquipmentSlotType>
+		<MultiSlot>false</MultiSlot>
         <Range>-1</Range>		
 	</ItemTemplate>
 	

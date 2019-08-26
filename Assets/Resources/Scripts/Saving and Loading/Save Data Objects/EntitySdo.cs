@@ -38,7 +38,7 @@ public class EntitySdo
    
     public List<Guid> InventoryItemIds { get; set; }
 
-    public IDictionary<BodyPart, Guid> EquippedIds;
+    public IDictionary<Entity.EquipmentSlot, Guid> EquippedIds;
 
     public Entity.BodyDictionary Body { get; set; } 
 
@@ -107,7 +107,7 @@ public class EntitySdo
             Speed = entity.Speed,
             Defense = entity.Defense,
             InventoryItemIds = new List<Guid>(),
-            EquippedIds = new Dictionary<BodyPart, Guid>(),
+            EquippedIds = new Dictionary<Entity.EquipmentSlot, Guid>(),
             Body = entity.Body,
             EntityType = entity.EntityType,
             Classification = entity.Classification,
@@ -129,9 +129,9 @@ public class EntitySdo
             sdo.InventoryItemIds.Add(itemId);
         }
 
-        foreach (var part in entity.Equipped.Keys)
+        foreach (var slot in entity.Equipped.Keys)
         {
-           sdo.EquippedIds.Add(new KeyValuePair<BodyPart, Guid>(part, entity.Equipped[part].Id));
+           sdo.EquippedIds.Add(new KeyValuePair<Entity.EquipmentSlot, Guid>(slot, entity.Equipped[slot].Id));
         }
 
         foreach (var child in entity.Children)

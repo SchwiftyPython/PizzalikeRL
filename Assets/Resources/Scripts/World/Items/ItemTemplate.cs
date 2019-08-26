@@ -9,8 +9,11 @@ public class ItemTemplate
     [XmlElement("Category")]
     public string Category;
 
-    [XmlElement("BodyPartCategory")]
-    public string BodyPartCategory;
+    [XmlElement("EquipmentSlotType")]
+    public Entity.EquipmentSlot EquipmentSlotType;
+
+    [XmlElement("MultiSlot")]
+    public bool MultiSlot;
 
     [XmlElement("Range")]
     public int Range;

@@ -5,7 +5,7 @@ public class ItemSdo
 {
     public ItemRarity Rarity;
 
-    public string BodyPartCategory;
+    public Entity.EquipmentSlot EquipmentSlotType;
 
     public string ItemType;
 
@@ -20,7 +20,7 @@ public class ItemSdo
         return new ItemSdo
         {
             Rarity = item.Rarity,
-            BodyPartCategory = item.BodyPartCategory,
+            EquipmentSlotType = item.EquipmentSlotType,
             ItemType = item.ItemType,
             ItemCategory = item.ItemCategory,
             Id = item.Id,
@@ -33,7 +33,7 @@ public class ItemSdo
         var item = new Item
         {
             Rarity = sdo.Rarity,
-            BodyPartCategory = sdo.BodyPartCategory,
+            EquipmentSlotType = sdo.EquipmentSlotType,
             ItemType = sdo.ItemType,
             ItemCategory = sdo.ItemCategory,
             Id = sdo.Id,

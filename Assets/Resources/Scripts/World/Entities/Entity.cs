@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,6 +25,38 @@ public class Entity : ISubscriber
         SouthWest,
         West,
         NorthWest
+    }
+
+    [Description("Equipment Slot")]
+    public enum EquipmentSlot
+    {
+        Body,
+        Head,
+        [Description("Right Arm One")]
+        RightArmOne,
+        [Description("Right Arm Two")]
+        RightArmTwo,
+        [Description("Left Arm One")]
+        LeftArmOne,
+        [Description("Left Arm Two")]
+        LeftArmTwo,
+        [Description("Right Hand One")]
+        RightHandOne,
+        [Description("Right Hand Two")]
+        RightHandTwo,
+        [Description("Left Hand One")]
+        LeftHandOne,
+        [Description("Left Hand Two")]
+        LeftHandTwo,
+        [Description("Missile Weapon One")]
+        MissileWeaponOne,
+        [Description("Missile Weapon Two")]
+        MissileWeaponTwo,
+        Hands,
+        Feet,
+        Special,
+        Thrown,
+        Consumable
     }
     
     private readonly IDictionary<Direction, Vector2> _directions = new Dictionary<Direction, Vector2>
@@ -95,7 +128,7 @@ public class Entity : ISubscriber
     public BodyDictionary Body { get; set; }
 
     public IDictionary<Guid, Item> Inventory { get; } //todo create method for adding items to inventory
-    public IDictionary<BodyPart, Item> Equipped;
+    public IDictionary<EquipmentSlot, Item> Equipped;
 
     [Serializable]
     public class ToppingCountDictionary : SerializableDictionary<Toppings, int> { }
@@ -116,6 +149,7 @@ public class Entity : ISubscriber
 
     public bool Mobile;
     public bool IsCustomer;
+    public bool IsMultiArmed;
 
     public Vector3 CurrentPosition
     {
@@ -146,7 +180,7 @@ public class Entity : ISubscriber
         Id = id;
         _isPlayer = isPlayer;
         Inventory = new Dictionary<Guid, Item>();
-        Equipped = new Dictionary<BodyPart, Item>();
+        Equipped = new Dictionary<EquipmentSlot, Item>();
 
         Prefab = Resources.Load(prefabPath) as GameObject;
 
@@ -360,55 +394,35 @@ public class Entity : ISubscriber
             $"Current HP: {CurrentHp}\nStrength: {Strength}\nAgility: {Agility}\nConstitution: {Constitution}\nSpeed: {Speed}\nDefense: {Defense}";
     }
 
-    public void EquipItem(Item item, Guid bodyPartKey)
+    public void EquipItem(Item item, EquipmentSlot slot)
     {
-        var appliesToAllPartsOfSameType = new List<string>
-        {
-            "torso",
-            "arm",
-            "leg",
-            "feet"
-        };
-        
-        //todo hands if two handed
+        //todo equipment that occupies more then one slot
+        //todo two slot boolean in item.xml
 
         Inventory.Remove(item.Id);
 
-        var bodyPart = Body[bodyPartKey];
-
-        var partsToEquip = new List<BodyPart> {bodyPart};
-        if (appliesToAllPartsOfSameType.Contains(bodyPart.Type.ToLower()))
+        if (Equipped[slot] != null)
         {
-            partsToEquip.AddRange(from part in Body where part.Value.Type.Equals(bodyPart.Type) select bodyPart);
+            Inventory.Add(Equipped[slot].Id, Equipped[slot]);
         }
 
-        foreach (var part in partsToEquip)
-        {
-            if (Equipped[part].Id != Guid.Empty)
-            {
-                var oldItem = Equipped[part];
-                Inventory.Add(oldItem.Id, oldItem);
-            }
-
-            Equipped[part] = item;
-        }
-
+        Equipped[slot] = item;
+        
         //todo equipment changed and inventory changed events
         EventMediator.Instance.Broadcast("EquipmentChanged", this);
         if (InventoryWindow.Instance != null) InventoryWindow.Instance.InventoryChanged = true;
     }
 
-    public void UnequipItem(Guid bodyPartKey)
+    public void UnequipItem(EquipmentSlot slot)
     {
-        var bodyPart = Body[bodyPartKey];
-
-        if (Equipped[bodyPart].Id != Guid.Empty)
+        if (Equipped[slot] == null)
         {
-            var item = Equipped[bodyPart];
-            Inventory.Add(item.Id, item);
+            return;
         }
 
-        Equipped[bodyPart] = new Item();
+        Inventory.Add(Equipped[slot].Id, Equipped[slot]);
+
+        Equipped[slot] = null;
 
         EventMediator.Instance.Broadcast("EquipmentChanged", this);
         InventoryWindow.Instance.InventoryChanged = true;
@@ -416,13 +430,13 @@ public class Entity : ISubscriber
 
     private void PopulateEquipped()
     {
-        Equipped = new Dictionary<BodyPart, Item>();
+        Equipped = new Dictionary<EquipmentSlot, Item>();
 
-        foreach (var bodyPart in Body.Values)
+        foreach (var slot in (EquipmentSlot[])(Enum.GetValues(typeof(EquipmentSlot))))
         {
-            if (!Equipped.ContainsKey(bodyPart))
+            if (!Equipped.ContainsKey(slot))
             {
-                Equipped.Add(bodyPart, new Item());
+                Equipped.Add(slot, null);
             }
         }
     }
@@ -576,6 +590,20 @@ public class Entity : ISubscriber
                     Debug.Log(partTemplate.Name + " missing required part " + partTemplate.NeedsPart);
                 }
             }
+        }
+
+        var armCount = 0;
+        foreach (var templateBodyPart in template.Parts.Where(templateBodyPart => templateBodyPart.Contains("arm")))
+        {
+            armCount++;
+
+            if (armCount <= 3)
+            {
+                continue;
+            }
+
+            IsMultiArmed = true;
+            break;
         }
     }
 
@@ -1188,10 +1216,17 @@ public class Entity : ISubscriber
         var unarmedDamageDice = new Dice(1, 4);
 
         //This will work as long as we only allow one melee and one ranged weapon to be equipped
-        var equippedMeleeWeapon = (Weapon)(from e in Equipped.Values
-                                  where e.GetType() == typeof(Weapon) 
-                                  && ((Weapon) e).Range < 2
-                                  select e).FirstOrDefault();
+        Item first = null;
+        foreach (Item e in Equipped.Values)
+        {
+            if (e.GetType() == typeof(Weapon) && ((Weapon) e).Range < 2)
+            {
+                first = e;
+                break;
+            }
+        }
+
+        var equippedMeleeWeapon = (Weapon)first;
 
         var damageDice = equippedMeleeWeapon != null ? equippedMeleeWeapon.ItemDice : unarmedDamageDice;
 
@@ -1281,7 +1316,7 @@ public class Entity : ISubscriber
     {
         //This should work as long as we only allow one melee and one ranged weapon to be equipped
         return (Weapon)(from e in Equipped.Values
-            where e.GetType() == typeof(Weapon)
+            where e != null && e.GetType() == typeof(Weapon)
                   && ((Weapon)e).IsRanged
             select e).FirstOrDefault();
     }

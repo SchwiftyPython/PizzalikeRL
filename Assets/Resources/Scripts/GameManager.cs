@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour, ISubscriber
             RunPlayerDeathRoutine();
         }
 
-        Debug.Log(CurrentState);
+        //Debug.Log(CurrentState);
         switch (CurrentState)
         {
             case GameState.Start:

@@ -289,13 +289,8 @@ public class Area
 
                             var turretBarrel = new Weapon(ItemTemplateLoader.GetItemTemplate("TurretBarrel"),
                                 GlobalHelper.GetRandomEnumValue<ItemRarity>());
-
-                            var part = turret.GetBodyPartsByType("special").FirstOrDefault();
-
-                            if (part != null)
-                            {
-                                turret.EquipItem(turretBarrel, part.Id);
-                            }
+                            
+                            turret.EquipItem(turretBarrel, Entity.EquipmentSlot.Special);
 
                             currentTile.SetPresentEntity(turret);
                         }
@@ -348,12 +343,7 @@ public class Area
                     var turretBarrel = new Weapon(ItemTemplateLoader.GetItemTemplate("TurretBarrel"),
                         GlobalHelper.GetRandomEnumValue<ItemRarity>());
 
-                    var part = turret.GetBodyPartsByType("special").FirstOrDefault();
-
-                    if (part != null)
-                    {
-                        turret.EquipItem(turretBarrel, part.Id);
-                    }
+                    turret.EquipItem(turretBarrel, Entity.EquipmentSlot.Special);
 
                     currentTile.SetPresentEntity(turret);
 

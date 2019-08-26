@@ -20,6 +20,7 @@ public class Weapon : Item
         Type = template.Type;
         ItemDice = _weaponBaseDamageValues[rarity];
         Range = template.Range;
+        MultiSlot = template.MultiSlot;
 
         IsRanged = Range > 1;
     }

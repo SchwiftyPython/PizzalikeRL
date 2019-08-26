@@ -6,7 +6,7 @@ public class UnequipButton : MonoBehaviour
     {
         var player = GameManager.Instance.Player;
 
-        player.UnequipItem(FilteredInventoryWindowPopUp.Instance.BodyPartFilterId);
+        player.UnequipItem(FilteredInventoryWindowPopUp.Instance.EquipmentSlotFilter);
 
         FilteredInventoryWindowPopUp.Instance.Hide();
     }

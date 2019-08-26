@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
     private IDictionary<char, GameObject> _bodyPartButtons;
     private Transform _parent;
 
-    private IDictionary<BodyPart, Item> _playerEquipment;
+    private IDictionary<Entity.EquipmentSlot, Item> _playerEquipment;
 
     private char _keyMapLetter;
 
@@ -31,7 +32,7 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
             Destroy(gameObject);
         }
 
-        _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
+        _playerEquipment = new Dictionary<Entity.EquipmentSlot, Item>(GameManager.Instance.Player.Equipped);
         _bodyPartButtons = new Dictionary<char, GameObject>();
         _parent = transform;
         _keyMapLetter = 'a';
@@ -65,21 +66,66 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
     private void PopulateWindow()
     {
         _keyMapLetter = 'a';
-        foreach (var bodyPart in _playerEquipment.Keys)
+        foreach (var slot in _playerEquipment.Keys)
         {
+            if (slot == Entity.EquipmentSlot.Consumable)
+            {
+                continue;
+            }
+
+            if (slot == Entity.EquipmentSlot.LeftArmTwo || slot == Entity.EquipmentSlot.LeftHandTwo ||
+                slot == Entity.EquipmentSlot.MissileWeaponTwo || slot == Entity.EquipmentSlot.RightArmTwo ||
+                slot == Entity.EquipmentSlot.RightHandTwo)
+            {
+                if (!GameManager.Instance.Player.IsMultiArmed)
+                {
+                    continue;
+                }
+            }
+
             var bodyPartButton = Instantiate(BodyPartPrefab, new Vector3(0, 0), Quaternion.identity);
             _bodyPartButtons.Add(_keyMapLetter, bodyPartButton);
             bodyPartButton.transform.SetParent(_parent);
 
             var textFields = bodyPartButton.GetComponentsInChildren<TextMeshProUGUI>(true);
 
-            var typeField = bodyPart.Type.Equals("special") ? bodyPart.Name : bodyPart.Type;
+            var slotString = slot.ToString();
 
-            textFields[0].text = "-  " + GlobalHelper.Capitalize(typeField);
+            if (!(Attribute.GetCustomAttribute(slot.GetType().GetField(slotString), typeof(DescriptionAttribute)) is DescriptionAttribute typeField))
+            {
+                textFields[0].text = "-  " + GlobalHelper.Capitalize(slotString);
+            }
+            else
+            {
+                textFields[0].text = "-  " + typeField.Description;
+            }
+
+            //preserve enum for conversion on click
+            textFields[3].text = textFields[0].text;
+
+            if (!GameManager.Instance.Player.IsMultiArmed)
+            {
+                textFields[0].text = textFields[0].text.Replace("One", "");
+                textFields[0].text = textFields[0].text.Replace("Two", "");
+            }
+
             textFields[1].text = _keyMapLetter.ToString();
-            textFields[2].text = string.IsNullOrEmpty(_playerEquipment[bodyPart].ItemType) ? " :   -- " 
-                : ":   " + _playerEquipment[bodyPart].ItemType; //todo make this more descriptive of weapon like inventory screen
-            textFields[3].text = bodyPart.Id.ToString();
+
+            if (_playerEquipment[slot] != null)
+            {
+                var itemString = _playerEquipment[slot].ItemType;
+
+                var element = typeof(ItemPrefabKeys).GetField(itemString);
+
+                if (Attribute.GetCustomAttribute(element, typeof(DescriptionAttribute)) is DescriptionAttribute fieldInfo)
+                {
+                    textFields[2].text = ":   " + fieldInfo.Description;
+                }
+            }
+            else
+            {
+                textFields[2].text = ":   -- ";
+            }
 
             NextKeyMapLetter();
         }
@@ -115,7 +161,7 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
 
     private void Refresh()
     {
-        _playerEquipment = new Dictionary<BodyPart, Item>(GameManager.Instance.Player.Equipped);
+        _playerEquipment = new Dictionary<Entity.EquipmentSlot, Item>(GameManager.Instance.Player.Equipped);
         DestroyOldButtons();
         PopulateWindow();
     }

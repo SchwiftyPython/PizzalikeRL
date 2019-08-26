@@ -18,6 +18,7 @@ public class Armor : Item
     {
         Type = template.Type;
         ItemDice = _armorDefenseValues[rarity];
+        MultiSlot = template.MultiSlot;
         GenDefense();
     }
 
