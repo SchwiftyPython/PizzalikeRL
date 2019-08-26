@@ -1216,10 +1216,17 @@ public class Entity : ISubscriber
         var unarmedDamageDice = new Dice(1, 4);
 
         //This will work as long as we only allow one melee and one ranged weapon to be equipped
-        var equippedMeleeWeapon = (Weapon)(from e in Equipped.Values
-                                  where e.GetType() == typeof(Weapon) 
-                                  && ((Weapon) e).Range < 2
-                                  select e).FirstOrDefault();
+        Item first = null;
+        foreach (Item e in Equipped.Values)
+        {
+            if (e.GetType() == typeof(Weapon) && ((Weapon) e).Range < 2)
+            {
+                first = e;
+                break;
+            }
+        }
+
+        var equippedMeleeWeapon = (Weapon)first;
 
         var damageDice = equippedMeleeWeapon != null ? equippedMeleeWeapon.ItemDice : unarmedDamageDice;
 
@@ -1309,7 +1316,7 @@ public class Entity : ISubscriber
     {
         //This should work as long as we only allow one melee and one ranged weapon to be equipped
         return (Weapon)(from e in Equipped.Values
-            where e.GetType() == typeof(Weapon)
+            where e != null && e.GetType() == typeof(Weapon)
                   && ((Weapon)e).IsRanged
             select e).FirstOrDefault();
     }

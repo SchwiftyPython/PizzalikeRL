@@ -67,13 +67,12 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
             {
                 Hide();
             }
-            Debug.Log("Button Pressed: " + Input.inputString);
-            Debug.Log("_buttons count: " + _buttons.Count);
+            
             _processingInput = false;
         }
     }
 
-    public void DisplayAvailableEquipmentForSelectedBodyPart(Entity.EquipmentSlot slot)
+    public void DisplayAvailableEquipmentForSelectedEquipmentSlot(Entity.EquipmentSlot slot)
     {
         _itemSections = new List<GameObject>();
         _buttons = new Dictionary<char, GameObject>();

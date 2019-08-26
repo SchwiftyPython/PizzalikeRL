@@ -1,41 +1,73 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public enum ItemPrefabKeys
 {
+    [Description("Cowboy Hat")]
     CowboyHat,
+    [Description("Energy Armor")]
     EnergyArmor,
+    [Description("Flak Armor")]
     FlakArmor,
+    [Description("Ballistic Helmet")]
     BallisticHelmet,
+    [Description("Leather Armor")]
     LeatherArmor,
+    [Description("Plate Armor")]
     PlateArmor,
+    [Description("Robes")]
     Robes,
+    [Description("Trench Coat")]
     TrenchCoat,
+    [Description("Tuque")]
     Tuque,
+    [Description("Assault Rifle")]
     AssaultRifle,
+    [Description("Battle Axe")]
     BattleAxe,
+    [Description("Bolt Action Rifle")]
     BoltActionRifle,
+    [Description("Club")]
     Club,
+    [Description("Folding Chair")]
     FoldingChair,
+    [Description("Frag Grenade")]
     FragGrenade,
+    [Description("Great Bow")]
     GreatBow,
+    [Description("Great Sword")]
     GreatSword,
+    [Description("Emp Grenade")]
     EmpGrenade,
+    [Description("Hand Axe")]
     HandAxe,
+    [Description("Knife")]
     Knife,
+    [Description("Laser Rifle")]
     LaserRifle,
+    [Description("Rocket Launcher")]
     RocketLauncher,
+    [Description("Light Machine Gun")]
     LightMachineGun,
+    [Description("Revolver")]
     Revolver,
+    [Description("Semi Auto Handgun")]
     SemiAutoHandgun,
+    [Description("Short Sword")]
     ShortSword,
+    [Description("Shotgun")]
     Shotgun,
+    [Description("Sniper Rifle")]
     SniperRifle,
+    [Description("Spear")]
     Spear,
+    [Description("Submachine Gun")]
     Submachinegun,
+    [Description("Warhammer")]
     Warhammer
 }
 

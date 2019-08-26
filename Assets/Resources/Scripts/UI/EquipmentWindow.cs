@@ -91,9 +91,7 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
 
             var slotString = slot.ToString();
 
-            var typeField = Attribute.GetCustomAttribute(slot.GetType().GetField(slotString), typeof(DescriptionAttribute)) as DescriptionAttribute;
-
-            if (typeField == null)
+            if (!(Attribute.GetCustomAttribute(slot.GetType().GetField(slotString), typeof(DescriptionAttribute)) is DescriptionAttribute typeField))
             {
                 textFields[0].text = "-  " + GlobalHelper.Capitalize(slotString);
             }
@@ -112,9 +110,22 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
             }
 
             textFields[1].text = _keyMapLetter.ToString();
-            textFields[2].text = _playerEquipment[slot] == null ? " :   -- " 
-                : ":   " + _playerEquipment[slot].ItemType; //todo make this more descriptive of weapon like inventory screen
-            
+
+            if (_playerEquipment[slot] != null)
+            {
+                var itemString = _playerEquipment[slot].ItemType;
+
+                var element = typeof(ItemPrefabKeys).GetField(itemString);
+
+                if (Attribute.GetCustomAttribute(element, typeof(DescriptionAttribute)) is DescriptionAttribute fieldInfo)
+                {
+                    textFields[2].text = ":   " + fieldInfo.Description;
+                }
+            }
+            else
+            {
+                textFields[2].text = ":   -- ";
+            }
 
             NextKeyMapLetter();
         }
