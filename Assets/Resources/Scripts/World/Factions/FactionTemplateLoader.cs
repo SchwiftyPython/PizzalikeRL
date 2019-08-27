@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class FactionTemplateLoader : MonoBehaviour
 {
@@ -11,6 +11,8 @@ public class FactionTemplateLoader : MonoBehaviour
     private static List<string> _factionTypes;
     private static FactionTemplateContainer _fc;
     private static List<string> _rawFactionNames;
+
+    private static string _fullPath;
 
     public static void Initialize()
     {
@@ -58,19 +60,38 @@ public class FactionTemplateLoader : MonoBehaviour
 
     public static string GenerateFactionName()
     {
-        //todo create actual generation instead of picking from premade list
+        const string startSymbol = "#origin#";
 
-        if (_rawFactionNames == null)
+        try
         {
-            return string.Empty;
-        }
+            var grammar = new TraceryNet.Grammar(new FileInfo(_fullPath));
 
-        var index = Random.Range(0, _rawFactionNames.Count);
-        return _rawFactionNames[index].Trim('\n');
+            var factionName = grammar.Flatten(startSymbol);
+
+            while (WorldData.Instance.Factions.ContainsKey(factionName))
+            {
+                factionName = grammar.Flatten(startSymbol);
+            }
+
+            return factionName;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Error opening " + _fullPath + "! " + e);
+            throw;
+        }
     }
 
     private static void LoadRawFactionNamesFromFile()
     {
-        _rawFactionNames = WorldData.Instance.RawFactionNamesFile.text.Split("\r\n"[0]).ToList();
+        const string storyPath = "\\Assets\\Resources\\Scripts\\World\\Factions";
+
+        const string file = "faction_name_tracery.json";
+
+        var basePath = Environment.CurrentDirectory;
+
+        _fullPath = System.IO.Path.Combine(basePath, storyPath.TrimStart('\\', '/'), file);
+
+        _fullPath = System.IO.Path.Combine(storyPath, _fullPath);
     }
 }
