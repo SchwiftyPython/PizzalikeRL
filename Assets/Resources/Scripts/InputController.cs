@@ -224,9 +224,14 @@ public class InputController : MonoBehaviour
                     var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
                         Vector2.positiveInfinity);
 
-                    if (hit && !_popupWindowOpen)
+                    if (hit && !GameManager.Instance.AnyActiveWindows())
                     {
-                        hit.collider.GetComponent<EntityInfo>()?.OnRightClick();
+                        var position = hit.collider.transform.localPosition;
+
+                        var entity = GameManager.Instance.CurrentArea.AreaTiles[(int) position.y, (int) position.x]
+                            .GetPresentEntity();
+
+                        EventMediator.Instance.Broadcast(GlobalHelper.InspectEntityEventName, this, entity);
                     }
                 }
                 if (currentScene.Equals(_worldMapSceneName))
