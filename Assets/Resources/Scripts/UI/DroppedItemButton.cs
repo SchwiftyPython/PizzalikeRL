@@ -1,6 +1,6 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DroppedItemButton : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class DroppedItemButton : MonoBehaviour
     //</Summary>
     public void Pressed()
     {
-        Guid.TryParse(transform.GetComponentsInChildren<Text>(true)[2].text, out var itemId);
+        Guid.TryParse(transform.GetComponentsInChildren<TextMeshProUGUI>(true)[2].text, out var itemId);
 
         var player = GameManager.Instance.Player;
         var selectedTile = player.CurrentTile;

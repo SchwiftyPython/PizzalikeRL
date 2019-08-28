@@ -102,14 +102,14 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
                 //todo come up with some kind of naming system based on material or legend
                 if (item.ItemCategory.Equals("weapon"))
                 {
-                    textFields[0].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
-                    textFields[1].text = _keyMapLetter.ToString();
+                    textFields[1].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
+                    textFields[0].text = _keyMapLetter.ToString();
                 }
                 else if (item.ItemCategory.Equals("armor"))
                 {
                     var defense = ((Armor)item).Defense;
-                    textFields[0].text = "-  " + item.ItemType + "     [ " + defense + " def ]"; //todo replace def with a shield icon
-                    textFields[1].text = _keyMapLetter.ToString();
+                    textFields[1].text = "-  " + item.ItemType + "     [ " + defense + " def ]"; //todo replace def with a shield icon
+                    textFields[0].text = _keyMapLetter.ToString();
                 }
                 textFields[2].text = item.Id.ToString();
                 NextKeyMapLetter();

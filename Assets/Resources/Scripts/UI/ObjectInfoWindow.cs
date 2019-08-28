@@ -1,10 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class ObjectInfoWindow : MonoBehaviour, ISubscriber
 {
+    private const int SmallWindowCharLimit = 59;
+
     public TextMeshProUGUI Name;
     public TextMeshProUGUI Description;
     public TextMeshProUGUI Equipment;
@@ -30,6 +31,18 @@ public class ObjectInfoWindow : MonoBehaviour, ISubscriber
 
         Name.text = entity.Fluff?.Name ?? entity.EntityType;
         Description.text = entity.EntityType; //todo
+
+        if (Description.text.Length > SmallWindowCharLimit && gameObject.name.ToLower().Contains("small"))
+        {
+            return;
+        }
+
+        if (Description.text.Length <= SmallWindowCharLimit && gameObject.name.ToLower().Contains("large"))
+        {
+            return;
+        }
+
+
         Equipment.text = GetEquippedItemsForEntity(entity);
         Hp.text = $"{entity.CurrentHp}/{entity.MaxHp}";
         Attitude.text = entity.GetAttitudeTowards(GameManager.Instance.Player).ToString();
@@ -44,7 +57,7 @@ public class ObjectInfoWindow : MonoBehaviour, ISubscriber
             .Aggregate(string.Empty, (current, item) => current + $", {item.ItemType}");
     }
 
-    private void Hide()
+    public void Hide()
     {
         gameObject.SetActive(false);
         GameManager.Instance.RemoveActiveWindow(gameObject);
