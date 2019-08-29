@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -110,19 +111,19 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
             itemButton.transform.SetParent(itemParent);
             Buttons.Add(_keyMapLetter, itemButton);
 
-            var textFields = itemButton.GetComponentsInChildren<Text>(true);
+            var textFields = itemButton.GetComponentsInChildren<TextMeshProUGUI>(true);
 
             //todo come up with some kind of naming system based on material or legend
             if (item.ItemCategory.Equals("weapon"))
             {
-                textFields[0].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
-                textFields[1].text = _keyMapLetter.ToString();
+                textFields[1].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
+                textFields[0].text = _keyMapLetter.ToString();
             }
             else if (item.ItemCategory.Equals("armor"))
             {
                 var defense = ((Armor)item).Defense;
-                textFields[0].text = "-  " + item.ItemType + "     [ " + defense + " def ]"; //todo replace def with a shield icon
-                textFields[1].text = _keyMapLetter.ToString();
+                textFields[1].text = "-  " + item.ItemType + "     [ " + defense + " def ]"; //todo replace def with a shield icon
+                textFields[0].text = _keyMapLetter.ToString();
             }
             textFields[2].text = item.Id.ToString();
             NextKeyMapLetter();
@@ -165,19 +166,19 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
             itemButton.transform.SetParent(itemParent);
             Buttons.Add(_keyMapLetter, itemButton);
 
-            var textFields = itemButton.GetComponentsInChildren<Text>(true);
+            var textFields = itemButton.GetComponentsInChildren<TextMeshProUGUI>(true);
 
             //todo come up with some kind of naming system based on material or legend
             if (item.ItemCategory.Equals("weapon"))
             {
-                textFields[0].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
-                textFields[1].text = _keyMapLetter.ToString();
+                textFields[1].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
+                textFields[0].text = _keyMapLetter.ToString();
             }
             else if (item.ItemCategory.Equals("armor"))
             {
                 var defense = ((Armor)item).Defense;
-                textFields[0].text = "-  " + item.ItemType + "     [ " + defense + " def ]"; //todo replace def with a shield icon
-                textFields[1].text = _keyMapLetter.ToString();
+                textFields[1].text = "-  " + item.ItemType + "     [ " + defense + " def ]"; //todo replace def with a shield icon
+                textFields[0].text = _keyMapLetter.ToString();
             }
             textFields[2].text = item.Id.ToString();
             NextKeyMapLetter();
@@ -257,7 +258,7 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
             GameObject itemSprite = null;
             foreach (var itemButton in Buttons.Values)
             {
-                Guid.TryParse(itemButton.transform.GetComponentsInChildren<Text>(true)[2].text, out var itemId);
+                Guid.TryParse(itemButton.transform.GetComponentsInChildren<TextMeshProUGUI>(true)[2].text, out var itemId);
 
                 var item = WorldData.Instance.Items[itemId];
 

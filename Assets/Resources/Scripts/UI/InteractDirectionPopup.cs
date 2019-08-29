@@ -19,7 +19,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 
     private void Start()
     {
-        EventMediator.Instance.SubscribeToEvent("Interact", this);
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.InteractEventName, this);
 
         if (gameObject.activeSelf)
         {
@@ -93,7 +93,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 
     private void OnDestroy()
     {
-        EventMediator.Instance.UnsubscribeFromEvent("Interact", this);
+        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.InteractEventName, this);
         GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 

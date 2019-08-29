@@ -5,6 +5,13 @@ using Random = UnityEngine.Random;
 
 public class GlobalHelper : MonoBehaviour
 {
+    public const string ToppingDroppedEventName = "ToppingDropped";
+    public const string ToppingNotDroppedEventName = "ToppingNotDropped";
+    public const string DeliveredEventName = "Delivered";
+    public const string NewActiveWindowEventName = "NewActiveWindow";
+    public const string InteractEventName = "Interact";
+    public const string InspectEntityEventName = "InspectEntity";
+
     private static readonly Dictionary<GoalDirection, Vector2> DirectionVectorDictionary = new Dictionary<GoalDirection, Vector2>
     {
         {GoalDirection.North, new Vector2(1, 0)},

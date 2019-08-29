@@ -23,15 +23,12 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     private CameraPosition _currentCameraPosition;
 
-    private const string ToppingDroppedEventName = "ToppingDropped";
-    private const string ToppingNotDroppedEventName = "ToppingNotDropped";
-    private const string DeliveredEventName = "Delivered";
-
     private readonly IList<string> _subscribedEvents = new List<string>
     {
-        ToppingDroppedEventName,
-        ToppingNotDroppedEventName,
-        DeliveredEventName
+        GlobalHelper.ToppingDroppedEventName,
+        GlobalHelper.ToppingNotDroppedEventName,
+        GlobalHelper.DeliveredEventName,
+        GlobalHelper.NewActiveWindowEventName
     };
 
     private readonly IDictionary<CameraPosition, int[]> _playerPositionRangesForCameraPosition = new Dictionary<CameraPosition, int[]>

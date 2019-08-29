@@ -30,8 +30,7 @@ public class AreaMap : MonoBehaviour
 
     public Fov Fov;
     public GameObject FovHolder;
-
-    public PopUpWindow PizzaOrderPopUp;
+   
     public GameObject ObjectInfoWindow;
     public GameObject DroppedItemPopUp;
     public GameObject ExclamationPointPrefab;

@@ -324,11 +324,11 @@
     <Compile Include="Assets\Resources\Scripts\UI\InventoryWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ItemButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\LoadWindowPopup.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\ObjectInfoWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderJournalAreaView.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderJournalWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderTab.cs" />
-    <Compile Include="Assets\Resources\Scripts\UI\PopUpWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\SaveGameFileButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\SettlementInfoWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\SystemWindow.cs" />

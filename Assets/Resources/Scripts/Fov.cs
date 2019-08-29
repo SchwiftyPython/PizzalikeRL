@@ -121,28 +121,6 @@ public class Fov : MonoBehaviour
 
     private static Vinteger TransformOctant(int row, int col, int octant)
     {
-        /*switch (octant)
-        {
-            case 0:
-                return new Vinteger(col, -row);
-            case 1:
-                return new Vinteger(row, -col);
-            case 2:
-                return new Vinteger(row, col);
-            case 3:
-                return new Vinteger(col, row);
-            case 4:
-                return new Vinteger(-col, row);
-            case 5:
-                return new Vinteger(-row, col);
-            case 6:
-                return new Vinteger(-row, -col);
-            case 7:
-                return new Vinteger(-col, -row);
-            default:
-                return new Vinteger(0, 0);
-        }*/
-
         switch (octant)
         {
             case 0:
