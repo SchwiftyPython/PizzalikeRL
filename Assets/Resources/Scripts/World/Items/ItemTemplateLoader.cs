@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemTemplateLoader : MonoBehaviour {
-
+public class ItemTemplateLoader : MonoBehaviour
+{
     public const string Path = "\\Scripts\\World\\Items\\itemtemplates";
     private static List<string> _itemTemplateTypes;
     private static ItemTemplateContainer _ic;

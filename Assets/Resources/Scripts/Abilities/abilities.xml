@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AbilitiesCollection>
+	<Abilities>
+	
+	<Ability name = "bash">
+	    <Cost> 0 </Cost>
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+	    <RequiresBackground></RequiresBackground>
+	    <Description> Give'm a whack! Chance of Dazing opponent.</Description>
+	    <RequiresProperty> bludgeon </RequiresProperty>	
+	    <ParentAbility></ParentAbility>
+	    <Cooldown> 0 </Cooldown>
+	</Ability>
+	
+	
+    </Abilities>
+</AbilitiesCollection>
+	

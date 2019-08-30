@@ -242,6 +242,9 @@
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelPerfectCamera.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelSnap.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\AbilitiesContainer.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\AbilitiesLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Ability.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\ButtonClick.cs" />
     <Compile Include="Assets\Resources\Scripts\DebugHelper.cs" />
@@ -474,6 +477,7 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\Resources\Scripts\World\Props\MiscPropBlueprints.txt" />
+    <None Include="Assets\Resources\Scripts\Abilities\abilities.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\Resources\Scripts\World\Entities\Names\bird_nicknames.txt" />
     <None Include="Assets\Resources\Scripts\World\Entities\Backgrounds\characterbackgrounds.xml" />
