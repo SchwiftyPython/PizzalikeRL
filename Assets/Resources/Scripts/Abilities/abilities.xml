@@ -6,13 +6,57 @@
 	    <Cost> 0 </Cost>
 	    <Attribute> strength </Attribute>
 	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
 	    <Description> Give'm a whack! Chance of Dazing opponent.</Description>
 	    <RequiresProperty> bludgeon </RequiresProperty>	
 	    <ParentAbility></ParentAbility>
-	    <Cooldown> 0 </Cooldown>
+		<Dice>1d4</Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 3 </Cooldown>
 	</Ability>
 	
+	<Ability name = "stab">
+	    <Cost> 0 </Cost>
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description> Poke'm! Chance of Bleeding.</Description>
+	    <RequiresProperty> pierce </RequiresProperty>	
+	    <ParentAbility></ParentAbility>
+		<Dice>1d4</Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 3 </Cooldown>
+	</Ability>
+
+    <Ability name = "divine aid">
+	    <Cost> 0 </Cost>
+	    <Attribute> intelligence </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground>religious</RequiresBackground>
+	    <Description>Apply holy bandaids to your wounds. Heals 1d4 * Intelligence Modifier</Description>
+	    <RequiresProperty></RequiresProperty>	
+	    <ParentAbility></ParentAbility>
+		<Dice>1d4</Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 7 </Cooldown>
+	</Ability>	
+	
+	<Ability name = "spin web">
+	    <Cost> 0 </Cost>
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart>spinneret</RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Spin web on target tile. Chance to ensnare anything occupying tile.</Description>
+	    <RequiresProperty></RequiresProperty>	
+	    <ParentAbility></ParentAbility>
+		<Dice></Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 8 </Cooldown>
+	</Ability>	
 	
     </Abilities>
 </AbilitiesCollection>

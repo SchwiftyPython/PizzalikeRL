@@ -20,11 +20,20 @@ public class Ability
     [XmlElement("Description")]
     public string Description;
 
+    [XmlElement("RequiresBodyPart")]
+    public string RequiresBodyPart;
+
     [XmlElement("RequiresProperty")]
     public string RequiresProperty;
 
     [XmlElement("ParentAbility")]
     public string ParentAbility;
+
+    [XmlElement("Dice")]
+    public string Dice;
+
+    [XmlElement("Duration")]
+    public int Duration;
 
     [XmlElement("Cooldown")]
     public int Cooldown;

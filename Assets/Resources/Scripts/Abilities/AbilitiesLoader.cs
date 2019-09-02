@@ -7,19 +7,19 @@ public class AbilitiesLoader : MonoBehaviour
     private static AbilitiesContainer _ac;
 
     public static Dictionary<string, Ability> AbilitiesDictionary;
-    public static TextAsset AbilitiesFile;
+    public TextAsset AbilitiesFile;
 
     private void Awake()
     {
-        LoadTemplatesFromFile();
+        LoadAbilitiesFromFile();
         PopulateAbilitiesDictionary();
     }
 
-    public static Ability GetAbility(string abilityName)
+    public Ability GetAbilityByName(string abilityName)
     {
         if (_ac == null)
         {
-            LoadTemplatesFromFile();
+            LoadAbilitiesFromFile();
         }
         if (_ac == null)
         {
@@ -30,17 +30,22 @@ public class AbilitiesLoader : MonoBehaviour
         return AbilitiesDictionary[abilityName];
     }
 
-    public static List<string> GetAbilityNames()
+    public List<string> GetAbilityNames()
     {
         if (_abilityNames == null)
         {
-            LoadTemplatesFromFile();
+            LoadAbilitiesFromFile();
         }
 
         return _abilityNames != null ? new List<string>(_abilityNames) : null;
     }
 
-    private static void LoadTemplatesFromFile()
+    public static Dictionary<string, Ability> GetAllAbilities()
+    {
+        return new Dictionary<string, Ability>(AbilitiesDictionary);
+    }
+
+    private void LoadAbilitiesFromFile()
     {
         _ac = AbilitiesContainer.Load(AbilitiesFile);
 

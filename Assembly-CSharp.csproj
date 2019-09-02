@@ -245,8 +245,10 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilitiesContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilitiesLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Ability.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\AbilityStore.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\ButtonClick.cs" />
+    <Compile Include="Assets\Resources\Scripts\DamageType.cs" />
     <Compile Include="Assets\Resources\Scripts\DebugHelper.cs" />
     <Compile Include="Assets\Resources\Scripts\Dice.cs" />
     <Compile Include="Assets\Resources\Scripts\DiceRoller.cs" />
