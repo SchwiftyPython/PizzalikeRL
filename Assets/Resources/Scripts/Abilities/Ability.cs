@@ -37,4 +37,6 @@ public class Ability
 
     [XmlElement("Cooldown")]
     public int Cooldown;
+
+    //todo need boolean for starting ability
 }

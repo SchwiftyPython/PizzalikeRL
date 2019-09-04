@@ -34,6 +34,7 @@ public class CharacterCreation : MonoBehaviour
     public GameObject SpeciesSelectPage;
     public GameObject StatPointAllocationPage;
     public GameObject ChooseBackgroundPage;
+    public GameObject AbilitySelectPage;
     public GameObject SummaryPage;
 
     public GameObject SpeciesOptionPrefab;
@@ -49,6 +50,11 @@ public class CharacterCreation : MonoBehaviour
     public GameObject StartingAbilityPrefab;
     public RectTransform BackgroundStartingAbilityParent;
     public RectTransform SpeciesStartingAbilityParent;
+
+    public GameObject AvailableAbilityPrefab;
+    public GameObject AbilityCategoryPrefab;
+    public RectTransform AbilityCategoryParent;
+    public GameObject AbilityDescription;
 
     public GameObject StrengthValueBox;
     public GameObject IncreaseStrengthButton;
@@ -98,6 +104,7 @@ public class CharacterCreation : MonoBehaviour
         SpeciesSelectPage.SetActive(true);
         StatPointAllocationPage.SetActive(false);
         ChooseBackgroundPage.SetActive(false);
+        AbilitySelectPage.SetActive(false);
         SummaryPage.SetActive(false);
         WorldSeedPopup.SetActive(false);
     }
@@ -171,6 +178,22 @@ public class CharacterCreation : MonoBehaviour
 
     public void OnNextFromChooseBackgroundPage()
     {
+        LoadAbilitiesForAbilitySelectScreen();
+
+        AbilitySelectPage.SetActive(true);
+
+        ChooseBackgroundPage.SetActive(false);
+    }
+
+    public void OnBackFromAbilitySelectPage()
+    {
+        ChooseBackgroundPage.SetActive(true);
+
+        AbilitySelectPage.SetActive(false);
+    }
+
+    public void OnNextFromAbilitySelectPage()
+    {
         SpeciesBox.GetComponent<TextMeshProUGUI>().text = GlobalHelper.Capitalize(_player.EntityType);
         BackgroundBox.GetComponent<TextMeshProUGUI>().text = GlobalHelper.Capitalize(_selectedBackground.Name);
 
@@ -179,14 +202,14 @@ public class CharacterCreation : MonoBehaviour
         SummaryIntelligenceBox.GetComponent<TextMeshProUGUI>().text = _intelligence.ToString();
         SummaryConstitutionBox.GetComponent<TextMeshProUGUI>().text = _constitution.ToString();
 
-        SummaryPage.SetActive(true);
+        AbilitySelectPage.SetActive(false);
 
-        ChooseBackgroundPage.SetActive(false);
+        SummaryPage.SetActive(true);
     }
 
     public void OnBackFromSummaryPage()
     {
-        ChooseBackgroundPage.SetActive(true);
+        AbilitySelectPage.SetActive(true);
 
         SummaryPage.SetActive(false);
     }
@@ -554,6 +577,60 @@ public class CharacterCreation : MonoBehaviour
 
             instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[1].text = ability.Description;
         }
+    }
+
+    private void LoadAbilitiesForAbilitySelectScreen()
+    {
+        //todo Filter out starting abilities
+
+        GlobalHelper.DestroyAllChildren(AbilityCategoryParent);
+
+        var bodyPartAbilities = new List<Ability>();
+
+        foreach (var bodyPartName in _playerTemplate.Parts)
+        {
+            var partAbilities = AbilityStore.GetAbilitiesByBodyPart(bodyPartName);
+
+            if (partAbilities == null)
+            {
+                continue;
+            }
+
+            bodyPartAbilities.AddRange(partAbilities);
+        }
+
+        var categoryInstance = Instantiate(AbilityCategoryPrefab, AbilityCategoryPrefab.transform.position,
+            Quaternion.identity);
+
+        categoryInstance.transform.SetParent(AbilityCategoryParent);
+
+        categoryInstance.GetComponentsInChildren<TextMeshProUGUI>()[1].text = "Species Abilities";
+
+        var abilityParent = categoryInstance.GetComponentsInChildren<RectTransform>(true)[7];
+
+        abilityParent.GetComponent<LayoutElement>().preferredHeight = 30 * bodyPartAbilities.Count;
+
+        foreach (var ability in bodyPartAbilities)
+        {
+            var instance = Instantiate(AvailableAbilityPrefab, StartingAbilityPrefab.transform.position,
+                Quaternion.identity);
+
+            instance.transform.SetParent(abilityParent);
+
+            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text = GlobalHelper.CapitalizeAllWords(ability.Name);
+        }
+
+
+        var backgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
+
+        var damageTypeAbilities = AbilityStore.GetAllDamageTypeAbilities();
+    }
+
+    public void DisplaySelectedAbilityDescription(string abilityName)
+    {
+        var selectedAbility = AbilityStore.GetAbilityByName(abilityName);
+
+        AbilityDescription.GetComponent<TextMeshProUGUI>().text = selectedAbility.Description;
     }
 
     public void SelectButton(GameObject button)

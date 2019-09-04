@@ -50,7 +50,7 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart>spinneret</RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description>Spin web on target tile. Chance to ensnare anything occupying tile.</Description>
+	    <Description>Shoot a web from your ass onto target tile. Chance to immobilize.</Description>
 	    <RequiresProperty></RequiresProperty>	
 	    <ParentAbility></ParentAbility>
 		<Dice></Dice>

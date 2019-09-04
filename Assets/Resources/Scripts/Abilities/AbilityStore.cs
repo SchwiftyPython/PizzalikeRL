@@ -110,7 +110,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     public static Ability GetAbilityByName(string name)
     {
-        return _allAbilities[name];
+        return _allAbilities[name.ToLower()];
     }
 
     public static List<Ability> GetAbilitiesByBodyPart(string partName)
@@ -121,6 +121,11 @@ public class AbilityStore : MonoBehaviour,ISubscriber
         }
 
         return _abilitiesByBodyPart.ContainsKey(partName) ? _abilitiesByBodyPart[partName] : null;
+    }
+
+    public static Dictionary<DamageType, List<Ability>> GetAllDamageTypeAbilities()
+    {
+        return _abilitiesByDamageType;
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
