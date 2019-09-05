@@ -4,9 +4,6 @@ public class Ability
 {
     [XmlAttribute("name")]
     public string Name;
-    
-    [XmlElement("Cost")]
-    public int Cost;
 
     [XmlElement("Attribute")]
     public string Attribute;
@@ -26,9 +23,6 @@ public class Ability
     [XmlElement("RequiresProperty")]
     public string RequiresProperty;
 
-    [XmlElement("ParentAbility")]
-    public string ParentAbility;
-
     [XmlElement("Dice")]
     public string Dice;
 
@@ -38,5 +32,6 @@ public class Ability
     [XmlElement("Cooldown")]
     public int Cooldown;
 
-    //todo need boolean for starting ability
+    [XmlElement("StartingAbility")]
+    public bool StartingAbility;
 }

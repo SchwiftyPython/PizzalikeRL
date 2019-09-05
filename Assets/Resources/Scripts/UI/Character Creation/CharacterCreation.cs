@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class CharacterCreation : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class CharacterCreation : MonoBehaviour
     private int _constitution;
     private int _intelligence;
     private int _remainingPoints;
+
+    private List<Ability> _abilities;
 
     public GameObject SpeciesSelectPage;
     public GameObject StatPointAllocationPage;
@@ -122,6 +125,8 @@ public class CharacterCreation : MonoBehaviour
         _remainingPoints = StartingPoints;
 
         RemainingPointsValue.GetComponent<TextMeshProUGUI>().text = _remainingPoints.ToString();
+
+        _abilities = new List<Ability>();
     }
 
     #region Navigation Buttons
@@ -194,6 +199,8 @@ public class CharacterCreation : MonoBehaviour
 
     public void OnNextFromAbilitySelectPage()
     {
+        BuildAbilityDictionary();
+
         SpeciesBox.GetComponent<TextMeshProUGUI>().text = GlobalHelper.Capitalize(_player.EntityType);
         BackgroundBox.GetComponent<TextMeshProUGUI>().text = GlobalHelper.Capitalize(_selectedBackground.Name);
 
@@ -230,7 +237,7 @@ public class CharacterCreation : MonoBehaviour
 
         if (string.IsNullOrEmpty(SeedInputField.text) || string.IsNullOrWhiteSpace(SeedInputField.text))
         {
-            WorldData.Instance.Seed = (UnityEngine.Random.Range(int.MinValue, int.MaxValue) +
+            WorldData.Instance.Seed = (Random.Range(int.MinValue, int.MaxValue) +
                                        (int)DateTime.Now.Ticks).ToString();
         }
         else
@@ -581,22 +588,59 @@ public class CharacterCreation : MonoBehaviour
 
     private void LoadAbilitiesForAbilitySelectScreen()
     {
-        //todo Filter out starting abilities
-
         GlobalHelper.DestroyAllChildren(AbilityCategoryParent);
 
-        var bodyPartAbilities = new List<Ability>();
+        var bodyPartAbilities = (from partAbilities in _playerTemplate.Parts.Select(AbilityStore.GetAbilitiesByBodyPart)
+            where partAbilities != null
+            from ability in partAbilities
+            where !ability.StartingAbility
+            select ability).ToList();
 
-        foreach (var bodyPartName in _playerTemplate.Parts)
+        if (bodyPartAbilities.Count > 0)
         {
-            var partAbilities = AbilityStore.GetAbilitiesByBodyPart(bodyPartName);
+            PopulateAbilityCategory("Species", bodyPartAbilities);
+        }
 
-            if (partAbilities == null)
+        var backgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
+
+        foreach (var ability in backgroundAbilities.ToArray().Where(ability => ability.StartingAbility))
+        {
+            backgroundAbilities.Remove(ability);
+        }
+
+        if (backgroundAbilities.Count > 0)
+        {
+            PopulateAbilityCategory(_selectedBackground.Name, backgroundAbilities);
+        }
+
+        var damageTypeAbilities = AbilityStore.GetAllDamageTypeAbilities();
+
+        if (damageTypeAbilities.Count < 1)
+        {
+            return;
+        }
+
+        foreach (var damageType in damageTypeAbilities)
+        {
+            foreach (var ability in damageType.Value.ToArray().Where(ability => ability.StartingAbility))
+            {
+                damageType.Value.Remove(ability);
+            }
+
+            if (damageType.Value.Count < 1)
             {
                 continue;
             }
 
-            bodyPartAbilities.AddRange(partAbilities);
+            PopulateAbilityCategory(damageType.Key.ToString(), damageType.Value);
+        }
+    }
+
+    private void PopulateAbilityCategory(string categoryName, IReadOnlyCollection<Ability> abilities)
+    {
+        if (abilities.Count < 1)
+        {
+            return;
         }
 
         var categoryInstance = Instantiate(AbilityCategoryPrefab, AbilityCategoryPrefab.transform.position,
@@ -604,26 +648,33 @@ public class CharacterCreation : MonoBehaviour
 
         categoryInstance.transform.SetParent(AbilityCategoryParent);
 
-        categoryInstance.GetComponentsInChildren<TextMeshProUGUI>()[1].text = "Species Abilities";
+        categoryInstance.GetComponentsInChildren<TextMeshProUGUI>()[1].text =
+            $"{GlobalHelper.Capitalize(categoryName)}";
 
         var abilityParent = categoryInstance.GetComponentsInChildren<RectTransform>(true)[7];
 
-        abilityParent.GetComponent<LayoutElement>().preferredHeight = 30 * bodyPartAbilities.Count;
+        abilityParent.GetComponent<LayoutElement>().preferredHeight = 30 * abilities.Count;
 
-        foreach (var ability in bodyPartAbilities)
+        foreach (var ability in abilities)
         {
+            if (ability.StartingAbility)
+            {
+                continue;
+            }
+
             var instance = Instantiate(AvailableAbilityPrefab, StartingAbilityPrefab.transform.position,
                 Quaternion.identity);
 
             instance.transform.SetParent(abilityParent);
 
-            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text = GlobalHelper.CapitalizeAllWords(ability.Name);
+            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text =
+                GlobalHelper.CapitalizeAllWords(ability.Name);
         }
+    }
 
-
-        var backgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
-
-        var damageTypeAbilities = AbilityStore.GetAllDamageTypeAbilities();
+    private void BuildAbilityDictionary()
+    {
+        //todo compile all abilities for player
     }
 
     public void DisplaySelectedAbilityDescription(string abilityName)
