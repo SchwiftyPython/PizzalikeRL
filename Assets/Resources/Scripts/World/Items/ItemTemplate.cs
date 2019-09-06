@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 public class ItemTemplate
 {
@@ -17,4 +18,8 @@ public class ItemTemplate
 
     [XmlElement("Range")]
     public int Range;
+
+    [XmlArray("Properties")]
+    [XmlArrayItem("Property")]
+    public List<string> Properties;
 }

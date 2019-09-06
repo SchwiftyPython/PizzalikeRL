@@ -8,6 +8,8 @@ public class SpeciesOptionButton : MonoBehaviour
         var optionClicked =
             EntityTemplateLoader.GetEntityTemplate(transform.GetComponentInChildren<TextMeshProUGUI>().text);
 
+        CharacterCreation.Instance.SelectButton(gameObject);
+
         CharacterCreation.Instance.SelectSpeciesOption(optionClicked);
     }
 }

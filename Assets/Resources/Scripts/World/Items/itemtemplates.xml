@@ -6,224 +6,290 @@
 	    <Category>armor</Category>
 		<EquipmentSlotType>Head</EquipmentSlotType>
         <MultiSlot>false</MultiSlot>		
-        <Range>-1</Range>		
+        <Range>-1</Range>
+        <Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Tuque">
 	    <Category>armor</Category>
 		<EquipmentSlotType>Head</EquipmentSlotType>
         <MultiSlot>false</MultiSlot>		
-		<Range>-1</Range>		
+		<Range>-1</Range>
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "CowboyHat">
 	    <Category>armor</Category>
 		<EquipmentSlotType>Head</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>-1</Range>		
+		<Range>-1</Range>	
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "EnergyArmor">
 	    <Category>armor</Category>
 		<EquipmentSlotType>Body</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>-1</Range>		
+		<Range>-1</Range>	
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "FlakArmor">
 	    <Category>armor</Category>
 		<EquipmentSlotType>Body</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>-1</Range>		
+		<Range>-1</Range>
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "LeatherArmor">
 	    <Category>armor</Category>
 		<EquipmentSlotType>Body</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>-1</Range>		
+		<Range>-1</Range>
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "PlateArmor">
 	    <Category>armor</Category>
 		<EquipmentSlotType>Body</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>-1</Range>		
+		<Range>-1</Range>
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "TrenchCoat">
 	    <Category>armor</Category>
 		<EquipmentSlotType>Body</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>-1</Range>		
+		<Range>-1</Range>
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "ShortSword">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>1</Range>		
+		<Range>1</Range>	
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "GreatBow">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>20</Range>		
+		<Range>20</Range>	
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "AssaultRifle">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>31</Range>		
+		<Range>31</Range>	
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "BattleAxe">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>1</Range>		
+		<Range>1</Range>	
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "BoltActionRifle">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>31</Range>		
+		<Range>31</Range>	
+<Properties>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Club">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>1</Range>		
+		<Range>1</Range>
+        <Properties>
+		    <Property> bludgeon </Property>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "FoldingChair">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
-		<MultiSlot>false</MultiSlot>
-		<Range>1</Range>		
+		<MultiSlot>true</MultiSlot>
+		<Range>1</Range>
+        <Properties>
+		    <Property> bludgeon </Property>
+        </Properties>		
 	</ItemTemplate>
 	
 	<ItemTemplate type = "FragGrenade">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>Thrown</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>5</Range>		
+		<Range>5</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "GreatSword">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>1</Range>		
+		<Range>1</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "EmpGrenade">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>Thrown</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>5</Range>		
+		<Range>5</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "HandAxe">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>1</Range>		
+		<Range>1</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Knife">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>1</Range>		
+		<Range>1</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "LaserRifle">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>23</Range>		
+		<Range>23</Range>
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "RocketLauncher">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>32</Range>		
+		<Range>32</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "LightMachineGun">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>32</Range>		
+		<Range>32</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Revolver">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>9</Range>		
+		<Range>9</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "SemiAutoHandgun">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>9</Range>		
+		<Range>9</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Shotgun">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>12</Range>		
+		<Range>12</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "SniperRifle">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>36</Range>		
+		<Range>36</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Spear">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>1</Range>		
+		<Range>1</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Submachinegun">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>12</Range>		
+		<Range>12</Range>
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Warhammer">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
-		<Range>1</Range>		
+		<Range>1</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>	
 	
 	<ItemTemplate type = "TurretBarrel">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>Special</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-		<Range>23</Range>		
+		<Range>23</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	<ItemTemplate type = "Bandage">
 	    <Category>consumable</Category>
 		<EquipmentSlotType>Consumable</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
-        <Range>-1</Range>		
+        <Range>-1</Range>	
+<Properties>
+        </Properties>			
 	</ItemTemplate>
 	
 	</ItemTemplates>

@@ -5,6 +5,9 @@ using Random = UnityEngine.Random;
 
 public class GlobalHelper : MonoBehaviour
 {
+    public const string DoubleSpace = "\n\n";
+    public const string SingleSpace = "\n";
+
     public const string ToppingDroppedEventName = "ToppingDropped";
     public const string ToppingNotDroppedEventName = "ToppingNotDropped";
     public const string DeliveredEventName = "Delivered";
@@ -32,6 +35,14 @@ public class GlobalHelper : MonoBehaviour
         }
     }
 
+    public static void DestroyAllChildren(RectTransform parent)
+    {
+        for (var i = 0; i < parent.transform.childCount; i++)
+        {
+            Destroy(parent.transform.GetChild(i).gameObject);
+        }
+    }
+
     public static string Capitalize(string s)
     {
         if (string.IsNullOrEmpty(s))
@@ -39,6 +50,11 @@ public class GlobalHelper : MonoBehaviour
             return string.Empty;
         }
         return char.ToUpper(s[0]) + s.Substring(1);
+    }
+
+    public static string CapitalizeAllWords(string s)
+    {
+        return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());
     }
 
     //<Summary>

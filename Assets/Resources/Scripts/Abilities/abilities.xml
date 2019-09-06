@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AbilitiesCollection>
+	<Abilities>
+	
+	<Ability name = "bash">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description> Give'm a whack! Chance of Dazing opponent.</Description>
+	    <RequiresProperty> bludgeon </RequiresProperty>	    
+		<Dice>1d4</Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 3 </Cooldown>
+		<StartingAbility>true</StartingAbility>
+	</Ability>
+	
+	<Ability name = "knockback">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description> Give'm a whack! Chance of Dazing opponent.</Description>
+	    <RequiresProperty> bludgeon </RequiresProperty>		    
+		<Dice>1d4</Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 3 </Cooldown>
+		<StartingAbility>false</StartingAbility>
+	</Ability>
+	
+	<Ability name = "stab">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description> Poke'm! Chance of Bleeding.</Description>
+	    <RequiresProperty> pierce </RequiresProperty>	    
+		<Dice>1d4</Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 3 </Cooldown>
+		<StartingAbility>true</StartingAbility>
+	</Ability>
+
+    <Ability name = "divine aid">	    
+	    <Attribute> intelligence </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground>religious</RequiresBackground>
+	    <Description>Apply holy bandaids to your wounds. Heals 1d4 * Intelligence Modifier</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice>1d4</Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 7 </Cooldown>
+		<StartingAbility>true</StartingAbility>
+	</Ability>	
+	
+	<Ability name = "spin web">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart>spinneret</RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Shoot a web from your ass onto target tile. Chance to immobilize.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>
+		<Duration>-1</Duration>
+	    <Cooldown> 8 </Cooldown>
+		<StartingAbility>true</StartingAbility>
+	</Ability>	
+	
+    </Abilities>
+</AbilitiesCollection>
+	

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class CharacterCreation : MonoBehaviour
 {
@@ -30,18 +32,33 @@ public class CharacterCreation : MonoBehaviour
     private int _intelligence;
     private int _remainingPoints;
 
+    private List<Ability> _abilities;
+    private Ability _selectedFreeAbility;
+
     public GameObject SpeciesSelectPage;
     public GameObject StatPointAllocationPage;
     public GameObject ChooseBackgroundPage;
+    public GameObject AbilitySelectPage;
     public GameObject SummaryPage;
 
     public GameObject SpeciesOptionPrefab;
     public RectTransform SpeciesOptionParent;
     public GameObject SpeciesDescription;
+    public GameObject SpeciesStartingAbilities;
 
     public GameObject BackgroundOptionPrefab;
     public RectTransform BackgroundOptionParent;
     public GameObject BackgroundDescription;
+    public GameObject BackgroundStartingAbilities;
+
+    public GameObject StartingAbilityPrefab;
+    public RectTransform BackgroundStartingAbilityParent;
+    public RectTransform SpeciesStartingAbilityParent;
+
+    public GameObject AvailableAbilityPrefab;
+    public GameObject AbilityCategoryPrefab;
+    public RectTransform AbilityCategoryParent;
+    public GameObject AbilityDescription;
 
     public GameObject StrengthValueBox;
     public GameObject IncreaseStrengthButton;
@@ -73,6 +90,8 @@ public class CharacterCreation : MonoBehaviour
     public GameObject WorldSeedPopup;
     public TMP_InputField SeedInputField;
 
+    public GameObject SelectedButton;
+
     public static CharacterCreation Instance;
 
     private void Awake()
@@ -89,6 +108,7 @@ public class CharacterCreation : MonoBehaviour
         SpeciesSelectPage.SetActive(true);
         StatPointAllocationPage.SetActive(false);
         ChooseBackgroundPage.SetActive(false);
+        AbilitySelectPage.SetActive(false);
         SummaryPage.SetActive(false);
         WorldSeedPopup.SetActive(false);
     }
@@ -106,6 +126,8 @@ public class CharacterCreation : MonoBehaviour
         _remainingPoints = StartingPoints;
 
         RemainingPointsValue.GetComponent<TextMeshProUGUI>().text = _remainingPoints.ToString();
+
+        _abilities = new List<Ability>();
     }
 
     #region Navigation Buttons
@@ -143,7 +165,10 @@ public class CharacterCreation : MonoBehaviour
         _constitution = Convert.ToInt32(ConstitutionValueBox.GetComponent<TextMeshProUGUI>().text);
         _intelligence = Convert.ToInt32(IntelligenceValueBox.GetComponent<TextMeshProUGUI>().text);
 
-        DisplayCharacterBackgroundDescription(_selectedBackground.Description);
+        SelectCharacterBackgroundOption(_selectedBackground);
+
+        BackgroundDescription.SetActive(true);
+        BackgroundStartingAbilities.SetActive(false);
 
         ChooseBackgroundPage.SetActive(true);
 
@@ -159,6 +184,22 @@ public class CharacterCreation : MonoBehaviour
 
     public void OnNextFromChooseBackgroundPage()
     {
+        LoadAbilitiesForAbilitySelectScreen();
+
+        AbilitySelectPage.SetActive(true);
+
+        ChooseBackgroundPage.SetActive(false);
+    }
+
+    public void OnBackFromAbilitySelectPage()
+    {
+        ChooseBackgroundPage.SetActive(true);
+
+        AbilitySelectPage.SetActive(false);
+    }
+
+    public void OnNextFromAbilitySelectPage()
+    {
         SpeciesBox.GetComponent<TextMeshProUGUI>().text = GlobalHelper.Capitalize(_player.EntityType);
         BackgroundBox.GetComponent<TextMeshProUGUI>().text = GlobalHelper.Capitalize(_selectedBackground.Name);
 
@@ -167,14 +208,14 @@ public class CharacterCreation : MonoBehaviour
         SummaryIntelligenceBox.GetComponent<TextMeshProUGUI>().text = _intelligence.ToString();
         SummaryConstitutionBox.GetComponent<TextMeshProUGUI>().text = _constitution.ToString();
 
-        SummaryPage.SetActive(true);
+        AbilitySelectPage.SetActive(false);
 
-        ChooseBackgroundPage.SetActive(false);
+        SummaryPage.SetActive(true);
     }
 
     public void OnBackFromSummaryPage()
     {
-        ChooseBackgroundPage.SetActive(true);
+        AbilitySelectPage.SetActive(true);
 
         SummaryPage.SetActive(false);
     }
@@ -195,7 +236,7 @@ public class CharacterCreation : MonoBehaviour
 
         if (string.IsNullOrEmpty(SeedInputField.text) || string.IsNullOrWhiteSpace(SeedInputField.text))
         {
-            WorldData.Instance.Seed = (UnityEngine.Random.Range(int.MinValue, int.MaxValue) +
+            WorldData.Instance.Seed = (Random.Range(int.MinValue, int.MaxValue) +
                                        (int)DateTime.Now.Ticks).ToString();
         }
         else
@@ -212,14 +253,64 @@ public class CharacterCreation : MonoBehaviour
     {
         _playerTemplate = template;
 
-        DisplaySpeciesDescription(template.Description);
+        LoadStartingAbilitiesForSpecies(template);
+
+        if (SpeciesDescription.activeSelf)
+        {
+            DisplaySpeciesDescription(template.Description);
+        }
+        else
+        {
+            DisplaySpeciesStartingAbilities();
+        }
+    }
+
+    public void DisplaySpeciesStartingAbilities()
+    {
+        SpeciesDescription.SetActive(false);
+
+        SpeciesStartingAbilities.SetActive(true);
+    }
+
+    public void DisplaySpeciesDescription(string description)
+    {
+        SpeciesDescription.GetComponent<TextMeshProUGUI>().text = description.Trim();
+
+        SpeciesDescription.SetActive(true);
+
+        SpeciesStartingAbilities.SetActive(false);
+    }
+
+    public void DisplaySpeciesDescription()
+    {
+        var description = _playerTemplate.Description;
+
+        DisplaySpeciesDescription(description);
     }
 
     public void SelectCharacterBackgroundOption(CharacterBackground background)
     {
         _selectedBackground = background;
 
-        DisplayCharacterBackgroundDescription(background.Description);
+        var description = background.Description;
+
+        LoadStartingAbilitiesForBackground(background);
+
+        if (BackgroundDescription.activeSelf)
+        {
+            DisplayCharacterBackgroundDescription(description);
+        }
+        else
+        {
+            DisplayBackgroundStartingAbilities();
+        }
+    }
+
+    public void DisplayBackgroundStartingAbilities()
+    {
+        BackgroundDescription.SetActive(false);
+
+        BackgroundStartingAbilities.SetActive(true);
     }
 
     #region Stat Buttons
@@ -370,11 +461,6 @@ public class CharacterCreation : MonoBehaviour
 
     #endregion Stat Buttons
 
-    private void DisplaySpeciesDescription(string description)
-    {
-        SpeciesDescription.GetComponent<TextMeshProUGUI>().text = description.Trim();
-    }
-
     private void LoadPlayableSpeciesList()
     {
         var allSpecies = EntityTemplateLoader.GetAllEntityTemplateTypes().OrderBy(s => s).ToList();
@@ -399,15 +485,40 @@ public class CharacterCreation : MonoBehaviour
                 continue;
             }
 
-            option.GetComponent<Button>().Select();
+            SelectButton(option);
         }
 
         SelectSpeciesOption(EntityTemplateLoader.GetEntityTemplate(allSpecies.First()));
     }
 
-    private void DisplayCharacterBackgroundDescription(string description)
+    public void DisplayCharacterBackgroundDescription(string description)
     {
         BackgroundDescription.GetComponent<TextMeshProUGUI>().text = description.Trim();
+
+        BackgroundDescription.SetActive(true);
+
+        BackgroundStartingAbilities.SetActive(false);
+    }
+
+    public void DisplayCharacterBackgroundDescription()
+    {
+        var description = _selectedBackground.Description;
+
+        DisplayCharacterBackgroundDescription(description);
+    }
+
+    public void AbilitySelected(string abilityName)
+    {
+        var selectedAbility = AbilityStore.GetAbilityByName(abilityName);
+
+        if (selectedAbility == null)
+        {
+            return;
+        }
+
+        DisplaySelectedAbilityDescription(selectedAbility.Description);
+
+        _selectedFreeAbility = selectedAbility;
     }
 
     private void LoadCharacterBackgrounds()
@@ -424,10 +535,208 @@ public class CharacterCreation : MonoBehaviour
             option.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
 
             option.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = background;
+
+            if (background != allBackgrounds.First())
+            {
+                continue;
+            }
+
+            SelectButton(option);
         }
 
         _selectedBackground = CharacterBackgroundLoader.GetCharacterBackground(allBackgrounds.First());
     }
+
+    private void LoadStartingAbilitiesForBackground(CharacterBackground background)
+    {
+        GlobalHelper.DestroyAllChildren(BackgroundStartingAbilityParent);
+
+        var backgroundAbilities = AbilityStore.GetAbilitiesByBackground(background);
+
+        foreach (var ability in backgroundAbilities)
+        {
+            var instance = Instantiate(StartingAbilityPrefab, StartingAbilityPrefab.transform.position,
+                Quaternion.identity);
+
+            instance.transform.SetParent(BackgroundStartingAbilityParent);
+
+            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text = GlobalHelper.CapitalizeAllWords(ability.Name);
+
+            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[1].text = ability.Description;
+        }
+    }
+
+    private void LoadStartingAbilitiesForSpecies(EntityTemplate species)
+    {
+        GlobalHelper.DestroyAllChildren(SpeciesStartingAbilityParent);
+        
+        var startingAbilities = new List<Ability>();
+
+        foreach (var bodyPartName in species.Parts)
+        {
+            var partAbilities = AbilityStore.GetAbilitiesByBodyPart(bodyPartName);
+
+            if(partAbilities == null)
+            {
+                continue;
+            }
+
+            startingAbilities.AddRange(partAbilities);
+        }
+
+        foreach (var ability in startingAbilities)
+        {
+            var instance = Instantiate(StartingAbilityPrefab, StartingAbilityPrefab.transform.position,
+                Quaternion.identity);
+
+            instance.transform.SetParent(SpeciesStartingAbilityParent);
+
+            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text = GlobalHelper.CapitalizeAllWords(ability.Name);
+
+            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[1].text = ability.Description;
+        }
+    }
+
+    private void LoadAbilitiesForAbilitySelectScreen()
+    {
+        GlobalHelper.DestroyAllChildren(AbilityCategoryParent);
+
+        var bodyPartAbilities = (from partAbilities in _playerTemplate.Parts.Select(AbilityStore.GetAbilitiesByBodyPart)
+            where partAbilities != null
+            from ability in partAbilities
+            where !ability.StartingAbility
+            select ability).ToList();
+
+        if (bodyPartAbilities.Count > 0)
+        {
+            PopulateAbilityCategory("Species", bodyPartAbilities);
+        }
+
+        var backgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
+
+        foreach (var ability in backgroundAbilities.ToArray().Where(ability => ability.StartingAbility))
+        {
+            backgroundAbilities.Remove(ability);
+        }
+
+        if (backgroundAbilities.Count > 0)
+        {
+            PopulateAbilityCategory(_selectedBackground.Name, backgroundAbilities);
+        }
+
+        var damageTypeAbilities = AbilityStore.GetAllDamageTypeAbilities();
+
+        if (damageTypeAbilities.Count < 1)
+        {
+            return;
+        }
+
+        foreach (var damageType in damageTypeAbilities)
+        {
+            foreach (var ability in damageType.Value.ToArray().Where(ability => ability.StartingAbility))
+            {
+                damageType.Value.Remove(ability);
+            }
+
+            if (damageType.Value.Count < 1)
+            {
+                continue;
+            }
+
+            PopulateAbilityCategory(damageType.Key.ToString(), damageType.Value);
+        }
+    }
+
+    private void PopulateAbilityCategory(string categoryName, IReadOnlyCollection<Ability> abilities)
+    {
+        if (abilities.Count < 1)
+        {
+            return;
+        }
+
+        var categoryInstance = Instantiate(AbilityCategoryPrefab, AbilityCategoryPrefab.transform.position,
+            Quaternion.identity);
+
+        categoryInstance.transform.SetParent(AbilityCategoryParent);
+
+        categoryInstance.GetComponentsInChildren<TextMeshProUGUI>()[1].text =
+            $"{GlobalHelper.Capitalize(categoryName)}";
+
+        var abilityParent = categoryInstance.GetComponentsInChildren<RectTransform>(true)[7];
+
+        abilityParent.GetComponent<LayoutElement>().preferredHeight = 30 * abilities.Count;
+
+        foreach (var ability in abilities)
+        {
+            if (ability.StartingAbility)
+            {
+                continue;
+            }
+
+            var instance = Instantiate(AvailableAbilityPrefab, StartingAbilityPrefab.transform.position,
+                Quaternion.identity);
+
+            instance.transform.SetParent(abilityParent);
+
+            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text =
+                GlobalHelper.CapitalizeAllWords(ability.Name);
+        }
+    }
+
+    private Entity.AbilityDictionary BuildAbilityDictionary()
+    {
+        var abilities = new Entity.AbilityDictionary {{_selectedFreeAbility.Name, _selectedFreeAbility}};
+
+        var startingBodyPartAbilities =
+            (from partAbilities in _playerTemplate.Parts.Select(AbilityStore.GetAbilitiesByBodyPart)
+                where partAbilities != null
+                from ability in partAbilities
+                where ability.StartingAbility
+                select ability).ToList();
+
+        foreach (var ability in startingBodyPartAbilities)
+        {
+            if (abilities.ContainsKey(ability.Name))
+            {
+                continue;
+            }
+
+            abilities.Add(ability.Name, ability);
+        }
+
+        var startingBackgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
+
+        foreach (var ability in startingBackgroundAbilities)
+        {
+            if (abilities.ContainsKey(ability.Name) || !ability.StartingAbility)
+            {
+                continue;
+            }
+
+            abilities.Add(ability.Name, ability);
+        }
+
+        return abilities;
+    }
+
+    private void DisplaySelectedAbilityDescription(string description)
+    {
+        AbilityDescription.GetComponent<TextMeshProUGUI>().text = description;
+    }
+
+    public void SelectButton(GameObject button)
+    {
+        if (SelectedButton != null)
+        {
+            SelectedButton.GetComponent<Button>().interactable = true;
+        }
+
+        EventSystem.current.SetSelectedGameObject(button, null);
+        button.GetComponent<Button>().interactable = false;
+
+        SelectedButton = button;
+    }
+    
 
     private void IncreaseRemainingPointsValue()
     {
@@ -479,6 +788,8 @@ public class CharacterCreation : MonoBehaviour
         _player.Fluff.BackgroundType = _selectedBackground;
         _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
         _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
+
+        _player.Abilities = BuildAbilityDictionary();
 
         var enteredName = NameBox.GetComponent<TextMeshProUGUI>().text.Trim();
 

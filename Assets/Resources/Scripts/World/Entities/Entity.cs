@@ -106,14 +106,13 @@ public class Entity : ISubscriber
 
     //Base stats
 
-    public int Level { get; set; }
-    public int Xp { get; set; }
+    public int Level { get; set; } //todo remove
+    public int Xp { get; set; } //todo remove or modify for specific ability categories  
 
     public int Strength { get; set; }
     public int Agility { get; set; }
     public int Constitution { get; set; }
     public int Intelligence { get; set; }
-
 
     //Stats dependent on base stat values
 
@@ -129,6 +128,11 @@ public class Entity : ISubscriber
 
     public IDictionary<Guid, Item> Inventory { get; } //todo create method for adding items to inventory
     public IDictionary<EquipmentSlot, Item> Equipped;
+
+    [Serializable]
+    public class AbilityDictionary : SerializableDictionary<string, Ability> { }
+
+    public AbilityDictionary Abilities;
 
     [Serializable]
     public class ToppingCountDictionary : SerializableDictionary<Toppings, int> { }

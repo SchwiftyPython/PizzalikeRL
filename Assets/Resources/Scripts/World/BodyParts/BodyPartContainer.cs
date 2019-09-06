@@ -4,13 +4,14 @@ using System.Xml.Serialization;
 using UnityEngine;
 
 [XmlRoot("BodyPartCollection")]
-public class BodyPartContainer{
-
+public class BodyPartContainer
+{
     [XmlArray("BodyParts")]
     [XmlArrayItem("BodyPart")]
     public List<BodyPartTemplate> BodyPartTemplates = new List<BodyPartTemplate>();
 
-    public static BodyPartContainer Load(string path){
+    public static BodyPartContainer Load(string path)
+    {
         var xml = Resources.Load<TextAsset>(path);
 
         var serializer = new XmlSerializer(typeof(BodyPartContainer));
