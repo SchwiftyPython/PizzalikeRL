@@ -33,6 +33,7 @@ public class CharacterCreation : MonoBehaviour
     private int _remainingPoints;
 
     private List<Ability> _abilities;
+    private Ability _selectedFreeAbility;
 
     public GameObject SpeciesSelectPage;
     public GameObject StatPointAllocationPage;
@@ -199,8 +200,6 @@ public class CharacterCreation : MonoBehaviour
 
     public void OnNextFromAbilitySelectPage()
     {
-        BuildAbilityDictionary();
-
         SpeciesBox.GetComponent<TextMeshProUGUI>().text = GlobalHelper.Capitalize(_player.EntityType);
         BackgroundBox.GetComponent<TextMeshProUGUI>().text = GlobalHelper.Capitalize(_selectedBackground.Name);
 
@@ -462,8 +461,6 @@ public class CharacterCreation : MonoBehaviour
 
     #endregion Stat Buttons
 
-    
-
     private void LoadPlayableSpeciesList()
     {
         var allSpecies = EntityTemplateLoader.GetAllEntityTemplateTypes().OrderBy(s => s).ToList();
@@ -508,6 +505,20 @@ public class CharacterCreation : MonoBehaviour
         var description = _selectedBackground.Description;
 
         DisplayCharacterBackgroundDescription(description);
+    }
+
+    public void AbilitySelected(string abilityName)
+    {
+        var selectedAbility = AbilityStore.GetAbilityByName(abilityName);
+
+        if (selectedAbility == null)
+        {
+            return;
+        }
+
+        DisplaySelectedAbilityDescription(selectedAbility.Description);
+
+        _selectedFreeAbility = selectedAbility;
     }
 
     private void LoadCharacterBackgrounds()
@@ -672,16 +683,45 @@ public class CharacterCreation : MonoBehaviour
         }
     }
 
-    private void BuildAbilityDictionary()
+    private Entity.AbilityDictionary BuildAbilityDictionary()
     {
-        //todo compile all abilities for player
+        var abilities = new Entity.AbilityDictionary {{_selectedFreeAbility.Name, _selectedFreeAbility}};
+
+        var startingBodyPartAbilities =
+            (from partAbilities in _playerTemplate.Parts.Select(AbilityStore.GetAbilitiesByBodyPart)
+                where partAbilities != null
+                from ability in partAbilities
+                where ability.StartingAbility
+                select ability).ToList();
+
+        foreach (var ability in startingBodyPartAbilities)
+        {
+            if (abilities.ContainsKey(ability.Name))
+            {
+                continue;
+            }
+
+            abilities.Add(ability.Name, ability);
+        }
+
+        var startingBackgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
+
+        foreach (var ability in startingBackgroundAbilities)
+        {
+            if (abilities.ContainsKey(ability.Name) || !ability.StartingAbility)
+            {
+                continue;
+            }
+
+            abilities.Add(ability.Name, ability);
+        }
+
+        return abilities;
     }
 
-    public void DisplaySelectedAbilityDescription(string abilityName)
+    private void DisplaySelectedAbilityDescription(string description)
     {
-        var selectedAbility = AbilityStore.GetAbilityByName(abilityName);
-
-        AbilityDescription.GetComponent<TextMeshProUGUI>().text = selectedAbility.Description;
+        AbilityDescription.GetComponent<TextMeshProUGUI>().text = description;
     }
 
     public void SelectButton(GameObject button)
@@ -748,6 +788,8 @@ public class CharacterCreation : MonoBehaviour
         _player.Fluff.BackgroundType = _selectedBackground;
         _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
         _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
+
+        _player.Abilities = BuildAbilityDictionary();
 
         var enteredName = NameBox.GetComponent<TextMeshProUGUI>().text.Trim();
 

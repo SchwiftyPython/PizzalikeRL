@@ -5,13 +5,13 @@ public class AbilitySelectButton : MonoBehaviour
 {
     public void OnClick()
     {
-        DisplayAbilityDescription();
+        SelectAbility();
     }
 
-    private void DisplayAbilityDescription()
+    private void SelectAbility()
     {
         var abilityName = gameObject.GetComponentInChildren<TextMeshProUGUI>().text;
 
-        CharacterCreation.Instance.DisplaySelectedAbilityDescription(abilityName);
+        CharacterCreation.Instance.AbilitySelected(abilityName);
     }
 }
