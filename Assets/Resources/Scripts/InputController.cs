@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class InputController : MonoBehaviour
 {
+    private Dictionary<KeyCode, GameObject> _abilityMap;
+
     private string _areaMapSceneName;
     private string _worldMapSceneName;
 
@@ -318,6 +320,43 @@ public class InputController : MonoBehaviour
             }
 
             tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
+
+    public void LoadStartingAbilitiesIntoAbilityBar()
+    {
+        _abilityMap = new Dictionary<KeyCode, GameObject>
+        {
+            { KeyCode.Alpha1, AbilityManager.AbilityButton1 },
+            { KeyCode.Alpha2, AbilityManager.AbilityButton2 },
+            { KeyCode.Alpha3, AbilityManager.AbilityButton3 },
+            { KeyCode.Alpha4, AbilityManager.AbilityButton4 },
+            { KeyCode.Alpha5, AbilityManager.AbilityButton5 },
+            { KeyCode.Alpha6, AbilityManager.AbilityButton6 },
+            { KeyCode.Alpha7, AbilityManager.AbilityButton7 },
+            { KeyCode.Alpha8, AbilityManager.AbilityButton8 },
+            { KeyCode.Alpha9, AbilityManager.AbilityButton9 },
+            { KeyCode.Alpha0, AbilityManager.AbilityButton0 }
+        };
+
+        var playerAbilities = GameManager.Instance.Player.Abilities;
+
+        if (playerAbilities.Count < 1)
+        {
+            return;
+        }
+
+        var mappingIndex = 0;
+
+        foreach (var ability in playerAbilities.Values)
+        {
+            var mapping = _abilityMap.ElementAt(mappingIndex).Key;
+
+            AbilityManager.AssignAbilityToButton(ability, _abilityMap[mapping]);
+
+            //todo link to button
+
+            mappingIndex++;
         }
     }
 

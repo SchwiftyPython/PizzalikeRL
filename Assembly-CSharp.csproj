@@ -311,6 +311,7 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SaveGameData.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableDictionary.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableVector3.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\AbilityManager.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilitySelectButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\BodyPartButton.cs" />
@@ -340,6 +341,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\SystemWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\TakeAllButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\UnequipButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\UseAbilityButton.cs" />
     <Compile Include="Assets\Resources\Scripts\World\AreaMap.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPart.cs" />
     <Compile Include="Assets\Resources\Scripts\World\BodyParts\BodyPartContainer.cs" />
