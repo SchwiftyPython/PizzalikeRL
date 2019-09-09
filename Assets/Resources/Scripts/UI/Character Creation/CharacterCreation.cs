@@ -33,7 +33,7 @@ public class CharacterCreation : MonoBehaviour
     private int _remainingPoints;
 
     private List<Ability> _abilities;
-    private Ability _selectedFreeAbility;
+    private AbilityTemplate _selectedFreeAbility;
 
     public GameObject SpeciesSelectPage;
     public GameObject StatPointAllocationPage;
@@ -570,7 +570,7 @@ public class CharacterCreation : MonoBehaviour
     {
         GlobalHelper.DestroyAllChildren(SpeciesStartingAbilityParent);
         
-        var startingAbilities = new List<Ability>();
+        var startingAbilities = new List<AbilityTemplate>();
 
         foreach (var bodyPartName in species.Parts)
         {
@@ -647,7 +647,7 @@ public class CharacterCreation : MonoBehaviour
         }
     }
 
-    private void PopulateAbilityCategory(string categoryName, IReadOnlyCollection<Ability> abilities)
+    private void PopulateAbilityCategory(string categoryName, List<AbilityTemplate> abilities)
     {
         if (abilities.Count < 1)
         {
@@ -685,7 +685,11 @@ public class CharacterCreation : MonoBehaviour
 
     private Entity.AbilityDictionary BuildAbilityDictionary()
     {
-        var abilities = new Entity.AbilityDictionary {{_selectedFreeAbility.Name, _selectedFreeAbility}};
+        var abilities = new Entity.AbilityDictionary();
+
+        var freeAbility = new Ability(_selectedFreeAbility);
+
+        abilities.Add(freeAbility.Name, freeAbility);
 
         var startingBodyPartAbilities =
             (from partAbilities in _playerTemplate.Parts.Select(AbilityStore.GetAbilitiesByBodyPart)
@@ -701,7 +705,7 @@ public class CharacterCreation : MonoBehaviour
                 continue;
             }
 
-            abilities.Add(ability.Name, ability);
+            abilities.Add(ability.Name, new Ability(ability));
         }
 
         var startingBackgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
@@ -713,7 +717,7 @@ public class CharacterCreation : MonoBehaviour
                 continue;
             }
 
-            abilities.Add(ability.Name, ability);
+            abilities.Add(ability.Name, new Ability(ability));
         }
 
         return abilities;

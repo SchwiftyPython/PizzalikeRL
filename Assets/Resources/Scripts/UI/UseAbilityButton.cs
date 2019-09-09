@@ -11,6 +11,8 @@ public class UseAbilityButton : MonoBehaviour
     private Button _button;
     private Ability _ability;
 
+    private int _remainingCooldownTurns;
+
     public Sprite DefaultSprite;
 
     private void Start()
@@ -28,6 +30,7 @@ public class UseAbilityButton : MonoBehaviour
         _button.interactable = true;
         _buttonIcon.color = _assignedColor;
         SetIcon(icon);
+        _remainingCooldownTurns = ability.RemainingCooldownTurns;
     }
 
     public void RemoveAbility()

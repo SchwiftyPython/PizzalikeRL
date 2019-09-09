@@ -246,6 +246,8 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilitiesLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Ability.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityStore.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTarget.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\ButtonClick.cs" />
     <Compile Include="Assets\Resources\Scripts\DamageType.cs" />

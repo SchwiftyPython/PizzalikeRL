@@ -8,7 +8,7 @@ public class AbilitiesContainer
 {
     [XmlArray("Abilities")]
     [XmlArrayItem("Ability")]
-    public List<Ability> AbilitiesList = new List<Ability>();
+    public List<AbilityTemplate> AbilitiesList = new List<AbilityTemplate>();
 
     public static AbilitiesContainer Load(TextAsset xml)
     {
