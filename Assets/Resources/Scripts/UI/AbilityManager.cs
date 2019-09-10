@@ -2,31 +2,39 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AbilityManager : MonoBehaviour
+public class AbilityManager : MonoBehaviour, ISubscriber
 {
     private static Dictionary<string, Sprite> _abilityIcons;
 
-    public static GameObject AbilityButton1;
-    public static GameObject AbilityButton2;
-    public static GameObject AbilityButton3;
-    public static GameObject AbilityButton4;
-    public static GameObject AbilityButton5;
-    public static GameObject AbilityButton6;
-    public static GameObject AbilityButton7;
-    public static GameObject AbilityButton8;
-    public static GameObject AbilityButton9;
-    public static GameObject AbilityButton0;
+    public GameObject AbilityButton1;
+    public GameObject AbilityButton2;
+    public GameObject AbilityButton3;
+    public GameObject AbilityButton4;
+    public GameObject AbilityButton5;
+    public GameObject AbilityButton6;
+    public GameObject AbilityButton7;
+    public GameObject AbilityButton8;
+    public GameObject AbilityButton9;
+    public GameObject AbilityButton0;
 
-    public static Sprite BashIcon;
+    public Sprite BashIcon;
+    public Sprite KnockBackIcon;
+    public Sprite StabIcon;
+    public Sprite DivineAidIcon;
+    public Sprite SpinWebIcon;
 
     private void Start()
     {
-        InputController.Instance.LoadStartingAbilitiesIntoAbilityBar();
-
         _abilityIcons = new Dictionary<string, Sprite>
         {
-            {"bash", BashIcon}
+            {"bash", BashIcon},
+            {"knockback", KnockBackIcon},
+            {"stab", StabIcon},
+            {"divine aid", DivineAidIcon},
+            {"spin web", SpinWebIcon}
         };
+
+        PrepareAbilityMap();
     }
 
     private static Sprite GetIconForAbility(Ability ability)
@@ -41,5 +49,29 @@ public class AbilityManager : MonoBehaviour
         var icon = GetIconForAbility(ability);
 
         buttonScript.AssignAbility(ability, icon);
+    }
+
+    public void PrepareAbilityMap()
+    {
+        var map = new Dictionary<KeyCode, GameObject>
+        {
+            { KeyCode.Alpha1, AbilityButton1 },
+            { KeyCode.Alpha2, AbilityButton2 },
+            { KeyCode.Alpha3, AbilityButton3 },
+            { KeyCode.Alpha4, AbilityButton4 },
+            { KeyCode.Alpha5, AbilityButton5 },
+            { KeyCode.Alpha6, AbilityButton6 },
+            { KeyCode.Alpha7, AbilityButton7 },
+            { KeyCode.Alpha8, AbilityButton8 },
+            { KeyCode.Alpha9, AbilityButton9 },
+            { KeyCode.Alpha0, AbilityButton0 }
+        };
+
+        EventMediator.Instance.Broadcast(GlobalHelper.LoadAbilityBarEventName, this, map);
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        
     }
 }

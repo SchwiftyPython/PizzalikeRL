@@ -48,7 +48,7 @@ public class Ability
         Effect = template.Effect;
         StartingAbility = template.StartingAbility;
 
-        Target = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target, true);
+        Target = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
 
         RemainingCooldownTurns = 0;
     }

@@ -100,7 +100,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     public static List<AbilityTemplate> GetAbilitiesByBackground(CharacterBackground background)
     {
-        return _abilitiesByBackground[background.Name];
+        return new List<AbilityTemplate>(_abilitiesByBackground[background.Name]);
     }
 
     public static List<AbilityTemplate> GetAbilitiesByDamageType(DamageType dt)

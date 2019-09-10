@@ -15,7 +15,7 @@ public class UseAbilityButton : MonoBehaviour
 
     public Sprite DefaultSprite;
 
-    private void Start()
+    private void Awake()
     {
         _buttonIcon = gameObject.GetComponent<Image>();
         _button = gameObject.GetComponent<Button>();
@@ -26,6 +26,16 @@ public class UseAbilityButton : MonoBehaviour
 
     public void AssignAbility(Ability ability, Sprite icon)
     {
+        if (_button == null)
+        {
+            _button = gameObject.GetComponent<Button>();
+        }
+
+        if (_buttonIcon == null)
+        {
+            _buttonIcon = gameObject.GetComponent<Image>();
+        }
+
         _ability = ability;
         _button.interactable = true;
         _buttonIcon.color = _assignedColor;

@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class InputController : MonoBehaviour
+public class InputController : MonoBehaviour, ISubscriber
 {
     private Dictionary<KeyCode, GameObject> _abilityMap;
 
@@ -54,6 +54,8 @@ public class InputController : MonoBehaviour
         }
         _canvasGraphicRaycaster = Canvas.GetComponent<GraphicRaycaster>();
         _canvasEventSystem = Canvas.GetComponent<EventSystem>();
+
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.LoadAbilityBarEventName, this);
     }
 
     private void Update()
@@ -325,20 +327,6 @@ public class InputController : MonoBehaviour
 
     public void LoadStartingAbilitiesIntoAbilityBar()
     {
-        _abilityMap = new Dictionary<KeyCode, GameObject>
-        {
-            { KeyCode.Alpha1, AbilityManager.AbilityButton1 },
-            { KeyCode.Alpha2, AbilityManager.AbilityButton2 },
-            { KeyCode.Alpha3, AbilityManager.AbilityButton3 },
-            { KeyCode.Alpha4, AbilityManager.AbilityButton4 },
-            { KeyCode.Alpha5, AbilityManager.AbilityButton5 },
-            { KeyCode.Alpha6, AbilityManager.AbilityButton6 },
-            { KeyCode.Alpha7, AbilityManager.AbilityButton7 },
-            { KeyCode.Alpha8, AbilityManager.AbilityButton8 },
-            { KeyCode.Alpha9, AbilityManager.AbilityButton9 },
-            { KeyCode.Alpha0, AbilityManager.AbilityButton0 }
-        };
-
         var playerAbilities = GameManager.Instance.Player.Abilities;
 
         if (playerAbilities.Count < 1)
@@ -353,8 +341,6 @@ public class InputController : MonoBehaviour
             var mapping = _abilityMap.ElementAt(mappingIndex).Key;
 
             AbilityManager.AssignAbilityToButton(ability, _abilityMap[mapping]);
-
-            //todo link to button
 
             mappingIndex++;
         }
@@ -376,6 +362,21 @@ public class InputController : MonoBehaviour
         _canvasGraphicRaycaster.Raycast(pointerEventData, results);
 
         return results.Any();
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals(GlobalHelper.LoadAbilityBarEventName))
+        {
+            _abilityMap = (Dictionary<KeyCode, GameObject>) parameter;
+
+            if (_abilityMap == null)
+            {
+                return;
+            }
+
+            LoadStartingAbilitiesIntoAbilityBar();
+        }
     }
 }
 

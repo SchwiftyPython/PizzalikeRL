@@ -7,7 +7,7 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description> Give'm a whack! Chance of Dazing opponent.</Description>
+	    <Description>Give'm a whack! Chance of Dazing opponent.</Description>
 	    <RequiresProperty> bludgeon </RequiresProperty>	    
 		<Dice>1d4</Dice>
 		<Duration>-1</Duration>
@@ -23,7 +23,7 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description> Give'm a whack! Chance of Dazing opponent.</Description>
+	    <Description>Make room! Pushes back your opponent 1 tile.</Description>
 	    <RequiresProperty> bludgeon </RequiresProperty>		    
 		<Dice>1d4</Dice>
 		<Duration>-1</Duration>
@@ -39,7 +39,7 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description> Poke'm! Chance of Bleeding.</Description>
+	    <Description>Poke'm! Chance of Bleeding.</Description>
 	    <RequiresProperty> pierce </RequiresProperty>	    
 		<Dice>1d4</Dice>
 		<Duration>-1</Duration>
