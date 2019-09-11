@@ -1,37 +1,55 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 public class Ability
 {
-    [XmlAttribute("name")]
     public string Name;
-
-    [XmlElement("Attribute")]
-    public string Attribute;
-
-    [XmlElement("AttributePrereq")]
+    
+    public string Attribute; //todo make enum
+    
     public string AttributePrereq;
-
-    [XmlElement("RequiresBackground")]
+    
     public string RequiresBackground;
-
-    [XmlElement("Description")]
+    
     public string Description;
-
-    [XmlElement("RequiresBodyPart")]
+    
     public string RequiresBodyPart;
-
-    [XmlElement("RequiresProperty")]
-    public string RequiresProperty;
-
-    [XmlElement("Dice")]
+    
+    public string RequiresProperty; //todo make enum
+    
     public string Dice;
-
-    [XmlElement("Duration")]
+    
     public int Duration;
-
-    [XmlElement("Cooldown")]
+    
     public int Cooldown;
-
-    [XmlElement("StartingAbility")]
+    
+    public AbilityTarget Target; 
+    
+    public string Effect; //todo make enum
+    
+    public int Range;
+    
     public bool StartingAbility;
+
+    public int RemainingCooldownTurns;
+
+    public Ability(AbilityTemplate template)
+    {
+        Name = template.Name;
+        Attribute = template.Attribute;
+        AttributePrereq = template.AttributePrereq;
+        RequiresBackground = template.RequiresBackground;
+        Description = template.Description;
+        RequiresBodyPart = template.RequiresBodyPart;
+        RequiresProperty = template.RequiresProperty;
+        Dice = template.Dice;
+        Duration = template.Duration;
+        Cooldown = template.Cooldown;
+        Effect = template.Effect;
+        StartingAbility = template.StartingAbility;
+
+        Target = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
+
+        RemainingCooldownTurns = 0;
+    }
 }

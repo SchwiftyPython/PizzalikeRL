@@ -7,11 +7,14 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description> Give'm a whack! Chance of Dazing opponent.</Description>
+	    <Description>Give'm a whack! Chance of Dazing opponent.</Description>
 	    <RequiresProperty> bludgeon </RequiresProperty>	    
 		<Dice>1d4</Dice>
 		<Duration>-1</Duration>
 	    <Cooldown> 3 </Cooldown>
+		<Target>direction</Target>
+		<Effect>daze</Effect>
+		<Range>1</Range>
 		<StartingAbility>true</StartingAbility>
 	</Ability>
 	
@@ -20,11 +23,14 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description> Give'm a whack! Chance of Dazing opponent.</Description>
+	    <Description>Make room! Pushes back your opponent 1 tile.</Description>
 	    <RequiresProperty> bludgeon </RequiresProperty>		    
 		<Dice>1d4</Dice>
 		<Duration>-1</Duration>
 	    <Cooldown> 3 </Cooldown>
+		<Target>direction</Target>
+		<Effect>push</Effect>
+		<Range>1</Range>
 		<StartingAbility>false</StartingAbility>
 	</Ability>
 	
@@ -33,11 +39,14 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description> Poke'm! Chance of Bleeding.</Description>
+	    <Description>Poke'm! Chance of Bleeding.</Description>
 	    <RequiresProperty> pierce </RequiresProperty>	    
 		<Dice>1d4</Dice>
 		<Duration>-1</Duration>
 	    <Cooldown> 3 </Cooldown>
+		<Target>direction</Target>
+		<Effect>bleed</Effect>
+		<Range>1</Range>
 		<StartingAbility>true</StartingAbility>
 	</Ability>
 
@@ -51,6 +60,9 @@
 		<Dice>1d4</Dice>
 		<Duration>-1</Duration>
 	    <Cooldown> 7 </Cooldown>
+		<Target>self</Target>
+		<Effect>heal</Effect>
+		<Range>-1</Range>
 		<StartingAbility>true</StartingAbility>
 	</Ability>	
 	
@@ -64,6 +76,9 @@
 		<Dice></Dice>
 		<Duration>-1</Duration>
 	    <Cooldown> 8 </Cooldown>
+		<Target>single tile</Target>
+		<Effect>immobilize</Effect>
+		<Range>4</Range>
 		<StartingAbility>true</StartingAbility>
 	</Ability>	
 	

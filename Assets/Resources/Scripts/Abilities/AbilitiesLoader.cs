@@ -6,7 +6,7 @@ public class AbilitiesLoader : MonoBehaviour
     private static List<string> _abilityNames;
     private static AbilitiesContainer _ac;
 
-    public static Dictionary<string, Ability> AbilitiesDictionary;
+    public static Dictionary<string, AbilityTemplate> AbilitiesDictionary;
     public TextAsset AbilitiesFile;
 
     private void Awake()
@@ -15,7 +15,7 @@ public class AbilitiesLoader : MonoBehaviour
         PopulateAbilitiesDictionary();
     }
 
-    public Ability GetAbilityByName(string abilityName)
+    public AbilityTemplate GetAbilityByName(string abilityName)
     {
         if (_ac == null)
         {
@@ -40,9 +40,9 @@ public class AbilitiesLoader : MonoBehaviour
         return _abilityNames != null ? new List<string>(_abilityNames) : null;
     }
 
-    public static Dictionary<string, Ability> GetAllAbilities()
+    public static Dictionary<string, AbilityTemplate> GetAllAbilities()
     {
-        return new Dictionary<string, Ability>(AbilitiesDictionary);
+        return new Dictionary<string, AbilityTemplate>(AbilitiesDictionary);
     }
 
     private void LoadAbilitiesFromFile()
@@ -59,7 +59,7 @@ public class AbilitiesLoader : MonoBehaviour
 
     private static void PopulateAbilitiesDictionary()
     {
-        AbilitiesDictionary = new Dictionary<string, Ability>();
+        AbilitiesDictionary = new Dictionary<string, AbilityTemplate>();
 
         foreach (var ability in _ac.AbilitiesList)
         {

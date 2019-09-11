@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class AbilityStore : MonoBehaviour,ISubscriber
 {
-    private static Dictionary<string, Ability> _allAbilities;
-    private static Dictionary<DamageType, List<Ability>> _abilitiesByDamageType;
-    private static Dictionary<string, List<Ability>> _abilitiesByBackground;
-    private static Dictionary<string, List<Ability>> _abilitiesByBodyPart;
+    private static Dictionary<string, AbilityTemplate> _allAbilities;
+    private static Dictionary<DamageType, List<AbilityTemplate>> _abilitiesByDamageType;
+    private static Dictionary<string, List<AbilityTemplate>> _abilitiesByBackground;
+    private static Dictionary<string, List<AbilityTemplate>> _abilitiesByBodyPart;
 
     private void Start()
     {
@@ -28,7 +28,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     private static void PopulateAbilitiesByDamageType()
     {
-        _abilitiesByDamageType = new Dictionary<DamageType, List<Ability>>();
+        _abilitiesByDamageType = new Dictionary<DamageType, List<AbilityTemplate>>();
 
         var damageTypes = Enum.GetValues(typeof(DamageType));
 
@@ -41,7 +41,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
                 continue;
             }
 
-            _abilitiesByDamageType.Add(damageType, new List<Ability>());
+            _abilitiesByDamageType.Add(damageType, new List<AbilityTemplate>());
 
             foreach (var ability in _allAbilities.Values.Where(ability =>
                 ability.RequiresProperty.Trim().Equals(damageType.ToString(), StringComparison.OrdinalIgnoreCase)))
@@ -53,7 +53,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     private static void PopulateAbilitiesByBackground()
     {
-        _abilitiesByBackground = new Dictionary<string, List<Ability>>();
+        _abilitiesByBackground = new Dictionary<string, List<AbilityTemplate>>();
 
         var backgrounds = CharacterBackgroundLoader.GetCharacterBackgroundTypes();
 
@@ -64,7 +64,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
                 continue;
             }
 
-            _abilitiesByBackground.Add(background, new List<Ability>());
+            _abilitiesByBackground.Add(background, new List<AbilityTemplate>());
             
             foreach (var ability in _allAbilities.Values.Where(ability =>
                 ability.RequiresBackground.Trim().Equals(background, StringComparison.OrdinalIgnoreCase)))
@@ -77,7 +77,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     private static void PopulateAbilitiesByBodyPart()
     {
-        _abilitiesByBodyPart = new Dictionary<string, List<Ability>>();
+        _abilitiesByBodyPart = new Dictionary<string, List<AbilityTemplate>>();
 
         var bodyParts = BodyPartLoader.BodyPartNames;
 
@@ -88,7 +88,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
                 continue;
             }
 
-            _abilitiesByBodyPart.Add(part, new List<Ability>());
+            _abilitiesByBodyPart.Add(part, new List<AbilityTemplate>());
 
             foreach (var ability in _allAbilities.Values.Where(ability =>
                 ability.RequiresBodyPart.Trim().Equals(part, StringComparison.OrdinalIgnoreCase)))
@@ -98,22 +98,22 @@ public class AbilityStore : MonoBehaviour,ISubscriber
         }
     }
 
-    public static List<Ability> GetAbilitiesByBackground(CharacterBackground background)
+    public static List<AbilityTemplate> GetAbilitiesByBackground(CharacterBackground background)
     {
-        return _abilitiesByBackground[background.Name];
+        return new List<AbilityTemplate>(_abilitiesByBackground[background.Name]);
     }
 
-    public static List<Ability> GetAbilitiesByDamageType(DamageType dt)
+    public static List<AbilityTemplate> GetAbilitiesByDamageType(DamageType dt)
     {
         return _abilitiesByDamageType[dt];
     }
 
-    public static Ability GetAbilityByName(string name)
+    public static AbilityTemplate GetAbilityByName(string name)
     {
         return _allAbilities[name.ToLower()];
     }
 
-    public static List<Ability> GetAbilitiesByBodyPart(string partName)
+    public static List<AbilityTemplate> GetAbilitiesByBodyPart(string partName)
     {
         if (_abilitiesByBodyPart == null)
         {
@@ -123,7 +123,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
         return _abilitiesByBodyPart.ContainsKey(partName) ? _abilitiesByBodyPart[partName] : null;
     }
 
-    public static Dictionary<DamageType, List<Ability>> GetAllDamageTypeAbilities()
+    public static Dictionary<DamageType, List<AbilityTemplate>> GetAllDamageTypeAbilities()
     {
         return _abilitiesByDamageType;
     }

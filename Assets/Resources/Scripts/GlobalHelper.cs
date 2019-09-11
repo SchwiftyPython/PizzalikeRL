@@ -14,6 +14,7 @@ public class GlobalHelper : MonoBehaviour
     public const string NewActiveWindowEventName = "NewActiveWindow";
     public const string InteractEventName = "Interact";
     public const string InspectEntityEventName = "InspectEntity";
+    public const string LoadAbilityBarEventName = "LoadAbilityBar";
 
     private static readonly Dictionary<GoalDirection, Vector2> DirectionVectorDictionary = new Dictionary<GoalDirection, Vector2>
     {

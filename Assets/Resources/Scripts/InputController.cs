@@ -7,8 +7,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class InputController : MonoBehaviour
+public class InputController : MonoBehaviour, ISubscriber
 {
+    private Dictionary<KeyCode, GameObject> _abilityMap;
+
     private string _areaMapSceneName;
     private string _worldMapSceneName;
 
@@ -52,6 +54,8 @@ public class InputController : MonoBehaviour
         }
         _canvasGraphicRaycaster = Canvas.GetComponent<GraphicRaycaster>();
         _canvasEventSystem = Canvas.GetComponent<EventSystem>();
+
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.LoadAbilityBarEventName, this);
     }
 
     private void Update()
@@ -321,6 +325,27 @@ public class InputController : MonoBehaviour
         }
     }
 
+    public void LoadStartingAbilitiesIntoAbilityBar()
+    {
+        var playerAbilities = GameManager.Instance.Player.Abilities;
+
+        if (playerAbilities.Count < 1)
+        {
+            return;
+        }
+
+        var mappingIndex = 0;
+
+        foreach (var ability in playerAbilities.Values)
+        {
+            var mapping = _abilityMap.ElementAt(mappingIndex).Key;
+
+            AbilityManager.AssignAbilityToButton(ability, _abilityMap[mapping]);
+
+            mappingIndex++;
+        }
+    }
+
     private bool IsUiClicked()
     {
         if (Canvas == null)
@@ -337,6 +362,21 @@ public class InputController : MonoBehaviour
         _canvasGraphicRaycaster.Raycast(pointerEventData, results);
 
         return results.Any();
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals(GlobalHelper.LoadAbilityBarEventName))
+        {
+            _abilityMap = (Dictionary<KeyCode, GameObject>) parameter;
+
+            if (_abilityMap == null)
+            {
+                return;
+            }
+
+            LoadStartingAbilitiesIntoAbilityBar();
+        }
     }
 }
 
