@@ -254,6 +254,8 @@
     <Compile Include="Assets\Resources\Scripts\DebugHelper.cs" />
     <Compile Include="Assets\Resources\Scripts\Dice.cs" />
     <Compile Include="Assets\Resources\Scripts\DiceRoller.cs" />
+    <Compile Include="Assets\Resources\Scripts\Effects\Effect.cs" />
+    <Compile Include="Assets\Resources\Scripts\Effects\Healing.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AIEvent.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
