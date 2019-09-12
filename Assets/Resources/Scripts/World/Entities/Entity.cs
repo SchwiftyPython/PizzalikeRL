@@ -120,6 +120,8 @@ public class Entity : ISubscriber
     public int CurrentHp { get; set; }
     public int Speed { get; set; }
     public int Defense { get; set; }
+
+    private List<Effect> _currentEffects;
     
     [Serializable]
     public class BodyDictionary : SerializableDictionary<Guid, BodyPart> { }
@@ -1059,7 +1061,7 @@ public class Entity : ISubscriber
             eventMediator = EventMediator.Instance;
         }
 
-        if (eventName.Equals("UnderAttack"))
+        if (eventName.Equals(GlobalHelper.UnderAttackEventName))
         {
             if (IsPlayer() || !(broadcaster is Entity victim) || victim.CurrentArea != CurrentArea)
             {
@@ -1088,6 +1090,17 @@ public class Entity : ISubscriber
             {
                 controller.GetAngryAt(victim);
             }
+        }
+        else if (eventName.Equals(GlobalHelper.EffectDoneEventName))
+        {
+            var effect = (Effect)broadcaster;
+
+            if (effect == null || !_currentEffects.Contains(effect))
+            {
+                return;
+            }
+
+            _currentEffects.Remove(effect);
         }
     }
 
@@ -1402,7 +1415,8 @@ public class Entity : ISubscriber
     {
         var baseEvents = new List<string>
         {
-            "UnderAttack"
+            GlobalHelper.UnderAttackEventName,
+            GlobalHelper.EffectDoneEventName
         };
 
         eventMediator = EventMediator.Instance;
@@ -1426,5 +1440,26 @@ public class Entity : ISubscriber
     public void PositionRevealed()
     {
         SetSpritePosition(_currentPosition);
+    }
+
+    public void Heal(int amount)
+    {
+        CurrentHp += amount;
+
+        if (CurrentHp > MaxHp)
+        {
+            CurrentHp = MaxHp;
+        }
+    }
+
+    public void ApplyEffect(string effectName, int duration, int amount)
+    {
+        switch (effectName)
+        {
+            case "heal":
+                var healEffect = new Healing(duration, amount, this);
+                _currentEffects.Add(healEffect);
+                break;
+        }
     }
 }

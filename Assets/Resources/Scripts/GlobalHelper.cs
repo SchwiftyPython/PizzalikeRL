@@ -8,6 +8,8 @@ public class GlobalHelper : MonoBehaviour
     public const string DoubleSpace = "\n\n";
     public const string SingleSpace = "\n";
 
+    #region EventNames
+
     public const string ToppingDroppedEventName = "ToppingDropped";
     public const string ToppingNotDroppedEventName = "ToppingNotDropped";
     public const string DeliveredEventName = "Delivered";
@@ -15,6 +17,11 @@ public class GlobalHelper : MonoBehaviour
     public const string InteractEventName = "Interact";
     public const string InspectEntityEventName = "InspectEntity";
     public const string LoadAbilityBarEventName = "LoadAbilityBar";
+    public const string EndTurnEventName = "EndTurn";
+    public const string UnderAttackEventName = "UnderAttack";
+    public const string EffectDoneEventName = "EffectDone";
+
+    #endregion EventNames
 
     private static readonly Dictionary<GoalDirection, Vector2> DirectionVectorDictionary = new Dictionary<GoalDirection, Vector2>
     {

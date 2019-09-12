@@ -1,17 +1,33 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
-public class Healing : Effect
+public class Healing : Effect, ISubscriber
 {
-    private int _amountToHealPerTurn;
+    private readonly int _amountToHealPerTurn;
 
-    public Healing(int duration, int amount)
+    public Healing(int duration, int amount, Entity entity)
     {
-        base._duration = duration;
-        base._name = "healing";
+        this.duration = duration;
+        name = "healing";
+        this.entity = entity;
         _amountToHealPerTurn = amount;
+
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName == GlobalHelper.EndTurnEventName)
+        {
+            if (duration > 0)
+            {
+                entity.Heal(_amountToHealPerTurn);
+                duration--;
+            }
+            else
+            {
+                EventMediator.Instance.Broadcast(GlobalHelper.EffectDoneEventName, this);
+            }
+        }
     }
 }

@@ -6,29 +6,31 @@ using UnityEngine;
 [Serializable]
 public class Effect
 {
-    protected string _name;
+    protected string name;
 
-    protected Guid _id;
+    protected Guid id;
 
-    protected int _duration;
+    protected int duration;
+
+    protected Entity entity;
 
     public string Name
     {
         get
         {
-            if (_name != null && !_name.Equals(string.Empty))
+            if (name != null && !name.Equals(string.Empty))
             {
-                return _name;
+                return name;
             }
 
             var fullName = GetType().FullName;
 
             if (fullName != null)
             {
-                _name = fullName.Substring(fullName.LastIndexOf('.') + 1);
+                name = fullName.Substring(fullName.LastIndexOf('.') + 1);
             }
 
-            return _name;
+            return name;
         }
     }
 }
