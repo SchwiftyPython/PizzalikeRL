@@ -22,7 +22,7 @@ public class Ability
     
     public int Cooldown;
     
-    public AbilityTarget Target; 
+    public AbilityTarget TargetType; 
     
     public string Effect; //todo make enum
     
@@ -32,7 +32,11 @@ public class Ability
 
     public int RemainingCooldownTurns;
 
-    public Ability(AbilityTemplate template)
+    public Entity Owner;
+
+    public object Target;
+
+    public Ability(AbilityTemplate template, Entity owner)
     {
         Name = template.Name;
         Attribute = template.Attribute;
@@ -46,14 +50,25 @@ public class Ability
         Cooldown = template.Cooldown;
         Effect = template.Effect;
         StartingAbility = template.StartingAbility;
-
-        Target = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
-
         RemainingCooldownTurns = 0;
+        Owner = owner;
+
+        TargetType = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
     }
 
     public void Use()
     {
+        switch (TargetType)
+        {
+            case AbilityTarget.Self:
+                Target = Owner;
 
+                if (Effect != null || Effect != string.Empty)
+                {
+
+                }
+
+                break;
+        }
     }
 }
