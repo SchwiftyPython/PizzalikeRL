@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Xml.Serialization;
 
 public class Ability
 {
@@ -51,5 +50,10 @@ public class Ability
         Target = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
 
         RemainingCooldownTurns = 0;
+    }
+
+    public void Use()
+    {
+
     }
 }
