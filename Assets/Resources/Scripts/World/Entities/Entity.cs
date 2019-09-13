@@ -1234,26 +1234,55 @@ public class Entity : ISubscriber
         return roll >= target.Defense;
     }
 
+    private List<Weapon> GetEquippedMeleeWeapons()
+    {
+        var meleeSlots = new List<EquipmentSlot>
+        {
+            EquipmentSlot.LeftHandOne,
+            EquipmentSlot.LeftHandTwo,
+            EquipmentSlot.RightHandOne,
+            EquipmentSlot.RightHandTwo
+        };
+
+        var meleeWeapons = new List<Weapon>();
+
+        foreach (var slot in meleeSlots)
+        {
+            if (Equipped[slot] != null)
+            {
+                meleeWeapons.Add((Weapon) Equipped[slot]);
+            }
+        }
+
+        return meleeWeapons;
+    }
+
     private void ApplyMeleeDamage(Entity target)
     {
         var unarmedDamageDice = new Dice(1, 4);
 
-        //This will work as long as we only allow one melee and one ranged weapon to be equipped
-        Item first = null;
-        foreach (Item e in Equipped.Values)
+        var equippedMeleeWeapons = GetEquippedMeleeWeapons();
+
+        var damageDice = new List<Dice>();
+        if (equippedMeleeWeapons != null && equippedMeleeWeapons.Count > 0)
         {
-            if (e.GetType() == typeof(Weapon) && ((Weapon) e).Range < 2)
+            foreach (var weapon in equippedMeleeWeapons)
             {
-                first = e;
-                break;
+                damageDice.Add(weapon.ItemDice);
             }
         }
+        else
+        {
+            damageDice.Add(unarmedDamageDice);
+        }
 
-        var equippedMeleeWeapon = (Weapon)first;
+        var damageRoll = 0;
 
-        var damageDice = equippedMeleeWeapon != null ? equippedMeleeWeapon.ItemDice : unarmedDamageDice;
-
-        var damageRoll = DiceRoller.Instance.RollDice(damageDice);
+        foreach (var dice in damageDice)
+        {
+            var roll = DiceRoller.Instance.RollDice(dice);
+            damageRoll += roll;
+        }
 
         var hitBodyPart = target.BodyPartHit();
 
