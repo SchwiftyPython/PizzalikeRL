@@ -128,6 +128,16 @@ public class AbilityStore : MonoBehaviour,ISubscriber
         return _abilitiesByDamageType;
     }
 
+    public static Ability CreateAbility(AbilityTemplate template, Entity owner)
+    {
+        if (template.Effect.Contains("heal"))
+        {
+            return new Heal(template, owner);
+        }
+
+        return null;
+    }
+
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         throw new System.NotImplementedException();

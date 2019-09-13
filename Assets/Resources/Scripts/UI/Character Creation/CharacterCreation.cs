@@ -687,9 +687,12 @@ public class CharacterCreation : MonoBehaviour
     {
         var abilities = new Entity.AbilityDictionary();
 
-        var freeAbility = new Ability(_selectedFreeAbility);
+        var freeAbility = AbilityStore.CreateAbility(_selectedFreeAbility, _player);
 
-        abilities.Add(freeAbility.Name, freeAbility);
+        if (freeAbility != null)
+        {
+            abilities.Add(freeAbility.Name, freeAbility);
+        }
 
         var startingBodyPartAbilities =
             (from partAbilities in _playerTemplate.Parts.Select(AbilityStore.GetAbilitiesByBodyPart)
@@ -705,7 +708,7 @@ public class CharacterCreation : MonoBehaviour
                 continue;
             }
 
-            abilities.Add(ability.Name, new Ability(ability));
+            abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, _player));
         }
 
         var startingBackgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
@@ -717,7 +720,7 @@ public class CharacterCreation : MonoBehaviour
                 continue;
             }
 
-            abilities.Add(ability.Name, new Ability(ability));
+            abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, _player));
         }
 
         return abilities;

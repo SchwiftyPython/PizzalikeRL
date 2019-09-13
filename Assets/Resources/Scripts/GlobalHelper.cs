@@ -84,4 +84,14 @@ public class GlobalHelper : MonoBehaviour
     {
         return DirectionVectorDictionary;
     }
+
+    public static Dice GetDiceFromString(string dice)
+    {
+        var splitDice = dice.Split('d');
+
+        var numDice = int.Parse(splitDice[0]);
+        var numSides = int.Parse(splitDice[1]);
+
+        return new Dice(numDice, numSides);
+    }
 }

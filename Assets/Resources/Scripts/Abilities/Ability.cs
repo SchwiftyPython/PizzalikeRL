@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class Ability
+public class Ability : ISubscriber
 {
     public string Name;
     
@@ -22,7 +22,7 @@ public class Ability
     
     public int Cooldown;
     
-    public AbilityTarget Target; 
+    public AbilityTarget TargetType; 
     
     public string Effect; //todo make enum
     
@@ -32,7 +32,9 @@ public class Ability
 
     public int RemainingCooldownTurns;
 
-    public Ability(AbilityTemplate template)
+    public Entity Owner;
+
+    public Ability(AbilityTemplate template, Entity owner)
     {
         Name = template.Name;
         Attribute = template.Attribute;
@@ -46,14 +48,33 @@ public class Ability
         Cooldown = template.Cooldown;
         Effect = template.Effect;
         StartingAbility = template.StartingAbility;
-
-        Target = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
-
         RemainingCooldownTurns = 0;
+        Owner = owner;
+
+        TargetType = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
+
+        if (Duration > 0)
+        {
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
+        }
     }
 
-    public void Use()
+    public virtual void Use()
     {
+    }
 
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName == GlobalHelper.EndTurnEventName)
+        {
+            if (RemainingCooldownTurns > 0)
+            {
+                RemainingCooldownTurns--;
+            }
+            else
+            {
+                EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
+            }
+        }
     }
 }
