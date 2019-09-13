@@ -210,6 +210,8 @@ public class Entity : ISubscriber
         }
 
         SubscribeToBaseEvents();
+
+        _currentEffects = new List<Effect>();
     }
     
     public Entity(Entity parent, Faction faction = null, bool isPlayer = false)
@@ -292,6 +294,8 @@ public class Entity : ISubscriber
         }
 
         SubscribeToBaseEvents();
+
+        _currentEffects = new List<Effect>();
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
@@ -370,6 +374,8 @@ public class Entity : ISubscriber
         }
 
         SubscribeToBaseEvents();
+
+        _currentEffects = new List<Effect>();
     }
 
     public void SetStats(int strength, int agility, int constitution, int intelligence)
@@ -1458,7 +1464,13 @@ public class Entity : ISubscriber
         {
             case "heal":
                 var healEffect = new Healing(duration, amount, this);
-                _currentEffects.Add(healEffect);
+
+                if (duration < 0)
+                {
+                    return;
+                }
+
+                _currentEffects.Add(healEffect); //todo event
                 break;
         }
     }

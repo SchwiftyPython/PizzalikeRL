@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class UseAbilityButton : MonoBehaviour
+public class UseAbilityButton : MonoBehaviour, ISubscriber
 {
     //todo cooldown mask
     private readonly Color _unassignedColor = new Color(1, 1, 1, 0);
@@ -41,6 +41,8 @@ public class UseAbilityButton : MonoBehaviour
         _buttonIcon.color = _assignedColor;
         SetIcon(icon);
         _remainingCooldownTurns = ability.RemainingCooldownTurns;
+
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
     }
 
     public void RemoveAbility()
@@ -49,6 +51,8 @@ public class UseAbilityButton : MonoBehaviour
         _button.interactable = false;
         _buttonIcon.color = _unassignedColor;
         SetIcon(DefaultSprite);
+
+        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
     }
 
     public void SetIcon(Sprite newIcon)
@@ -58,6 +62,24 @@ public class UseAbilityButton : MonoBehaviour
 
     public void OnClick()
     {
+        _remainingCooldownTurns = _ability.Cooldown;
+        _ability.Use();
 
+        //todo disable during cooldown
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName == GlobalHelper.EndTurnEventName)
+        {
+            if (_remainingCooldownTurns > 0)
+            {
+                _remainingCooldownTurns--;
+            }
+            else
+            {
+                //todo enable ability
+            }
+        }
     }
 }

@@ -171,6 +171,8 @@ public class GameManager : MonoBehaviour, ISubscriber
                 }
                 if (InputController.Instance.ActionTaken)
                 {
+                    EventMediator.Instance.Broadcast(GlobalHelper.EndTurnEventName, this);
+
                     CurrentState = GameState.EndTurn;
                     TurnNumber++;
 

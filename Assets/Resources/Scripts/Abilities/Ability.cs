@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class Ability
+public class Ability : ISubscriber
 {
     public string Name;
     
@@ -34,8 +34,6 @@ public class Ability
 
     public Entity Owner;
 
-    public object Target;
-
     public Ability(AbilityTemplate template, Entity owner)
     {
         Name = template.Name;
@@ -54,21 +52,29 @@ public class Ability
         Owner = owner;
 
         TargetType = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
+
+        if (Duration > 0)
+        {
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
+        }
     }
 
-    public void Use()
+    public virtual void Use()
     {
-        switch (TargetType)
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName == GlobalHelper.EndTurnEventName)
         {
-            case AbilityTarget.Self:
-                Target = Owner;
-
-                if (Effect != null || Effect != string.Empty)
-                {
-
-                }
-
-                break;
+            if (RemainingCooldownTurns > 0)
+            {
+                RemainingCooldownTurns--;
+            }
+            else
+            {
+                EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
+            }
         }
     }
 }

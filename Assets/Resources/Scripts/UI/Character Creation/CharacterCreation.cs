@@ -689,7 +689,10 @@ public class CharacterCreation : MonoBehaviour
 
         var freeAbility = AbilityStore.CreateAbility(_selectedFreeAbility, _player);
 
-        abilities.Add(freeAbility.Name, freeAbility);
+        if (freeAbility != null)
+        {
+            abilities.Add(freeAbility.Name, freeAbility);
+        }
 
         var startingBodyPartAbilities =
             (from partAbilities in _playerTemplate.Parts.Select(AbilityStore.GetAbilitiesByBodyPart)
