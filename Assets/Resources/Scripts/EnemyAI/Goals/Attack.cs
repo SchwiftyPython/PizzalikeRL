@@ -78,7 +78,7 @@ public class Attack : Goal
 
             remainingMoves.Remove(selectedMove.Key);
         }
-
+        
         //Debug.Log(Self.Fluff != null ? Self.Fluff.Name : Self.EntityType + " can't attack!");
         FailToParent();
     }
@@ -86,7 +86,7 @@ public class Attack : Goal
     private bool TryRangedWeapon()
     {
         //todo apply los via raycast. Probably in Entity. Make RangedWeaponCanHit method. Include range check
-        if (!Self.HasRangedWeaponEquipped() || !Self.EquippedWeaponInRangeOfTarget(_target))
+        if (!Self.HasRangedWeaponsEquipped() || !Self.EquippedWeaponsInRangeOfTarget(_target))
         {
             return false;
         }

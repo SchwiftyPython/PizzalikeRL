@@ -1165,16 +1165,34 @@ public class Entity : ISubscriber
         }
     }
 
-    public bool HasRangedWeaponEquipped()
+    public bool HasRangedWeaponsEquipped()
     {
-        var equippedRangedWeapon = GetEquippedRangedWeapon();
-        return equippedRangedWeapon != null;
+        var equippedRangedWeapons = GetEquippedRangedWeapons();
+        return equippedRangedWeapons != null && equippedRangedWeapons.Count > 0;
     }
 
-    public bool EquippedWeaponInRangeOfTarget(Entity target)
+    public bool EquippedWeaponsInRangeOfTarget(Entity target)
     {
-        var equippedRangedWeapon = GetEquippedRangedWeapon();
-        return equippedRangedWeapon != null && CalculateDistanceToTarget(target) <= equippedRangedWeapon.Range;
+        var equippedRangedWeapons = GetEquippedRangedWeapons();
+
+        if (equippedRangedWeapons == null || equippedRangedWeapons.Count < 1)
+        {
+            //todo log this as an error.
+            //todo This method would have been called after verifying there were ranged weapons equipped.
+            return false;
+        }
+
+        var inRangeWeapons = new List<Weapon>();
+
+        foreach (var weapon in equippedRangedWeapons)
+        {
+            if (weapon.Range >= CalculateDistanceToTarget(target))
+            {
+                inRangeWeapons.Add(weapon);
+            }
+        }
+
+        return inRangeWeapons.Count > 0;
     }
 
     public Attitude GetAttitudeTowards(Entity target)
@@ -1234,26 +1252,55 @@ public class Entity : ISubscriber
         return roll >= target.Defense;
     }
 
+    private List<Weapon> GetEquippedMeleeWeapons()
+    {
+        var meleeSlots = new List<EquipmentSlot>
+        {
+            EquipmentSlot.LeftHandOne,
+            EquipmentSlot.LeftHandTwo,
+            EquipmentSlot.RightHandOne,
+            EquipmentSlot.RightHandTwo
+        };
+
+        var meleeWeapons = new List<Weapon>();
+
+        foreach (var slot in meleeSlots)
+        {
+            if (Equipped[slot] != null)
+            {
+                meleeWeapons.Add((Weapon) Equipped[slot]);
+            }
+        }
+
+        return meleeWeapons;
+    }
+
     private void ApplyMeleeDamage(Entity target)
     {
         var unarmedDamageDice = new Dice(1, 4);
 
-        //This will work as long as we only allow one melee and one ranged weapon to be equipped
-        Item first = null;
-        foreach (Item e in Equipped.Values)
+        var equippedMeleeWeapons = GetEquippedMeleeWeapons();
+
+        var damageDice = new List<Dice>();
+        if (equippedMeleeWeapons != null && equippedMeleeWeapons.Count > 0)
         {
-            if (e.GetType() == typeof(Weapon) && ((Weapon) e).Range < 2)
+            foreach (var weapon in equippedMeleeWeapons)
             {
-                first = e;
-                break;
+                damageDice.Add(weapon.ItemDice);
             }
         }
+        else
+        {
+            damageDice.Add(unarmedDamageDice);
+        }
 
-        var equippedMeleeWeapon = (Weapon)first;
+        var damageRoll = 0;
 
-        var damageDice = equippedMeleeWeapon != null ? equippedMeleeWeapon.ItemDice : unarmedDamageDice;
-
-        var damageRoll = DiceRoller.Instance.RollDice(damageDice);
+        foreach (var dice in damageDice)
+        {
+            var roll = DiceRoller.Instance.RollDice(dice);
+            damageRoll += roll;
+        }
 
         var hitBodyPart = target.BodyPartHit();
 
@@ -1311,22 +1358,38 @@ public class Entity : ISubscriber
 
     private void ApplyRangedDamage(Entity target)
     {
-        //This should work as long as we only allow one melee and one ranged weapon to be equipped
-        var equippedRangedWeapon = GetEquippedRangedWeapon();
+        var equippedRangedWeapons = GetEquippedRangedWeapons();
 
-        ApplyDamage(target, equippedRangedWeapon?.ItemDice);
+        var damageDice = new List<Dice>();
+
+        foreach (var weapon in equippedRangedWeapons)
+        {
+            if (weapon.Range >= CalculateDistanceToTarget(target))
+            {
+                damageDice.Add(weapon.ItemDice);
+            }
+        }
+
+        var damageRoll = 0;
+
+        foreach (var dice in damageDice)
+        {
+            var roll = DiceRoller.Instance.RollDice(dice);
+            damageRoll += roll;
+        }
+
+        ApplyDamage(target, damageRoll);
     }
 
-    private void ApplyDamage(Entity target, Dice damageDice)
+    private void ApplyDamage(Entity target, int damage)
     {
-        var damageRoll = DiceRoller.Instance.RollDice(damageDice);
-
         var hitBodyPart = target.BodyPartHit();
 
-        target.CurrentHp -= damageRoll;
-        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
+        target.CurrentHp -= damage;
+        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damage < 1 ? 0 : hitBodyPart.CurrentHp - damage;
 
-        var message = EntityType + " hits " + target.EntityType + "'s " + hitBodyPart.Name + " for " + damageRoll + " hit points.";
+        //todo message event
+        var message = EntityType + " hits " + target.EntityType + "'s " + hitBodyPart.Name + " for " + damage + " hit points.";
         GameManager.Instance.Messages.Add(message);
     }
 
@@ -1335,13 +1398,25 @@ public class Entity : ISubscriber
         target.GetSprite().GetComponent<EnemyController>()?.ReactToAttacker(this);
     }
 
-    private Weapon GetEquippedRangedWeapon()
+    private List<Weapon> GetEquippedRangedWeapons()
     {
-        //This should work as long as we only allow one melee and one ranged weapon to be equipped
-        return (Weapon)(from e in Equipped.Values
-            where e != null && e.GetType() == typeof(Weapon)
-                  && ((Weapon)e).IsRanged
-            select e).FirstOrDefault();
+        var equipped = new List<Weapon>();
+
+        var missileWeaponOne = Equipped[EquipmentSlot.MissileWeaponOne];
+
+        if (missileWeaponOne != null)
+        {
+            equipped.Add((Weapon) missileWeaponOne);
+        }
+
+        var missileWeaponTwo = Equipped[EquipmentSlot.MissileWeaponTwo];
+
+        if (missileWeaponTwo != null)
+        {
+            equipped.Add((Weapon)missileWeaponTwo);
+        }
+
+        return equipped;
     }
     
     //<Summary>

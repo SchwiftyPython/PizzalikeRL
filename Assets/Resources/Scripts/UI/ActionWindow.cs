@@ -51,8 +51,8 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 
         if (presentEntity != null)
         {
-            if (_player.HasRangedWeaponEquipped() &&
-                _player.EquippedWeaponInRangeOfTarget(presentEntity))
+            if (_player.HasRangedWeaponsEquipped() &&
+                _player.EquippedWeaponsInRangeOfTarget(presentEntity))
             {
                 RangedAttackButton.GetComponent<Button>().interactable = true;
             }
