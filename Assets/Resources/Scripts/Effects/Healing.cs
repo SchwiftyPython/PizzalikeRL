@@ -17,11 +17,13 @@ public class Healing : Effect, ISubscriber
         {
             entity.Heal(_amountToHealPerTurn); //todo event
 
-            Debug.Log($"{entity.EntityType} healed for {_amountToHealPerTurn}");
+            //Debug.Log($"{entity.EntityType} healed for {_amountToHealPerTurn}");
 
             //todo message event
             return;
         }
+
+        remainingTurns = duration;
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
     }
@@ -30,10 +32,10 @@ public class Healing : Effect, ISubscriber
     {
         if (eventName == GlobalHelper.EndTurnEventName)
         {
-            if (duration > 0)
+            if (remainingTurns > 0)
             {
                 entity.Heal(_amountToHealPerTurn); //todo event
-                duration--;
+                remainingTurns--;
 
                 Debug.Log($"{entity.EntityType} healed for {_amountToHealPerTurn}");
 

@@ -125,7 +125,7 @@
 		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>
         <Properties>
-		    <Property> bludgeon </Property>
+		    <Property>bludgeon</Property>
         </Properties>		
 	</ItemTemplate>
 	
@@ -135,7 +135,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>
         <Properties>
-		    <Property> bludgeon </Property>
+		    <Property>bludgeon</Property>
         </Properties>		
 	</ItemTemplate>
 	
@@ -270,7 +270,8 @@
 		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>	
-<Properties>
+        <Properties>
+            <Property>bludgeon</Property>
         </Properties>			
 	</ItemTemplate>	
 	

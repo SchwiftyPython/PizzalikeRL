@@ -248,6 +248,7 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityStore.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTarget.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTemplate.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Bash.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Heal.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\ButtonClick.cs" />
@@ -255,6 +256,7 @@
     <Compile Include="Assets\Resources\Scripts\DebugHelper.cs" />
     <Compile Include="Assets\Resources\Scripts\Dice.cs" />
     <Compile Include="Assets\Resources\Scripts\DiceRoller.cs" />
+    <Compile Include="Assets\Resources\Scripts\Effects\Daze.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Effect.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Healing.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AIEvent.cs" />
@@ -342,6 +344,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderJournalWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderTab.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\SaveGameFileButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\SelectDirectionForAbilityPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\SettlementInfoWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\SystemWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\TakeAllButton.cs" />

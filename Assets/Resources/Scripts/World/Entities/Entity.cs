@@ -1266,6 +1266,11 @@ public class Entity : ISubscriber
 
         foreach (var slot in meleeSlots)
         {
+            if (!Equipped.ContainsKey(slot))
+            {
+                continue;
+            }
+
             if (Equipped[slot] != null)
             {
                 meleeWeapons.Add((Weapon) Equipped[slot]);
@@ -1381,7 +1386,7 @@ public class Entity : ISubscriber
         ApplyDamage(target, damageRoll);
     }
 
-    private void ApplyDamage(Entity target, int damage)
+    public void ApplyDamage(Entity target, int damage)
     {
         var hitBodyPart = target.BodyPartHit();
 
@@ -1546,6 +1551,16 @@ public class Entity : ISubscriber
                 }
 
                 _currentEffects.Add(healEffect); //todo event
+                break;
+            case "daze":
+                var dazeEffect = new Daze(duration, this);
+
+                if (duration < 0)
+                {
+                    return;
+                }
+
+                _currentEffects.Add(dazeEffect);
                 break;
         }
     }

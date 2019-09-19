@@ -13,5 +13,7 @@
         var amountToHeal = DiceRoller.Instance.RollDice(dice);
 
         Owner.ApplyEffect("heal", Duration, amountToHeal);
+
+        base.Use();
     }
 }

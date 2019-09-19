@@ -11,6 +11,8 @@ public class Effect
 
     protected Entity entity;
 
+    protected int remainingTurns;
+
     public string Name
     {
         get

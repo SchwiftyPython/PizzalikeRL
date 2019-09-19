@@ -633,17 +633,19 @@ public class CharacterCreation : MonoBehaviour
 
         foreach (var damageType in damageTypeAbilities)
         {
-            foreach (var ability in damageType.Value.ToArray().Where(ability => ability.StartingAbility))
+            var abilityList = new List<AbilityTemplate>(damageType.Value);
+
+            foreach (var ability in abilityList.ToArray().Where(ability => ability.StartingAbility))
             {
-                damageType.Value.Remove(ability);
+                abilityList.Remove(ability);
             }
 
-            if (damageType.Value.Count < 1)
+            if (abilityList.Count < 1)
             {
                 continue;
             }
 
-            PopulateAbilityCategory(damageType.Key.ToString(), damageType.Value);
+            PopulateAbilityCategory(damageType.Key.ToString(), abilityList);
         }
     }
 
@@ -723,7 +725,43 @@ public class CharacterCreation : MonoBehaviour
             abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, _player));
         }
 
+        var startingDamageTypeAbilities = AbilityStore.GetAllDamageTypeAbilities();
+
+        foreach (var damageType in startingDamageTypeAbilities.Keys)
+        {
+            foreach (var ability in startingDamageTypeAbilities[damageType])
+            {
+                if (abilities.ContainsKey(ability.Name) || !ability.StartingAbility)
+                {
+                    continue;
+                }
+
+                abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, _player));
+            }
+        }
+
         return abilities;
+    }
+
+    private IDictionary<Entity.EquipmentSlot, Item> GenerateStartingEquipment()
+    {
+        //todo need some kind of cap that varies depending on entity
+        //todo player starting out should be capped at on uncommon
+        //todo raise cap as necessary for others
+        //todo a "hero type" would have up to a legendary
+        //todo a named character read about in books requires a legendary item
+        //todo possibly base on background
+
+        var startingEquipment = new Dictionary<Entity.EquipmentSlot, Item>();
+
+        //todo we need a test with a bludgeon
+        //////// TESTING BLUDGEON //////////////////////////////////////////////
+
+        startingEquipment[Entity.EquipmentSlot.RightHandOne] = ItemStore.Instance.GetRandomWeaponByProperty("bludgeon");
+
+        //////// END TESTING BLUDGEON ////////////////////////////////////////
+
+        return startingEquipment;
     }
 
     private void DisplaySelectedAbilityDescription(string description)
@@ -795,6 +833,8 @@ public class CharacterCreation : MonoBehaviour
         _player.Fluff.BackgroundType = _selectedBackground;
         _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
         _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
+
+        _player.Equipped = GenerateStartingEquipment();
 
         _player.Abilities = BuildAbilityDictionary();
 
