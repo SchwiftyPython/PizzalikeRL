@@ -1538,7 +1538,7 @@ public class Entity : ISubscriber
         }
     }
 
-    public void ApplyEffect(string effectName, int duration, int amount)
+    public void ApplyEffect(string effectName, int duration, int amount, GoalDirection direction = GoalDirection.North)
     {
         switch (effectName)
         {
@@ -1561,6 +1561,17 @@ public class Entity : ISubscriber
                 }
 
                 _currentEffects.Add(dazeEffect);
+                break;
+            case "push":
+
+                if (amount < 1)
+                {
+                    var pushEffect = new Push(this, direction);
+                }
+                else
+                {
+                    var pushEffect = new Push(this, direction, amount);
+                }
                 break;
         }
     }

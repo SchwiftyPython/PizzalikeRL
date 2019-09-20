@@ -142,8 +142,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
         if (template.Name.Equals("knockback", StringComparison.OrdinalIgnoreCase))
         {
-            //todo
-            return null;
+            return new KnockBack(template, owner);
         }
 
         Debug.Log($"{template.Name} failed to create!");

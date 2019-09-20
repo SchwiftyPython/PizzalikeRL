@@ -79,7 +79,9 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
                 return;
             }
 
-            EventMediator.Instance.Broadcast(GlobalHelper.AbilityTileSelectedEventName, this, targetEntity);
+            var directionStruct = new PushDirectionStruct {target = targetEntity, pushDirection = chosenDirection};
+
+            EventMediator.Instance.Broadcast(GlobalHelper.AbilityTileSelectedEventName, this, directionStruct);
 
             Hide();
         }

@@ -250,6 +250,7 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Bash.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Heal.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\KnockBack.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\ButtonClick.cs" />
     <Compile Include="Assets\Resources\Scripts\DamageType.cs" />
@@ -259,6 +260,8 @@
     <Compile Include="Assets\Resources\Scripts\Effects\Daze.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Effect.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Healing.cs" />
+    <Compile Include="Assets\Resources\Scripts\Effects\Push.cs" />
+    <Compile Include="Assets\Resources\Scripts\Effects\PushDirectionStruct.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AIEvent.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\EnemyController.cs" />
