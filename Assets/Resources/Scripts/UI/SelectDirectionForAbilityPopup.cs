@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +18,8 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
     };
 
     private bool _listeningForInput;
+
+    private object _broadcaster;
 
     private void Start()
     {
@@ -78,8 +81,8 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
                 _listeningForInput = true;
                 return;
             }
-
-            var directionStruct = new PushDirectionStruct {target = targetEntity, pushDirection = chosenDirection};
+            
+            var directionStruct = new DirectionStruct { target = targetEntity, direction = chosenDirection };
 
             EventMediator.Instance.Broadcast(GlobalHelper.AbilityTileSelectedEventName, this, directionStruct);
 
@@ -113,6 +116,8 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         {
             return;
         }
+
+        _broadcaster = broadcaster;
 
         if (eventName == GlobalHelper.DirectionalAbilityEventName)
         {

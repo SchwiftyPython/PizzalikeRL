@@ -1,26 +1,28 @@
-﻿public class Bash : Ability
+﻿public class Stab : Ability
 {
-    public Bash(AbilityTemplate template, Entity owner) : base(template, owner)
+    public Stab(AbilityTemplate template, Entity owner) : base(template, owner)
     {
     }
 
     public override void Use()
     {
-       EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilityTileSelectedEventName, this);
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilityTileSelectedEventName, this);
 
-       EventMediator.Instance.Broadcast(GlobalHelper.DirectionalAbilityEventName, this);
+        EventMediator.Instance.Broadcast(GlobalHelper.DirectionalAbilityEventName, this);
 
-       base.Use();
+        base.Use();
     }
 
     public override void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         if (eventName == GlobalHelper.AbilityTileSelectedEventName)
         {
-            if (!(parameter is Entity target))
+            if (!(parameter is DirectionStruct directionStruct))
             {
                 return;
             }
+
+            var target = directionStruct.target;
 
             RemainingCooldownTurns = Cooldown;
 
@@ -29,8 +31,8 @@
             var damage = DiceRoller.Instance.RollDice(dice);
 
             Owner.ApplyDamage(target, damage);
-            
-            target.ApplyEffect("Daze", 2, 0);
+
+            target.ApplyEffect(Effect, 2, 2);
 
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilityTileSelectedEventName, this);
         }

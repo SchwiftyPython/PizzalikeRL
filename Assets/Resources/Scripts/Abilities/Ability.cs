@@ -18,8 +18,6 @@ public class Ability : ISubscriber
     
     public string Dice;
     
-    public int Duration;
-    
     public int Cooldown;
     
     public AbilityTarget TargetType; 
@@ -44,7 +42,6 @@ public class Ability : ISubscriber
         RequiresBodyPart = template.RequiresBodyPart;
         RequiresProperty = template.RequiresProperty;
         Dice = template.Dice;
-        Duration = template.Duration;
         Cooldown = template.Cooldown;
         Effect = template.Effect;
         StartingAbility = template.StartingAbility;

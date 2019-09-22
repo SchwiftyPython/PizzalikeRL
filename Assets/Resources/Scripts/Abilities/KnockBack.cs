@@ -17,7 +17,7 @@
     {
         if (eventName == GlobalHelper.AbilityTileSelectedEventName)
         {
-            if (!(parameter is PushDirectionStruct directionStruct))
+            if (!(parameter is DirectionStruct directionStruct))
             {
                 return;
             }
@@ -32,7 +32,7 @@
 
             Owner.ApplyDamage(target, damage);
 
-            target.ApplyEffect("push", Duration, 0, directionStruct.pushDirection);
+            target.ApplyEffect(Effect, -1, 0, directionStruct.direction);
 
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilityTileSelectedEventName, this);
         }

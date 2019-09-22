@@ -752,12 +752,12 @@ public class CharacterCreation : MonoBehaviour
         //todo a named character read about in books requires a legendary item
         //todo possibly base on background
 
-        var startingEquipment = new Dictionary<Entity.EquipmentSlot, Item>();
+        var startingEquipment = _player.Equipped;
 
-        //todo we need a test with a bludgeon
+        //todo we need a test with a pierce
         //////// TESTING BLUDGEON //////////////////////////////////////////////
 
-        startingEquipment[Entity.EquipmentSlot.RightHandOne] = ItemStore.Instance.GetRandomWeaponByProperty("bludgeon");
+        startingEquipment[Entity.EquipmentSlot.RightHandOne] = ItemStore.Instance.GetRandomWeaponByProperty("pierce");
 
         //////// END TESTING BLUDGEON ////////////////////////////////////////
 

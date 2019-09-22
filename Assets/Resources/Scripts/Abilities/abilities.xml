@@ -9,8 +9,7 @@
 	    <RequiresBackground></RequiresBackground>
 	    <Description>Give'm a whack! Chance of Dazing opponent.</Description>
 	    <RequiresProperty> bludgeon </RequiresProperty>	    
-		<Dice>1d4</Dice>
-		<Duration>-1</Duration>
+		<Dice>1d4</Dice>		
 	    <Cooldown> 3 </Cooldown>
 		<Target>direction</Target>
 		<Effect>daze</Effect>
@@ -25,8 +24,7 @@
 	    <RequiresBackground></RequiresBackground>
 	    <Description>Make room! Pushes back your opponent 1 tile.</Description>
 	    <RequiresProperty> bludgeon </RequiresProperty>		    
-		<Dice>1d4</Dice>
-		<Duration>-1</Duration>
+		<Dice>1d4</Dice>		
 	    <Cooldown> 3 </Cooldown>
 		<Target>direction</Target>
 		<Effect>push</Effect>
@@ -41,8 +39,7 @@
 	    <RequiresBackground></RequiresBackground>
 	    <Description>Poke'm! Chance of Bleeding.</Description>
 	    <RequiresProperty> pierce </RequiresProperty>	    
-		<Dice>1d4</Dice>
-		<Duration>-1</Duration>
+		<Dice>1d4</Dice>		
 	    <Cooldown> 3 </Cooldown>
 		<Target>direction</Target>
 		<Effect>bleed</Effect>
@@ -57,8 +54,7 @@
 	    <RequiresBackground>religious</RequiresBackground>
 	    <Description>Apply holy bandaids to your wounds. Heals 1d4 * Intelligence Modifier</Description>
 	    <RequiresProperty></RequiresProperty>	    
-		<Dice>1d4</Dice>
-		<Duration>-1</Duration>
+		<Dice>1d4</Dice>		
 	    <Cooldown> 7 </Cooldown>
 		<Target>self</Target>
 		<Effect>heal</Effect>
@@ -73,8 +69,7 @@
 	    <RequiresBackground></RequiresBackground>
 	    <Description>Shoot a web from your ass onto target tile. Chance to immobilize.</Description>
 	    <RequiresProperty></RequiresProperty>	    
-		<Dice></Dice>
-		<Duration>-1</Duration>
+		<Dice></Dice>		
 	    <Cooldown> 8 </Cooldown>
 		<Target>single tile</Target>
 		<Effect>immobilize</Effect>

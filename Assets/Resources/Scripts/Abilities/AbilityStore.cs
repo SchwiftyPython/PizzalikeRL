@@ -145,6 +145,11 @@ public class AbilityStore : MonoBehaviour,ISubscriber
             return new KnockBack(template, owner);
         }
 
+        if (template.Name.Equals("stab", StringComparison.OrdinalIgnoreCase))
+        {
+            return new Stab(template, owner);
+        }
+
         Debug.Log($"{template.Name} failed to create!");
         return null;
     }

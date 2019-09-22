@@ -3,13 +3,15 @@
 public class Daze : Effect, ISubscriber
 {
     private const int AttributePenalty = 5;
+    private const int DefaultDuration = 3;
 
     public Daze(int duration, Entity target)
     {
-        this.duration = duration;
+        this.duration = duration < 1 ? DefaultDuration : duration;
+        
         name = "daze";
         entity = target;
-        remainingTurns = duration;
+        remainingTurns = this.duration;
 
         entity.Agility -= AttributePenalty;
         entity.Intelligence -= AttributePenalty;

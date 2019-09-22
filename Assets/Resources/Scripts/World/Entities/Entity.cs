@@ -1398,6 +1398,11 @@ public class Entity : ISubscriber
         GameManager.Instance.Messages.Add(message);
     }
 
+    public void ApplyRecurringDamage(int damage)
+    {
+        CurrentHp -= damage;
+    }
+
     private void TargetReactToAttacker(Entity target)
     {
         target.GetSprite().GetComponent<EnemyController>()?.ReactToAttacker(this);
@@ -1563,7 +1568,6 @@ public class Entity : ISubscriber
                 _currentEffects.Add(dazeEffect);
                 break;
             case "push":
-
                 if (amount < 1)
                 {
                     var pushEffect = new Push(this, direction);
@@ -1572,6 +1576,16 @@ public class Entity : ISubscriber
                 {
                     var pushEffect = new Push(this, direction, amount);
                 }
+                break;
+            case "bleed":
+                var bleedEffect = new Bleed(duration, amount, this);
+
+                if (duration < 0)
+                {
+                    return;
+                }
+
+                _currentEffects.Add(bleedEffect);
                 break;
         }
     }
