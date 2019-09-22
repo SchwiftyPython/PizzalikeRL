@@ -1,27 +1,22 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class Healing : Effect, ISubscriber
+public class Bleed : Effect, ISubscriber
 {
-    private readonly int _amountToHealPerTurn;
+    private readonly int _damagePerTurn;
 
-    public Healing(int duration, int amount, Entity entity)
+    public Bleed(int duration, int amount, Entity target)
     {
         this.duration = duration;
-        name = "healing";
-        this.entity = entity;
-        _amountToHealPerTurn = amount;
-
-        if (duration < 0)
-        {
-            entity.Heal(_amountToHealPerTurn); //todo event
-
-            //todo message event
-            return;
-        }
-
+        name = "bleed";
+        entity = target;
         remainingTurns = duration;
+        _damagePerTurn = amount;
+
+        //todo message event target dazed
+        //todo check if player for different message
+        Debug.Log($"{entity.EntityType} is bleeding!");
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
     }
@@ -32,15 +27,15 @@ public class Healing : Effect, ISubscriber
         {
             if (remainingTurns > 0)
             {
-                entity.Heal(_amountToHealPerTurn); //todo event
+                entity.ApplyRecurringDamage(_damagePerTurn);
+
                 remainingTurns--;
-
-                Debug.Log($"{entity.EntityType} healed for {_amountToHealPerTurn}");
-
-                //todo message event
             }
             else
             {
+                //todo message event target dazed
+                Debug.Log($"{entity.EntityType} is no longer bleeding!");
+
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
 
                 EventMediator.Instance.Broadcast(GlobalHelper.EffectDoneEventName, this);

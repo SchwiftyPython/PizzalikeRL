@@ -21,5 +21,5 @@ public class ItemTemplate
 
     [XmlArray("Properties")]
     [XmlArrayItem("Property")]
-    public List<string> Properties;
+    public List<string> Properties; //todo may need enum
 }

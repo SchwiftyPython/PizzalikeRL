@@ -18,8 +18,6 @@ public class Ability : ISubscriber
     
     public string Dice;
     
-    public int Duration;
-    
     public int Cooldown;
     
     public AbilityTarget TargetType; 
@@ -44,7 +42,6 @@ public class Ability : ISubscriber
         RequiresBodyPart = template.RequiresBodyPart;
         RequiresProperty = template.RequiresProperty;
         Dice = template.Dice;
-        Duration = template.Duration;
         Cooldown = template.Cooldown;
         Effect = template.Effect;
         StartingAbility = template.StartingAbility;
@@ -52,18 +49,18 @@ public class Ability : ISubscriber
         Owner = owner;
 
         TargetType = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
-
-        if (Duration > 0)
-        {
-            EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
-        }
     }
 
     public virtual void Use()
     {
+        if (Cooldown > 0)
+        {
+            //todo disable ability
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
+        }
     }
 
-    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    public virtual void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         if (eventName == GlobalHelper.EndTurnEventName)
         {
@@ -73,6 +70,7 @@ public class Ability : ISubscriber
             }
             else
             {
+                //todo enable ability
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
             }
         }

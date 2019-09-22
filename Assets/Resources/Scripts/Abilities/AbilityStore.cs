@@ -105,7 +105,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     public static List<AbilityTemplate> GetAbilitiesByDamageType(DamageType dt)
     {
-        return _abilitiesByDamageType[dt];
+        return new List<AbilityTemplate>(_abilitiesByDamageType[dt]);
     }
 
     public static AbilityTemplate GetAbilityByName(string name)
@@ -125,7 +125,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     public static Dictionary<DamageType, List<AbilityTemplate>> GetAllDamageTypeAbilities()
     {
-        return _abilitiesByDamageType;
+        return new Dictionary<DamageType, List<AbilityTemplate>>(_abilitiesByDamageType);
     }
 
     public static Ability CreateAbility(AbilityTemplate template, Entity owner)
@@ -135,6 +135,22 @@ public class AbilityStore : MonoBehaviour,ISubscriber
             return new Heal(template, owner);
         }
 
+        if (template.Name.Equals("bash", StringComparison.OrdinalIgnoreCase))
+        {
+            return new Bash(template, owner);
+        }
+
+        if (template.Name.Equals("knockback", StringComparison.OrdinalIgnoreCase))
+        {
+            return new KnockBack(template, owner);
+        }
+
+        if (template.Name.Equals("stab", StringComparison.OrdinalIgnoreCase))
+        {
+            return new Stab(template, owner);
+        }
+
+        Debug.Log($"{template.Name} failed to create!");
         return null;
     }
 

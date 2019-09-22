@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractDirectionPopup : MonoBehaviour, ISubscriber
+public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 {
-    //todo throw in global helper
     private readonly IDictionary<KeyCode, GoalDirection> _keypadDirections = new Dictionary<KeyCode, GoalDirection>
     {
         { KeyCode.Keypad7, GoalDirection.NorthWest },
@@ -18,9 +19,11 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 
     private bool _listeningForInput;
 
+    private object _broadcaster;
+
     private void Start()
     {
-        EventMediator.Instance.SubscribeToEvent(GlobalHelper.InteractEventName, this);
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.DirectionalAbilityEventName, this);
 
         if (gameObject.activeSelf)
         {
@@ -31,12 +34,12 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
     
     private void Update()
     {
-        if (Input.anyKeyDown && _listeningForInput) 
+        if (Input.anyKeyDown && _listeningForInput)
         {
             _listeningForInput = false;
 
-            GoalDirection chosenDirection = GoalDirection.North;
-            bool validDirectionChosen = false;
+            var chosenDirection = GoalDirection.North;
+            var validDirectionChosen = false;
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -61,18 +64,27 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
             }
 
             var currentTile = GameManager.Instance.Player.CurrentTile;
+
             var directionVector = GlobalHelper.GetVectorForDirection(chosenDirection);
 
             var targetVector = new Vector2(currentTile.X + directionVector.x, currentTile.Y + directionVector.y);
 
-            var targetTile = GameManager.Instance.CurrentArea.AreaTiles[(int) targetVector.x, (int) targetVector.y];
+            var targetTile = GameManager.Instance.CurrentArea.AreaTiles[(int)targetVector.x, (int)targetVector.y];
 
-            if (targetTile.PresentProp is Grave)
+            var targetEntity = targetTile.GetPresentEntity();
+
+            if (targetEntity == null)
             {
-                //todo show grave inscription
-            }
+                //todo broadcast message no valid target
+                Debug.Log("No valid target for ability!");
 
-            EventMediator.Instance.Broadcast("DroppedItemPopup", this, targetTile);
+                _listeningForInput = true;
+                return;
+            }
+            
+            var directionStruct = new DirectionStruct { target = targetEntity, direction = chosenDirection };
+
+            EventMediator.Instance.Broadcast(GlobalHelper.AbilityTileSelectedEventName, this, directionStruct);
 
             Hide();
         }
@@ -94,7 +106,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 
     private void OnDestroy()
     {
-        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.InteractEventName, this);
+        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.DirectionalAbilityEventName, this);
         GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 
@@ -105,6 +117,11 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
             return;
         }
 
-        Show();
+        _broadcaster = broadcaster;
+
+        if (eventName == GlobalHelper.DirectionalAbilityEventName)
+        {
+            Show();
+        }
     }
 }

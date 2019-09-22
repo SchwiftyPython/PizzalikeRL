@@ -156,6 +156,31 @@ public class ItemStore : MonoBehaviour
         }
     }
 
+    public Weapon GetRandomWeaponByProperty(string property, ItemRarity rarityCap = ItemRarity.Common)
+    {
+        var weaponTemplatesWithProperty = GetWeaponTemplateByProperty(property);
+
+        var randomTemplate = weaponTemplatesWithProperty[Random.Range(0, weaponTemplatesWithProperty.Count)];
+
+        if (rarityCap == ItemRarity.Common)
+        {
+            return new Weapon(randomTemplate, rarityCap);
+        }
+
+        const int maxTries = 6;
+
+        var rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+
+        var currentTry = 1;
+        while (currentTry <= maxTries && rarity > rarityCap)
+        {
+            rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+            currentTry++;
+        }
+
+        return new Weapon(randomTemplate, rarity);
+    }
+
     //<Summary>
     //    Gets prefab for item based on type 
     //</Summary>
@@ -203,6 +228,24 @@ public class ItemStore : MonoBehaviour
         var itemType = _baseItemTemplateTypes[Random.Range(0, _baseItemTemplateTypes.Count)];
 
         return ItemTemplateLoader.GetItemTemplate(itemType);
+    }
+
+    private List<ItemTemplate> GetWeaponTemplateByProperty(string property)
+    {
+        var templatesForProperty = new List<ItemTemplate>();
+
+        foreach (var templateType in _baseItemTemplateTypes)
+        {
+            var template = ItemTemplateLoader.GetItemTemplate(templateType);
+
+            if (template.Category == "weapon" &&
+                template.Properties.Contains(property))
+            {
+                templatesForProperty.Add(template);
+            }
+        }
+
+        return templatesForProperty;
     }
 
     //<Summary>

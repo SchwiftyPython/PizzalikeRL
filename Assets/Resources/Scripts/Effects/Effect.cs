@@ -11,6 +11,8 @@ public class Effect
 
     protected Entity entity;
 
+    protected int remainingTurns;
+
     public string Name
     {
         get
@@ -24,7 +26,7 @@ public class Effect
 
             if (fullName != null)
             {
-                name = fullName.Substring(fullName.LastIndexOf('.') + 1);
+                name = fullName.Substring(fullName.LastIndexOf('.') + 1).ToLower();
             }
 
             return name;

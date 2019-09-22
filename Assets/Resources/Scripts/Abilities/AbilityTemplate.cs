@@ -26,9 +26,6 @@ public class AbilityTemplate
     [XmlElement("Dice")]
     public string Dice;
 
-    [XmlElement("Duration")]
-    public int Duration;
-
     [XmlElement("Cooldown")]
     public int Cooldown;
 
