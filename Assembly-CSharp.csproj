@@ -251,6 +251,7 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\Bash.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Heal.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\KnockBack.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\SpinWeb.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Stab.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\ButtonClick.cs" />
@@ -263,6 +264,7 @@
     <Compile Include="Assets\Resources\Scripts\Effects\DirectionStruct.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Effect.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Healing.cs" />
+    <Compile Include="Assets\Resources\Scripts\Effects\Immobilize.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Push.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AIEvent.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyAI\AstarAI.cs" />
@@ -300,6 +302,7 @@
     <Compile Include="Assets\Resources\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Resources\Scripts\Messenger.cs" />
     <Compile Include="Assets\Resources\Scripts\MoveEntity.cs" />
+    <Compile Include="Assets\Resources\Scripts\PickTarget.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Pizza.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\PizzaOrder.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Topping.cs" />
