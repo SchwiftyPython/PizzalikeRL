@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class SpinWeb : Ability
+﻿public class SpinWeb : Ability
 {
     public SpinWeb(AbilityTemplate template, Entity owner) : base(template, owner)
     {
@@ -12,7 +8,7 @@ public class SpinWeb : Ability
     {
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilityTileSelectedEventName, this);
 
-        EventMediator.Instance.Broadcast(GlobalHelper.SingleTileAbilityEventName, this, Range);
+        EventMediator.Instance.Broadcast(GlobalHelper.SingleTileAbilityEventName, Owner, Range);
 
         base.Use();
     }

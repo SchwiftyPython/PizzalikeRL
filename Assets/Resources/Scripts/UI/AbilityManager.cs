@@ -39,7 +39,15 @@ public class AbilityManager : MonoBehaviour, ISubscriber
 
     private static Sprite GetIconForAbility(Ability ability)
     {
-        return !_abilityIcons.ContainsKey(ability.Name) ? null : _abilityIcons[ability.Name];
+        if (!_abilityIcons.ContainsKey(ability.Name))
+        {
+            Debug.Log($"{ability.Name} icon not found!");
+            return null;
+        }
+        else
+        {
+            return _abilityIcons[ability.Name];
+        }
     }
 
     public static void AssignAbilityToButton(Ability ability, GameObject buttonParent)

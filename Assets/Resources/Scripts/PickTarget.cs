@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PickTarget : MonoBehaviour, ISubscriber
@@ -6,8 +7,10 @@ public class PickTarget : MonoBehaviour, ISubscriber
     private bool _pickerActive;
     private List<Tile> _selectedTiles;
 
-    private Color _highlightedColor; //todo maybe an overlay will be easier than finding a good color for each tile
+    public GameObject TileOverlayPrefab; //todo pizzas?! lol
     private List<Tile> _highlightedTiles;
+
+    private Tile[,] _currentAreaTiles;
 
     private void Start()
     {
@@ -88,7 +91,37 @@ public class PickTarget : MonoBehaviour, ISubscriber
 
     private void ShowSingleTilePicker(int range, Vector2 startPosition)
     {
-        
+        Tile targetTile = null;
+
+        //todo pick some adjacent tile to start
+        foreach (GoalDirection direction in Enum.GetValues(typeof(GoalDirection)))
+        {
+            var vector = GlobalHelper.GetVectorForDirection(direction);
+
+            var target = startPosition + vector;
+
+            try
+            {
+                targetTile = _currentAreaTiles[(int) target.x, (int) target.y];
+            }
+            catch (Exception)
+            {
+                continue;
+            }
+
+            if (!targetTile.IsWall())
+            {
+                break;
+            }
+        }
+
+        if (targetTile == null || targetTile.IsWall())
+        {
+            Debug.Log("Nowhere to place ability selector!");
+            return;
+        }
+
+        var instance = Instantiate(TileOverlayPrefab, new Vector2(targetTile.Y, targetTile.X), Quaternion.identity);
     }
 
     //todo area of effect picker Range, Size, Vector2 some corner or start point
@@ -106,6 +139,8 @@ public class PickTarget : MonoBehaviour, ISubscriber
             {
                 return;
             }
+
+            _currentAreaTiles = GameManager.Instance.CurrentArea.AreaTiles;
 
             ShowSingleTilePicker(range, new Vector2(abilityUser.CurrentTile.X, abilityUser.CurrentTile.Y));
         }
