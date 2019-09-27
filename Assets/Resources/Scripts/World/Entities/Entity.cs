@@ -167,7 +167,7 @@ public class Entity : ISubscriber
 
             if (!IsPlayer())
             {
-                if (!CurrentTile.Revealed || CurrentTile.Visibility == Visibilities.Invisible)
+                if (!CurrentTile.Revealed || CurrentTile.Visibility == Visibilities.Invisible) //todo needs to be triggered by event so it happens on players turn
                 {
                     return;
                 }

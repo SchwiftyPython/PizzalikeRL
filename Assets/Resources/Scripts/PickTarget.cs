@@ -12,6 +12,8 @@ public class PickTarget : MonoBehaviour, ISubscriber
 
     private Tile[,] _currentAreaTiles;
 
+    private Dictionary<Tile, GameObject> _picker;
+
     private void Start()
     {
         _pickerActive = false;
@@ -27,8 +29,7 @@ public class PickTarget : MonoBehaviour, ISubscriber
 
             if (Input.GetKeyDown(KeyCode.Keypad8))
             {
-                //Attempt move up
-                
+                MovePicker(GoalDirection.North);
             }
             else if (Input.GetKeyDown(KeyCode.Keypad7))
             {
@@ -70,13 +71,49 @@ public class PickTarget : MonoBehaviour, ISubscriber
                 //todo cancel
             }
 
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 //todo check if tiles are in range
                 //todo add tile to _selected tiles
                 //todo return via broadcast
+
+                EventMediator.Instance.Broadcast(GlobalHelper.InputReceivedEventName, this);
             }
         }
+    }
+
+    private void MovePicker(GoalDirection direction)
+    {
+        var tempPicker = new Dictionary<Tile, GameObject>();
+
+        var target = GlobalHelper.GetVectorForDirection(direction);
+
+        foreach (var tile in _picker.Keys)
+        {
+            Tile targetTile;
+
+            try
+            {
+                targetTile = _currentAreaTiles[(int) (tile.X + target.x), (int) (tile.Y + target.y)];
+            }
+            catch
+            {
+                return;
+            }
+
+            if (targetTile.IsWall())
+            {
+                return;
+            }
+
+            var overlay = _picker[tile];
+
+            overlay.transform.localPosition = new Vector3(targetTile.Y, targetTile.X);
+
+            tempPicker.Add(targetTile, _picker[tile]);
+        }
+
+        _picker = tempPicker;
     }
 
     private Entity GetEntityAt(int x, int y)
@@ -91,6 +128,7 @@ public class PickTarget : MonoBehaviour, ISubscriber
 
     private void ShowSingleTilePicker(int range, Vector2 startPosition)
     {
+        _picker = new Dictionary<Tile, GameObject>();
         Tile targetTile = null;
 
         //todo pick some adjacent tile to start
@@ -122,6 +160,11 @@ public class PickTarget : MonoBehaviour, ISubscriber
         }
 
         var instance = Instantiate(TileOverlayPrefab, new Vector2(targetTile.Y, targetTile.X), Quaternion.identity);
+
+        _picker.Add(targetTile, instance);
+        _pickerActive = true;
+
+        EventMediator.Instance.Broadcast(GlobalHelper.AwaitingInputElsewhereEventName, this);
     }
 
     //todo area of effect picker Range, Size, Vector2 some corner or start point

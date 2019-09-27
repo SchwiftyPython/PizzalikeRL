@@ -33,6 +33,8 @@ public class InputController : MonoBehaviour, ISubscriber
     private GraphicRaycaster _canvasGraphicRaycaster;
     private EventSystem _canvasEventSystem;
 
+    private bool _awaitingInputElsewhere;
+
     private void Start()
     {
         if (Instance == null)
@@ -41,7 +43,6 @@ public class InputController : MonoBehaviour, ISubscriber
         }
         else if (Instance != this)
         {
-            // Destroy the current object, so there is just one 
             Destroy(gameObject);
         }
 
@@ -56,10 +57,16 @@ public class InputController : MonoBehaviour, ISubscriber
         _canvasEventSystem = Canvas.GetComponent<EventSystem>();
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.LoadAbilityBarEventName, this);
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.AwaitingInputElsewhereEventName, this);
     }
 
     private void Update()
     {
+        if (_awaitingInputElsewhere)
+        {
+            return;
+        }
+
         var currentScene = GameManager.Instance.CurrentScene.name;
 
         if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn)
@@ -376,6 +383,22 @@ public class InputController : MonoBehaviour, ISubscriber
             }
 
             LoadStartingAbilitiesIntoAbilityBar();
+        }
+
+        if (eventName.Equals(GlobalHelper.AwaitingInputElsewhereEventName))
+        {
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.InputReceivedEventName, this);
+            EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AwaitingInputElsewhereEventName, this);
+
+            _awaitingInputElsewhere = true;
+        }
+
+        if (eventName.Equals(GlobalHelper.InputReceivedEventName))
+        {
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.AwaitingInputElsewhereEventName, this);
+            EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.InputReceivedEventName, this);
+
+            _awaitingInputElsewhere = false;
         }
     }
 }

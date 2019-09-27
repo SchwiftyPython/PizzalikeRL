@@ -131,6 +131,8 @@ public class WorldData : MonoBehaviour
     public GameObject ConventionalTurretPrefab;
     public GameObject SmallChest;
     public GameObject PizzaOven;
+
+    public GameObject SpiderWeb;
     
     public static WorldData Instance;
 

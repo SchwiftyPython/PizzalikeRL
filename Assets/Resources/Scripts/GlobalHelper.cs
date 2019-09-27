@@ -23,6 +23,8 @@ public class GlobalHelper : MonoBehaviour
     public const string DirectionalAbilityEventName = "DirectionalAbility";
     public const string AbilityTileSelectedEventName = "AbilityTileSelected";
     public const string SingleTileAbilityEventName = "SingleTileAbility";
+    public const string AwaitingInputElsewhereEventName = "AwaitingInputElsewhere";
+    public const string InputReceivedEventName = "Input Recieved";
 
     #endregion EventNames
 
