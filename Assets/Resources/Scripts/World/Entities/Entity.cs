@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -1454,6 +1455,8 @@ public class Entity : ISubscriber
 
     private void AutoHarvestFields()
     {
+        //todo have field subscribe to entityenteredtilevent
+
         if (!(CurrentTile.PresentProp is Field))
         {
             return;
@@ -1480,6 +1483,8 @@ public class Entity : ISubscriber
 
     private void AutoHarvestCheeseTree()
     {
+        //todo have cheesetree subscribe to entityenteredtilevent
+
         if (!(CurrentTile.PresentProp is CheeseTree))
         {
             return;
@@ -1545,6 +1550,8 @@ public class Entity : ISubscriber
 
     public void ApplyEffect(string effectName, int duration, int amount, GoalDirection direction = GoalDirection.North)
     {
+        //todo take in effect and have effect handle application to entity
+
         switch (effectName)
         {
             case "heal":
@@ -1588,5 +1595,12 @@ public class Entity : ISubscriber
                 _currentEffects.Add(bleedEffect);
                 break;
         }
+    }
+
+    public void ApplyEffect(Effect effect)
+    {
+        _currentEffects.Add(effect);
+
+        effect.Apply(this);
     }
 }

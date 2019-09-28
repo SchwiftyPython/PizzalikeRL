@@ -25,6 +25,7 @@ public class GlobalHelper : MonoBehaviour
     public const string SingleTileAbilityEventName = "SingleTileAbility";
     public const string AwaitingInputElsewhereEventName = "AwaitingInputElsewhere";
     public const string InputReceivedEventName = "Input Recieved";
+    public const string EntityEnteredTileEventName = "EntityEnteredTile";
 
     #endregion EventNames
 

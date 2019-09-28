@@ -308,6 +308,8 @@
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Topping.cs" />
     <Compile Include="Assets\Resources\Scripts\PizzaOrderGeneration\Toppings.cs" />
     <Compile Include="Assets\Resources\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Resources\Scripts\Properties\Property.cs" />
+    <Compile Include="Assets\Resources\Scripts\Properties\Sticky.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\AreaSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\ArmorSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\BuildingSdo.cs" />
@@ -390,6 +392,7 @@
     <Compile Include="Assets\Resources\Scripts\World\Props\Field.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Props\Grave.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Props\Prop.cs" />
+    <Compile Include="Assets\Resources\Scripts\World\Props\Web.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Reputation.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\Building.cs" />
     <Compile Include="Assets\Resources\Scripts\World\Settlements\Buildings\BuildingPrefab.cs" />

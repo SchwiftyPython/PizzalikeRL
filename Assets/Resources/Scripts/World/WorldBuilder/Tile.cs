@@ -9,12 +9,13 @@ public enum Visibilities
 }
 
 [Serializable]
-public class Tile
+public class Tile : ISubscriber
 {
     private Visibilities _visibility;
 
     private Entity _presentEntity;
     private List<Item> _presentItems;
+    private List<Property> _properties; //todo this can probably stay, but may not get used for a bit
 
     private Rarities _rarity;
     private string _prefabName;
@@ -41,7 +42,7 @@ public class Tile
     public GameObject PresentWallTile { get; set; }
 
     public Topping PresentTopping { get; set; }
-    public Prop PresentProp { get; set; }
+    public Prop PresentProp { get; set; } 
 
     public Visibilities Visibility
     {
@@ -167,5 +168,16 @@ public class Tile
         }
 
         FovTile.GetComponent<SpriteRenderer>().color = color;
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals(GlobalHelper.EntityEnteredTileEventName))
+        {
+            if (PresentProp != null && PresentProp.TriggeredByEvent(eventName))
+            {
+                PresentProp.Trigger(eventName, broadcaster); //todo broadcaster should be entity
+            }
+        }
     }
 }
