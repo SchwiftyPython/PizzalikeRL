@@ -1,4 +1,6 @@
-﻿public class SpinWeb : Ability
+﻿using UnityEngine;
+
+public class SpinWeb : Ability
 {
     public SpinWeb(AbilityTemplate template, Entity owner) : base(template, owner)
     {
@@ -17,18 +19,23 @@
     {
         if (eventName == GlobalHelper.AbilityTileSelectedEventName)
         {
+            EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilityTileSelectedEventName, this);
+
             if (!(parameter is Tile target))
             {
                 return;
             }
 
-            
-            //todo apply web sprite to tile -- need a dang web sprite
-            //todo set a trap property on tile?
+            if (target.PresentProp != null)
+            {
+                return;
+            }
+
+            target.PresentProp = new Web();
+
+            AbilityManager.InstantiateAbilityPrefab(target, target.PresentProp.Prefab);
 
             RemainingCooldownTurns = Cooldown;
-
-            EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilityTileSelectedEventName, this);
         }
 
         base.OnNotify(eventName, broadcaster, parameter);

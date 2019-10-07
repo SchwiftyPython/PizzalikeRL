@@ -1,119 +1,68 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PickTarget : MonoBehaviour, ISubscriber
 {
     private bool _pickerActive;
-    private List<Tile> _selectedTiles;
-
-    public GameObject TileOverlayPrefab; //todo pizzas?! lol
-    private List<Tile> _highlightedTiles;
+    private bool _processingInput;
+    private Tile _selectedTile;
+    private Entity _selectedTarget;
+    private List<Entity> _validTargets;
 
     private Tile[,] _currentAreaTiles;
+    private List<Entity> _presentEntities;
 
-    private Dictionary<Tile, GameObject> _picker;
+    private readonly Color _highlightedColor = Color.cyan;
 
     private void Start()
     {
         _pickerActive = false;
+        _processingInput = false;
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.SingleTileAbilityEventName, this);
     }
 
     private void Update()
     {
-        if (_pickerActive)
+        if (_pickerActive && !_processingInput)
         {
-            //todo highlight tiles under mouse or where keyboard moves shape
-
-            if (Input.GetKeyDown(KeyCode.Keypad8))
+            if (Input.GetKeyDown(KeyCode.Tab))
             {
-                MovePicker(GoalDirection.North);
+                _processingInput = true;
+                MoveToNextTarget();
+                _processingInput = false;
             }
-            else if (Input.GetKeyDown(KeyCode.Keypad7))
-            {
-                //Attempt move diagonal up and left
-                
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                //Attempt move left
-                
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                //Attempt move diagonal down and left                
-                
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                //Attempt move down
-                
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                //Attempt move diagonal down and right
-                
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad6))
-            {
-                //Attempt move right
-                
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad9))
-            {
-                //Attempt move diagonal up and right
-                
-            }
+            
             else if (Input.GetKeyDown(KeyCode.Escape))
             {
-                //todo cancel
+                EventMediator.Instance.Broadcast(GlobalHelper.InputReceivedEventName, this);
+                _pickerActive = false;
             }
 
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
-                //todo check if tiles are in range
-                //todo add tile to _selected tiles
+                //todo check if target is in range
                 //todo return via broadcast
+
+                _processingInput = true;
+                _pickerActive = false;
+
+                Debug.Log("Ability Target Selected");
+
+                EventMediator.Instance.Broadcast(GlobalHelper.AbilityTileSelectedEventName, this, _selectedTarget);
 
                 EventMediator.Instance.Broadcast(GlobalHelper.InputReceivedEventName, this);
             }
         }
     }
 
-    private void MovePicker(GoalDirection direction)
+    private void MoveToNextTarget()
     {
-        var tempPicker = new Dictionary<Tile, GameObject>();
-
-        var target = GlobalHelper.GetVectorForDirection(direction);
-
-        foreach (var tile in _picker.Keys)
-        {
-            Tile targetTile;
-
-            try
-            {
-                targetTile = _currentAreaTiles[(int) (tile.X + target.x), (int) (tile.Y + target.y)];
-            }
-            catch
-            {
-                return;
-            }
-
-            if (targetTile.IsWall())
-            {
-                return;
-            }
-
-            var overlay = _picker[tile];
-
-            overlay.transform.localPosition = new Vector3(targetTile.Y, targetTile.X);
-
-            tempPicker.Add(targetTile, _picker[tile]);
-        }
-
-        _picker = tempPicker;
+        //todo cycle through list of valid targets
+        //todo highlight tile or show popup of target info. Some kind of indicator
     }
 
     private Entity GetEntityAt(int x, int y)
@@ -121,53 +70,42 @@ public class PickTarget : MonoBehaviour, ISubscriber
         return GetTileAt(x, y).GetPresentEntity();
     }
 
-    private Tile GetTileAt(int x, int y)
+    private void GetAllValidTargets(int range)
     {
-        return GameManager.Instance.CurrentArea.GetTileAt(new Vector3(x, y));
-    }
+        _validTargets = new List<Entity>();
 
-    private void ShowSingleTilePicker(int range, Vector2 startPosition)
-    {
-        _picker = new Dictionary<Tile, GameObject>();
-        Tile targetTile = null;
-
-        //todo pick some adjacent tile to start
-        foreach (GoalDirection direction in Enum.GetValues(typeof(GoalDirection)))
+        foreach (var currentEntity in _presentEntities)
         {
-            var vector = GlobalHelper.GetVectorForDirection(direction);
+            var distance = CalculateDistanceToTarget(currentEntity);
 
-            var target = startPosition + vector;
-
-            try
-            {
-                targetTile = _currentAreaTiles[(int) target.x, (int) target.y];
-            }
-            catch (Exception)
+            if (distance > range)
             {
                 continue;
             }
 
-            if (!targetTile.IsWall())
-            {
-                break;
-            }
+            _validTargets.Add(currentEntity);
         }
-
-        if (targetTile == null || targetTile.IsWall())
-        {
-            Debug.Log("Nowhere to place ability selector!");
-            return;
-        }
-
-        var instance = Instantiate(TileOverlayPrefab, new Vector2(targetTile.Y, targetTile.X), Quaternion.identity);
-
-        _picker.Add(targetTile, instance);
-        _pickerActive = true;
-
-        EventMediator.Instance.Broadcast(GlobalHelper.AwaitingInputElsewhereEventName, this);
     }
 
-    //todo area of effect picker Range, Size, Vector2 some corner or start point
+    private Tile GetTileAt(int x, int y)
+    {
+        if (!ReferenceEquals(_currentAreaTiles, GameManager.Instance.CurrentArea.AreaTiles))
+        {
+            _currentAreaTiles = GameManager.Instance.CurrentArea.AreaTiles;
+        }
+
+        return _currentAreaTiles[x, y];
+    }
+
+    private static int CalculateDistanceToTarget(Entity target)
+    {
+        var currentTile = GameManager.Instance.CurrentTile;
+
+        var a = target.CurrentTile.X - currentTile.X;
+        var b = target.CurrentTile.Y - currentTile.Y;
+
+        return (int)Math.Sqrt(a * a + b * b);
+    }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
@@ -184,8 +122,9 @@ public class PickTarget : MonoBehaviour, ISubscriber
             }
 
             _currentAreaTiles = GameManager.Instance.CurrentArea.AreaTiles;
+            _presentEntities = GameManager.Instance.CurrentArea.PresentEntities;
 
-            ShowSingleTilePicker(range, new Vector2(abilityUser.CurrentTile.X, abilityUser.CurrentTile.Y));
+            GetAllValidTargets(range); 
         }
     }
 }

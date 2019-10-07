@@ -181,6 +181,10 @@ public class InputController : MonoBehaviour, ISubscriber
                     ActionTaken = true;
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.Keypad5))
+            {
+                ActionTaken = true;
+            }
             else if (Input.GetKeyDown(KeyCode.Escape))
             {
                 EventMediator.Instance.Broadcast("GameMenuPopup", this);
@@ -205,7 +209,7 @@ public class InputController : MonoBehaviour, ISubscriber
             //Starts Look interaction
             else if (Input.GetKeyDown(KeyCode.L))
             {
-                //todo
+                //todo open journal
             }
             else if (Input.GetMouseButtonDown(0))
             {
