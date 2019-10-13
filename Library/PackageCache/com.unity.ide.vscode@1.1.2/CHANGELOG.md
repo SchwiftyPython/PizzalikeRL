@@ -1,5 +1,22 @@
 # Code Editor Package for Visual Studio Code
 
+## [1.1.2] - 2019-08-30
+
+Fixing OSX open command arguments
+
+
+## [1.1.1] - 2019-08-19
+
+Support for Player Project. Generates specific csproj files containing files, reference, defines,
+etc. that will show how the assembly will be compiled for a target platform.
+
+
+## [1.1.0] - 2019-08-07
+
+Adds support for choosing extensions to be opened with VSCode. This can be done through the GUI in Preferences.
+Avoids opening all extensions after the change in core unity.
+
+
 ## [1.0.7] - 2019-05-15
 
 Fix various OSX specific issues.

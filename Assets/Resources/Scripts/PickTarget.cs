@@ -10,7 +10,9 @@ public class PickTarget : MonoBehaviour, ISubscriber
     private bool _processingInput;
     private Tile _selectedTile;
     private Entity _selectedTarget;
-    private List<Entity> _validTargets;
+    private Entity[] _validTargets;
+
+    private int _targetIndex;
 
     private Tile[,] _currentAreaTiles;
     private List<Entity> _presentEntities;
@@ -38,6 +40,9 @@ public class PickTarget : MonoBehaviour, ISubscriber
             
             else if (Input.GetKeyDown(KeyCode.Escape))
             {
+                _selectedTarget = _validTargets[_targetIndex];
+
+                ClearHighlight(_selectedTarget.CurrentTile);
                 EventMediator.Instance.Broadcast(GlobalHelper.InputReceivedEventName, this);
                 _pickerActive = false;
             }
@@ -49,10 +54,30 @@ public class PickTarget : MonoBehaviour, ISubscriber
 
                 _processingInput = true;
                 _pickerActive = false;
+                //ClearHighlight(_selectedTile);
+
+//                _selectedTarget = _validTargets[_targetIndex];
+//                ClearHighlight(_selectedTarget.CurrentTile);
+
+                Tile highlightedTile = null; 
+                foreach (var tile in _currentAreaTiles)
+                {
+                    if (tile.TextureInstance.GetComponent<SpriteRenderer>().color == _highlightedColor)
+                    {
+                        highlightedTile = tile;
+                        break;
+                    }
+                }
 
                 Debug.Log("Ability Target Selected");
 
-                EventMediator.Instance.Broadcast(GlobalHelper.AbilityTileSelectedEventName, this, _selectedTarget);
+                if (highlightedTile != null)
+                {
+                    ClearHighlight(highlightedTile);
+
+                    EventMediator.Instance.Broadcast(GlobalHelper.AbilityTileSelectedEventName, this,
+                        highlightedTile.GetPresentEntity());
+                }
 
                 EventMediator.Instance.Broadcast(GlobalHelper.InputReceivedEventName, this);
             }
@@ -61,8 +86,51 @@ public class PickTarget : MonoBehaviour, ISubscriber
 
     private void MoveToNextTarget()
     {
-        //todo cycle through list of valid targets
-        //todo highlight tile or show popup of target info. Some kind of indicator
+        if (_validTargets == null || _validTargets.Length < 1)
+        {
+            return;
+        }
+
+        var tile = _currentAreaTiles[_validTargets[_targetIndex].CurrentTile.X,
+            _validTargets[_targetIndex].CurrentTile.Y];
+        ClearHighlight(tile);
+
+        _targetIndex++;
+
+        if (_targetIndex >= _validTargets.Length)
+        {
+            _targetIndex = 0;
+        }
+
+        tile = _currentAreaTiles[_validTargets[_targetIndex].CurrentTile.X,
+            _validTargets[_targetIndex].CurrentTile.Y];
+        tile.TextureInstance.GetComponent<SpriteRenderer>().color = _highlightedColor;
+
+        Debug.Log("Current index: " + _targetIndex);
+
+        //        if (_selectedTarget != null)
+        //        {
+        //            _validTargets.Enqueue(_selectedTarget);
+        //            ClearHighlight(_selectedTarget.CurrentTile);
+        //        }
+
+        //_selectedTarget = _validTargets.Dequeue();
+
+        //        var lastSelection = _validTargets.Dequeue();
+        //
+        //        ClearHighlight(lastSelection.CurrentTile);
+        //
+        //        _validTargets.Enqueue(lastSelection);
+        //
+        //        var tile = _validTargets.Peek().CurrentTile;
+        //        tile.TextureInstance.GetComponent<SpriteRenderer>().color = _highlightedColor;
+        //
+        //        _selectedTile = tile;
+    }
+
+    private void ClearHighlight(Tile tile)
+    {
+        tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     private Entity GetEntityAt(int x, int y)
@@ -72,10 +140,18 @@ public class PickTarget : MonoBehaviour, ISubscriber
 
     private void GetAllValidTargets(int range)
     {
-        _validTargets = new List<Entity>();
+        _selectedTarget = null;
+        _selectedTile = null;
+        _targetIndex = 0;
 
+        var tempList = new List<Entity>();
         foreach (var currentEntity in _presentEntities)
         {
+            if (currentEntity == GameManager.Instance.Player)
+            {
+                continue;
+            }
+
             var distance = CalculateDistanceToTarget(currentEntity);
 
             if (distance > range)
@@ -83,8 +159,10 @@ public class PickTarget : MonoBehaviour, ISubscriber
                 continue;
             }
 
-            _validTargets.Add(currentEntity);
+            tempList.Add(currentEntity);
         }
+
+        _validTargets = tempList.ToArray();
     }
 
     private Tile GetTileAt(int x, int y)
@@ -124,7 +202,23 @@ public class PickTarget : MonoBehaviour, ISubscriber
             _currentAreaTiles = GameManager.Instance.CurrentArea.AreaTiles;
             _presentEntities = GameManager.Instance.CurrentArea.PresentEntities;
 
-            GetAllValidTargets(range); 
+            GetAllValidTargets(range);
+
+            if (_validTargets == null || _validTargets.Length < 1)
+            {
+                EventMediator.Instance.Broadcast(GlobalHelper.InputReceivedEventName, this);
+                _pickerActive = false;
+
+                Debug.Log("No valid targets in range!");
+
+                return;
+            }
+
+            MoveToNextTarget();
+
+            _pickerActive = true;
+            _processingInput = false;
+            EventMediator.Instance.Broadcast(GlobalHelper.AwaitingInputElsewhereEventName, this);
         }
     }
 }

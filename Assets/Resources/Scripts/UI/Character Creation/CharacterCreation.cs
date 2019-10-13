@@ -754,13 +754,6 @@ public class CharacterCreation : MonoBehaviour
 
         var startingEquipment = _player.Equipped;
 
-        //todo we need a test with a pierce
-        //////// TESTING BLUDGEON //////////////////////////////////////////////
-
-        startingEquipment[Entity.EquipmentSlot.RightHandOne] = ItemStore.Instance.GetRandomWeaponByProperty("pierce");
-
-        //////// END TESTING BLUDGEON ////////////////////////////////////////
-
         return startingEquipment;
     }
 

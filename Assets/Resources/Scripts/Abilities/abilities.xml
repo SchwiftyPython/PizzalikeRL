@@ -67,11 +67,11 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart>spinneret</RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description>Shoot a web from your ass onto target tile. Chance to immobilize.</Description>
+	    <Description>Shoot a web from your ass at somebody. Chance to immobilize.</Description>
 	    <RequiresProperty></RequiresProperty>	    
 		<Dice></Dice>		
 	    <Cooldown> 8 </Cooldown>
-		<Target>single tile</Target>
+		<Target>single entity</Target>
 		<Effect>immobilize</Effect>
 		<Range>4</Range>
 		<StartingAbility>true</StartingAbility>

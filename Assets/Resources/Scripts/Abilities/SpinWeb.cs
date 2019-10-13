@@ -10,7 +10,7 @@ public class SpinWeb : Ability
     {
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilityTileSelectedEventName, this);
 
-        EventMediator.Instance.Broadcast(GlobalHelper.SingleTileAbilityEventName, Owner, Range);
+        EventMediator.Instance.Broadcast(GlobalHelper.SingleTileAbilityEventName, this);
 
         base.Use();
     }
@@ -21,19 +21,21 @@ public class SpinWeb : Ability
         {
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilityTileSelectedEventName, this);
 
-            if (!(parameter is Tile target))
+            if (!(parameter is Entity target))
             {
                 return;
             }
 
-            if (target.PresentProp != null)
+            var tile = target.CurrentTile;
+
+            if (tile.PresentProp != null)
             {
                 return;
             }
 
-            target.PresentProp = new Web();
+            tile.PresentProp = new Web();
 
-            AbilityManager.InstantiateAbilityPrefab(target, target.PresentProp.Prefab);
+            AbilityManager.InstantiateAbilityPrefab(tile, tile.PresentProp.Prefab);
 
             RemainingCooldownTurns = Cooldown;
         }

@@ -9,6 +9,14 @@ using UnityEngine.UI;
 
 public class InputController : MonoBehaviour, ISubscriber
 {
+    private enum InputMode
+    {
+        Adventure,
+        TargetPicker
+    }
+
+    private InputMode _currentInputMode;
+
     private Dictionary<KeyCode, GameObject> _abilityMap;
 
     private string _areaMapSceneName;
@@ -35,6 +43,9 @@ public class InputController : MonoBehaviour, ISubscriber
 
     private bool _awaitingInputElsewhere;
 
+    private TargetPicker _picker;
+    private Entity _selectedTarget;
+
     private void Start()
     {
         if (Instance == null)
@@ -58,6 +69,7 @@ public class InputController : MonoBehaviour, ISubscriber
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.LoadAbilityBarEventName, this);
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.AwaitingInputElsewhereEventName, this);
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.SingleTileAbilityEventName, this);
     }
 
     private void Update()
@@ -71,211 +83,247 @@ public class InputController : MonoBehaviour, ISubscriber
 
         if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn)
         {
-            if (_player == null || _player != GameManager.Instance.Player)
+            if (_currentInputMode == InputMode.Adventure)
             {
-                _player = GameManager.Instance.Player;
-                //Debug.Log ("player reference in update: " + _player);
-            }
+                if (_player == null || _player != GameManager.Instance.Player)
+                {
+                    _player = GameManager.Instance.Player;
+                    //Debug.Log ("player reference in update: " + _player);
+                }
 
-            if (Input.GetKeyDown(KeyCode.Keypad8))
-            {
-                //Attempt move up
-                Vector2 target;
-                target = currentScene == _areaMapSceneName
-                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y)
-                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y);
+                if (Input.GetKeyDown(KeyCode.Keypad8))
+                {
+                    //Attempt move up
+                    Vector2 target;
+                    target = currentScene == _areaMapSceneName
+                        ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y)
+                        : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y);
 
-                if (_player.MoveOrAttackSuccessful(target))
-                {
-                    ActionTaken = true;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad7))
-            {
-                //Attempt move diagonal up and left
-                Vector2 target;
-                target = currentScene == _areaMapSceneName
-                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y - 1)
-                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y - 1);
-
-                if (_player.MoveOrAttackSuccessful(target))
-                {
-                    ActionTaken = true;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                //Attempt move left
-                Vector2 target;
-                target = currentScene == _areaMapSceneName
-                    ? new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y - 1)
-                    : new Vector2(_player.CurrentCell.X, _player.CurrentCell.Y - 1);
-                
-                if (_player.MoveOrAttackSuccessful(target))
-                {
-                    ActionTaken = true;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                //Attempt move diagonal down and left                
-                Vector2 target;
-                target = currentScene == _areaMapSceneName
-                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y - 1)
-                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y - 1);
-               
-                if (_player.MoveOrAttackSuccessful(target))
-                {
-                    ActionTaken = true;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                //Attempt move down
-                Vector2 target;
-                target = currentScene == _areaMapSceneName
-                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y)
-                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y);
-                
-                if (_player.MoveOrAttackSuccessful(target))
-                {
-                    ActionTaken = true;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                //Attempt move diagonal down and right
-                Vector2 target;
-                target = currentScene == _areaMapSceneName
-                    ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y + 1)
-                    : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y + 1);
-                
-                if (_player.MoveOrAttackSuccessful(target))
-                {
-                    ActionTaken = true;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad6))
-            {
-                //Attempt move right
-                Vector2 target;
-                target = currentScene == _areaMapSceneName
-                    ? new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y + 1)
-                    : new Vector2(_player.CurrentCell.X, _player.CurrentCell.Y + 1);
-                
-                if (_player.MoveOrAttackSuccessful(target))
-                {
-                    ActionTaken = true;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad9))
-            {
-                //Attempt move diagonal up and right
-                Vector2 target;
-                target = currentScene == _areaMapSceneName
-                    ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y + 1)
-                    : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y + 1);
-                
-                if (_player.MoveOrAttackSuccessful(target))
-                {
-                    ActionTaken = true;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad5))
-            {
-                ActionTaken = true;
-            }
-            else if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                EventMediator.Instance.Broadcast("GameMenuPopup", this);
-            }
-            else if (Input.GetKeyDown(KeyCode.J))
-            {
-                EventMediator.Instance.Broadcast("PizzaJournal", this);
-            }
-            //Open dropped item popup for player's current tile
-            else if (Input.GetKeyDown(KeyCode.G))
-            {
-                if (currentScene.Equals(_areaMapSceneName) && !GameManager.Instance.AnyActiveWindows())
-                {
-                   EventMediator.Instance.Broadcast("DroppedItemPopup", this);
-                }
-            }
-            //Interact 
-            else if (Input.GetKeyDown(KeyCode.Space))
-            {
-                EventMediator.Instance.Broadcast("Interact", this);
-            }
-            //Starts Look interaction
-            else if (Input.GetKeyDown(KeyCode.L))
-            {
-                //todo open journal
-            }
-            else if (Input.GetMouseButtonDown(0))
-            {
-                if (currentScene.Equals(_areaMapSceneName) && !GameManager.Instance.AnyActiveWindows() && !IsUiClicked())
-                {
-                    var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-                    if (pos.x < 0 || pos.y < 0 || pos.x > GameManager.Instance.CurrentArea.Width ||
-                        pos.y > GameManager.Instance.CurrentArea.Height)
+                    if (_player.MoveOrAttackSuccessful(target))
                     {
-                        return;
-                    }
-
-                    var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int) pos.y, (int) pos.x];
-
-                    //highlight tile and path to it
-                    StartCoroutine(HighlightPathToTarget(_player, selectedTile.GetGridPosition()));
-
-                    EventMediator.Instance.Broadcast("ActionPopup", this, selectedTile);
-                }
-
-            }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                if (currentScene.Equals(_areaMapSceneName))
-                {
-                    var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
-                        Vector2.positiveInfinity);
-
-                    if (hit && !GameManager.Instance.AnyActiveWindows())
-                    {
-                        var position = hit.collider.transform.localPosition;
-
-                        var entity = GameManager.Instance.CurrentArea.AreaTiles[(int) position.y, (int) position.x]
-                            .GetPresentEntity();
-
-                        EventMediator.Instance.Broadcast(GlobalHelper.InspectEntityEventName, this, entity);
+                        ActionTaken = true;
                     }
                 }
-                if (currentScene.Equals(_worldMapSceneName))
+                else if (Input.GetKeyDown(KeyCode.Keypad7))
                 {
-                    var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
-                        Vector2.positiveInfinity);
+                    //Attempt move diagonal up and left
+                    Vector2 target;
+                    target = currentScene == _areaMapSceneName
+                        ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y - 1)
+                        : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y - 1);
 
-                    if (hit && !_popupWindowOpen)
+                    if (_player.MoveOrAttackSuccessful(target))
                     {
-                        hit.collider.GetComponent<WorldTileInfo>()?.OnRightClick();
+                        ActionTaken = true;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Keypad4))
+                {
+                    //Attempt move left
+                    Vector2 target;
+                    target = currentScene == _areaMapSceneName
+                        ? new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y - 1)
+                        : new Vector2(_player.CurrentCell.X, _player.CurrentCell.Y - 1);
+
+                    if (_player.MoveOrAttackSuccessful(target))
+                    {
+                        ActionTaken = true;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Keypad1))
+                {
+                    //Attempt move diagonal down and left                
+                    Vector2 target;
+                    target = currentScene == _areaMapSceneName
+                        ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y - 1)
+                        : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y - 1);
+
+                    if (_player.MoveOrAttackSuccessful(target))
+                    {
+                        ActionTaken = true;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Keypad2))
+                {
+                    //Attempt move down
+                    Vector2 target;
+                    target = currentScene == _areaMapSceneName
+                        ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y)
+                        : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y);
+
+                    if (_player.MoveOrAttackSuccessful(target))
+                    {
+                        ActionTaken = true;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Keypad3))
+                {
+                    //Attempt move diagonal down and right
+                    Vector2 target;
+                    target = currentScene == _areaMapSceneName
+                        ? new Vector2(_player.CurrentTile.X - 1, _player.CurrentTile.Y + 1)
+                        : new Vector2(_player.CurrentCell.X - 1, _player.CurrentCell.Y + 1);
+
+                    if (_player.MoveOrAttackSuccessful(target))
+                    {
+                        ActionTaken = true;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Keypad6))
+                {
+                    //Attempt move right
+                    Vector2 target;
+                    target = currentScene == _areaMapSceneName
+                        ? new Vector2(_player.CurrentTile.X, _player.CurrentTile.Y + 1)
+                        : new Vector2(_player.CurrentCell.X, _player.CurrentCell.Y + 1);
+
+                    if (_player.MoveOrAttackSuccessful(target))
+                    {
+                        ActionTaken = true;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Keypad9))
+                {
+                    //Attempt move diagonal up and right
+                    Vector2 target;
+                    target = currentScene == _areaMapSceneName
+                        ? new Vector2(_player.CurrentTile.X + 1, _player.CurrentTile.Y + 1)
+                        : new Vector2(_player.CurrentCell.X + 1, _player.CurrentCell.Y + 1);
+
+                    if (_player.MoveOrAttackSuccessful(target))
+                    {
+                        ActionTaken = true;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Keypad5))
+                {
+                    ActionTaken = true;
+                }
+                else if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    EventMediator.Instance.Broadcast("GameMenuPopup", this);
+                }
+                else if (Input.GetKeyDown(KeyCode.J))
+                {
+                    EventMediator.Instance.Broadcast("PizzaJournal", this);
+                }
+                //Open dropped item popup for player's current tile
+                else if (Input.GetKeyDown(KeyCode.G))
+                {
+                    if (currentScene.Equals(_areaMapSceneName) && !GameManager.Instance.AnyActiveWindows())
+                    {
+                        EventMediator.Instance.Broadcast("DroppedItemPopup", this);
+                    }
+                }
+                //Interact 
+                else if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    EventMediator.Instance.Broadcast("Interact", this);
+                }
+                //Starts Look interaction
+                else if (Input.GetKeyDown(KeyCode.L))
+                {
+                    //todo open journal
+                }
+                else if (Input.GetMouseButtonDown(0))
+                {
+                    if (currentScene.Equals(_areaMapSceneName) && !GameManager.Instance.AnyActiveWindows() &&
+                        !IsUiClicked())
+                    {
+                        var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                        if (pos.x < 0 || pos.y < 0 || pos.x > GameManager.Instance.CurrentArea.Width ||
+                            pos.y > GameManager.Instance.CurrentArea.Height)
+                        {
+                            return;
+                        }
+
+                        var selectedTile = GameManager.Instance.CurrentArea.AreaTiles[(int) pos.y, (int) pos.x];
+
+                        //highlight tile and path to it
+                        StartCoroutine(HighlightPathToTarget(_player, selectedTile.GetGridPosition()));
+
+                        EventMediator.Instance.Broadcast("ActionPopup", this, selectedTile);
+                    }
+
+                }
+                else if (Input.GetMouseButtonDown(1))
+                {
+                    if (currentScene.Equals(_areaMapSceneName))
+                    {
+                        var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
+                            Vector2.positiveInfinity);
+
+                        if (hit && !GameManager.Instance.AnyActiveWindows())
+                        {
+                            var position = hit.collider.transform.localPosition;
+
+                            var entity = GameManager.Instance.CurrentArea.AreaTiles[(int) position.y, (int) position.x]
+                                .GetPresentEntity();
+
+                            EventMediator.Instance.Broadcast(GlobalHelper.InspectEntityEventName, this, entity);
+                        }
+                    }
+
+                    if (currentScene.Equals(_worldMapSceneName))
+                    {
+                        var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
+                            Vector2.positiveInfinity);
+
+                        if (hit && !_popupWindowOpen)
+                        {
+                            hit.collider.GetComponent<WorldTileInfo>()?.OnRightClick();
+                        }
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.KeypadMinus))
+                {
+                    if (currentScene.Equals(_areaMapSceneName))
+                    {
+                        SceneManager.LoadScene(_worldMapSceneName);
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.KeypadPlus))
+                {
+                    if (currentScene.Equals(_worldMapSceneName))
+                    {
+                        GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
+                        GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
+                        GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentArea;
+                        GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
+                        SceneManager.LoadScene(_areaMapSceneName);
                     }
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.KeypadMinus))
+
+            if (_currentInputMode == InputMode.TargetPicker)
             {
-                if (currentScene.Equals(_areaMapSceneName))
+                if (Input.GetKeyDown(KeyCode.Tab))
                 {
-                    SceneManager.LoadScene(_worldMapSceneName);
+                    ClearHighlight(_selectedTarget.CurrentTile);
+
+                    _selectedTarget = _picker.GetNextTarget();
+
+                    HighlightTile(_selectedTarget.CurrentTile);
                 }
-            }
-            else if (Input.GetKeyDown(KeyCode.KeypadPlus))
-            {
-                if (currentScene.Equals(_worldMapSceneName))
+
+                else if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    GameManager.Instance.PlayerEnteringAreaFromWorldMap = true;
-                    GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
-                    GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentArea;
-                    GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
-                    SceneManager.LoadScene(_areaMapSceneName);
+                    ClearHighlight(_selectedTarget.CurrentTile);
+
+                    _currentInputMode = InputMode.Adventure;
+                }
+
+                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                {
+                    ClearHighlight(_selectedTarget.CurrentTile);
+
+                    Debug.Log("Target Selected");
+
+                    _currentInputMode = InputMode.Adventure;
+
+                    EventMediator.Instance.Broadcast(GlobalHelper.AbilityTileSelectedEventName, this, _selectedTarget);
+
                 }
             }
         }
@@ -313,9 +361,14 @@ public class InputController : MonoBehaviour, ISubscriber
         foreach (var tilePosition in Path.vectorPath)
         {
             var tile = currentArea.AreaTiles[(int) tilePosition.y, (int) tilePosition.x];
-            tile.TextureInstance.GetComponent<SpriteRenderer>().color = HighlightedColor;
+            HighlightTile(tile);
             _highlightedTiles.Add(tile);
         }
+    }
+
+    public void HighlightTile(Tile tile)
+    {
+        tile.TextureInstance.GetComponent<SpriteRenderer>().color = HighlightedColor;
     }
 
     public void ClearHighlights()
@@ -332,8 +385,13 @@ public class InputController : MonoBehaviour, ISubscriber
                 continue;
             }
 
-            tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
+            ClearHighlight(tile);
         }
+    }
+
+    public void ClearHighlight(Tile tile)
+    {
+        tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     public void LoadStartingAbilitiesIntoAbilityBar()
@@ -403,6 +461,27 @@ public class InputController : MonoBehaviour, ISubscriber
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.InputReceivedEventName, this);
 
             _awaitingInputElsewhere = false;
+        }
+
+        if (eventName.Equals(GlobalHelper.SingleTileAbilityEventName))
+        {
+            if (!(broadcaster is Ability ability))
+            {
+                return;
+            }
+
+            _picker = new TargetPicker(ability);
+
+            _selectedTarget = _picker.GetCurrentTarget();
+
+            if (_selectedTarget == null)
+            {
+                return;
+            }
+
+            HighlightTile(_selectedTarget.CurrentTile);
+
+            _currentInputMode = InputMode.TargetPicker;
         }
     }
 }

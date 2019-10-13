@@ -2,5 +2,6 @@
 {
     Direction,
     Self,
-    SingleTile
+    SingleTile,
+    SingleEntity
 }
