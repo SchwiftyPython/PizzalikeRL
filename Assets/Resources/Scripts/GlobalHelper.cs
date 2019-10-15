@@ -22,6 +22,7 @@ public class GlobalHelper : MonoBehaviour
     public const string EffectDoneEventName = "EffectDone";
     public const string DirectionalAbilityEventName = "DirectionalAbility";
     public const string AbilityTileSelectedEventName = "AbilityTileSelected";
+    public const string EntityEnteredTileEventName = "EntityEnteredTile";
 
     #endregion EventNames
 

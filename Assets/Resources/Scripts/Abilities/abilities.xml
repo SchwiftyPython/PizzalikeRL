@@ -71,7 +71,7 @@
 	    <RequiresProperty></RequiresProperty>	    
 		<Dice></Dice>		
 	    <Cooldown> 8 </Cooldown>
-		<Target>single tile</Target>
+		<Target>direction</Target>
 		<Effect>immobilize</Effect>
 		<Range>4</Range>
 		<StartingAbility>true</StartingAbility>

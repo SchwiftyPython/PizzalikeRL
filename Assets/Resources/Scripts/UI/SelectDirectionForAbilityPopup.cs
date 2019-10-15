@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
@@ -16,6 +14,11 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         { KeyCode.Keypad2, GoalDirection.South },
         { KeyCode.Keypad3, GoalDirection.SouthEast }
     };
+
+    private Color _highlightedColor = Color.cyan;
+    private List<Tile> _highlightedTiles;
+
+    private int _abilityRange;
 
     private bool _listeningForInput;
 
@@ -90,8 +93,37 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         }
     }
 
+    private void HighlightTilesInRange()
+    {
+        //todo go in every direction and highlight tiles along the way
+    }
+
+    private List<Tile> HighLightTilesInDirection(GoalDirection direction, int distance)
+    {
+        var directionVector = GlobalHelper.GetVectorForDirection(direction);
+
+        var areaTiles = GameManager.Instance.CurrentArea.AreaTiles;
+
+        var startingTile = GameManager.Instance.CurrentTile;
+
+        var highlightedTiles = new List<Tile>();
+
+        for (var i = 0; i < distance; i++)
+        {
+
+        }
+
+        return highlightedTiles;
+    }
+
+    private void ClearHighlights()
+    {
+
+    }
+
     private void Show()
     {
+        HighlightTilesInRange();
         gameObject.SetActive(true);
         _listeningForInput = true;
         GameManager.Instance.AddActiveWindow(gameObject);
@@ -99,6 +131,7 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 
     private void Hide()
     {
+        ClearHighlights();
         gameObject.SetActive(false);
         _listeningForInput = false;
         GameManager.Instance.RemoveActiveWindow(gameObject);
@@ -118,6 +151,15 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         }
 
         _broadcaster = broadcaster;
+
+        if (!(parameter is int abilityRange))
+        {
+            _abilityRange = 1;
+        }
+        else
+        {
+            _abilityRange = abilityRange;
+        }
 
         if (eventName == GlobalHelper.DirectionalAbilityEventName)
         {

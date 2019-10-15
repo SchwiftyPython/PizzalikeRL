@@ -70,6 +70,17 @@ public class AbilityManager : MonoBehaviour, ISubscriber
         EventMediator.Instance.Broadcast(GlobalHelper.LoadAbilityBarEventName, this, map);
     }
 
+    public static void InstantiateAbilityPrefab(Tile target, GameObject prefab)
+    {
+        if (target.PresentProp.Texture != null)
+        {
+            Destroy(target.PresentProp.Texture);
+        }
+
+        target.PresentProp.Texture = Instantiate(target.PresentProp.Prefab,
+            new Vector2(target.Y, target.X), Quaternion.identity);
+    }
+
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Prop
 {
@@ -8,7 +9,9 @@ public class Prop
 
     public bool IsContainer;
 
-	public Prop(GameObject prefab, bool isContainer = false)
+    public List<string> EventsTriggeredBy;
+
+    public Prop(GameObject prefab, bool isContainer = false)
 	{
 	    Prefab = prefab;
 	    IsContainer = isContainer;
@@ -18,4 +21,11 @@ public class Prop
     {
         throw new System.NotImplementedException();
     }
+
+    public bool TriggeredByEvent(string eventName)
+    {
+        return EventsTriggeredBy.Contains(eventName);
+    }
+
+    public virtual void Trigger(string eventName, object parameter = null) { }
 }

@@ -1545,6 +1545,9 @@ public class Entity : ISubscriber
 
     public void ApplyEffect(string effectName, int duration, int amount, GoalDirection direction = GoalDirection.North)
     {
+        //todo we should be able to have the effect handle the specifics and just add to current effects.
+        //todo change to dictionary so it's not this ugly switch statement
+
         switch (effectName)
         {
             case "heal":
@@ -1588,5 +1591,12 @@ public class Entity : ISubscriber
                 _currentEffects.Add(bleedEffect);
                 break;
         }
+    }
+
+    public void ApplyEffect(Effect effect)
+    {
+        _currentEffects.Add(effect);
+
+        effect.Apply(this);
     }
 }
