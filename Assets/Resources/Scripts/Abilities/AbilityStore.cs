@@ -130,6 +130,8 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     public static Ability CreateAbility(AbilityTemplate template, Entity owner)
     {
+        //todo need dictionary
+
         if (template.Effect.Contains("heal"))
         {
             return new Heal(template, owner);
@@ -148,6 +150,11 @@ public class AbilityStore : MonoBehaviour,ISubscriber
         if (template.Name.Equals("stab", StringComparison.OrdinalIgnoreCase))
         {
             return new Stab(template, owner);
+        }
+
+        if (template.Name.Equals("spin web", StringComparison.OrdinalIgnoreCase))
+        {
+            return new SpinWeb(template, owner);
         }
 
         Debug.Log($"{template.Name} failed to create!");

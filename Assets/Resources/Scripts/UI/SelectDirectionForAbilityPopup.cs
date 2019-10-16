@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
@@ -95,30 +96,56 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 
     private void HighlightTilesInRange()
     {
-        //todo go in every direction and highlight tiles along the way
+        _highlightedTiles = new List<Tile>();
+
+        var directions = Enum.GetValues(typeof(GoalDirection));
+
+        foreach (var direction in directions)
+        {
+            _highlightedTiles.AddRange(HighLightTilesInDirection((GoalDirection) direction, _abilityRange));
+        }
     }
 
-    private List<Tile> HighLightTilesInDirection(GoalDirection direction, int distance)
+    private IEnumerable<Tile> HighLightTilesInDirection(GoalDirection direction, int distance)
     {
         var directionVector = GlobalHelper.GetVectorForDirection(direction);
 
         var areaTiles = GameManager.Instance.CurrentArea.AreaTiles;
 
-        var startingTile = GameManager.Instance.CurrentTile;
-
         var highlightedTiles = new List<Tile>();
+
+        var currentTile = GameManager.Instance.CurrentTile;
 
         for (var i = 0; i < distance; i++)
         {
+            var nextTileId = new Vector2(currentTile.X + directionVector.x, currentTile.Y + directionVector.y);
 
+            currentTile = areaTiles[(int) nextTileId.x, (int) nextTileId.y];
+
+            HighlightTile(currentTile);
+
+            highlightedTiles.Add(currentTile);
         }
 
         return highlightedTiles;
     }
 
+    private void HighlightTile(Tile tile)
+    {
+        tile.TextureInstance.GetComponent<SpriteRenderer>().color = _highlightedColor;
+    }
+
     private void ClearHighlights()
     {
+        if (_highlightedTiles == null || _highlightedTiles.Count < 1)
+        {
+            return;
+        }
 
+        foreach (var tile in _highlightedTiles)
+        {
+            tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
+        }
     }
 
     private void Show()
