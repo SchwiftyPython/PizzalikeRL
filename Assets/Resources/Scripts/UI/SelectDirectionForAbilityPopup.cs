@@ -77,6 +77,28 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 
             var targetEntity = targetTile.GetPresentEntity();
 
+            var i = 1;
+
+            while (targetEntity == null && i < _abilityRange)
+            {
+                targetVector = new Vector2(targetTile.X + directionVector.x, targetTile.Y + directionVector.y);
+
+                try
+                {
+                    targetTile = GameManager.Instance.CurrentArea.AreaTiles[(int)targetVector.x, (int)targetVector.y];
+                }
+                catch (Exception)
+                {
+                    break;
+                }
+
+                //todo check if tile blocks movement
+
+                targetEntity = targetTile.GetPresentEntity();
+
+                i++;
+            }
+
             if (targetEntity == null)
             {
                 //todo broadcast message no valid target
@@ -120,7 +142,16 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         {
             var nextTileId = new Vector2(currentTile.X + directionVector.x, currentTile.Y + directionVector.y);
 
-            currentTile = areaTiles[(int) nextTileId.x, (int) nextTileId.y];
+            try
+            {
+                currentTile = areaTiles[(int)nextTileId.x, (int)nextTileId.y];
+            }
+            catch (Exception)
+            {
+                break;
+            }
+
+            //todo check if tile blocks movement
 
             HighlightTile(currentTile);
 

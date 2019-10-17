@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class SpinWeb : Ability
+﻿public class SpinWeb : Ability
 {
     public SpinWeb(AbilityTemplate template, Entity owner) : base(template, owner)
     {
@@ -10,7 +8,7 @@ public class SpinWeb : Ability
     {
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilityTileSelectedEventName, this);
 
-        EventMediator.Instance.Broadcast(GlobalHelper.DirectionalAbilityEventName, this);
+        EventMediator.Instance.Broadcast(GlobalHelper.DirectionalAbilityEventName, this, Range);
 
         base.Use();
     }
@@ -21,12 +19,12 @@ public class SpinWeb : Ability
         {
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilityTileSelectedEventName, this);
 
-            if (!(parameter is Entity target))
+            if (!(parameter is DirectionStruct directionStruct))
             {
                 return;
             }
 
-            var tile = target.CurrentTile;
+            var tile = directionStruct.target.CurrentTile;
 
             if (tile.PresentProp != null)
             {
@@ -34,6 +32,8 @@ public class SpinWeb : Ability
             }
 
             tile.PresentProp = new Web();
+
+            directionStruct.target.ApplyEffect(new Immobilize(5));
 
             AbilityManager.InstantiateAbilityPrefab(tile, tile.PresentProp.Prefab);
 

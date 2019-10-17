@@ -15,6 +15,8 @@ public class Immobilize : Effect, ISubscriber
 
         entity.Mobile = false;
 
+        Debug.Log($"{entity.EntityType} is immobile!");
+
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
     }
 
@@ -30,6 +32,10 @@ public class Immobilize : Effect, ISubscriber
             else
             {
                 entity.Mobile = true;
+
+                GlobalHelper.DestroyObject(entity.CurrentTile.PresentProp.Texture);
+
+                entity.CurrentTile.PresentProp = null;
 
                 Debug.Log($"{entity.EntityType} is no longer immobile!");
 

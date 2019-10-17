@@ -44,6 +44,7 @@ public class Ability : ISubscriber
         Dice = template.Dice;
         Cooldown = template.Cooldown;
         Effect = template.Effect;
+        Range = template.Range;
         StartingAbility = template.StartingAbility;
         RemainingCooldownTurns = 0;
         Owner = owner;

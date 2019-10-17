@@ -54,6 +54,11 @@ public class GlobalHelper : MonoBehaviour
         }
     }
 
+    public static void DestroyObject(GameObject go)
+    {
+        Destroy(go);
+    }
+
     public static string Capitalize(string s)
     {
         if (string.IsNullOrEmpty(s))
