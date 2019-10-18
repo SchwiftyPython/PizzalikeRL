@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 {
@@ -16,7 +17,7 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         { KeyCode.Keypad3, GoalDirection.SouthEast }
     };
 
-    private Color _highlightedColor = Color.cyan;
+    private readonly Color _highlightedColor = Color.cyan;
     private List<Tile> _highlightedTiles;
 
     private int _abilityRange;
@@ -92,7 +93,10 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
                     break;
                 }
 
-                //todo check if tile blocks movement
+                if (!_highlightedTiles.Contains(targetTile))
+                {
+                    break;
+                }
 
                 targetEntity = targetTile.GetPresentEntity();
 
@@ -151,7 +155,10 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
                 break;
             }
 
-            //todo check if tile blocks movement
+            if (currentTile.GetBlocksLight() || currentTile.Visibility != Visibilities.Visible)
+            {
+                break;
+            }
 
             HighlightTile(currentTile);
 
@@ -193,6 +200,7 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         gameObject.SetActive(false);
         _listeningForInput = false;
         GameManager.Instance.RemoveActiveWindow(gameObject);
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     private void OnDestroy()
