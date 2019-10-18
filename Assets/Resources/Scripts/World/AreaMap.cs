@@ -482,6 +482,10 @@ public class AreaMap : MonoBehaviour
             _player.CurrentCell = _currentArea.ParentCell;
             _currentArea.AreaTiles[_player.CurrentTile.X, _player.CurrentTile.Y]
                 .Visibility = Visibilities.Visible;
+
+            GameManager.Instance.CurrentTile = _player.CurrentTile;
+            GameManager.Instance.CurrentArea = _player.CurrentArea;
+            GameManager.Instance.CurrentCell = _player.CurrentCell;
         }
     }
 

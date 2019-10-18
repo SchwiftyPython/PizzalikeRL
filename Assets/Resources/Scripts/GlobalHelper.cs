@@ -22,6 +22,7 @@ public class GlobalHelper : MonoBehaviour
     public const string EffectDoneEventName = "EffectDone";
     public const string DirectionalAbilityEventName = "DirectionalAbility";
     public const string AbilityTileSelectedEventName = "AbilityTileSelected";
+    public const string EntityEnteredTileEventName = "EntityEnteredTile";
 
     #endregion EventNames
 
@@ -51,6 +52,11 @@ public class GlobalHelper : MonoBehaviour
         {
             Destroy(parent.transform.GetChild(i).gameObject);
         }
+    }
+
+    public static void DestroyObject(GameObject go)
+    {
+        Destroy(go);
     }
 
     public static string Capitalize(string s)

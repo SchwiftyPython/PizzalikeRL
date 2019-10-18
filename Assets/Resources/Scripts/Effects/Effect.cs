@@ -32,4 +32,6 @@ public class Effect
             return name;
         }
     }
+
+    public virtual void Apply(Entity target) { }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 {
@@ -16,6 +16,11 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         { KeyCode.Keypad2, GoalDirection.South },
         { KeyCode.Keypad3, GoalDirection.SouthEast }
     };
+
+    private readonly Color _highlightedColor = Color.cyan;
+    private List<Tile> _highlightedTiles;
+
+    private int _abilityRange;
 
     private bool _listeningForInput;
 
@@ -73,6 +78,31 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 
             var targetEntity = targetTile.GetPresentEntity();
 
+            var i = 1;
+
+            while (targetEntity == null && i < _abilityRange)
+            {
+                targetVector = new Vector2(targetTile.X + directionVector.x, targetTile.Y + directionVector.y);
+
+                try
+                {
+                    targetTile = GameManager.Instance.CurrentArea.AreaTiles[(int)targetVector.x, (int)targetVector.y];
+                }
+                catch (Exception)
+                {
+                    break;
+                }
+
+                if (!_highlightedTiles.Contains(targetTile))
+                {
+                    break;
+                }
+
+                targetEntity = targetTile.GetPresentEntity();
+
+                i++;
+            }
+
             if (targetEntity == null)
             {
                 //todo broadcast message no valid target
@@ -90,8 +120,75 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         }
     }
 
+    private void HighlightTilesInRange()
+    {
+        _highlightedTiles = new List<Tile>();
+
+        var directions = Enum.GetValues(typeof(GoalDirection));
+
+        foreach (var direction in directions)
+        {
+            _highlightedTiles.AddRange(HighLightTilesInDirection((GoalDirection) direction, _abilityRange));
+        }
+    }
+
+    private IEnumerable<Tile> HighLightTilesInDirection(GoalDirection direction, int distance)
+    {
+        var directionVector = GlobalHelper.GetVectorForDirection(direction);
+
+        var areaTiles = GameManager.Instance.CurrentArea.AreaTiles;
+
+        var highlightedTiles = new List<Tile>();
+
+        var currentTile = GameManager.Instance.CurrentTile;
+
+        for (var i = 0; i < distance; i++)
+        {
+            var nextTileId = new Vector2(currentTile.X + directionVector.x, currentTile.Y + directionVector.y);
+
+            try
+            {
+                currentTile = areaTiles[(int)nextTileId.x, (int)nextTileId.y];
+            }
+            catch (Exception)
+            {
+                break;
+            }
+
+            if (currentTile.GetBlocksLight() || currentTile.Visibility != Visibilities.Visible)
+            {
+                break;
+            }
+
+            HighlightTile(currentTile);
+
+            highlightedTiles.Add(currentTile);
+        }
+
+        return highlightedTiles;
+    }
+
+    private void HighlightTile(Tile tile)
+    {
+        tile.TextureInstance.GetComponent<SpriteRenderer>().color = _highlightedColor;
+    }
+
+    private void ClearHighlights()
+    {
+        if (_highlightedTiles == null || _highlightedTiles.Count < 1)
+        {
+            return;
+        }
+
+        foreach (var tile in _highlightedTiles)
+        {
+            tile.TextureInstance.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
+
     private void Show()
     {
+        HighlightTilesInRange();
         gameObject.SetActive(true);
         _listeningForInput = true;
         GameManager.Instance.AddActiveWindow(gameObject);
@@ -99,9 +196,11 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 
     private void Hide()
     {
+        ClearHighlights();
         gameObject.SetActive(false);
         _listeningForInput = false;
         GameManager.Instance.RemoveActiveWindow(gameObject);
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     private void OnDestroy()
@@ -118,6 +217,15 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
         }
 
         _broadcaster = broadcaster;
+
+        if (!(parameter is int abilityRange))
+        {
+            _abilityRange = 1;
+        }
+        else
+        {
+            _abilityRange = abilityRange;
+        }
 
         if (eventName == GlobalHelper.DirectionalAbilityEventName)
         {
