@@ -42,6 +42,8 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
         SetIcon(icon);
         _remainingCooldownTurns = ability.RemainingCooldownTurns;
 
+        ability.AbilityButton = _button;
+
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
     }
 
