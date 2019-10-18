@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.UI;
 
 public class Ability : ISubscriber
 {
@@ -32,6 +33,8 @@ public class Ability : ISubscriber
 
     public Entity Owner;
 
+    public Button AbilityButton;
+
     public Ability(AbilityTemplate template, Entity owner)
     {
         Name = template.Name;
@@ -54,11 +57,7 @@ public class Ability : ISubscriber
 
     public virtual void Use()
     {
-        if (Cooldown > 0)
-        {
-            //todo disable ability
-            EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
-        }
+        
     }
 
     public virtual void OnNotify(string eventName, object broadcaster, object parameter = null)
@@ -71,9 +70,20 @@ public class Ability : ISubscriber
             }
             else
             {
-                //todo enable ability
+                AbilityButton.interactable = true;
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
             }
+        }
+    }
+
+    public void UseAbilitySuccess()
+    {
+        EventMediator.Instance.Broadcast(GlobalHelper.ActionTakenEventName, this);
+
+        if (Cooldown > 0)
+        {
+            AbilityButton.interactable = false;
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
         }
     }
 }

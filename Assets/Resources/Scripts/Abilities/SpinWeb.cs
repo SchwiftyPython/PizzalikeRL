@@ -38,6 +38,8 @@
             AbilityManager.InstantiateAbilityPrefab(tile, tile.PresentProp.Prefab);
 
             RemainingCooldownTurns = Cooldown;
+
+            UseAbilitySuccess();
         }
 
         base.OnNotify(eventName, broadcaster, parameter);

@@ -56,6 +56,7 @@ public class InputController : MonoBehaviour, ISubscriber
         _canvasEventSystem = Canvas.GetComponent<EventSystem>();
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.LoadAbilityBarEventName, this);
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.ActionTakenEventName, this);
     }
 
     private void Update()
@@ -173,6 +174,10 @@ public class InputController : MonoBehaviour, ISubscriber
                 {
                     ActionTaken = true;
                 }
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad5))
+            {
+                ActionTaken = true;
             }
             else if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -376,6 +381,10 @@ public class InputController : MonoBehaviour, ISubscriber
             }
 
             LoadStartingAbilitiesIntoAbilityBar();
+        }
+        else if (eventName.Equals(GlobalHelper.ActionTakenEventName))
+        {
+            ActionTaken = true;
         }
     }
 }
