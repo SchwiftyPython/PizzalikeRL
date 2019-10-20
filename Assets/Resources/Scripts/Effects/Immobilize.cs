@@ -33,9 +33,7 @@ public class Immobilize : Effect, ISubscriber
             {
                 entity.Mobile = true;
 
-                GlobalHelper.DestroyObject(entity.CurrentTile.PresentProp.Texture);
-
-                entity.CurrentTile.PresentProp = null;
+                GlobalHelper.DestroyObject(entity.CurrentTile.AbilityTexture);
 
                 Debug.Log($"{entity.EntityType} is no longer immobile!");
 
