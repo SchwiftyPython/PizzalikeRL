@@ -72,12 +72,7 @@ public class AbilityManager : MonoBehaviour, ISubscriber
 
     public static void InstantiateAbilityPrefab(Tile target, GameObject prefab)
     {
-        if (target.PresentProp.Texture != null)
-        {
-            Destroy(target.PresentProp.Texture);
-        }
-
-        target.PresentProp.Texture = Instantiate(target.PresentProp.Prefab,
+        target.AbilityTexture = Instantiate(prefab,
             new Vector2(target.Y, target.X), Quaternion.identity);
     }
 

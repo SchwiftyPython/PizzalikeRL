@@ -1,28 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
 
-public class Web : Prop
+public class Web : MonoBehaviour
 {
-    //todo maybe rethink this as prop and make some ability texture thing
-    //todo plays like shit if they're on headstone or something
+    private readonly GameObject _prefab = WorldData.Instance.SpiderWebPrefab;
 
-    public Web() : base(WorldData.Instance.SpiderWebPrefab)
+    public Web(Tile tile)
     {
-//        EventsTriggeredBy = new List<string>
-//        {
-//            GlobalHelper.EntityEnteredTileEventName
-//        };
-    }
-
-    public override void Trigger(string eventName, object parameter)
-    {
-//        if (eventName.Equals(GlobalHelper.EntityEnteredTileEventName))
-//        {
-//            if (!(parameter is Entity targetEntity))
-//            {
-//                return;
-//            }
-//
-//            targetEntity.ApplyEffect(new Immobilize(7));
-//        }
+        tile.AbilityTexture = Instantiate(_prefab,
+            new Vector2(tile.Y, tile.X), Quaternion.identity);
     }
 }

@@ -43,6 +43,8 @@ public class Tile
     public Topping PresentTopping { get; set; }
     public Prop PresentProp { get; set; }
 
+    public GameObject AbilityTexture;
+
     public Visibilities Visibility
     {
         get { return _visibility; }

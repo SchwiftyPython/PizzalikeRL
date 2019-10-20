@@ -1,5 +1,10 @@
-﻿public class SpinWeb : Ability
+﻿using UnityEngine;
+
+public class SpinWeb : Ability
 {
+    private readonly GameObject _prefab = WorldData.Instance.SpiderWebPrefab;
+    private const int ImmobilizeDuration = 5;
+
     public SpinWeb(AbilityTemplate template, Entity owner) : base(template, owner)
     {
     }
@@ -26,16 +31,9 @@
 
             var tile = directionStruct.target.CurrentTile;
 
-            if (tile.PresentProp != null)
-            {
-                return;
-            }
+            directionStruct.target.ApplyEffect(new Immobilize(ImmobilizeDuration));
 
-            tile.PresentProp = new Web();
-
-            directionStruct.target.ApplyEffect(new Immobilize(5));
-
-            AbilityManager.InstantiateAbilityPrefab(tile, tile.PresentProp.Prefab);
+            AbilityManager.InstantiateAbilityPrefab(tile, _prefab);
 
             RemainingCooldownTurns = Cooldown;
 
