@@ -26,8 +26,6 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 
     private object _broadcaster;
 
-    private readonly Vector2 _startingPosition = new Vector2(-185, 503);
-
     private void Start()
     {
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.DirectionalAbilityEventName, this);
@@ -190,7 +188,6 @@ public class SelectDirectionForAbilityPopup : MonoBehaviour, ISubscriber
 
     private void Show()
     {
-        transform.localPosition = _startingPosition;
         HighlightTilesInRange();
         gameObject.SetActive(true);
         _listeningForInput = true;
