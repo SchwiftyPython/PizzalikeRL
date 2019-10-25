@@ -17,7 +17,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
     };
 
     private bool _listeningForInput;
-    private Vector2 _startingPosition = new Vector2(-185, 65);
+    private readonly Vector2 _startingPosition = new Vector2(-185, 503);
 
     private void Start()
     {
@@ -82,11 +82,6 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
     private void Show()
     {
         transform.localPosition = _startingPosition;
-        if (PopupIsObstructingPlayer())
-        {
-
-        }
-
         gameObject.SetActive(true);
         _listeningForInput = true;
         GameManager.Instance.AddActiveWindow(gameObject);
@@ -97,22 +92,6 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
         gameObject.SetActive(false);
         _listeningForInput = false;
         GameManager.Instance.RemoveActiveWindow(gameObject);
-    }
-
-    private bool PopupIsObstructingPlayer()
-    {
-        var playerSprite = GameManager.Instance.Player.GetSprite();
-
-        var popupRectTransform = gameObject.GetComponent<RectTransform>();
-
-        var playerPositionWorld = transform.TransformPoint(playerSprite.transform.position);
-
-        if (RectTransformUtility.RectangleContainsScreenPoint(popupRectTransform, playerPositionWorld))
-        {
-            return true;
-        }
-
-        return false;
     }
 
     private void OnDestroy()
