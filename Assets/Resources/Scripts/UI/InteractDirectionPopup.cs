@@ -17,6 +17,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
     };
 
     private bool _listeningForInput;
+    private readonly Vector2 _startingPosition = new Vector2(-185, 503);
 
     private void Start()
     {
@@ -80,6 +81,7 @@ public class InteractDirectionPopup : MonoBehaviour, ISubscriber
 
     private void Show()
     {
+        transform.localPosition = _startingPosition;
         gameObject.SetActive(true);
         _listeningForInput = true;
         GameManager.Instance.AddActiveWindow(gameObject);
