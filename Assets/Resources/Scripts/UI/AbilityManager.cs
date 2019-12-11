@@ -76,6 +76,16 @@ public class AbilityManager : MonoBehaviour, ISubscriber
             new Vector2(target.Y, target.X), Quaternion.identity);
     }
 
+    public void EnableAbility()
+    {
+
+    }
+
+    public void DisableAbility()
+    {
+
+    }
+
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         

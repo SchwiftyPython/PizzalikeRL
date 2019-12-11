@@ -411,7 +411,10 @@ public class Entity : ISubscriber
         //todo equipment that occupies more then one slot
         //todo two slot boolean in item.xml
 
-        Inventory.Remove(item.Id);
+        if (Inventory.ContainsKey(item.Id))
+        {
+            Inventory.Remove(item.Id);
+        }
 
         if (Equipped[slot] != null)
         {
@@ -419,9 +422,12 @@ public class Entity : ISubscriber
         }
 
         Equipped[slot] = item;
+
+        //todo cycle through abilities and enable or disable as needed
         
-        //todo equipment changed and inventory changed events
-        EventMediator.Instance.Broadcast("EquipmentChanged", this);
+        EventMediator.Instance.Broadcast(GlobalHelper.ItemEquippedEventName, this);
+
+        //todo subscribe InventoryWindow to event
         if (InventoryWindow.Instance != null) InventoryWindow.Instance.InventoryChanged = true;
     }
 

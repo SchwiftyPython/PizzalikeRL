@@ -42,9 +42,19 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
         SetIcon(icon);
         _remainingCooldownTurns = ability.RemainingCooldownTurns;
 
-        ability.AbilityButton = _button;
+        ability.AssignAbilityToButton(_button);
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
+    }
+
+    public void EnableButton()
+    {
+        _button.interactable = true;
+    }
+
+    public void DisableButton()
+    {
+        _button.interactable = false;
     }
 
     public void RemoveAbility()

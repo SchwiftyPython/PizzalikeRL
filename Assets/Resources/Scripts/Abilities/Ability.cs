@@ -3,6 +3,10 @@ using UnityEngine.UI;
 
 public class Ability : ISubscriber
 {
+    private UseAbilityButton _buttonScript;
+
+    private bool _enabled;
+
     public string Name;
     
     public string Attribute; //todo make enum
@@ -60,6 +64,12 @@ public class Ability : ISubscriber
         
     }
 
+    public void AssignAbilityToButton(Button abilityButton)
+    {
+        AbilityButton = abilityButton;
+        _buttonScript = abilityButton.GetComponent<Button>().GetComponent<UseAbilityButton>();
+    }
+
     public virtual void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         if (eventName == GlobalHelper.EndTurnEventName)
@@ -70,7 +80,8 @@ public class Ability : ISubscriber
             }
             else
             {
-                AbilityButton.interactable = true;
+                _enabled = true;
+                _buttonScript?.EnableButton();
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
             }
         }
@@ -82,7 +93,8 @@ public class Ability : ISubscriber
 
         if (Cooldown > 0)
         {
-            AbilityButton.interactable = false;
+            _enabled = false;
+            _buttonScript?.DisableButton();
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
         }
     }
