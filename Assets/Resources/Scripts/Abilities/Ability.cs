@@ -57,11 +57,31 @@ public class Ability : ISubscriber
         Owner = owner;
 
         TargetType = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
+
+        if (!string.IsNullOrEmpty(RequiresProperty))
+        {
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
+        }
     }
 
     public virtual void Use()
     {
         
+    }
+
+    public void Enable()
+    {
+        _enabled = true;
+    }
+
+    public void Disable()
+    {
+        _enabled = false;
+    }
+
+    public bool IsEnabled()
+    {
+        return _enabled;
     }
 
     public void AssignAbilityToButton(Button abilityButton)
@@ -81,9 +101,12 @@ public class Ability : ISubscriber
             else
             {
                 _enabled = true;
-                _buttonScript?.EnableButton();
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
             }
+        }
+        else if (eventName == GlobalHelper.ItemEquippedEventName)
+        {
+
         }
     }
 
@@ -94,7 +117,6 @@ public class Ability : ISubscriber
         if (Cooldown > 0)
         {
             _enabled = false;
-            _buttonScript?.DisableButton();
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
         }
     }

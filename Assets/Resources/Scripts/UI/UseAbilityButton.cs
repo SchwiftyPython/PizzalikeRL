@@ -47,12 +47,12 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
     }
 
-    public void EnableButton()
+    private void EnableButton()
     {
         _button.interactable = true;
     }
 
-    public void DisableButton()
+    private void DisableButton()
     {
         _button.interactable = false;
     }
@@ -76,8 +76,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
     {
         _remainingCooldownTurns = _ability.Cooldown;
         _ability.Use();
-
-        //todo disable during cooldown
+        DisableButton();
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
@@ -90,7 +89,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
             }
             else
             {
-                //todo enable ability
+                EnableButton();
             }
         }
     }
