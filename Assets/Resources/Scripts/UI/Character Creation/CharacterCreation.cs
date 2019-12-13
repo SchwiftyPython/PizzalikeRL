@@ -743,7 +743,8 @@ public class CharacterCreation : MonoBehaviour
         return abilities;
     }
 
-    private IDictionary<Entity.EquipmentSlot, Item> GenerateStartingEquipment()
+    //todo need to move this to item store so NPCs can use via Entity class
+    private void GenerateStartingEquipment()
     {
         //todo need some kind of cap that varies depending on entity
         //todo player starting out should be capped at on uncommon
@@ -752,16 +753,11 @@ public class CharacterCreation : MonoBehaviour
         //todo a named character read about in books requires a legendary item
         //todo possibly base on background
 
-        var startingEquipment = _player.Equipped;
+        //////// TESTING pierce //////////////////////////////////////////////
 
-        //todo we need a test with a pierce
-        //////// TESTING BLUDGEON //////////////////////////////////////////////
+        _player.EquipItem(ItemStore.Instance.GetRandomWeaponByProperty("pierce"), Entity.EquipmentSlot.RightHandOne);
 
-        startingEquipment[Entity.EquipmentSlot.RightHandOne] = ItemStore.Instance.GetRandomWeaponByProperty("pierce");
-
-        //////// END TESTING BLUDGEON ////////////////////////////////////////
-
-        return startingEquipment;
+        //////// END TESTING pierce ////////////////////////////////////////
     }
 
     private void DisplaySelectedAbilityDescription(string description)
@@ -834,9 +830,9 @@ public class CharacterCreation : MonoBehaviour
         _player.Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
         _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
 
-        _player.Equipped = GenerateStartingEquipment();
-
         _player.Abilities = BuildAbilityDictionary();
+
+        GenerateStartingEquipment();
 
         var enteredName = NameBox.GetComponent<TextMeshProUGUI>().text.Trim();
 

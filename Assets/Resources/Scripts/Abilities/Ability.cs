@@ -47,7 +47,7 @@ public class Ability : ISubscriber
         RequiresBackground = template.RequiresBackground;
         Description = template.Description;
         RequiresBodyPart = template.RequiresBodyPart;
-        RequiresProperty = template.RequiresProperty;
+        RequiresProperty = template.RequiresProperty.Trim();
         Dice = template.Dice;
         Cooldown = template.Cooldown;
         Effect = template.Effect;
@@ -58,7 +58,7 @@ public class Ability : ISubscriber
 
         TargetType = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
 
-        if (!string.IsNullOrEmpty(RequiresProperty))
+        if (!string.IsNullOrEmpty(RequiresProperty) && Owner.IsPlayer())
         {
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
         }
@@ -100,13 +100,25 @@ public class Ability : ISubscriber
             }
             else
             {
-                _enabled = true;
+                Enable();
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
             }
         }
         else if (eventName == GlobalHelper.ItemEquippedEventName)
         {
+            if (!(parameter is Item equippedItem))
+            {
+                return;
+            }
 
+            if (equippedItem.Properties.Contains(RequiresProperty))
+            {
+                Enable();
+            }
+            else
+            {
+                Disable();
+            }
         }
     }
 
@@ -116,7 +128,12 @@ public class Ability : ISubscriber
 
         if (Cooldown > 0)
         {
-            _enabled = false;
+            if (_buttonScript != null)
+            {
+                _buttonScript.DisableButton();
+            }
+
+            Disable();
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
         }
     }

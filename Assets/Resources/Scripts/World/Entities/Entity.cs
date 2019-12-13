@@ -423,14 +423,16 @@ public class Entity : ISubscriber
 
         Equipped[slot] = item;
 
-        //todo cycle through abilities and enable or disable as needed
-        
-        EventMediator.Instance.Broadcast(GlobalHelper.ItemEquippedEventName, this);
+        //todo issue with this is NPCs' abilities will also be subscribed to this event
+        //todo may be able to limit NPC subscription by current area then cost will be negligible
+        //todo then can just check if the broadcaster is the ability's owner
+        EventMediator.Instance.Broadcast(GlobalHelper.ItemEquippedEventName, this, item);
 
         //todo subscribe InventoryWindow to event
         if (InventoryWindow.Instance != null) InventoryWindow.Instance.InventoryChanged = true;
     }
 
+    //todo send event out for abilities, inventory
     public void UnequipItem(EquipmentSlot slot)
     {
         if (Equipped[slot] == null)

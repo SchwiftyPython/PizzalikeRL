@@ -45,14 +45,39 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
         ability.AssignAbilityToButton(_button);
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
+
+        if (!string.IsNullOrEmpty(ability.RequiresProperty))
+        {
+            CheckEquippedItemsForRequiredProperty();
+
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
+        }
+        else
+        {
+            EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.ItemEquippedEventName, this);
+        }
     }
 
-    private void EnableButton()
+    public void CheckEquippedItemsForRequiredProperty()
+    {
+        DisableButton();
+
+        foreach (var equippedItem in GameManager.Instance.Player.Equipped.Values)
+        {
+            if (equippedItem != null && equippedItem.Properties.Contains(_ability.RequiresProperty))
+            {
+                EnableButton();
+                break;
+            }
+        }
+    }
+
+    public void EnableButton()
     {
         _button.interactable = true;
     }
 
-    private void DisableButton()
+    public void DisableButton()
     {
         _button.interactable = false;
     }
@@ -76,7 +101,6 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
     {
         _remainingCooldownTurns = _ability.Cooldown;
         _ability.Use();
-        DisableButton();
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
@@ -90,6 +114,23 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
             else
             {
                 EnableButton();
+            }
+        }
+        else if (eventName == GlobalHelper.ItemEquippedEventName)
+        {
+            if (!(parameter is Item equippedItem))
+            {
+                return;
+            }
+
+            //todo need to check all items for required property not just equipped item
+            if (equippedItem.Properties.Contains(_ability.RequiresProperty))
+            {
+                EnableButton();
+            }
+            else
+            {
+                DisableButton();
             }
         }
     }
