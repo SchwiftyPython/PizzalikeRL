@@ -411,7 +411,10 @@ public class Entity : ISubscriber
         //todo equipment that occupies more then one slot
         //todo two slot boolean in item.xml
 
-        Inventory.Remove(item.Id);
+        if (Inventory.ContainsKey(item.Id))
+        {
+            Inventory.Remove(item.Id);
+        }
 
         if (Equipped[slot] != null)
         {
@@ -419,9 +422,13 @@ public class Entity : ISubscriber
         }
 
         Equipped[slot] = item;
-        
-        //todo equipment changed and inventory changed events
-        EventMediator.Instance.Broadcast("EquipmentChanged", this);
+
+        //todo issue with this is NPCs' abilities will also be subscribed to this event
+        //todo may be able to limit NPC subscription by current area then cost will be negligible
+        //todo then can just check if the broadcaster is the ability's owner
+        EventMediator.Instance.Broadcast(GlobalHelper.ItemEquippedEventName, this);
+
+        //todo subscribe InventoryWindow to event
         if (InventoryWindow.Instance != null) InventoryWindow.Instance.InventoryChanged = true;
     }
 
@@ -436,7 +443,7 @@ public class Entity : ISubscriber
 
         Equipped[slot] = null;
 
-        EventMediator.Instance.Broadcast("EquipmentChanged", this);
+        EventMediator.Instance.Broadcast(GlobalHelper.ItemUnequippedEventName, this);
         InventoryWindow.Instance.InventoryChanged = true;
     }
 

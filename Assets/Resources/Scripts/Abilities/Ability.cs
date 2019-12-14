@@ -3,6 +3,10 @@ using UnityEngine.UI;
 
 public class Ability : ISubscriber
 {
+    private UseAbilityButton _buttonScript;
+
+    private bool _enabled;
+
     public string Name;
     
     public string Attribute; //todo make enum
@@ -43,7 +47,7 @@ public class Ability : ISubscriber
         RequiresBackground = template.RequiresBackground;
         Description = template.Description;
         RequiresBodyPart = template.RequiresBodyPart;
-        RequiresProperty = template.RequiresProperty;
+        RequiresProperty = template.RequiresProperty.Trim();
         Dice = template.Dice;
         Cooldown = template.Cooldown;
         Effect = template.Effect;
@@ -53,11 +57,52 @@ public class Ability : ISubscriber
         Owner = owner;
 
         TargetType = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
+
+        if (!string.IsNullOrEmpty(RequiresProperty) && Owner.IsPlayer())
+        {
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemUnequippedEventName, this);
+        }
     }
 
     public virtual void Use()
     {
         
+    }
+
+    public void Enable()
+    {
+        _enabled = true;
+    }
+
+    public void Disable()
+    {
+        _enabled = false;
+    }
+
+    public bool IsEnabled()
+    {
+        return _enabled;
+    }
+
+    public void AssignAbilityToButton(Button abilityButton)
+    {
+        AbilityButton = abilityButton;
+        _buttonScript = abilityButton.GetComponent<Button>().GetComponent<UseAbilityButton>();
+    }
+
+    public void CheckEquippedItemsForRequiredProperty()
+    {
+        Disable();
+
+        foreach (var equippedItem in GameManager.Instance.Player.Equipped.Values)
+        {
+            if (equippedItem != null && equippedItem.Properties.Contains(RequiresProperty))
+            {
+                Enable();
+                break;
+            }
+        }
     }
 
     public virtual void OnNotify(string eventName, object broadcaster, object parameter = null)
@@ -70,9 +115,13 @@ public class Ability : ISubscriber
             }
             else
             {
-                AbilityButton.interactable = true;
+                Enable();
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
             }
+        }
+        else if (eventName == GlobalHelper.ItemEquippedEventName || eventName == GlobalHelper.ItemUnequippedEventName)
+        {
+            CheckEquippedItemsForRequiredProperty();
         }
     }
 
@@ -82,7 +131,12 @@ public class Ability : ISubscriber
 
         if (Cooldown > 0)
         {
-            AbilityButton.interactable = false;
+            if (_buttonScript != null)
+            {
+                _buttonScript.DisableButton();
+            }
+
+            Disable();
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
         }
     }

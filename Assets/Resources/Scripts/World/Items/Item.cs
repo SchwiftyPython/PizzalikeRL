@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Item
@@ -20,6 +21,8 @@ public class Item
 
     public Dice ItemDice;
 
+    public List<string> Properties;
+
     public Item(){ }
 
     public Item(ItemTemplate template, ItemRarity rarity)
@@ -28,6 +31,7 @@ public class Item
         ItemCategory = template.Category;
         EquipmentSlotType = template.EquipmentSlotType;
         Rarity = rarity;
+        Properties = template.Properties;
         Id = Guid.NewGuid();
 
         //May end up getting prefab based on item characteristics and/or modifying appearance at runtime.
