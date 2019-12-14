@@ -823,6 +823,9 @@ public class CharacterCreation : MonoBehaviour
     private void PreparePlayerForPlay()
     {
         _player = new Entity(_playerTemplate, null, true);
+
+        GameManager.Instance.Player = _player;
+
         _player.SetStats(_strength, _agility, _constitution, _intelligence);
 
         _player.CreateFluff(_playerTemplate);
@@ -840,8 +843,6 @@ public class CharacterCreation : MonoBehaviour
         {
             _player.Fluff.Name = enteredName;
         }
-
-        GameManager.Instance.Player = _player;
 
         WorldData.Instance.Entities.Add(_player.Id, _player);
     }

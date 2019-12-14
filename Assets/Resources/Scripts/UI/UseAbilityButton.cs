@@ -51,6 +51,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
             CheckEquippedItemsForRequiredProperty();
 
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemUnequippedEventName, this);
         }
         else
         {
@@ -116,22 +117,9 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
                 EnableButton();
             }
         }
-        else if (eventName == GlobalHelper.ItemEquippedEventName)
+        else if (eventName == GlobalHelper.ItemEquippedEventName || eventName == GlobalHelper.ItemUnequippedEventName)
         {
-            if (!(parameter is Item equippedItem))
-            {
-                return;
-            }
-
-            //todo need to check all items for required property not just equipped item
-            if (equippedItem.Properties.Contains(_ability.RequiresProperty))
-            {
-                EnableButton();
-            }
-            else
-            {
-                DisableButton();
-            }
+            CheckEquippedItemsForRequiredProperty();
         }
     }
 }

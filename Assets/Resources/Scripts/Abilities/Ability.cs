@@ -61,6 +61,7 @@ public class Ability : ISubscriber
         if (!string.IsNullOrEmpty(RequiresProperty) && Owner.IsPlayer())
         {
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemUnequippedEventName, this);
         }
     }
 
@@ -90,6 +91,20 @@ public class Ability : ISubscriber
         _buttonScript = abilityButton.GetComponent<Button>().GetComponent<UseAbilityButton>();
     }
 
+    public void CheckEquippedItemsForRequiredProperty()
+    {
+        Disable();
+
+        foreach (var equippedItem in GameManager.Instance.Player.Equipped.Values)
+        {
+            if (equippedItem != null && equippedItem.Properties.Contains(RequiresProperty))
+            {
+                Enable();
+                break;
+            }
+        }
+    }
+
     public virtual void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         if (eventName == GlobalHelper.EndTurnEventName)
@@ -104,21 +119,9 @@ public class Ability : ISubscriber
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
             }
         }
-        else if (eventName == GlobalHelper.ItemEquippedEventName)
+        else if (eventName == GlobalHelper.ItemEquippedEventName || eventName == GlobalHelper.ItemUnequippedEventName)
         {
-            if (!(parameter is Item equippedItem))
-            {
-                return;
-            }
-
-            if (equippedItem.Properties.Contains(RequiresProperty))
-            {
-                Enable();
-            }
-            else
-            {
-                Disable();
-            }
+            CheckEquippedItemsForRequiredProperty();
         }
     }
 

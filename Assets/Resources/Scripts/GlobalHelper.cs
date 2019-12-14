@@ -25,6 +25,8 @@ public class GlobalHelper : MonoBehaviour
     public const string EntityEnteredTileEventName = "EntityEnteredTile";
     public const string ActionTakenEventName = "ActionTaken";
     public const string ItemEquippedEventName = "ItemEquipped";
+    public const string ItemUnequippedEventName = "ItemUnequipped";
+
 
     #endregion EventNames
 
