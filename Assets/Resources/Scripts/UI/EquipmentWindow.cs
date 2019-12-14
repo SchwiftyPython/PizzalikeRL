@@ -37,9 +37,10 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
         _parent = transform;
         _keyMapLetter = 'a';
         PopulateWindow();
-        EventMediator.Instance.SubscribeToEvent("EquipmentChanged", this);
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemUnequippedEventName, this);
     }
-    
+
     private void Update()
     {
         if (isActiveAndEnabled && !FilteredInventoryWindowPopUp.Instance.FilteredInventoryWindow.activeSelf)
@@ -168,7 +169,8 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
-        if (eventName.Equals("EquipmentChanged"))
+        if (eventName.Equals(GlobalHelper.ItemEquippedEventName) ||
+            eventName.Equals(GlobalHelper.ItemUnequippedEventName))
         {
             Refresh();
         }
