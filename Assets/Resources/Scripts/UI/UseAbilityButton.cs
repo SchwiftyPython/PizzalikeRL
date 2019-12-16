@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UseAbilityButton : MonoBehaviour, ISubscriber
+public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 {
     //todo cooldown mask
     private readonly Color _unassignedColor = new Color(1, 1, 1, 0);
@@ -100,8 +101,37 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
 
     public void OnClick()
     {
+
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            Debug.Log("Left click");
+            OnLeftClick();
+        }
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            Debug.Log("Right click");
+            OnRightClick();
+        }
+    }
+
+    public void OnLeftClick()
+    {
+        if (!_button.interactable)
+        {
+            return;
+        }
+
         _remainingCooldownTurns = _ability.Cooldown;
         _ability.Use();
+    }
+
+    public void OnRightClick()
+    {
+        //todo sow ability button action window
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
