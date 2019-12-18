@@ -14,7 +14,7 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
     {
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilityButtonActionPopupEventName, this);
 
-        gameObject.SetActive(false);
+        Hide();
     }
 
     private void Update()
@@ -40,7 +40,17 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
-        throw new System.NotImplementedException();
+        if (eventName == GlobalHelper.AbilityButtonActionPopupEventName)
+        {
+            _selectedButton = parameter as Button;
+
+            if (_selectedButton == null || !((UseAbilityButton)broadcaster).AbilityAssigned())
+            {
+                return;
+            }
+
+            Show();
+        }
     }
 
     private void OnDestroy()

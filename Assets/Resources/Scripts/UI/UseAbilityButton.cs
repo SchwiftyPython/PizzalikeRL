@@ -94,6 +94,11 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
         EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
     }
 
+    public bool AbilityAssigned()
+    {
+        return _ability != null;
+    }
+
     public void SetIcon(Sprite newIcon)
     {
         _buttonIcon.sprite = newIcon;
@@ -131,7 +136,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 
     public void OnRightClick()
     {
-        //todo sow ability button action window
+        EventMediator.Instance.Broadcast(GlobalHelper.AbilityButtonActionPopupEventName, this, _button);
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
