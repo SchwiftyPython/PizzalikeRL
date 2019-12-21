@@ -62,12 +62,18 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
     private void Show()
     {
         gameObject.SetActive(true);
+
+        var pos = Input.mousePosition;
+
+        gameObject.transform.position = new Vector2(pos.x + 60f, pos.y + 50f);
+
         GameManager.Instance.AddActiveWindow(gameObject);
     }
 
     private void Hide()
     {
         gameObject.SetActive(false);
+
         GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 }
