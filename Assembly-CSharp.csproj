@@ -329,6 +329,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\AbilityButtonActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilityManager.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilitySelectButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\AbilitySelectPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\BodyPartButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\Character Creation\CharacterBackgroundOptionButton.cs" />
