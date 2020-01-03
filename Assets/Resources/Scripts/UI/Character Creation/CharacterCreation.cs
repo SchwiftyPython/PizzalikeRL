@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class CharacterCreation : MonoBehaviour
+public class CharacterCreation : MonoBehaviour, ISubscriber
 {
     private readonly List<string> _nonPlayableSpecies;
 
@@ -186,6 +186,8 @@ public class CharacterCreation : MonoBehaviour
     {
         LoadAbilitiesForAbilitySelectScreen();
 
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilitySelectedEventName, this);
+
         AbilitySelectPage.SetActive(true);
 
         ChooseBackgroundPage.SetActive(false);
@@ -194,6 +196,8 @@ public class CharacterCreation : MonoBehaviour
     public void OnBackFromAbilitySelectPage()
     {
         ChooseBackgroundPage.SetActive(true);
+
+        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilitySelectedEventName, this);
 
         AbilitySelectPage.SetActive(false);
     }
@@ -845,5 +849,17 @@ public class CharacterCreation : MonoBehaviour
         }
 
         WorldData.Instance.Entities.Add(_player.Id, _player);
+
+        EventMediator.Instance.UnsubscribeFromAllEvents(this);
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals(GlobalHelper.AbilitySelectedEventName))
+        {
+            var abilityName = parameter.ToString();
+
+            AbilitySelected(abilityName);
+        }
     }
 }

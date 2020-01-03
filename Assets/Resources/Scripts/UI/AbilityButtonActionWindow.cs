@@ -30,7 +30,7 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
 
     public void OnAssignButtonClick()
     {
-        //todo open ability select popup window 
+        EventMediator.Instance.Broadcast(GlobalHelper.AbilitySelectPopupEventName, this, _selectedButton);
     }
 
     public void OnRemoveButtonClick()

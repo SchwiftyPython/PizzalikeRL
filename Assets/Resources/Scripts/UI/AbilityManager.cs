@@ -51,6 +51,15 @@ public class AbilityManager : MonoBehaviour, ISubscriber
         buttonScript.AssignAbility(ability, icon);
     }
 
+    public static void AssignAbilityToButton(Ability ability, Button button)
+    {
+        var buttonScript = button.GetComponent<UseAbilityButton>();
+
+        var icon = GetIconForAbility(ability);
+
+        buttonScript.AssignAbility(ability, icon);
+    }
+
     public void PrepareAbilityMap()
     {
         var map = new Dictionary<KeyCode, GameObject>

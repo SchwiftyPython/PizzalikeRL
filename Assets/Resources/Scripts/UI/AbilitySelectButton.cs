@@ -12,6 +12,8 @@ public class AbilitySelectButton : MonoBehaviour
     {
         var abilityName = gameObject.GetComponentInChildren<TextMeshProUGUI>().text;
 
-        CharacterCreation.Instance.AbilitySelected(abilityName);
+        EventMediator.Instance.Broadcast(GlobalHelper.AbilitySelectedEventName, this, abilityName);
+
+        //CharacterCreation.Instance.AbilitySelected(abilityName);
     }
 }
