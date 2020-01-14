@@ -212,6 +212,8 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         SummaryIntelligenceBox.GetComponent<TextMeshProUGUI>().text = _intelligence.ToString();
         SummaryConstitutionBox.GetComponent<TextMeshProUGUI>().text = _constitution.ToString();
 
+        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilitySelectedEventName, this);
+
         AbilitySelectPage.SetActive(false);
 
         SummaryPage.SetActive(true);
@@ -857,7 +859,14 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
     {
         if (eventName.Equals(GlobalHelper.AbilitySelectedEventName))
         {
-            var abilityName = parameter.ToString();
+            var button = parameter as Button;
+
+            if (button == null)
+            {
+                return;
+            }
+
+            var abilityName = button.GetComponentInChildren<TextMeshProUGUI>().text;
 
             AbilitySelected(abilityName);
         }

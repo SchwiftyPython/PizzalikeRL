@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +40,7 @@ public class AbilitySelectPopup : MonoBehaviour, ISubscriber
         {
             var abilityParent = AbilityCategoryParent;
 
-            abilityParent.GetComponent<LayoutElement>().preferredHeight = 30 * abilities.Count;
+            //abilityParent.GetComponent<LayoutElement>().preferredHeight = 30 * abilities.Count;
 
             var instance = Instantiate(AvailableAbilityPrefab, abilityParent.transform.position,
                 Quaternion.identity);
@@ -72,6 +69,7 @@ public class AbilitySelectPopup : MonoBehaviour, ISubscriber
 
     private void Show()
     {
+        PopulateAllAbilities();
         gameObject.SetActive(true);
         GameManager.Instance.AddActiveWindow(gameObject);
     }
@@ -86,13 +84,20 @@ public class AbilitySelectPopup : MonoBehaviour, ISubscriber
     {
         if (eventName.Equals(GlobalHelper.AbilitySelectedEventName))
         {
-            var abilityName = parameter.ToString();
+            _selectedButton = parameter as Button;
+
+            if (_selectedButton == null)
+            {
+                return;
+            }
+
+            var abilityName = _selectedButton.GetComponentInChildren<TextMeshProUGUI>().text;
 
             AbilitySelected(abilityName);
         }
-        else if (eventName.Equals(GlobalHelper.AbilitySelectedEventName))
+        else if (eventName.Equals(GlobalHelper.AbilitySelectPopupEventName))
         {
-            _selectedButton = parameter as Button;
+            Show();
         }
     }
 }

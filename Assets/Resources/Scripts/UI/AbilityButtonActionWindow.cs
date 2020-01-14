@@ -31,11 +31,13 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
     public void OnAssignButtonClick()
     {
         EventMediator.Instance.Broadcast(GlobalHelper.AbilitySelectPopupEventName, this, _selectedButton);
+        Hide();
     }
 
     public void OnRemoveButtonClick()
     {
         _selectedButton.GetComponent<UseAbilityButton>().RemoveAbility();
+        Hide();
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
@@ -44,12 +46,12 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
         {
             _selectedButton = parameter as Button;
 
-            if (_selectedButton == null || !((UseAbilityButton)broadcaster).AbilityAssigned())
+            if (_selectedButton == null)
             {
                 return;
             }
 
-            Show();
+            Show(((UseAbilityButton)broadcaster).AbilityAssigned());
         }
     }
 
@@ -59,8 +61,10 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
         GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 
-    private void Show()
+    private void Show(bool abilityAssigned)
     {
+        RemoveButton.interactable = abilityAssigned;
+
         gameObject.SetActive(true);
 
         var pos = Input.mousePosition;
