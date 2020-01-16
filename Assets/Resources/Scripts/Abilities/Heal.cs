@@ -14,6 +14,8 @@
 
         Owner.ApplyEffect("heal", -1, amountToHeal);
 
+        UseAbilitySuccess();
+
         base.Use();
     }
 }

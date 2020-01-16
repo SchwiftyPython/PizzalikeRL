@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,6 +36,8 @@ public class AbilityManager : MonoBehaviour, ISubscriber
         };
 
         PrepareAbilityMap();
+
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilitySelectedEventName, this);
     }
 
     private static Sprite GetIconForAbility(Ability ability)
@@ -87,6 +90,25 @@ public class AbilityManager : MonoBehaviour, ISubscriber
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
-        
+        /*if (eventName.Equals(GlobalHelper.AbilitySelectedEventName))
+        {
+            var button = parameter as Button;
+
+            if (button == null)
+            {
+                return;
+            }
+
+            var abilityName = button.GetComponentInChildren<TextMeshProUGUI>().text.ToLower();
+
+            var selectedAbility = GameManager.Instance.Player.Abilities[abilityName];
+
+            if (selectedAbility == null)
+            {
+                return;
+            }
+
+            AssignAbilityToButton(selectedAbility, button);
+        }*/
     }
 }

@@ -33,6 +33,8 @@
             target.ApplyEffect("Daze", 2, 0);
 
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilityTileSelectedEventName, this);
+
+            UseAbilitySuccess();
         }
 
         base.OnNotify(eventName, broadcaster, parameter);

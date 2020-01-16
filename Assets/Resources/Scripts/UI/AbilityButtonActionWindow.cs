@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
 {
     private Button _selectedButton;
+    private GameObject _buttonParent;
 
     public Button AssignButton;
     public Button RemoveButton;
@@ -30,7 +29,7 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
 
     public void OnAssignButtonClick()
     {
-        EventMediator.Instance.Broadcast(GlobalHelper.AbilitySelectPopupEventName, this, _selectedButton);
+        EventMediator.Instance.Broadcast(GlobalHelper.AbilitySelectPopupEventName, _buttonParent, _selectedButton);
         Hide();
     }
 
@@ -44,6 +43,13 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
     {
         if (eventName == GlobalHelper.AbilityButtonActionPopupEventName)
         {
+            _buttonParent = broadcaster as GameObject;
+
+            if (_buttonParent == null)
+            {
+                return;
+            }
+
             _selectedButton = parameter as Button;
 
             if (_selectedButton == null)
@@ -51,7 +57,7 @@ public class AbilityButtonActionWindow : MonoBehaviour, ISubscriber
                 return;
             }
 
-            Show(((UseAbilityButton)broadcaster).AbilityAssigned());
+            Show(((GameObject)broadcaster).GetComponent<Button>().GetComponent<UseAbilityButton>().AbilityAssigned());
         }
     }
 

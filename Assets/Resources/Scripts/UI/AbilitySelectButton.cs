@@ -16,7 +16,5 @@ public class AbilitySelectButton : MonoBehaviour
         var button = gameObject.GetComponentInChildren<Button>();
 
         EventMediator.Instance.Broadcast(GlobalHelper.AbilitySelectedEventName, this, button);
-
-        //CharacterCreation.Instance.AbilitySelected(abilityName);
     }
 }

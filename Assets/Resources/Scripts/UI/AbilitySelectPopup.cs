@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class AbilitySelectPopup : MonoBehaviour, ISubscriber
 {
     private Button _selectedButton;
+    private GameObject _buttonParent;
 
     public GameObject AvailableAbilityPrefab;
     public GameObject AbilityCategoryPrefab;
@@ -56,7 +57,7 @@ public class AbilitySelectPopup : MonoBehaviour, ISubscriber
     {
         var ability = GameManager.Instance.Player.Abilities[abilityName];
 
-        AbilityManager.AssignAbilityToButton(ability, _selectedButton);
+        AbilityManager.AssignAbilityToButton(ability, _buttonParent);
 
         Hide();
     }
@@ -91,12 +92,19 @@ public class AbilitySelectPopup : MonoBehaviour, ISubscriber
                 return;
             }
 
-            var abilityName = _selectedButton.GetComponentInChildren<TextMeshProUGUI>().text;
+            var abilityName = _selectedButton.GetComponentInChildren<TextMeshProUGUI>().text.ToLower();
 
             AbilitySelected(abilityName);
         }
         else if (eventName.Equals(GlobalHelper.AbilitySelectPopupEventName))
         {
+            _buttonParent = broadcaster as GameObject;
+
+            if (_buttonParent == null)
+            {
+                return;
+            }
+
             Show();
         }
     }

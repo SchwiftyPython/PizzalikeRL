@@ -136,7 +136,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 
     public void OnRightClick()
     {
-        EventMediator.Instance.Broadcast(GlobalHelper.AbilityButtonActionPopupEventName, this, _button);
+        EventMediator.Instance.Broadcast(GlobalHelper.AbilityButtonActionPopupEventName, this.gameObject, _button);
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
