@@ -26,7 +26,9 @@ public class GlobalHelper : MonoBehaviour
     public const string ActionTakenEventName = "ActionTaken";
     public const string ItemEquippedEventName = "ItemEquipped";
     public const string ItemUnequippedEventName = "ItemUnequipped";
-
+    public const string AbilityButtonActionPopupEventName = "AbilityButtonActionPopup";
+    public const string AbilitySelectPopupEventName = "AbilitySelectPopup";
+    public const string AbilitySelectedEventName = "AbilitySelected";
 
     #endregion EventNames
 

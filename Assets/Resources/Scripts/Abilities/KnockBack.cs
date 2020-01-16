@@ -35,6 +35,8 @@
             target.ApplyEffect(Effect, -1, 0, directionStruct.direction);
 
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilityTileSelectedEventName, this);
+
+            UseAbilitySuccess();
         }
 
         base.OnNotify(eventName, broadcaster, parameter);

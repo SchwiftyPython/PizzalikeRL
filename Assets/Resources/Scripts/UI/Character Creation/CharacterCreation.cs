@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class CharacterCreation : MonoBehaviour
+public class CharacterCreation : MonoBehaviour, ISubscriber
 {
     private readonly List<string> _nonPlayableSpecies;
 
@@ -186,6 +186,8 @@ public class CharacterCreation : MonoBehaviour
     {
         LoadAbilitiesForAbilitySelectScreen();
 
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilitySelectedEventName, this);
+
         AbilitySelectPage.SetActive(true);
 
         ChooseBackgroundPage.SetActive(false);
@@ -194,6 +196,8 @@ public class CharacterCreation : MonoBehaviour
     public void OnBackFromAbilitySelectPage()
     {
         ChooseBackgroundPage.SetActive(true);
+
+        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilitySelectedEventName, this);
 
         AbilitySelectPage.SetActive(false);
     }
@@ -207,6 +211,8 @@ public class CharacterCreation : MonoBehaviour
         SummaryAgilityBox.GetComponent<TextMeshProUGUI>().text = _agility.ToString();
         SummaryIntelligenceBox.GetComponent<TextMeshProUGUI>().text = _intelligence.ToString();
         SummaryConstitutionBox.GetComponent<TextMeshProUGUI>().text = _constitution.ToString();
+
+        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.AbilitySelectedEventName, this);
 
         AbilitySelectPage.SetActive(false);
 
@@ -845,5 +851,24 @@ public class CharacterCreation : MonoBehaviour
         }
 
         WorldData.Instance.Entities.Add(_player.Id, _player);
+
+        EventMediator.Instance.UnsubscribeFromAllEvents(this);
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals(GlobalHelper.AbilitySelectedEventName))
+        {
+            var button = parameter as Button;
+
+            if (button == null)
+            {
+                return;
+            }
+
+            var abilityName = button.GetComponentInChildren<TextMeshProUGUI>().text;
+
+            AbilitySelected(abilityName);
+        }
     }
 }

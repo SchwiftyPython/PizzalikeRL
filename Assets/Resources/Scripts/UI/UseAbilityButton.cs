@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UseAbilityButton : MonoBehaviour, ISubscriber
+public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 {
     //todo cooldown mask
     private readonly Color _unassignedColor = new Color(1, 1, 1, 0);
@@ -93,6 +94,11 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
         EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
     }
 
+    public bool AbilityAssigned()
+    {
+        return _ability != null;
+    }
+
     public void SetIcon(Sprite newIcon)
     {
         _buttonIcon.sprite = newIcon;
@@ -100,8 +106,37 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber
 
     public void OnClick()
     {
+
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            Debug.Log("Left click");
+            OnLeftClick();
+        }
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            Debug.Log("Right click");
+            OnRightClick();
+        }
+    }
+
+    public void OnLeftClick()
+    {
+        if (!_button.interactable)
+        {
+            return;
+        }
+
         _remainingCooldownTurns = _ability.Cooldown;
         _ability.Use();
+    }
+
+    public void OnRightClick()
+    {
+        EventMediator.Instance.Broadcast(GlobalHelper.AbilityButtonActionPopupEventName, this.gameObject, _button);
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)

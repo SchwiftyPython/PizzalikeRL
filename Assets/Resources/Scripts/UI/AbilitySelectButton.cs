@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AbilitySelectButton : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class AbilitySelectButton : MonoBehaviour
     {
         var abilityName = gameObject.GetComponentInChildren<TextMeshProUGUI>().text;
 
-        CharacterCreation.Instance.AbilitySelected(abilityName);
+        var button = gameObject.GetComponentInChildren<Button>();
+
+        EventMediator.Instance.Broadcast(GlobalHelper.AbilitySelectedEventName, this, button);
     }
 }
