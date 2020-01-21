@@ -45,7 +45,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 
         ability.AssignAbilityToButton(_button);
 
-        EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
+        //EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
 
         if (!string.IsNullOrEmpty(ability.RequiresProperty))
         {
@@ -77,6 +77,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
     public void EnableButton()
     {
         _button.interactable = true;
+        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
     }
 
     public void DisableButton()
@@ -154,6 +155,11 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
         }
         else if (eventName == GlobalHelper.ItemEquippedEventName || eventName == GlobalHelper.ItemUnequippedEventName)
         {
+            if (!((Entity) broadcaster).IsPlayer())
+            {
+                return;
+            }
+
             CheckEquippedItemsForRequiredProperty();
         }
     }
