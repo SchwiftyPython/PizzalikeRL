@@ -134,6 +134,8 @@ public class Ability : ISubscriber
             if (_buttonScript != null)
             {
                 _buttonScript.DisableButton();
+                EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, _buttonScript);
+
             }
 
             Disable();
