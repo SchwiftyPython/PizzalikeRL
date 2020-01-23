@@ -1581,9 +1581,7 @@
 				<Part>small mammal leg</Part>
 				<Part>small mammal leg</Part>
 				<Part>small mammal hand</Part>
-				<Part>small mammal hand</Part>	
-                <Part>small mammal hand</Part>
-				<Part>small mammal hand</Part>				
+				<Part>small mammal hand</Part>	                		
 			</BodyParts>
 			<PossibleBiomes>		   
 			    <Biome>Swamp</Biome>

@@ -155,7 +155,7 @@ public class Entity : ISubscriber
 
     public bool Mobile;
     public bool IsCustomer;
-    public bool IsMultiArmed;
+    public bool IsMultiArmed; //can't we just make a method that checks how many arms we got?
 
     public Vector3 CurrentPosition
     {
@@ -587,13 +587,11 @@ public class Entity : ISubscriber
                 {
                     if (possibleParent.ChildrenBodyParts.Count >= possibleParent.MaxChildrenBodyParts)
                     {
-                        //Debug.Log(partTemplate.NeedsPart + ": max children bodyparts reached");
+                        continue;
                     }
-                    else
-                    {
-                        parent = possibleParent;
-                        break;
-                    }
+
+                    parent = possibleParent;
+                    break;
                 }
 
                 if (parent != null)
@@ -606,6 +604,7 @@ public class Entity : ISubscriber
                 }
                 else
                 {
+                    Debug.Log($"Error building {template.Type}");
                     Debug.Log(partTemplate.Name + " missing required part " + partTemplate.NeedsPart);
                 }
             }

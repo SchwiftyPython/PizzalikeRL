@@ -494,7 +494,7 @@
 			<NeedsPart/>
 			<AttackVerb/>
 			<Coverage> 30 </Coverage>
-            <MaxChildrenBodyParts> 10 </MaxChildrenBodyParts>  			
+            <MaxChildrenBodyParts> 25 </MaxChildrenBodyParts>  			
 		</BodyPart> 
 		
 		<BodyPart name = "turret body">
