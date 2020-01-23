@@ -29,7 +29,20 @@ public class ObjectInfoWindow : MonoBehaviour, ISubscriber
             return;
         }
 
-        Name.text = entity.Fluff?.Name ?? entity.EntityType;
+        if (entity.Fluff != null)
+        {
+            Name.text = entity.Fluff.Name;
+
+            if (entity.Fluff.FactionName != null)
+            {
+                Name.text = $"{Name.text}, {entity.Fluff.FactionName}";
+            }
+        }
+        else
+        {
+            Name.text = entity.EntityType;
+        }
+        
         Description.text = entity.EntityType; //todo
 
         if (Description.text.Length > SmallWindowCharLimit && gameObject.name.ToLower().Contains("small"))
