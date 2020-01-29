@@ -43,7 +43,8 @@ public class Messenger : MonoBehaviour
 
     private void ScrollToBottom()
     {
-        MessageScrollRect.normalizedPosition = new Vector2(0, 0);
+        MessageScrollRect.verticalScrollbar.direction = Scrollbar.Direction.BottomToTop;
+        MessageScrollRect.normalizedPosition = new Vector2(0, 0.0f);
     }
 
     public static Messenger GetInstance()
