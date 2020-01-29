@@ -1400,7 +1400,7 @@ public class Entity : ISubscriber
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damage < 1 ? 0 : hitBodyPart.CurrentHp - damage;
 
         //todo message event
-        var message = EntityType + " hits " + target.EntityType + "'s " + hitBodyPart.Name + " for " + damage + " hit points.";
+        var message = EntityType + " hits " + target.EntityType + "'s " + hitBodyPart.Type + " for " + damage + " hit points.";
         GameManager.Instance.Messages.Add(message);
     }
 
