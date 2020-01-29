@@ -63,9 +63,6 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     public Dictionary<string, PizzaOrder> ActiveOrders;
 
-    public List<string> Messages;
-    private Messenger _messenger;
-
     public int TurnNumber;
     public int NextTurnNumberForOrder;
 
@@ -102,8 +99,6 @@ public class GameManager : MonoBehaviour, ISubscriber
         CurrentState = GameState.Start;
 
         PlayerInStartingArea = true;
-
-        Messages = new List<string>();
 
         ActiveOrders = new Dictionary<string, PizzaOrder>();
 
@@ -205,7 +200,6 @@ public class GameManager : MonoBehaviour, ISubscriber
                 }
                 else
                 {
-                    CheckMessages();
                     CheckForDeadEntities();
                     CurrentState = WhoseTurn();
                 }
@@ -309,23 +303,6 @@ public class GameManager : MonoBehaviour, ISubscriber
         CurrentEntityController.ActionTaken = false;
         CurrentEntityController.TurnStarted = false;
         return GameState.Enemyturn;
-    }
-
-    private void CheckMessages()
-    {
-        if (_messenger == null)
-        {
-            _messenger = Messenger.GetInstance();
-        }
-        if (Messages.Count <= 0)
-        {
-            return;
-        }
-        foreach (var message in Messages)
-        {
-            _messenger.CreateMessage(message);
-        }
-        Messages.Clear();
     }
 
     private void CheckForDeadEntities()

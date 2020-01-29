@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Messenger : MonoBehaviour
+public class Messenger : MonoBehaviour, ISubscriber
 {
     private const int MaxMessagesOnScreen = 45;
 
@@ -29,6 +30,8 @@ public class Messenger : MonoBehaviour
         }
 
         _messagesOnScreen = new Queue<GameObject>();
+
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.SendMessageToConsoleEventName, this);
     }
 
     //todo store all messages in some log that can be accessed via menu
@@ -86,5 +89,20 @@ public class Messenger : MonoBehaviour
         _messagesOnScreen.Enqueue(cm);
 
         ScrollToBottom();
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals(GlobalHelper.SendMessageToConsoleEventName))
+        {
+            var message = parameter as string;
+
+            if (string.IsNullOrEmpty(message))
+            {
+                return;
+            }
+
+            CreateMessage(message);
+        }
     }
 }

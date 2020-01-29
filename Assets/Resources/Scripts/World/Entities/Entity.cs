@@ -931,14 +931,16 @@ public class Entity : ISubscriber
                 TargetReactToAttacker(target);
                 return;
             }
-            var message = EntityType + " killed " + target.EntityType + "!";
-            GameManager.Instance.Messages.Add(message);
+            var message = $"{EntityType} killed {target.EntityType}!";
+
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
         }
         else
         {
             TargetReactToAttacker(target);
-            var message = EntityType + " missed " + target.EntityType + "!";
-            GameManager.Instance.Messages.Add(message);
+            var message = $"{EntityType} missed {target.EntityType}!";
+
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
         }
     }
 
@@ -1165,9 +1167,11 @@ public class Entity : ISubscriber
         else
         {
             TargetReactToAttacker(target);
-            //todo make this missed with weapon used
-            var message = EntityType + " missed " + target.EntityType + " with ranged attack!";
-            GameManager.Instance.Messages.Add(message);
+
+            //todo might need to do for each weapon if it comes to that
+            var message = $"{EntityType} missed {target.EntityType} with {GetEquippedRangedWeapons().First()}!"; 
+
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
         }
     }
 
@@ -1318,8 +1322,9 @@ public class Entity : ISubscriber
         target.CurrentHp -= damageRoll;
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
 
-        var message = EntityType + " hits " + target.EntityType + " for " + damageRoll + " hit points.";
-        GameManager.Instance.Messages.Add(message);
+        var message = $"{EntityType} hits {target.EntityType} for {damageRoll} hit points.";
+
+        EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
 
         EventMediator.Instance.Broadcast("MeleeHit", this);
 
@@ -1400,8 +1405,9 @@ public class Entity : ISubscriber
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damage < 1 ? 0 : hitBodyPart.CurrentHp - damage;
 
         //todo message event
-        var message = EntityType + " hits " + target.EntityType + "'s " + hitBodyPart.Type + " for " + damage + " hit points.";
-        GameManager.Instance.Messages.Add(message);
+        var message = $"{EntityType} hits {target.EntityType}'s {hitBodyPart.Type} for {damage} hit points.";
+
+        EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
     }
 
     public void ApplyRecurringDamage(int damage)
@@ -1448,8 +1454,9 @@ public class Entity : ISubscriber
 
         ToppingCounts[CurrentTile.PresentTopping.Type] += 1;
 
-        var message = "Picked up " + CurrentTile.PresentTopping.Type;
-        GameManager.Instance.Messages.Add(message);
+        var message = $"Picked up {CurrentTile.PresentTopping.Type}";
+
+        EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
 
         if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
         {
@@ -1471,8 +1478,9 @@ public class Entity : ISubscriber
 
         ToppingCounts[CurrentTile.PresentTopping.Type] += 1;
 
-        var message = "Picked up " + CurrentTile.PresentTopping.Type;
-        GameManager.Instance.Messages.Add(message);
+        var message = $"Picked up {CurrentTile.PresentTopping.Type}";
+
+        EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
 
         if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
         {
@@ -1495,8 +1503,9 @@ public class Entity : ISubscriber
 
         ToppingCounts[CurrentTile.PresentTopping.Type] += 1;
 
-        var message = "Picked up " + CurrentTile.PresentTopping.Type;
-        GameManager.Instance.Messages.Add(message);
+        var message = $"Picked up {CurrentTile.PresentTopping.Type}";
+
+        EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
 
         if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
         {
