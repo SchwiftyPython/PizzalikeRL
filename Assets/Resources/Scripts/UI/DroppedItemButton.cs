@@ -20,8 +20,9 @@ public class DroppedItemButton : MonoBehaviour
 
         selectedTile.PresentItems.Remove(item);
 
-        var message = "Picked up " + item.ItemType; //todo change to item name
-        GameManager.Instance.Messages.Add(message);
+        var message = $"Picked up {item.ItemType}"; //todo change to item name
+
+        EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
 
         if (selectedTile.PresentItems.Count <= 0)
         {
