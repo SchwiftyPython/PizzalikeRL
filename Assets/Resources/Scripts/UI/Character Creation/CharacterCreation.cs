@@ -759,11 +759,11 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         //todo a named character read about in books requires a legendary item
         //todo possibly base on background
 
-        //////// TESTING pierce //////////////////////////////////////////////
+        //////// TESTING ranged //////////////////////////////////////////////
 
-        _player.EquipItem(ItemStore.Instance.GetRandomWeaponByProperty("pierce"), Entity.EquipmentSlot.RightHandOne);
+        _player.EquipItem(ItemStore.Instance.GetRandomRangedWeapon(), Entity.EquipmentSlot.MissileWeaponOne);
 
-        //////// END TESTING pierce ////////////////////////////////////////
+        //////// END TESTING ranged ////////////////////////////////////////
     }
 
     private void DisplaySelectedAbilityDescription(string description)
