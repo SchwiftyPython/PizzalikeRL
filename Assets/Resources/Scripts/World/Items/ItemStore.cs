@@ -181,6 +181,42 @@ public class ItemStore : MonoBehaviour
         return new Weapon(randomTemplate, rarity);
     }
 
+    public Weapon GetRandomRangedWeapon(ItemRarity rarityCap = ItemRarity.Common)
+    {
+        var rangedTemplates = new List<ItemTemplate>();
+
+        foreach (var templateType in _baseItemTemplateTypes)
+        {
+            var currentTemplate = ItemTemplateLoader.GetItemTemplate(templateType);
+
+            if (currentTemplate.Category == "weapon" &&
+                currentTemplate.EquipmentSlotType == Entity.EquipmentSlot.MissileWeaponOne)
+            {
+                rangedTemplates.Add(currentTemplate);
+            }
+        }
+
+        var weaponTemplate = rangedTemplates[Random.Range(0, rangedTemplates.Count)];
+
+        if (rarityCap == ItemRarity.Common)
+        {
+            return new Weapon(weaponTemplate, rarityCap);
+        }
+
+        const int maxTries = 6;
+
+        var rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+
+        var currentTry = 1;
+        while (currentTry <= maxTries && rarity > rarityCap)
+        {
+            rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+            currentTry++;
+        }
+
+        return new Weapon(weaponTemplate, rarity);
+    }
+
     //<Summary>
     //    Gets prefab for item based on type 
     //</Summary>

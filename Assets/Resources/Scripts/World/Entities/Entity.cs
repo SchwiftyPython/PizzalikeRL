@@ -1157,19 +1157,18 @@ public class Entity : ISubscriber
     {
         if (RangedHit(target))
         {
+            ApplyRangedDamage(target);
+
             if (!target.IsDead())
             {
                 TargetReactToAttacker(target);
-                return;
             }
-            ApplyRangedDamage(target);
         }
         else
         {
             TargetReactToAttacker(target);
 
-            //todo might need to do for each weapon if it comes to that
-            var message = $"{EntityType} missed {target.EntityType} with {GetEquippedRangedWeapons().First()}!"; 
+            var message = $"{EntityType} missed {target.EntityType}!"; 
 
             EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
         }

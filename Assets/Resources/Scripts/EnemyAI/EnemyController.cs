@@ -89,6 +89,15 @@ public class EnemyController : AstarAI
         }
         else
         {
+            if (Goals == null)
+            {
+                if (Self.Goals == null)
+                {
+                    Self.Goals = new Stack<Goal>();
+                }
+                Goals = Self.Goals;
+            }
+
             if (Goals.Count > 0 && Goals.Peek().GetType() == typeof(Attack))
             {
                 return;

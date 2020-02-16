@@ -52,7 +52,8 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         if (presentEntity != null)
         {
             if (_player.HasRangedWeaponsEquipped() &&
-                _player.EquippedWeaponsInRangeOfTarget(presentEntity))
+                _player.EquippedWeaponsInRangeOfTarget(presentEntity)
+                && presentEntity.CurrentTile.Visibility == Visibilities.Visible)
             {
                 RangedAttackButton.GetComponent<Button>().interactable = true;
             }
@@ -120,7 +121,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 
     private void AfterActionCleanup()
     {
-        GameManager.Instance.CurrentState = GameManager.GameState.EndTurn;
+        EventMediator.Instance.Broadcast(GlobalHelper.ActionTakenEventName, this);
         Hide();
     }
 

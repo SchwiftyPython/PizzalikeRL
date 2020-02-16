@@ -102,7 +102,7 @@ public class SaveGameData : MonoBehaviour
                 CurrentTileId = GameManager.Instance.CurrentTile.Id,
                 CurrentState = GameManager.Instance.CurrentState,
                 CurrentSceneName = GameManager.Instance.CurrentScene.name,
-                Messages = GameManager.Instance.Messages,
+                //Messages = GameManager.Instance.Messages,
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders),
                 FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
                 EntitySdos = EntitySdo.ConvertToEntitySdos(WorldData.Instance.Entities.Values.ToList()),
@@ -166,7 +166,7 @@ public class SaveGameData : MonoBehaviour
 
         GameManager.Instance.CurrentTile = GameManager.Instance.Player.CurrentTile;
 
-        GameManager.Instance.Messages = saveData.Messages;
+        //GameManager.Instance.Messages = saveData.Messages;
 
         GameManager.Instance.ActiveOrders = ConvertActiveOrdersForPlaying(saveData.ActiveOrders);
 
