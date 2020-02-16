@@ -117,6 +117,8 @@ public class Attack : Goal
         var targetLocation = _target.CurrentTile;
 
         PushChildGoal(new MoveToLocal(_target.CurrentArea, targetLocation.X, targetLocation.Y));
+        ParentController.Goals.Peek().TakeAction();
+        ParentController.Goals.Peek().TakeAction();
         return true;
     }
 
