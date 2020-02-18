@@ -81,7 +81,9 @@ public class Entity : ISubscriber
 
     private Reputation _entityReputation;
 
-    private EventMediator eventMediator;
+    private EventMediator _eventMediator;
+
+    private int _lastTurnMoved;
 
     public Entity BirthFather { get; set; }
     public Entity BirthMother { get; set; }
@@ -212,6 +214,7 @@ public class Entity : ISubscriber
         SubscribeToBaseEvents();
 
         _currentEffects = new List<Effect>();
+        _lastTurnMoved = 0;
     }
     
     public Entity(Entity parent, Faction faction = null, bool isPlayer = false)
@@ -296,6 +299,7 @@ public class Entity : ISubscriber
         SubscribeToBaseEvents();
 
         _currentEffects = new List<Effect>();
+        _lastTurnMoved = 0;
     }
 
     public Entity(EntityTemplate template, Faction faction = null, bool isPlayer = false)
@@ -376,6 +380,7 @@ public class Entity : ISubscriber
         SubscribeToBaseEvents();
 
         _currentEffects = new List<Effect>();
+        _lastTurnMoved = 0;
     }
 
     public void SetStats(int strength, int agility, int constitution, int intelligence)
@@ -958,6 +963,7 @@ public class Entity : ISubscriber
                 AutoPickupToppingsInCurrentTile();
                 AutoHarvestFields();
                 AutoHarvestCheeseTree();
+                _lastTurnMoved = GameManager.Instance.TurnNumber;
                 return true;
             }
             if (!EntityPresent(target))
@@ -972,6 +978,7 @@ public class Entity : ISubscriber
             if (WorldMapCanMove(target))
             {
                 WorldMapMove(target);
+                _lastTurnMoved = GameManager.Instance.TurnNumber;
                 return true;
             }
         }
@@ -1070,9 +1077,9 @@ public class Entity : ISubscriber
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
-        if (eventMediator == null)
+        if (_eventMediator == null)
         {
-            eventMediator = EventMediator.Instance;
+            _eventMediator = EventMediator.Instance;
         }
 
         if (eventName.Equals(GlobalHelper.UnderAttackEventName))
@@ -1352,15 +1359,33 @@ public class Entity : ISubscriber
             chanceToHit += 3;
         }
 
-        //todo + attack bonus?
-        //todo + 10 if attacker has not moved in last two turns
+        var currentTurn = GameManager.Instance.TurnNumber;
 
-        //todo - 1-15 if defender moved last turn
-        //todo - 10 if defender moved last turn
-        //todo - 10 if defender is flying
-        //todo - defender bonus?
+        //+ 10 if attacker has not moved in last two turns
+        //- 10 otherwise
+        if (currentTurn - _lastTurnMoved > 2)
+        {
+            chanceToHit += 10;
+        }
+        else
+        {
+            chanceToHit -= 10;
+        }
+
+        //- 1-15 if defender moved last turn
+        if (target.MovedLastTurn(currentTurn))
+        {
+            var hitPenalty = Random.Range(1, 16);
+
+            chanceToHit -= hitPenalty;
+        }
 
         return chanceToHit;
+    }
+
+    public bool MovedLastTurn(int currentTurn)
+    {
+        return currentTurn - _lastTurnMoved <= 1;
     }
 
     public int CalculateDistanceToTarget(Entity target)
@@ -1524,22 +1549,22 @@ public class Entity : ISubscriber
             GlobalHelper.EffectDoneEventName
         };
 
-        eventMediator = EventMediator.Instance;
+        _eventMediator = EventMediator.Instance;
 
         foreach (var baseEvent in baseEvents)
         {
-            eventMediator.SubscribeToEvent(baseEvent, this);
+            _eventMediator.SubscribeToEvent(baseEvent, this);
         }
     }
 
     public void UnsubscribeFromAllEvents()
     {
-        if (eventMediator == null)
+        if (_eventMediator == null)
         {
-            eventMediator = EventMediator.Instance;
+            _eventMediator = EventMediator.Instance;
         }
 
-        eventMediator.UnsubscribeFromAllEvents(this);
+        _eventMediator.UnsubscribeFromAllEvents(this);
     }
 
     public void PositionRevealed()
