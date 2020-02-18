@@ -786,6 +786,8 @@ public class Entity : ISubscriber
             }
         }
 
+        _lastTurnMoved = GameManager.Instance.TurnNumber;
+
         //Debug.Log("entity.currentPosition after move: " + CurrentTile.X + " " + CurrentTile.Y);
         //Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
     }
@@ -806,6 +808,7 @@ public class Entity : ISubscriber
             //Set to middle area of cell
             CurrentArea = CurrentCell.Areas[1, 1];
             GameManager.Instance.CurrentArea = CurrentArea;
+            _lastTurnMoved = GameManager.Instance.TurnNumber;
         }
     }
 
@@ -963,7 +966,6 @@ public class Entity : ISubscriber
                 AutoPickupToppingsInCurrentTile();
                 AutoHarvestFields();
                 AutoHarvestCheeseTree();
-                _lastTurnMoved = GameManager.Instance.TurnNumber;
                 return true;
             }
             if (!EntityPresent(target))
@@ -978,7 +980,6 @@ public class Entity : ISubscriber
             if (WorldMapCanMove(target))
             {
                 WorldMapMove(target);
-                _lastTurnMoved = GameManager.Instance.TurnNumber;
                 return true;
             }
         }
@@ -1261,7 +1262,7 @@ public class Entity : ISubscriber
             return false;
         }
 
-        //unarmed for testing. Will check for equipped weapon and add appropriate bonuses
+        //todo unarmed for testing. Will check for equipped weapon and add appropriate bonuses
         const int unarmedBaseToHit = 3;
         roll += unarmedBaseToHit;
 
@@ -1381,6 +1382,11 @@ public class Entity : ISubscriber
         }
 
         return chanceToHit;
+    }
+
+    public int GetChanceToHitRangedTarget(Entity target)
+    {
+        return CalculateChanceToHitRanged(target);
     }
 
     public bool MovedLastTurn(int currentTurn)

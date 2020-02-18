@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,9 @@ public class ActionWindow : MonoBehaviour, ISubscriber
     public GameObject RangedAttackButton;
     public GameObject MeleeAttackButton;
     public GameObject DeliverButton;
-    
+    public GameObject RangedHitChancePanel;
+    public TextMeshProUGUI RangeHitChanceText;
+
     private void Start()
     {
         EventMediator.Instance.SubscribeToEvent("ActionPopup", this);
@@ -56,10 +59,13 @@ public class ActionWindow : MonoBehaviour, ISubscriber
                 && presentEntity.CurrentTile.Visibility == Visibilities.Visible)
             {
                 RangedAttackButton.GetComponent<Button>().interactable = true;
+                RangedHitChancePanel.SetActive(true);
+                RangeHitChanceText.text = GetChanceToHit(presentEntity);
             }
             else
             {
                 RangedAttackButton.GetComponent<Button>().interactable = false;
+                RangedHitChancePanel.SetActive(false);
             }
 
             MeleeAttackButton.GetComponent<Button>().interactable = _player.CalculateDistanceToTarget(presentEntity) < 2;
@@ -76,6 +82,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         else
         {
             RangedAttackButton.GetComponent<Button>().interactable = false;
+            RangedHitChancePanel.SetActive(false);
             MeleeAttackButton.GetComponent<Button>().interactable = false;
             DeliverButton.GetComponent<Button>().interactable = false;
         }
@@ -117,6 +124,11 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         //todo Generate some fluff about order, create landmark, etc
 
         AfterActionCleanup();
+    }
+
+    private string GetChanceToHit(Entity presentEntity)
+    {
+        return _player.GetChanceToHitRangedTarget(presentEntity) + "%";
     }
 
     private void AfterActionCleanup()
