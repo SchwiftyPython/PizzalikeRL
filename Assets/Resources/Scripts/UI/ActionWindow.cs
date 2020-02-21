@@ -15,7 +15,9 @@ public class ActionWindow : MonoBehaviour, ISubscriber
     public GameObject MeleeAttackButton;
     public GameObject DeliverButton;
     public GameObject RangedHitChancePanel;
-    public TextMeshProUGUI RangeHitChanceText;
+    public TextMeshProUGUI RangedHitChanceText;
+    public GameObject MeleeHitChancePanel;
+    public TextMeshProUGUI MeleeHitChanceText;
 
     private void Start()
     {
@@ -35,7 +37,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         }
     }
 
-    private void Hide()
+    public void Hide()
     {
         gameObject.SetActive(false);
         GameManager.Instance.RemoveActiveWindow(gameObject);
@@ -60,7 +62,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
             {
                 RangedAttackButton.GetComponent<Button>().interactable = true;
                 RangedHitChancePanel.SetActive(true);
-                RangeHitChanceText.text = GetChanceToHit(presentEntity);
+                RangedHitChanceText.text = GetChanceToHitRanged(presentEntity);
             }
             else
             {
@@ -69,6 +71,8 @@ public class ActionWindow : MonoBehaviour, ISubscriber
             }
 
             MeleeAttackButton.GetComponent<Button>().interactable = _player.CalculateDistanceToTarget(presentEntity) < 2;
+            MeleeHitChancePanel.SetActive(MeleeAttackButton.GetComponent<Button>().interactable);
+            MeleeHitChanceText.text = GetChanceToHitMelee(presentEntity);
 
             if (presentEntity.IsCustomer && OrderReadyForDelivery(presentEntity))
             {
@@ -84,6 +88,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
             RangedAttackButton.GetComponent<Button>().interactable = false;
             RangedHitChancePanel.SetActive(false);
             MeleeAttackButton.GetComponent<Button>().interactable = false;
+            MeleeHitChancePanel.SetActive(false);
             DeliverButton.GetComponent<Button>().interactable = false;
         }
 
@@ -126,9 +131,14 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         AfterActionCleanup();
     }
 
-    private string GetChanceToHit(Entity presentEntity)
+    private string GetChanceToHitRanged(Entity presentEntity)
     {
         return _player.GetChanceToHitRangedTarget(presentEntity) + "%";
+    }
+
+    private string GetChanceToHitMelee(Entity presentEntity)
+    {
+        return _player.GetChanceToHitMeleeTarget(presentEntity) + "%";
     }
 
     private void AfterActionCleanup()
