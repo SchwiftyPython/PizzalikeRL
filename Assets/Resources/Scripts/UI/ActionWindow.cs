@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,11 @@ public class ActionWindow : MonoBehaviour, ISubscriber
     public GameObject RangedAttackButton;
     public GameObject MeleeAttackButton;
     public GameObject DeliverButton;
-    
+    public GameObject RangedHitChancePanel;
+    public TextMeshProUGUI RangedHitChanceText;
+    public GameObject MeleeHitChancePanel;
+    public TextMeshProUGUI MeleeHitChanceText;
+
     private void Start()
     {
         EventMediator.Instance.SubscribeToEvent("ActionPopup", this);
@@ -32,7 +37,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         }
     }
 
-    private void Hide()
+    public void Hide()
     {
         gameObject.SetActive(false);
         GameManager.Instance.RemoveActiveWindow(gameObject);
@@ -56,13 +61,18 @@ public class ActionWindow : MonoBehaviour, ISubscriber
                 && presentEntity.CurrentTile.Visibility == Visibilities.Visible)
             {
                 RangedAttackButton.GetComponent<Button>().interactable = true;
+                RangedHitChancePanel.SetActive(true);
+                RangedHitChanceText.text = GetChanceToHitRanged(presentEntity);
             }
             else
             {
                 RangedAttackButton.GetComponent<Button>().interactable = false;
+                RangedHitChancePanel.SetActive(false);
             }
 
             MeleeAttackButton.GetComponent<Button>().interactable = _player.CalculateDistanceToTarget(presentEntity) < 2;
+            MeleeHitChancePanel.SetActive(MeleeAttackButton.GetComponent<Button>().interactable);
+            MeleeHitChanceText.text = GetChanceToHitMelee(presentEntity);
 
             if (presentEntity.IsCustomer && OrderReadyForDelivery(presentEntity))
             {
@@ -76,7 +86,9 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         else
         {
             RangedAttackButton.GetComponent<Button>().interactable = false;
+            RangedHitChancePanel.SetActive(false);
             MeleeAttackButton.GetComponent<Button>().interactable = false;
+            MeleeHitChancePanel.SetActive(false);
             DeliverButton.GetComponent<Button>().interactable = false;
         }
 
@@ -117,6 +129,16 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         //todo Generate some fluff about order, create landmark, etc
 
         AfterActionCleanup();
+    }
+
+    private string GetChanceToHitRanged(Entity presentEntity)
+    {
+        return _player.GetChanceToHitRangedTarget(presentEntity) + "%";
+    }
+
+    private string GetChanceToHitMelee(Entity presentEntity)
+    {
+        return _player.GetChanceToHitMeleeTarget(presentEntity) + "%";
     }
 
     private void AfterActionCleanup()

@@ -786,6 +786,8 @@ public class Entity : ISubscriber
             }
         }
 
+        _lastTurnMoved = GameManager.Instance.TurnNumber;
+
         //Debug.Log("entity.currentPosition after move: " + CurrentTile.X + " " + CurrentTile.Y);
         //Debug.Log("sprite.currentPosition after move: " + _sprite.transform.position.x + " " + _sprite.transform.position.y);
     }
@@ -806,6 +808,7 @@ public class Entity : ISubscriber
             //Set to middle area of cell
             CurrentArea = CurrentCell.Areas[1, 1];
             GameManager.Instance.CurrentArea = CurrentArea;
+            _lastTurnMoved = GameManager.Instance.TurnNumber;
         }
     }
 
@@ -963,7 +966,6 @@ public class Entity : ISubscriber
                 AutoPickupToppingsInCurrentTile();
                 AutoHarvestFields();
                 AutoHarvestCheeseTree();
-                _lastTurnMoved = GameManager.Instance.TurnNumber;
                 return true;
             }
             if (!EntityPresent(target))
@@ -978,7 +980,6 @@ public class Entity : ISubscriber
             if (WorldMapCanMove(target))
             {
                 WorldMapMove(target);
-                _lastTurnMoved = GameManager.Instance.TurnNumber;
                 return true;
             }
         }
@@ -1251,7 +1252,7 @@ public class Entity : ISubscriber
         return _entityReputation.GetReputationStateForValue(reputationValueTotal);
     }
 
-    private static bool MeleeRollHit(Entity target)
+    private bool MeleeRollHit(Entity target)
     {
         var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
 
@@ -1261,11 +1262,9 @@ public class Entity : ISubscriber
             return false;
         }
 
-        //unarmed for testing. Will check for equipped weapon and add appropriate bonuses
-        const int unarmedBaseToHit = 3;
-        roll += unarmedBaseToHit;
+        var chanceToHit = GetChanceToHitMeleeTarget(target);
 
-        return roll >= target.Defense;
+        return roll <= chanceToHit;
     }
 
     private List<Weapon> GetEquippedMeleeWeapons()
@@ -1354,7 +1353,13 @@ public class Entity : ISubscriber
 
         var distanceToTarget = CalculateDistanceToTarget(target);
 
-        if (distanceToTarget < 6)
+        //- 10 if in melee range
+        //+ 3 if within 6 tiles, but not in melee range
+        if (distanceToTarget < 2)
+        {
+            chanceToHit -= 10;
+        }
+        else if (distanceToTarget < 6)
         {
             chanceToHit += 3;
         }
@@ -1372,13 +1377,27 @@ public class Entity : ISubscriber
             chanceToHit -= 10;
         }
 
-        //- 1-15 if defender moved last turn
+        //- 8 if defender moved last turn
         if (target.MovedLastTurn(currentTurn))
         {
-            var hitPenalty = Random.Range(1, 16);
-
-            chanceToHit -= hitPenalty;
+            chanceToHit -= 8;
         }
+
+        return chanceToHit;
+    }
+
+    public int GetChanceToHitRangedTarget(Entity target)
+    {
+        return CalculateChanceToHitRanged(target);
+    }
+
+    public int GetChanceToHitMeleeTarget(Entity target)
+    {
+        var chanceToHit = 100 - target.Defense;
+
+        //todo unarmed for testing. Will check for equipped weapon and add appropriate bonuses
+        const int unarmedBaseToHit = 3;
+        chanceToHit += unarmedBaseToHit;
 
         return chanceToHit;
     }
