@@ -939,16 +939,29 @@ public class Entity : ISubscriber
                 TargetReactToAttacker(target);
                 return;
             }
-            var message = $"{EntityType} killed {target.EntityType}!";
+            var message = $"{(target.Fluff != null ? target.Fluff.Name : target.EntityType)} died!";
 
-            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
         }
         else
         {
             TargetReactToAttacker(target);
-            var message = $"{EntityType} missed {target.EntityType}!";
 
-            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
+            var message = string.Empty;
+
+            if (IsPlayer())
+            {
+                message = $"You missed {(target.Fluff != null ? target.Fluff.Name : target.EntityType)}!";
+            }
+            else if (target.IsPlayer())
+            {
+                message = $"{(Fluff != null ? Fluff.Name : EntityType)} missed you!";
+            }
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
+            }
         }
     }
 
@@ -1170,15 +1183,32 @@ public class Entity : ISubscriber
             if (!target.IsDead())
             {
                 TargetReactToAttacker(target);
+                return;
             }
+
+            var message = $"{(target.Fluff != null ? target.Fluff.Name : target.EntityType)} died!";
+
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
         }
         else
         {
             TargetReactToAttacker(target);
 
-            var message = $"{EntityType} missed {target.EntityType}!"; 
+            var message = string.Empty;
 
-            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
+            if (IsPlayer())
+            {
+                message = $"You missed {(target.Fluff != null ? target.Fluff.Name : target.EntityType)}!";
+            }
+            else if (target.IsPlayer())
+            {
+                message = $"{(Fluff != null ? Fluff.Name : EntityType)} missed you!";
+            }
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
+            }
         }
     }
 
@@ -1322,18 +1352,9 @@ public class Entity : ISubscriber
             damageRoll += roll;
         }
 
-        var hitBodyPart = target.BodyPartHit();
-
-        target.CurrentHp -= damageRoll;
-        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damageRoll < 1 ? 0 : hitBodyPart.CurrentHp - damageRoll;
-
-        var message = $"{EntityType} hits {target.EntityType} for {damageRoll} hit points.";
-
-        EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
+        ApplyDamage(target, damageRoll);
 
         EventMediator.Instance.Broadcast("MeleeHit", this);
-
-        //Debug.Log("Target remaining hp: " + target.CurrentHp);
     }
 
     private bool RangedHit(Entity target)
@@ -1447,10 +1468,21 @@ public class Entity : ISubscriber
         target.CurrentHp -= damage;
         hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damage < 1 ? 0 : hitBodyPart.CurrentHp - damage;
 
-        //todo message event
-        var message = $"{EntityType} hits {target.EntityType}'s {hitBodyPart.Type} for {damage} hit points.";
+        var message = string.Empty;
 
-        EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
+        if (IsPlayer())
+        {
+            message = $"You hit {(target.Fluff != null ? target.Fluff.Name : target.EntityType)}'s {hitBodyPart.Type} for {damage} hit points.";
+        }
+        else if (target.IsPlayer())
+        {
+            message = $"{(Fluff != null ? Fluff.Name : EntityType)} hit your {hitBodyPart.Type} for {damage} hit points.";
+        }
+
+        if (!string.IsNullOrEmpty(message))
+        {
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
+        }
     }
 
     public void ApplyRecurringDamage(int damage)
