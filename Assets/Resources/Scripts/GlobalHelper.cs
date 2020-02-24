@@ -45,6 +45,12 @@ public class GlobalHelper : MonoBehaviour
         {GoalDirection.NorthWest, new Vector2(1, -1)}
     };
 
+    public enum RangedAttackType
+    {
+        Missile,
+        Thrown
+    }
+
     public static void DestroyAllChildren(GameObject parent)
     {
         for (var i = 0; i < parent.transform.childCount; i++)

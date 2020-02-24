@@ -86,7 +86,7 @@ public class Attack : Goal
     private bool TryRangedWeapon()
     {
         //todo apply los via raycast. Probably in Entity. Make RangedWeaponCanHit method. Include range check
-        if (!Self.HasRangedWeaponsEquipped() || !Self.EquippedWeaponsInRangeOfTarget(_target))
+        if (!Self.HasMissileWeaponsEquipped() || !Self.EquippedMissileWeaponsInRangeOfTarget(_target))
         {
             return false;
         }

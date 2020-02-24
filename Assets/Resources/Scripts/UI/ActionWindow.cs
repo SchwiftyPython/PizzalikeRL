@@ -14,10 +14,13 @@ public class ActionWindow : MonoBehaviour, ISubscriber
     public GameObject RangedAttackButton;
     public GameObject MeleeAttackButton;
     public GameObject DeliverButton;
+    public GameObject ThrownButton;
     public GameObject RangedHitChancePanel;
     public TextMeshProUGUI RangedHitChanceText;
     public GameObject MeleeHitChancePanel;
     public TextMeshProUGUI MeleeHitChanceText;
+    public GameObject ThrownHitChancePanel;
+    public TextMeshProUGUI ThrownHitChanceText;
 
     private void Start()
     {
@@ -56,40 +59,67 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 
         if (presentEntity != null)
         {
-            if (_player.HasRangedWeaponsEquipped() &&
-                _player.EquippedWeaponsInRangeOfTarget(presentEntity)
+            if (_player.HasMissileWeaponsEquipped() &&
+                _player.EquippedMissileWeaponsInRangeOfTarget(presentEntity)
                 && presentEntity.CurrentTile.Visibility == Visibilities.Visible)
             {
+                RangedAttackButton.SetActive(true);
                 RangedAttackButton.GetComponent<Button>().interactable = true;
                 RangedHitChancePanel.SetActive(true);
                 RangedHitChanceText.text = GetChanceToHitRanged(presentEntity);
             }
             else
             {
+                RangedAttackButton.SetActive(false);
                 RangedAttackButton.GetComponent<Button>().interactable = false;
                 RangedHitChancePanel.SetActive(false);
             }
 
+            if (_player.HasThrownWeaponEquipped() &&
+                _player.ThrownWeaponInRangeOfTarget(presentEntity)
+                && presentEntity.CurrentTile.Visibility == Visibilities.Visible)
+            {
+                RangedAttackButton.SetActive(true);
+                ThrownButton.GetComponent<Button>().interactable = true;
+                ThrownHitChancePanel.SetActive(true);
+                ThrownHitChanceText.text = GetChanceToHitRanged(presentEntity);
+            }
+            else
+            {
+                RangedAttackButton.SetActive(false);
+                ThrownButton.GetComponent<Button>().interactable = false;
+                ThrownHitChancePanel.SetActive(false);
+            }
+
             MeleeAttackButton.GetComponent<Button>().interactable = _player.CalculateDistanceToTarget(presentEntity) < 2;
+            MeleeAttackButton.SetActive(MeleeAttackButton.GetComponent<Button>().interactable);
             MeleeHitChancePanel.SetActive(MeleeAttackButton.GetComponent<Button>().interactable);
             MeleeHitChanceText.text = GetChanceToHitMelee(presentEntity);
 
             if (presentEntity.IsCustomer && OrderReadyForDelivery(presentEntity))
             {
                 DeliverButton.GetComponent<Button>().interactable = true;
+                DeliverButton.SetActive(true);
             }
             else
             {
                 DeliverButton.GetComponent<Button>().interactable = false;
+                DeliverButton.SetActive(false);
             }
         }
         else
         {
             RangedAttackButton.GetComponent<Button>().interactable = false;
             RangedHitChancePanel.SetActive(false);
+            RangedAttackButton.SetActive(false);
             MeleeAttackButton.GetComponent<Button>().interactable = false;
             MeleeHitChancePanel.SetActive(false);
+            MeleeAttackButton.SetActive(false);
             DeliverButton.GetComponent<Button>().interactable = false;
+            DeliverButton.SetActive(false);
+            ThrownButton.GetComponent<Button>().interactable = false;
+            ThrownButton.SetActive(false);
+            ThrownHitChancePanel.SetActive(false);
         }
 
         var pos = Input.mousePosition;
@@ -115,6 +145,12 @@ public class ActionWindow : MonoBehaviour, ISubscriber
     public void OnMeleeAttackButtonClicked()
     {
         _player.MeleeAttack(_selectedTile.GetPresentEntity());
+        AfterActionCleanup();
+    }
+
+    public void OnThrowWeaponButtonClicked()
+    {
+        _player.RangedAttack(_selectedTile.GetPresentEntity(), GlobalHelper.RangedAttackType.Thrown);
         AfterActionCleanup();
     }
 

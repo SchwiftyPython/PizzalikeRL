@@ -1174,11 +1174,28 @@ public class Entity : ISubscriber
         return part;
     }
 
-    public void RangedAttack(Entity target)
+    public void RangedAttack(Entity target,
+        GlobalHelper.RangedAttackType attackType = GlobalHelper.RangedAttackType.Missile)
     {
-        if (RangedHit(target))
+        //todo get weapon here so bonuses can be applied and you can just as a param to ranged hit and apply damage
+        List<Weapon> equippedRangedWeapons = null;
+        if (attackType == GlobalHelper.RangedAttackType.Missile)
         {
-            ApplyRangedDamage(target);
+            equippedRangedWeapons = GetEquippedMissileWeapons();
+        }
+        else if (attackType == GlobalHelper.RangedAttackType.Thrown)
+        {
+            equippedRangedWeapons = new List<Weapon> {GetEquippedThrownWeapon()};
+        }
+        else
+        {
+            Debug.Log("Invalid ranged attack type!");
+            throw new ArgumentException("Invalid ranged attack type!", nameof(attackType));
+        }
+
+        if (RangedHit(target, equippedRangedWeapons))
+        {
+            ApplyRangedDamage(target, equippedRangedWeapons);
 
             if (!target.IsDead())
             {
@@ -1188,7 +1205,8 @@ public class Entity : ISubscriber
 
             var message = $"{(target.Fluff != null ? target.Fluff.Name : target.EntityType)} died!";
 
-            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this,
+                GlobalHelper.Capitalize(message));
         }
         else
         {
@@ -1207,20 +1225,27 @@ public class Entity : ISubscriber
 
             if (!string.IsNullOrEmpty(message))
             {
-                EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
+                EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this,
+                    GlobalHelper.Capitalize(message));
             }
         }
     }
 
-    public bool HasRangedWeaponsEquipped()
+    public bool HasMissileWeaponsEquipped()
     {
-        var equippedRangedWeapons = GetEquippedRangedWeapons();
+        var equippedRangedWeapons = GetEquippedMissileWeapons();
         return equippedRangedWeapons != null && equippedRangedWeapons.Count > 0;
     }
 
-    public bool EquippedWeaponsInRangeOfTarget(Entity target)
+    public bool HasThrownWeaponEquipped()
     {
-        var equippedRangedWeapons = GetEquippedRangedWeapons();
+        var equippedRangedWeapons = GetEquippedThrownWeapon();
+        return equippedRangedWeapons != null;
+    }
+
+    public bool EquippedMissileWeaponsInRangeOfTarget(Entity target)
+    {
+        var equippedRangedWeapons = GetEquippedMissileWeapons();
 
         if (equippedRangedWeapons == null || equippedRangedWeapons.Count < 1)
         {
@@ -1240,6 +1265,20 @@ public class Entity : ISubscriber
         }
 
         return inRangeWeapons.Count > 0;
+    }
+
+    public bool ThrownWeaponInRangeOfTarget(Entity target)
+    {
+        const int baseThrowRange = 6;
+
+        var equippedThrownWeapon = GetEquippedThrownWeapon();
+
+        if (equippedThrownWeapon == null)
+        {
+            return false;
+        }
+
+        return baseThrowRange >= CalculateDistanceToTarget(target);
     }
 
     public Attitude GetAttitudeTowards(Entity target)
@@ -1357,17 +1396,19 @@ public class Entity : ISubscriber
         EventMediator.Instance.Broadcast("MeleeHit", this);
     }
 
-    private bool RangedHit(Entity target)
+    private bool RangedHit(Entity target, List<Weapon> equippedRangedWeapons)
     {
         var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
 
-        var chanceToHit = CalculateChanceToHitRanged(target);
+        var chanceToHit = CalculateChanceToHitRanged(target, equippedRangedWeapons);
 
         return roll <= chanceToHit;
     }
 
-    private int CalculateChanceToHitRanged(Entity target)
+    private int CalculateChanceToHitRanged(Entity target, List<Weapon> equippedRangedWeapons)
     {
+        //todo apply any bonuses from equipped weapons
+
         const int startingChanceToHit = 60;
 
         var chanceToHit = startingChanceToHit;
@@ -1409,7 +1450,9 @@ public class Entity : ISubscriber
 
     public int GetChanceToHitRangedTarget(Entity target)
     {
-        return CalculateChanceToHitRanged(target);
+        var equippedMissileWeapons = GetEquippedMissileWeapons();
+
+        return CalculateChanceToHitRanged(target, equippedMissileWeapons);
     }
 
     public int GetChanceToHitMeleeTarget(Entity target)
@@ -1436,10 +1479,8 @@ public class Entity : ISubscriber
         return (int) Math.Sqrt(a * a + b * b);
     }
 
-    private void ApplyRangedDamage(Entity target)
+    private void ApplyRangedDamage(Entity target, IEnumerable<Weapon> equippedRangedWeapons)
     {
-        var equippedRangedWeapons = GetEquippedRangedWeapons();
-
         var damageDice = new List<Dice>();
 
         foreach (var weapon in equippedRangedWeapons)
@@ -1495,7 +1536,7 @@ public class Entity : ISubscriber
         target.GetSprite().GetComponent<EnemyController>()?.ReactToAttacker(this);
     }
 
-    private List<Weapon> GetEquippedRangedWeapons()
+    private List<Weapon> GetEquippedMissileWeapons()
     {
         var equipped = new List<Weapon>();
 
@@ -1514,6 +1555,11 @@ public class Entity : ISubscriber
         }
 
         return equipped;
+    }
+
+    private Weapon GetEquippedThrownWeapon()
+    {
+        return (Weapon) Equipped[EquipmentSlot.Thrown];
     }
     
     //<Summary>
