@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
@@ -197,6 +196,42 @@ public class ItemStore : MonoBehaviour
         }
 
         var weaponTemplate = rangedTemplates[Random.Range(0, rangedTemplates.Count)];
+
+        if (rarityCap == ItemRarity.Common)
+        {
+            return new Weapon(weaponTemplate, rarityCap);
+        }
+
+        const int maxTries = 6;
+
+        var rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+
+        var currentTry = 1;
+        while (currentTry <= maxTries && rarity > rarityCap)
+        {
+            rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+            currentTry++;
+        }
+
+        return new Weapon(weaponTemplate, rarity);
+    }
+
+    public Weapon GetRandomThrownWeapon(ItemRarity rarityCap = ItemRarity.Common)
+    {
+        var thrownTemplates = new List<ItemTemplate>();
+
+        foreach (var templateType in _baseItemTemplateTypes)
+        {
+            var currentTemplate = ItemTemplateLoader.GetItemTemplate(templateType);
+
+            if (currentTemplate.Category == "weapon" &&
+                currentTemplate.EquipmentSlotType == Entity.EquipmentSlot.Thrown)
+            {
+                thrownTemplates.Add(currentTemplate);
+            }
+        }
+
+        var weaponTemplate = thrownTemplates[Random.Range(0, thrownTemplates.Count)];
 
         if (rarityCap == ItemRarity.Common)
         {
