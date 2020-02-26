@@ -9,6 +9,8 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 {
     private Entity _player;
     private Tile _selectedTile;
+    private Weapon _selectedWeapon;
+    private List<Tile> _aoeTiles;
 
     public GameObject MoveHereButton;
     public GameObject RangedAttackButton;
@@ -79,14 +81,14 @@ public class ActionWindow : MonoBehaviour, ISubscriber
                 _player.ThrownWeaponInRangeOfTarget(presentEntity)
                 && presentEntity.CurrentTile.Visibility == Visibilities.Visible)
             {
-                RangedAttackButton.SetActive(true);
+                ThrownButton.SetActive(true);
                 ThrownButton.GetComponent<Button>().interactable = true;
                 ThrownHitChancePanel.SetActive(true);
                 ThrownHitChanceText.text = GetChanceToHitRanged(presentEntity);
             }
             else
             {
-                RangedAttackButton.SetActive(false);
+                ThrownButton.SetActive(false);
                 ThrownButton.GetComponent<Button>().interactable = false;
                 ThrownHitChancePanel.SetActive(false);
             }
@@ -124,7 +126,10 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 
         var pos = Input.mousePosition;
 
-        gameObject.transform.position = new Vector2(pos.x + 60f, pos.y + 50f);
+        //todo check if window overlaps highlighted tiles
+        //todo check if window is near edge of game area
+        //todo possibly make window draggable so player can adjust if needed
+        gameObject.transform.position = new Vector2(pos.x + 90f, pos.y + 80f);
 
         gameObject.SetActive(true);
         GameManager.Instance.AddActiveWindow(gameObject);
@@ -142,6 +147,26 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         AfterActionCleanup();
     }
 
+    public void OnHoverRangedAttackButton()
+    {
+        var equippedMissileWeapons = _player.GetEquippedMissileWeapons();
+
+        var aoe = false;
+        foreach (var missileWeapon in equippedMissileWeapons)
+        {
+            if (missileWeapon.Properties.Contains("aoe"))
+            {
+                aoe = true;
+                break;
+            }
+        }
+
+        if (aoe)
+        {
+            OnHoverWithAoE(equippedMissileWeapons.First());
+        }
+    }
+
     public void OnMeleeAttackButtonClicked()
     {
         _player.MeleeAttack(_selectedTile.GetPresentEntity());
@@ -150,8 +175,57 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 
     public void OnThrowWeaponButtonClicked()
     {
-        _player.RangedAttack(_selectedTile.GetPresentEntity(), GlobalHelper.RangedAttackType.Thrown);
+        if (_aoeTiles != null && _aoeTiles.Count > 0)
+        {
+            _player.RangedAttackAOE(_aoeTiles, _selectedWeapon);
+        }
+        else
+        {
+            _player.RangedAttack(_selectedTile.GetPresentEntity(), GlobalHelper.RangedAttackType.Thrown);
+        }
         AfterActionCleanup();
+    }
+
+    public void OnHoverThrowWeaponButton()
+    {
+        var equippedThrownWeapon = _player.GetEquippedThrownWeapon();
+
+        if (equippedThrownWeapon == null)
+        {
+            return;
+        }
+
+        if (equippedThrownWeapon.Properties.Contains("aoe"))
+        {
+            OnHoverWithAoE(equippedThrownWeapon);
+        }
+    }
+
+    public void OnHoverWithAoE(Weapon aoeWeapon)
+    {
+        //todo calc hit chance for each entity in aoe? Maybe avg of all instead of a bunch of windows
+
+        var aoe = aoeWeapon.AOE;
+
+        IEnumerable<Tile> tilesToHighlight = null;
+
+        if (aoe.GetType() == typeof(BlastAOE))
+        {
+            tilesToHighlight =
+                AreaMap.Instance.GetCellsInCircle(_selectedTile.X, _selectedTile.Y,
+                    ((BlastAOE) aoeWeapon.AOE).GetRadius());
+        }
+
+        _aoeTiles = (List<Tile>) tilesToHighlight;
+        _selectedWeapon = aoeWeapon;
+
+        InputController.Instance.HighlightTiles(tilesToHighlight);
+    }
+
+    public void OnButtonExit()
+    {
+        _aoeTiles = null;
+        InputController.Instance.ClearHighlights();
     }
 
     public void OnDeliverButtonClicked()

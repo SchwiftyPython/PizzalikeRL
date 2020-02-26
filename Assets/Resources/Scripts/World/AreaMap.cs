@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Pathfinding;
 using UnityEngine;
@@ -145,6 +146,112 @@ public class AreaMap : MonoBehaviour
                 tile.FovTile.transform.SetParent(FovHolder.transform);
             }
         }
+    }
+
+    /// <summary>
+    /// Get an IEnumerable of Tiles in a circle around the center Tile up to the specified radius using Bresenham's midpoint circle algorithm
+    /// </summary>
+    /// <seealso href="https://en.wikipedia.org/wiki/Midpoint_circle_algorithm">Based on Bresenham's midpoint circle algorithm</seealso>
+    /// <param name="xCenter">X location of the center Tile with 0 as the farthest left</param>
+    /// <param name="yCenter">Y location of the center Tile with 0 as the top</param>
+    /// <param name="radius">The number of Tiles to get in a radius from the center Tile</param>
+    /// <returns>IEnumerable of Tiles in a circle around the center Tile</returns>
+    public IEnumerable<Tile> GetCellsInCircle(int xCenter, int yCenter, int radius)
+    {
+        var discovered = new HashSet<string>();
+
+        var d = (5 - (radius * 4)) / 4;
+        var x = 0;
+        var y = radius;
+
+        do
+        {
+            foreach (var tile in GetCellsAlongLine(xCenter + x, yCenter + y, xCenter - x, yCenter + y))
+            {
+                if (AddToHashSet(discovered, tile))
+                {
+                    yield return tile;
+                }
+            }
+            foreach (var tile in GetCellsAlongLine(xCenter - x, yCenter - y, xCenter + x, yCenter - y))
+            {
+                if (AddToHashSet(discovered, tile))
+                {
+                    yield return tile;
+                }
+            }
+            foreach (var tile in GetCellsAlongLine(xCenter + y, yCenter + x, xCenter - y, yCenter + x))
+            {
+                if (AddToHashSet(discovered, tile))
+                {
+                    yield return tile;
+                }
+            }
+            foreach (var tile in GetCellsAlongLine(xCenter + y, yCenter - x, xCenter - y, yCenter - x))
+            {
+                if (AddToHashSet(discovered, tile))
+                {
+                    yield return tile;
+                }
+            }
+
+            if (d < 0)
+            {
+                d += (2 * x) + 1;
+            }
+            else
+            {
+                d += (2 * (x - y)) + 1;
+                y--;
+            }
+            x++;
+        } while (x <= y);
+    }
+
+    /// <summary>
+    /// Get an IEnumerable of Cells in a line from the Origin Cell to the Destination Cell
+    /// The resulting IEnumerable includes the Origin and Destination Cells
+    /// Uses Bresenham's line algorithm to determine which Cells are in the closest approximation to a straight line between the two Cells
+    /// </summary>
+    /// <param name="xOrigin">X location of the Origin Cell at the start of the line with 0 as the farthest left</param>
+    /// <param name="yOrigin">Y location of the Origin Cell at the start of the line with 0 as the top</param>
+    /// <param name="xDestination">X location of the Destination Cell at the end of the line with 0 as the farthest left</param>
+    /// <param name="yDestination">Y location of the Destination Cell at the end of the line with 0 as the top</param>
+    /// <returns>IEnumerable of Cells in a line from the Origin Cell to the Destination Cell which includes the Origin and Destination Cells</returns>
+    public IEnumerable<Tile> GetCellsAlongLine( int xOrigin, int yOrigin, int xDestination, int yDestination )
+    {
+         xOrigin = ClampX( xOrigin );
+         yOrigin = ClampY( yOrigin );
+         xDestination = ClampX( xDestination );
+         yDestination = ClampY( yDestination );
+
+         var dx = Math.Abs( xDestination - xOrigin );
+         var dy = Math.Abs( yDestination - yOrigin );
+
+         var sx = xOrigin < xDestination ? 1 : -1;
+         var sy = yOrigin < yDestination ? 1 : -1;
+         var err = dx - dy;
+
+         while ( true )
+         {
+            yield return _currentArea.AreaTiles[xOrigin, yOrigin];
+            if ( xOrigin == xDestination && yOrigin == yDestination )
+            {
+               break;
+            }
+            var e2 = 2 * err;
+            if ( e2 > -dy )
+            {
+               err -= dy;
+               xOrigin += sx;
+            }
+            if ( e2 < dx )
+            {
+               err += dx;
+               yOrigin += sy;
+            }
+         }
+      
     }
 
     public void MarkCustomers()
@@ -441,6 +548,21 @@ public class AreaMap : MonoBehaviour
         var roll = Random.Range(0f, 1f);
 
         return roll < _itemDropChances[rarity];
+    }
+
+    private int ClampX(int x)
+    {
+        return (x < 0) ? 0 : (x > _currentArea.Height - 1) ? _currentArea.Height - 1 : x;
+    }
+
+    private int ClampY(int y)
+    {
+        return (y < 0) ? 0 : (y > _currentArea.Width - 1) ? _currentArea.Width - 1 : y;
+    }
+
+    private bool AddToHashSet(HashSet<string> hashSet, Tile tile)
+    {
+        return hashSet.Add(tile.Id);
     }
 
     private void PlacePlayer()

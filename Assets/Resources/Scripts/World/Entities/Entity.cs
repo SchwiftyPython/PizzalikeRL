@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 [Serializable]
@@ -494,7 +495,7 @@ public class Entity : ISubscriber
         var inheritFromChances = new Dictionary<string, int>
         {
             { "mother", 95 },
-            { "father", 95 },
+            { "father", 95 }
             //{ "both", 60 }
         };
 
@@ -988,7 +989,8 @@ public class Entity : ISubscriber
             MeleeAttack(GameManager.Instance.CurrentArea.GetTileAt(target).GetPresentEntity());
             return true;
         }
-        else if (currentScene.Equals("WorldMap"))
+
+        if (currentScene.Equals("WorldMap"))
         {
             if (WorldMapCanMove(target))
             {
@@ -1164,7 +1166,7 @@ public class Entity : ISubscriber
 
             var roll = DiceRoller.Instance.RollDice(dice);
 
-            var chanceToHit = (float)part.Coverage / (float)TotalBodyPartCoverage * 100;
+            var chanceToHit = part.Coverage / (float)TotalBodyPartCoverage * 100;
 
             partHit = roll <= chanceToHit;
 
@@ -1178,14 +1180,14 @@ public class Entity : ISubscriber
         GlobalHelper.RangedAttackType attackType = GlobalHelper.RangedAttackType.Missile)
     {
         //todo get weapon here so bonuses can be applied and you can just as a param to ranged hit and apply damage
-        List<Weapon> equippedRangedWeapons = null;
+        Weapon equippedRangedWeapon = null;
         if (attackType == GlobalHelper.RangedAttackType.Missile)
         {
-            equippedRangedWeapons = GetEquippedMissileWeapons();
+            equippedRangedWeapon = GetEquippedMissileWeapons().FirstOrDefault();
         }
         else if (attackType == GlobalHelper.RangedAttackType.Thrown)
         {
-            equippedRangedWeapons = new List<Weapon> {GetEquippedThrownWeapon()};
+            equippedRangedWeapon = GetEquippedThrownWeapon();
         }
         else
         {
@@ -1193,9 +1195,9 @@ public class Entity : ISubscriber
             throw new ArgumentException("Invalid ranged attack type!", nameof(attackType));
         }
 
-        if (RangedHit(target, equippedRangedWeapons))
+        if (RangedHit(target, equippedRangedWeapon))
         {
-            ApplyRangedDamage(target, equippedRangedWeapons);
+            ApplyRangedDamage(target, equippedRangedWeapon);
 
             if (!target.IsDead())
             {
@@ -1229,6 +1231,23 @@ public class Entity : ISubscriber
                     GlobalHelper.Capitalize(message));
             }
         }
+    }
+
+    public void RangedAttackAOE(List<Tile> aoeTiles, Weapon aoeWeapon)
+    {
+        var targets = new List<Entity>();
+
+        foreach (var tile in aoeTiles)
+        {
+            var presentEntity = tile.GetPresentEntity();
+
+            if (presentEntity != null)
+            {
+                targets.Add(presentEntity);
+            }
+        }
+
+        //todo foreach one check if hit
     }
 
     public bool HasMissileWeaponsEquipped()
@@ -1396,16 +1415,16 @@ public class Entity : ISubscriber
         EventMediator.Instance.Broadcast("MeleeHit", this);
     }
 
-    private bool RangedHit(Entity target, List<Weapon> equippedRangedWeapons)
+    private bool RangedHit(Entity target, Weapon equippedRangedWeapon)
     {
         var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
 
-        var chanceToHit = CalculateChanceToHitRanged(target, equippedRangedWeapons);
+        var chanceToHit = CalculateChanceToHitRanged(target, equippedRangedWeapon);
 
         return roll <= chanceToHit;
     }
 
-    private int CalculateChanceToHitRanged(Entity target, List<Weapon> equippedRangedWeapons)
+    private int CalculateChanceToHitRanged(Entity target, Weapon equippedRangedWeapon)
     {
         //todo apply any bonuses from equipped weapons
 
@@ -1452,7 +1471,7 @@ public class Entity : ISubscriber
     {
         var equippedMissileWeapons = GetEquippedMissileWeapons();
 
-        return CalculateChanceToHitRanged(target, equippedMissileWeapons);
+        return CalculateChanceToHitRanged(target, equippedMissileWeapons.First());
     }
 
     public int GetChanceToHitMeleeTarget(Entity target)
@@ -1479,25 +1498,11 @@ public class Entity : ISubscriber
         return (int) Math.Sqrt(a * a + b * b);
     }
 
-    private void ApplyRangedDamage(Entity target, IEnumerable<Weapon> equippedRangedWeapons)
+    private void ApplyRangedDamage(Entity target, Weapon equippedRangedWeapon)
     {
-        var damageDice = new List<Dice>();
+        var damageDice = equippedRangedWeapon.ItemDice;
 
-        foreach (var weapon in equippedRangedWeapons)
-        {
-            if (weapon.Range >= CalculateDistanceToTarget(target))
-            {
-                damageDice.Add(weapon.ItemDice);
-            }
-        }
-
-        var damageRoll = 0;
-
-        foreach (var dice in damageDice)
-        {
-            var roll = DiceRoller.Instance.RollDice(dice);
-            damageRoll += roll;
-        }
+        var damageRoll = DiceRoller.Instance.RollDice(damageDice);
 
         ApplyDamage(target, damageRoll);
     }
@@ -1536,7 +1541,7 @@ public class Entity : ISubscriber
         target.GetSprite().GetComponent<EnemyController>()?.ReactToAttacker(this);
     }
 
-    private List<Weapon> GetEquippedMissileWeapons()
+    public List<Weapon> GetEquippedMissileWeapons()
     {
         var equipped = new List<Weapon>();
 
@@ -1557,7 +1562,7 @@ public class Entity : ISubscriber
         return equipped;
     }
 
-    private Weapon GetEquippedThrownWeapon()
+    public Weapon GetEquippedThrownWeapon()
     {
         return (Weapon) Equipped[EquipmentSlot.Thrown];
     }
@@ -1581,7 +1586,7 @@ public class Entity : ISubscriber
 
         if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
         {
-            UnityEngine.Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
+            Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
         }
         CurrentTile.PresentTopping = null;
     }
@@ -1605,10 +1610,10 @@ public class Entity : ISubscriber
 
         if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
         {
-            UnityEngine.Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
+            Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
         }
 
-        UnityEngine.Object.Destroy(CurrentTile.PresentProp.Texture);
+        Object.Destroy(CurrentTile.PresentProp.Texture);
         CurrentTile.PresentProp = null;
         CurrentTile.PresentTopping = null;
     }
@@ -1630,10 +1635,10 @@ public class Entity : ISubscriber
 
         if (CurrentTile.PresentItems.Count < 1 && CurrentTile.PresentTopping.WorldSprite != null)
         {
-            UnityEngine.Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
+            Object.Destroy(CurrentTile.PresentTopping.WorldSprite);
         }
 
-        UnityEngine.Object.Destroy(CurrentTile.PresentProp.Texture);
+        Object.Destroy(CurrentTile.PresentProp.Texture);
         CurrentTile.PresentProp = null;
         CurrentTile.PresentTopping = null;
     }
