@@ -29,4 +29,9 @@ public class Weapon : Item
         
         IsRanged = Range > 1;
     }
+
+    public bool IsAoeWeapon()
+    {
+        return AOE != null;
+    }
 }

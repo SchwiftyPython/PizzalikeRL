@@ -1176,24 +1176,9 @@ public class Entity : ISubscriber
         return part;
     }
 
-    public void RangedAttack(Entity target,
-        GlobalHelper.RangedAttackType attackType = GlobalHelper.RangedAttackType.Missile)
+    public void RangedAttack(Entity target, Weapon equippedRangedWeapon)
     {
         //todo get weapon here so bonuses can be applied and you can just as a param to ranged hit and apply damage
-        Weapon equippedRangedWeapon = null;
-        if (attackType == GlobalHelper.RangedAttackType.Missile)
-        {
-            equippedRangedWeapon = GetEquippedMissileWeapons().FirstOrDefault();
-        }
-        else if (attackType == GlobalHelper.RangedAttackType.Thrown)
-        {
-            equippedRangedWeapon = GetEquippedThrownWeapon();
-        }
-        else
-        {
-            Debug.Log("Invalid ranged attack type!");
-            throw new ArgumentException("Invalid ranged attack type!", nameof(attackType));
-        }
 
         if (RangedHit(target, equippedRangedWeapon))
         {
@@ -1247,7 +1232,10 @@ public class Entity : ISubscriber
             }
         }
 
-        //todo foreach one check if hit
+        foreach (var target in targets)
+        {
+            RangedAttack(target, aoeWeapon);
+        }
     }
 
     public bool HasMissileWeaponsEquipped()

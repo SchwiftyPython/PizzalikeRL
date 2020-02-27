@@ -143,7 +143,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 
     public void OnRangedAttackButtonClicked()
     {
-        _player.RangedAttack(_selectedTile.GetPresentEntity());
+        _player.RangedAttack(_selectedTile.GetPresentEntity(), _selectedWeapon);
         AfterActionCleanup();
     }
 
@@ -181,7 +181,7 @@ public class ActionWindow : MonoBehaviour, ISubscriber
         }
         else
         {
-            _player.RangedAttack(_selectedTile.GetPresentEntity(), GlobalHelper.RangedAttackType.Thrown);
+            _player.RangedAttack(_selectedTile.GetPresentEntity(), _selectedWeapon);
         }
         AfterActionCleanup();
     }
@@ -207,16 +207,16 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 
         var aoe = aoeWeapon.AOE;
 
-        IEnumerable<Tile> tilesToHighlight = null;
+        List<Tile> tilesToHighlight = null;
 
         if (aoe.GetType() == typeof(BlastAOE))
         {
             tilesToHighlight =
-                AreaMap.Instance.GetCellsInCircle(_selectedTile.X, _selectedTile.Y,
-                    ((BlastAOE) aoeWeapon.AOE).GetRadius());
+                new List<Tile>(AreaMap.Instance.GetCellsInCircle(_selectedTile.X, _selectedTile.Y,
+                    ((BlastAOE) aoeWeapon.AOE).GetRadius()));
         }
 
-        _aoeTiles = (List<Tile>) tilesToHighlight;
+        _aoeTiles = tilesToHighlight;
         _selectedWeapon = aoeWeapon;
 
         InputController.Instance.HighlightTiles(tilesToHighlight);
