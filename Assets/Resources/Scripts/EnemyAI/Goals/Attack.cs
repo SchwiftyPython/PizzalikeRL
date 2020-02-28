@@ -85,13 +85,48 @@ public class Attack : Goal
 
     private bool TryRangedWeapon()
     {
+        var attackType = GlobalHelper.GetRandomEnumValue<GlobalHelper.RangedAttackType>();
+
+        Weapon equippedWeapon = null;
+
         //todo apply los via raycast. Probably in Entity. Make RangedWeaponCanHit method. Include range check
-        if (!Self.HasMissileWeaponsEquipped() || !Self.EquippedMissileWeaponsInRangeOfTarget(_target))
+        if (attackType == GlobalHelper.RangedAttackType.Missile && Self.HasMissileWeaponsEquipped() &&
+            Self.EquippedMissileWeaponsInRangeOfTarget(_target))
+        {
+            equippedWeapon = Self.GetEquippedMissileWeapons().First();
+        }
+
+
+        if (attackType == GlobalHelper.RangedAttackType.Thrown && Self.HasThrownWeaponEquipped() &&
+            Self.ThrownWeaponInRangeOfTarget(_target))
+        {
+            equippedWeapon = Self.GetEquippedThrownWeapon();
+        }
+
+        if (equippedWeapon == null)
         {
             return false;
         }
-        Self.RangedAttack(_target);
+
+        if(equippedWeapon.IsAoeWeapon())
+        {
+            List<Tile>tiles = null;
+
+            if (equippedWeapon.AOE.GetType() == typeof(BlastAOE))
+            {
+                tiles =
+                    new List<Tile>(AreaMap.Instance.GetCellsInCircle(_target.CurrentTile.X, _target.CurrentTile.Y,
+                        ((BlastAOE)equippedWeapon.AOE).GetRadius()));
+            }
+
+            Self.RangedAttackAOE( tiles, equippedWeapon);
+
+            return true;
+        }
+
+        Self.RangedAttack(_target, equippedWeapon);
         return true;
+
     }
 
     private bool TryMeleeWeapon()

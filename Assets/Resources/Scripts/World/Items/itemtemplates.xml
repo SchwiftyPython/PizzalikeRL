@@ -146,6 +146,7 @@
 		<MultiSlot>false</MultiSlot>
 		<Range>5</Range>	
 <Properties>
+<Property>aoe</Property>
         </Properties>			
 	</ItemTemplate>
 	
@@ -165,6 +166,7 @@
 		<MultiSlot>false</MultiSlot>
 		<Range>5</Range>	
 <Properties>
+<Property>aoe</Property>
         </Properties>			
 	</ItemTemplate>
 	
@@ -202,6 +204,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>32</Range>	
 <Properties>
+<Property>aoe</Property>
         </Properties>			
 	</ItemTemplate>
 	

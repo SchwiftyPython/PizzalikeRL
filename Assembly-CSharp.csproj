@@ -254,6 +254,10 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\KnockBack.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\SpinWeb.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Stab.cs" />
+    <Compile Include="Assets\Resources\Scripts\Area of Effect\AimLimit.cs" />
+    <Compile Include="Assets\Resources\Scripts\Area of Effect\AOEStore.cs" />
+    <Compile Include="Assets\Resources\Scripts\Area of Effect\BlastAOE.cs" />
+    <Compile Include="Assets\Resources\Scripts\Area of Effect\IAreaOfEffect.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Audio\ButtonClick.cs" />
     <Compile Include="Assets\Resources\Scripts\DamageType.cs" />

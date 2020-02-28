@@ -1,0 +1,14 @@
+﻿/// <summary>
+/// Enum used for common targeting limitations (or lack thereof, in the case of AimLimit.FREE ). AimLimit.ORTHOGONAL will
+/// limit single targets or the centers/aimed-at-cells of AOE effects to cells directly, north, south, east or west of
+/// the user.AimLimit.DIAGONAL does the same but for northeast, southeast, southwest, or northwest.AimLimit.EIGHT_WAY
+/// limits the same things, but is less restrictive, allowing all cells AimLimit.ORTHOGONAL does as well as all cells
+/// AimLimit.DIAGONAL allows. AimLimit.FREE allows all cells within any range limit an ability may have.
+/// </summary>
+public enum AimLimit 
+{
+    Free,
+    EightWay,
+    Orthogonal,
+    Diagonal
+}

@@ -300,6 +300,7 @@ public class InputController : MonoBehaviour, ISubscriber
         }
     }
 
+    //todo only highlight path on hover over move button
     public void HighlightPath()
     {
         var currentArea = GameManager.Instance.CurrentArea;
@@ -307,6 +308,19 @@ public class InputController : MonoBehaviour, ISubscriber
         foreach (var tilePosition in Path.vectorPath)
         {
             var tile = currentArea.AreaTiles[(int) tilePosition.y, (int) tilePosition.x];
+            tile.TextureInstance.GetComponent<SpriteRenderer>().color = HighlightedColor;
+            _highlightedTiles.Add(tile);
+        }
+    }
+
+    public void HighlightTiles(IEnumerable<Tile> tiles)
+    {
+        ClearHighlights();
+
+        var currentArea = GameManager.Instance.CurrentArea;
+        _highlightedTiles = new List<Tile>();
+        foreach (var tile in tiles)
+        {
             tile.TextureInstance.GetComponent<SpriteRenderer>().color = HighlightedColor;
             _highlightedTiles.Add(tile);
         }
