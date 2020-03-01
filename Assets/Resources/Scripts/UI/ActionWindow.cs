@@ -149,21 +149,16 @@ public class ActionWindow : MonoBehaviour, ISubscriber
 
     public void OnHoverRangedAttackButton()
     {
-        var equippedMissileWeapons = _player.GetEquippedMissileWeapons();
+        var equippedMissileWeapon = _player.GetEquippedMissileWeapon();
 
-        var aoe = false;
-        foreach (var missileWeapon in equippedMissileWeapons)
+        if (equippedMissileWeapon == null)
         {
-            if (missileWeapon.Properties.Contains("aoe"))
-            {
-                aoe = true;
-                break;
-            }
+            return;
         }
 
-        if (aoe)
+        if (equippedMissileWeapon.Properties.Contains("aoe"))
         {
-            OnHoverWithAoE(equippedMissileWeapons.First());
+            OnHoverWithAoE(equippedMissileWeapon);
         }
     }
 

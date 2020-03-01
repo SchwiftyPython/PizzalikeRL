@@ -75,8 +75,7 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
             }
 
             if (slot == Entity.EquipmentSlot.LeftArmTwo || slot == Entity.EquipmentSlot.LeftHandTwo ||
-                slot == Entity.EquipmentSlot.MissileWeaponTwo || slot == Entity.EquipmentSlot.RightArmTwo ||
-                slot == Entity.EquipmentSlot.RightHandTwo)
+                slot == Entity.EquipmentSlot.RightArmTwo || slot == Entity.EquipmentSlot.RightHandTwo)
             {
                 if (!GameManager.Instance.Player.IsMultiArmed)
                 {
