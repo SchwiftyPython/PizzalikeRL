@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Faction
@@ -10,7 +11,7 @@ public class Faction
         MixedSpecies
     }
 
-    private const int CitizenPopulationValue = 50;
+    private const int CitizenPopulationValue = 5;
 
     public PopulationType PopType;
 
@@ -149,7 +150,7 @@ public class Faction
         const int humanoidChance = 96;
 
         PickPopulationType();
-        Population = Random.Range(100, 1000);
+        Population = Random.Range(900, 2250);
         
         var availableEntityTypes = new List<string>();
         if (PopType == PopulationType.MixedSpecies)
@@ -228,10 +229,13 @@ public class Faction
             }
 
             var citizen = new Entity(template, this);
+            citizen.GenerateStartingEquipment();
             citizen.CreateFluff(template, Name);
             Citizens.Add(citizen);
             WorldData.Instance.Entities.Add(citizen.Id, citizen);
         }
+
+        Debug.Log($"Number of Citizens: {Citizens.Count}");
 
         RemainingCitizensToPlace = new List<Entity>(Citizens);
     }

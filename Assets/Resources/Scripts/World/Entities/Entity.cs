@@ -51,8 +51,6 @@ public class Entity : ISubscriber
         LeftHandTwo,
         [Description("Missile Weapon One")]
         MissileWeaponOne,
-        [Description("Missile Weapon Two")]
-        MissileWeaponTwo,
         Hands,
         Feet,
         Special,
@@ -416,6 +414,11 @@ public class Entity : ISubscriber
     {
         //todo equipment that occupies more then one slot
         //todo two slot boolean in item.xml
+
+        if (item == null)
+        {
+            return;
+        }
 
         if (Inventory.ContainsKey(item.Id))
         {
@@ -1150,6 +1153,49 @@ public class Entity : ISubscriber
     {
         Fluff = new EntityFluff(template.Type, factionName, template.NameFiles);
     }
+    
+    //todo need some kind of cap that varies depending on entity
+    //todo raise cap as necessary for others
+    //todo a "hero type" would have up to a legendary
+    //todo a named character read about in books requires a legendary item
+    //todo possibly base on background
+    //todo might use a capper to limit number of rarest items. Test without first
+    public void GenerateStartingEquipment(ItemRarity rarityCap = ItemRarity.Uncommon)
+    {
+        const int minEquippedItems = 5;
+        const int maxEquippedItems = 6;
+        const int minInventoryItems = 3;
+        const int maxInventoryItems = 7;
+
+        var numEquippedItems = Random.Range(minEquippedItems, maxEquippedItems + 1);
+
+        var emptyEquipmentSlots = Equipped.Keys.ToList();
+
+        for (var i = 0; i < numEquippedItems; i++)
+        {
+            if (emptyEquipmentSlots.Count < 1)
+            {
+                break;
+            }
+
+            var currentEquipmentSlot = emptyEquipmentSlots[Random.Range(0, emptyEquipmentSlots.Count)];
+
+            var itemForSlot = ItemStore.Instance.GetRandomItemByEquipmentSlot(currentEquipmentSlot, rarityCap);
+
+            EquipItem(itemForSlot, currentEquipmentSlot);
+
+            emptyEquipmentSlots.Remove(currentEquipmentSlot);
+        }
+
+        var numInventoryItems = Random.Range(minInventoryItems, maxInventoryItems + 1);
+
+        var items = ItemStore.Instance.GetRandomItems(numInventoryItems, rarityCap);
+
+        foreach(var item in items)
+        {
+            Inventory.Add(item.Id, item);
+        }
+    }
 
     public BodyPart BodyPartHit()
     {
@@ -1240,8 +1286,8 @@ public class Entity : ISubscriber
 
     public bool HasMissileWeaponsEquipped()
     {
-        var equippedRangedWeapons = GetEquippedMissileWeapons();
-        return equippedRangedWeapons != null && equippedRangedWeapons.Count > 0;
+        var equippedRangedWeapons = GetEquippedMissileWeapon();
+        return equippedRangedWeapons != null;
     }
 
     public bool HasThrownWeaponEquipped()
@@ -1252,26 +1298,16 @@ public class Entity : ISubscriber
 
     public bool EquippedMissileWeaponsInRangeOfTarget(Entity target)
     {
-        var equippedRangedWeapons = GetEquippedMissileWeapons();
+        var equippedRangedWeapon = GetEquippedMissileWeapon();
 
-        if (equippedRangedWeapons == null || equippedRangedWeapons.Count < 1)
+        if (equippedRangedWeapon == null)
         {
             //todo log this as an error.
             //todo This method would have been called after verifying there were ranged weapons equipped.
             return false;
         }
 
-        var inRangeWeapons = new List<Weapon>();
-
-        foreach (var weapon in equippedRangedWeapons)
-        {
-            if (weapon.Range >= CalculateDistanceToTarget(target))
-            {
-                inRangeWeapons.Add(weapon);
-            }
-        }
-
-        return inRangeWeapons.Count > 0;
+        return equippedRangedWeapon.Range >= CalculateDistanceToTarget(target);
     }
 
     public bool ThrownWeaponInRangeOfTarget(Entity target)
@@ -1457,9 +1493,9 @@ public class Entity : ISubscriber
 
     public int GetChanceToHitRangedTarget(Entity target)
     {
-        var equippedMissileWeapons = GetEquippedMissileWeapons();
+        var equippedMissileWeapons = GetEquippedMissileWeapon();
 
-        return CalculateChanceToHitRanged(target, equippedMissileWeapons.First());
+        return CalculateChanceToHitRanged(target, equippedMissileWeapons);
     }
 
     public int GetChanceToHitMeleeTarget(Entity target)
@@ -1529,25 +1565,9 @@ public class Entity : ISubscriber
         target.GetSprite().GetComponent<EnemyController>()?.ReactToAttacker(this);
     }
 
-    public List<Weapon> GetEquippedMissileWeapons()
+    public Weapon GetEquippedMissileWeapon()
     {
-        var equipped = new List<Weapon>();
-
-        var missileWeaponOne = Equipped[EquipmentSlot.MissileWeaponOne];
-
-        if (missileWeaponOne != null)
-        {
-            equipped.Add((Weapon) missileWeaponOne);
-        }
-
-        var missileWeaponTwo = Equipped[EquipmentSlot.MissileWeaponTwo];
-
-        if (missileWeaponTwo != null)
-        {
-            equipped.Add((Weapon)missileWeaponTwo);
-        }
-
-        return equipped;
+        return (Weapon) Equipped[EquipmentSlot.MissileWeaponOne]; 
     }
 
     public Weapon GetEquippedThrownWeapon()

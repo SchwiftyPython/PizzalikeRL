@@ -93,7 +93,7 @@ public class Attack : Goal
         if (attackType == GlobalHelper.RangedAttackType.Missile && Self.HasMissileWeaponsEquipped() &&
             Self.EquippedMissileWeaponsInRangeOfTarget(_target))
         {
-            equippedWeapon = Self.GetEquippedMissileWeapons().First();
+            equippedWeapon = Self.GetEquippedMissileWeapon();
         }
 
 

@@ -100,23 +100,11 @@ public class ItemStore : MonoBehaviour
         var rarity = GetRandomRarity();
 
         var itemTemplate = GetRandomBaseItemTemplate();
-        
-        switch (itemTemplate.Category.ToLower())
-        {
-            case "armor":
-                return new Armor(itemTemplate, rarity);
-            case "weapon":
-                return new Weapon(itemTemplate, rarity);
-            case "consumable":
-                return GetRandomItem();
-                //todo need sprite 
-                //return new Item(itemTemplate, rarity);
-            default:
-                return new Item(itemTemplate, rarity);
-        }
+
+        return GetItemFromTemplate(itemTemplate);
     }
 
-    public List<Item> GetRandomItems(int numItems = 0)
+    public List<Item> GetRandomItems(int numItems = 0, ItemRarity rarityCap = ItemRarity.Common)
     {
         if (numItems < 1)
         {
@@ -127,7 +115,30 @@ public class ItemStore : MonoBehaviour
 
         for (var i = 0; i < numItems; i++)
         {
-            items.Add(GetRandomItem());
+            if (rarityCap == ItemRarity.Legendary)
+            {
+                items.Add(GetRandomItem());
+            }
+            else if(rarityCap == ItemRarity.Common)
+            {
+                items.Add(GetRandomItemForRarity(ItemRarity.Common));
+            }
+            else
+            {
+                const int maxTries = 5;
+
+                var rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+
+                var currentTry = 1;
+                while (currentTry <= maxTries && rarity > rarityCap)
+                {
+                    rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+                    currentTry++;
+                }
+
+                items.Add(GetRandomItemForRarity(rarity));
+            }
+            
         }
 
         return items;
@@ -178,6 +189,47 @@ public class ItemStore : MonoBehaviour
         }
 
         return new Weapon(randomTemplate, rarity);
+    }
+
+    public Item GetRandomItemByEquipmentSlot(Entity.EquipmentSlot slot, ItemRarity rarityCap = ItemRarity.Common)
+    {
+        var templatesForSlot = new List<ItemTemplate>();
+
+        foreach (var templateType in _baseItemTemplateTypes)
+        {
+            var currentTemplate = ItemTemplateLoader.GetItemTemplate(templateType);
+
+            if (currentTemplate.EquipmentSlotType == slot)
+            {
+                templatesForSlot.Add(currentTemplate);
+            }
+        }
+
+        if (templatesForSlot.Count < 1)
+        {
+            return null;
+        }
+
+        var itemTemplate = templatesForSlot[Random.Range(0, templatesForSlot.Count)];
+
+        if (rarityCap == ItemRarity.Common)
+        {
+            return GetItemFromTemplate(itemTemplate, rarityCap);
+        }
+
+        const int maxTries = 2;
+
+        var rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+
+        var currentTry = 1;
+        while (currentTry <= maxTries && rarity > rarityCap)
+        {
+            rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
+            currentTry++;
+        }
+
+        return GetItemFromTemplate(itemTemplate, rarity);
+
     }
 
     public Weapon GetRandomRangedWeapon(ItemRarity rarityCap = ItemRarity.Common)
@@ -268,18 +320,23 @@ public class ItemStore : MonoBehaviour
     {
         var itemTemplate = ItemTemplateLoader.GetItemTemplate(itemType);
 
-        switch (itemTemplate.Category.ToLower())
+        return GetItemFromTemplate(itemTemplate, rarity);
+    }
+
+    private Item GetItemFromTemplate(ItemTemplate template, ItemRarity rarity = ItemRarity.Common)
+    {
+        switch (template.Category.ToLower())
         {
             case "armor":
-                return new Armor(itemTemplate, rarity);
+                return new Armor(template, rarity);
             case "weapon":
-                return new Weapon(itemTemplate, rarity);
+                return new Weapon(template, rarity);
             case "consumable":
                 return GetRandomItem();
             //todo need sprite 
             //return new Item(itemTemplate, rarity);
             default:
-                return new Item(itemTemplate, rarity);
+                return new Item(template, rarity);
         }
     }
 

@@ -749,23 +749,9 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         return abilities;
     }
 
-    //todo need to move this to item store so NPCs can use via Entity class
     private void GenerateStartingEquipment()
     {
-        //todo need some kind of cap that varies depending on entity
-        //todo player starting out should be capped at on uncommon
-        //todo raise cap as necessary for others
-        //todo a "hero type" would have up to a legendary
-        //todo a named character read about in books requires a legendary item
-        //todo possibly base on background
-
-        //////// TESTING thrown //////////////////////////////////////////////
-
-        _player.EquipItem(ItemStore.Instance.GetRandomRangedWeapon(), Entity.EquipmentSlot.MissileWeaponOne);
-
-        _player.EquipItem(ItemStore.Instance.GetRandomThrownWeapon(), Entity.EquipmentSlot.Thrown);
-
-        //////// END TESTING thrown ////////////////////////////////////////
+        _player.GenerateStartingEquipment();
     }
 
     private void DisplaySelectedAbilityDescription(string description)
