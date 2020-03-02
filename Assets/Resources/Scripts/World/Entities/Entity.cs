@@ -1153,8 +1153,7 @@ public class Entity : ISubscriber
     {
         Fluff = new EntityFluff(template.Type, factionName, template.NameFiles);
     }
-
-    //todo only if humanoid or part of faction
+    
     //todo need some kind of cap that varies depending on entity
     //todo raise cap as necessary for others
     //todo a "hero type" would have up to a legendary
