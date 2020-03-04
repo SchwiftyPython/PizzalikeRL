@@ -30,6 +30,7 @@ public class GlobalHelper : MonoBehaviour
     public const string AbilitySelectPopupEventName = "AbilitySelectPopup";
     public const string AbilitySelectedEventName = "AbilitySelected";
     public const string SendMessageToConsoleEventName = "SendMessageToConsole";
+    public const string InspectItemEventName = "InspectItemEvent";
 
     #endregion EventNames
 

@@ -351,6 +351,7 @@
     <Compile Include="Assets\Resources\Scripts\UI\InteractDirectionPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\InventoryWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ItemButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\ItemInfoPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\LoadWindowPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\ObjectInfoWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\PizzaOrderButton.cs" />
