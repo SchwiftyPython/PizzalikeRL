@@ -316,6 +316,13 @@ public class ItemStore : MonoBehaviour
         return _itemPrefabsWorldView[prefabKey];
     }
 
+    public string GetDisplayNameForItemType(string itemType)
+    {
+        Enum.TryParse(itemType, true, out ItemPrefabKeys prefabKey);
+
+        return prefabKey.ToString();
+    }
+
     private Item CreateItemOfType(string itemType, ItemRarity rarity = ItemRarity.Common)
     {
         var itemTemplate = ItemTemplateLoader.GetItemTemplate(itemType);

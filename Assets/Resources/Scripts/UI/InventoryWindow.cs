@@ -4,7 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class InventoryWindow : MonoBehaviour
+public class InventoryWindow : MonoBehaviour, ISubscriber
 {
     public GameObject PlayerInventoryWindow;
 
@@ -15,13 +15,19 @@ public class InventoryWindow : MonoBehaviour
     private List<GameObject> _itemSections;
     private List<GameObject> _buttons;
 
-    private Transform _sectionParent;
+    public Transform SectionParent;
+    public GameObject ItemInformation;
 
     private IDictionary<Guid, Item> _playerInventory;
 
     private char _keyMapLetter;
 
     public bool InventoryChanged;
+
+    public TextMeshProUGUI ItemName;
+    public TextMeshProUGUI ItemDescription;
+    public TextMeshProUGUI ItemModifiers;
+    public TextMeshProUGUI ItemRarity;
 
     public static InventoryWindow Instance;
 
@@ -38,7 +44,6 @@ public class InventoryWindow : MonoBehaviour
         
         _sortedItems = new Dictionary<string, List<Item>>();
         _buttons = new List<GameObject>();
-        _sectionParent = transform;
 
         _itemSections = new List<GameObject>();
         _buttons = new List<GameObject>();
@@ -50,6 +55,8 @@ public class InventoryWindow : MonoBehaviour
     {
         PopulateSectionDictionary();
         PopulateWindow();
+
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemSelectedEventName, this);
     }
 
     private void Update()
@@ -62,6 +69,34 @@ public class InventoryWindow : MonoBehaviour
             PopulateSectionDictionary();
             PopulateWindow();
         }
+    }
+
+    public void ShowItemDescription(Item item)
+    {
+        if (item == null)
+        {
+            return;
+        }
+
+        if (item.ItemCategory.Equals("weapon"))
+        {
+            ItemName.text =
+                $"{ItemStore.Instance.GetDisplayNameForItemType(item.ItemType)}     [ {item.ItemDice.NumDice}d{item.ItemDice.NumSides} ]"; //todo add a sword icon
+        }
+        else if (item.ItemCategory.Equals("armor"))
+        {
+            var defense = ((Armor)item).Defense;
+            ItemName.text =
+                $"{ItemStore.Instance.GetDisplayNameForItemType(item.ItemType)}     [ {defense} def ]"; //todo replace def with a shield icon
+        }
+
+        ItemDescription.text = string.Empty;
+
+        ItemModifiers.text = string.Empty;
+
+        ItemRarity.text = item.Rarity.ToString();
+
+        ItemInformation.SetActive(true);
     }
 
     private void PopulateSectionDictionary()  //todo sections should be melee, missile armor -- correspond to slots
@@ -91,7 +126,7 @@ public class InventoryWindow : MonoBehaviour
         foreach (var section in _sortedItems.Keys)
         {
             var sectionHeader = Instantiate(SectionPrefab, new Vector3(0, 0), Quaternion.identity);
-            sectionHeader.transform.SetParent(_sectionParent);
+            sectionHeader.transform.SetParent(SectionParent);
             _itemSections.Add(sectionHeader);
 
             var sectionHeaderText = sectionHeader.GetComponent<TextMeshProUGUI>();
@@ -164,6 +199,19 @@ public class InventoryWindow : MonoBehaviour
         foreach (var section in _itemSections)
         {
             Destroy(section);
+        }
+    }
+
+    public void OnNotify(string eventName, object broadcaster, object parameter = null)
+    {
+        if (eventName.Equals(GlobalHelper.ItemSelectedEventName, StringComparison.OrdinalIgnoreCase))
+        {
+            if (!(parameter is Item item))
+            {
+                return;
+            }
+
+            ShowItemDescription(item);
         }
     }
 }
