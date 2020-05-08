@@ -99,20 +99,43 @@ public class InventoryWindow : MonoBehaviour, ISubscriber
         ItemInformation.SetActive(true);
     }
 
-    private void PopulateSectionDictionary()  //todo sections should be melee, missile armor -- correspond to slots
+    //todo sections should be melee, missile, armor -- correspond to slots. Could also offer group by option. Find by property.
+    private void PopulateSectionDictionary()  
     {
         _playerInventory = GameManager.Instance.Player.Inventory;
         _sortedItems = new Dictionary<string, List<Item>>();
 
         foreach (var item in _playerInventory.Values)
         {
-            if (_sortedItems.ContainsKey(item.ItemType))
+            string sectionName;
+
+            if (item.ItemCategory.Equals("weapon", StringComparison.OrdinalIgnoreCase))
             {
-                _sortedItems[item.ItemType].Add(item);
+                if (item.ItemType.IndexOf("grenade", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    sectionName = "Grenades";
+                }
+                else if (((Weapon) item).IsRanged)
+                {
+                    sectionName = "Ranged";
+                }
+                else
+                {
+                    sectionName = "Melee";
+                }
             }
-            if (!_sortedItems.ContainsKey(item.ItemType))
+            else
             {
-                _sortedItems.Add(item.ItemType, new List<Item>{ item }); 
+                sectionName = GlobalHelper.Capitalize(item.ItemCategory);
+            }
+
+            if (_sortedItems.ContainsKey(sectionName))
+            {
+                _sortedItems[sectionName].Add(item);
+            }
+            else
+            {
+                _sortedItems.Add(sectionName, new List<Item> { item });
             }
         }
     }
@@ -130,7 +153,7 @@ public class InventoryWindow : MonoBehaviour, ISubscriber
             _itemSections.Add(sectionHeader);
 
             var sectionHeaderText = sectionHeader.GetComponent<TextMeshProUGUI>();
-            sectionHeaderText.text = FirstCharToUpper(section) + "s";
+            sectionHeaderText.text = section;
 
             var itemButtonsParent = sectionHeader.transform;
 
@@ -145,13 +168,13 @@ public class InventoryWindow : MonoBehaviour, ISubscriber
                 //todo come up with some kind of naming system based on material or legend
                 if (item.ItemCategory.Equals("weapon"))
                 {
-                    textFields[1].text = "-  " + item.ItemType + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
+                    textFields[1].text = "-  " + item.ItemName + "     [ " + item.ItemDice.NumDice + "d" + item.ItemDice.NumSides + " ]"; //todo add a sword icon
                     textFields[0].text = _keyMapLetter.ToString();
                 }
                 else if (item.ItemCategory.Equals("armor"))
                 {
                     var defense = ((Armor) item).Defense;
-                    textFields[1].text = "-  " + item.ItemType + "     [ " + defense + " def ]" ; //todo replace def with a shield icon
+                    textFields[1].text = "-  " + item.ItemName + "     [ " + defense + " def ]" ; //todo replace def with a shield icon
                     textFields[0].text = _keyMapLetter.ToString();
                 }
                 textFields[2].text = item.Id.ToString();

@@ -23,6 +23,8 @@ public class Item
 
     public List<string> Properties;
 
+    public string ItemName;
+
     public Item(){ }
 
     public Item(ItemTemplate template, ItemRarity rarity)
@@ -33,6 +35,8 @@ public class Item
         Rarity = rarity;
         Properties = template.Properties;
         Id = Guid.NewGuid();
+
+        ItemName = GlobalHelper.SplitStringByCapitalLetters(template.Type);
 
         //May end up getting prefab based on item characteristics and/or modifying appearance at runtime.
         WorldPrefab = ItemStore.Instance.GetWorldPrefabForItemByType(ItemType);
