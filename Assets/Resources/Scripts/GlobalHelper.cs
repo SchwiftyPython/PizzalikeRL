@@ -88,6 +88,25 @@ public class GlobalHelper : MonoBehaviour
         return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());
     }
 
+    public static string SplitStringByCapitalLetters(string s)
+    {
+        var splitString = "";
+
+        foreach (var letter in s)
+        {
+            if (char.IsUpper(letter) && splitString.Length > 0)
+            {
+                splitString += " " + letter;
+            }
+            else
+            {
+                splitString += letter;
+            }
+        }
+
+        return splitString;
+    }
+
     //<Summary>
     // Returns a random enum value of type T
     //</Summary>
