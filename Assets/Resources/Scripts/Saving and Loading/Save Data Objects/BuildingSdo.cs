@@ -22,14 +22,18 @@ public class BuildingSdo
 
     public static BuildingSdo ConvertToBuildingSdo(Building building)
     {
-        return new BuildingSdo
+        if (building == null)
         {
-            WallTypeIndex = building.WallTypeIndex,
-            FloorTypeIndex = building.FloorTypeIndex,
-            Width = building.Width,
-            Height = building.Height,
-            Blueprint = ConvertBlueprintForSaving(building.Blueprint)
-        };
+            return null;
+        }
+
+        var sdo = new BuildingSdo();
+        sdo.WallTypeIndex = building.WallTypeIndex;
+        sdo.FloorTypeIndex = building.FloorTypeIndex;
+        sdo.Width = building.Width;
+        sdo.Height = building.Height;
+        sdo.Blueprint = ConvertBlueprintForSaving(building.Blueprint);
+        return sdo;
     }
 
     public static List<Building> ConvertToBuildings(List<BuildingSdo> sdos)

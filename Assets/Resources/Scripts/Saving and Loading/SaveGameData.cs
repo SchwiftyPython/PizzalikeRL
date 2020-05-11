@@ -85,6 +85,7 @@ public class SaveGameData : MonoBehaviour
         LoadSavedGamesFileInfo();
     }
 
+    //todo make save game file right after world gen
     public void Save()
     {
         Debug.Log("Saving...");

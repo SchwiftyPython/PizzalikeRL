@@ -18,7 +18,16 @@ public class LotSdo
 
     public static List<LotSdo> ConvertToLotSdos(List<Lot> lots)
     {
-        return lots.Select(ConvertToLotSdo).ToList();
+        List<LotSdo> list = new List<LotSdo>();
+        if (lots != null)
+        {
+            foreach (var sdo in lots.Select(ConvertToLotSdo))
+            {
+                list.Add(sdo);
+            }
+        }
+
+        return list;
     }
 
     public static LotSdo ConvertToLotSdo(Lot lot)

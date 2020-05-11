@@ -68,21 +68,20 @@ public class AreaSdo
 
     public static AreaSdo ConvertAreaForSaving(Area area)
     {
-        var tempSdo = new AreaSdo
-        {
-            PresentEntityIds = new List<Guid>(),
-            AreaTiles = area.AreaBuilt()
-                ? TileSdo.ConvertAreaTilesForSaving(area.AreaTiles)
-                : null,
-            BiomeType = area.BiomeType,
-            PresentFactionNames = new List<string>(),
-            TurnOrderIds = new Queue<Guid>(),
-            X = area.X,
-            Y = area.Y,
-            ParentCellId = area.ParentCell.Id,
-            SettlementSdo = area.Settlement.GetSettlementSdo(),
-            SettlementSectionSdo = new SettlementSectionSdo(area.SettlementSection)
-        };
+        AreaSdo tempSdo;
+        tempSdo = new AreaSdo();
+        tempSdo.PresentEntityIds = new List<Guid>();
+        tempSdo.AreaTiles = area.AreaBuilt()
+            ? TileSdo.ConvertAreaTilesForSaving(area.AreaTiles)
+            : null;
+        tempSdo.BiomeType = area.BiomeType;
+        tempSdo.PresentFactionNames = new List<string>();
+        tempSdo.TurnOrderIds = new Queue<Guid>();
+        tempSdo.X = area.X;
+        tempSdo.Y = area.Y;
+        tempSdo.ParentCellId = area.ParentCell.Id;
+        tempSdo.SettlementSdo = area.Settlement?.GetSettlementSdo();
+        tempSdo.SettlementSectionSdo = new SettlementSectionSdo(area.SettlementSection);
 
         if (area.PresentEntities != null)
         {

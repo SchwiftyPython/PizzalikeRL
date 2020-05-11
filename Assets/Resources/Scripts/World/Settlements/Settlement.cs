@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 public class Settlement
@@ -18,20 +19,29 @@ public class Settlement
     private readonly Cell _cell;
     private int _yearFounded;
     private string _history;
-    private List<Entity> _citizens;
     private IDictionary<Area, SettlementSection> _areas;
 
     public string Name;
     public readonly SettlementSize Size;
     public Faction Faction;
+    public List<Entity> Citizens { get; }
 
     public Settlement(Faction faction, SettlementSize size, Cell cell, int population, bool isStartingArea = false)
     {
         Faction = faction;
         Size = size;
-        Name = SettlementPrefabStore.GenerateName();
+        Citizens = new List<Entity>();
         _cell = cell;
         _population = population;
+
+        Name = SettlementPrefabStore.GenerateName();
+
+        while (WorldData.Instance.Settlements.ContainsKey(Name))
+        {
+            Name = SettlementPrefabStore.GenerateName();
+        }
+
+        WorldData.Instance.Settlements.Add(Name, this);
 
         if (isStartingArea)
         {
@@ -45,7 +55,15 @@ public class Settlement
         {
             PickAreas();
         }
+    }
 
+    public bool IsBuilt()
+    {
+        return _areas.Keys.All(area => area.AreaBuilt());
+    }
+
+    public void Build()
+    {
         BuildAreas();
     }
 
@@ -63,6 +81,8 @@ public class Settlement
         _population = sdo.Population;
         _history = sdo.History;
 
+        //todo get citizens from sdo
+
         _areas = new Dictionary<Area, SettlementSection>();
 
         foreach (var id in sdo.AreaIds)
@@ -77,31 +97,31 @@ public class Settlement
 
     public SettlementSdo GetSettlementSdo()
     {
-        var sdo = new SettlementSdo
-        {
-            CellId = _cell.Id,
-            Population = _population,
-            FactionName = Faction.Name,
-            History = _history,
-            Name = Name, 
-            CitizenIds = new List<Guid>(),
-            Size = Size,
-            AreaIds = new List<string>()
-        };
+        SettlementSdo sdo;
+        sdo = new SettlementSdo();
+        sdo.CellId = _cell.Id;
+        sdo.Population = _population;
+        sdo.FactionName = Faction?.Name;
+        sdo.History = _history;
+        sdo.Name = Name;
+        sdo.CitizenIds = new List<Guid>();
+        sdo.Size = Size;
+        sdo.AreaIds = new List<string>();
+        sdo.SectionSdos = new List<SettlementSectionSdo>();
 
         foreach (var area in _areas.Keys)
         {
             sdo.AreaIds.Add(area.Id);
         }
 
-        foreach (var lotSdo in sdo.LotSdos)
+        foreach (var section in _areas.Values)
         {
-            sdo.BuildingSdos.Add(lotSdo.AssignedBuildingSdo);
+            sdo.SectionSdos.Add(new SettlementSectionSdo(section));
         }
 
-        if (_citizens != null)
+        if (Citizens != null)
         {
-            foreach (var citizen in _citizens)
+            foreach (var citizen in Citizens)
             {
                 sdo.CitizenIds.Add(citizen.Id);
             }

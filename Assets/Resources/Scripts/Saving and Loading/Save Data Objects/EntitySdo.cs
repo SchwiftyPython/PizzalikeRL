@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 
 [Serializable]
 public class EntitySdo
@@ -88,41 +89,40 @@ public class EntitySdo
 
     public static EntitySdo ConvertToEntitySdo(Entity entity)
     {
-        var sdo =  new EntitySdo
-        {
-            Id = entity.Id,
-            IsPlayer = entity.IsPlayer(),
-            PrefabPath = entity.PrefabPath,
-            FactionName = entity.Faction?.Name,
-            TotalBodyPartCoverage = entity.TotalBodyPartCoverage,
-            CurrentPosition = entity.CurrentPosition,
-            Level = entity.Level,
-            Xp = entity.Xp,
-            Strength = entity.Strength,
-            Agility = entity.Agility,
-            Constitution = entity.Constitution,
-            Intelligence = entity.Intelligence,
-            MaxHp = entity.MaxHp,
-            CurrentHp = entity.CurrentHp,
-            Speed = entity.Speed,
-            Defense = entity.Defense,
-            InventoryItemIds = new List<Guid>(),
-            EquippedIds = new Dictionary<Entity.EquipmentSlot, Guid>(),
-            Body = entity.Body,
-            EntityType = entity.EntityType,
-            Classification = entity.Classification,
-            Fluff = entity.Fluff,
-            Goals = entity.Goals,
-            CurrentCellId = entity.CurrentCell?.Id,
-            CurrentAreaId = entity.CurrentArea?.Id,
-            CurrentTileId = entity.CurrentTile?.Id,
-            Mobile = entity.Mobile,
-            ToppingDropped = ToppingSdo.ConvertToToppingSdo(entity.ToppingDropped),
-            ToppingCounts = entity.ToppingCounts,
-            BirthMotherId = entity.BirthMother.Id,
-            BirthFatherId = entity.BirthFather.Id,
-            ChildrenIds = new List<Guid>()
-        };
+        EntitySdo sdo;
+        sdo = new EntitySdo();
+        sdo.Id = entity.Id;
+        sdo.IsPlayer = entity.IsPlayer();
+        sdo.PrefabPath = entity.PrefabPath;
+        sdo.FactionName = entity.Faction?.Name;
+        sdo.TotalBodyPartCoverage = entity.TotalBodyPartCoverage;
+        sdo.CurrentPosition = entity.CurrentPosition;
+        sdo.Level = entity.Level;
+        sdo.Xp = entity.Xp;
+        sdo.Strength = entity.Strength;
+        sdo.Agility = entity.Agility;
+        sdo.Constitution = entity.Constitution;
+        sdo.Intelligence = entity.Intelligence;
+        sdo.MaxHp = entity.MaxHp;
+        sdo.CurrentHp = entity.CurrentHp;
+        sdo.Speed = entity.Speed;
+        sdo.Defense = entity.Defense;
+        sdo.InventoryItemIds = new List<Guid>();
+        sdo.EquippedIds = new Dictionary<Entity.EquipmentSlot, Guid>();
+        sdo.Body = entity.Body;
+        sdo.EntityType = entity.EntityType;
+        sdo.Classification = entity.Classification;
+        sdo.Fluff = entity.Fluff;
+        sdo.Goals = entity.Goals;
+        sdo.CurrentCellId = entity.CurrentCell?.Id;
+        sdo.CurrentAreaId = entity.CurrentArea?.Id;
+        sdo.CurrentTileId = entity.CurrentTile?.Id;
+        sdo.Mobile = entity.Mobile;
+        sdo.ToppingDropped = ToppingSdo.ConvertToToppingSdo(entity.ToppingDropped);
+        sdo.ToppingCounts = entity.ToppingCounts;
+        sdo.BirthMotherId = entity.BirthMother?.Id ?? Guid.Empty;
+        sdo.BirthFatherId = entity.BirthFather?.Id ?? Guid.Empty;
+        sdo.ChildrenIds = new List<Guid>();
 
         foreach (var itemId in entity.Inventory.Keys)
         {
@@ -131,12 +131,15 @@ public class EntitySdo
 
         foreach (var slot in entity.Equipped.Keys)
         {
-           sdo.EquippedIds.Add(new KeyValuePair<Entity.EquipmentSlot, Guid>(slot, entity.Equipped[slot].Id));
+           sdo.EquippedIds.Add(new KeyValuePair<Entity.EquipmentSlot, Guid>(slot, entity.Equipped[slot]?.Id ?? Guid.Empty));
         }
 
-        foreach (var child in entity.Children)
+        if (entity.Children != null && entity.Children.Count > 0)
         {
-            sdo.ChildrenIds.Add(child.Id);
+            foreach (var child in entity.Children)
+            {
+                sdo.ChildrenIds.Add(child.Id);
+            }
         }
 
         return sdo;

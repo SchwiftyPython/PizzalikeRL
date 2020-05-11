@@ -58,10 +58,35 @@ public class PizzaOrder
 
     private void ChooseCustomer()
     {
-        var allNpcs = new List<Entity>(WorldData.Instance.Entities.Values)
-            .Where(e => e.IsPlayer() == false && e.Fluff != null).ToList();
+        var allSettlements = new List<Settlement>(WorldData.Instance.Settlements.Values);
 
-        Customer = allNpcs[Random.Range(0, allNpcs.Count)];
+        var settlement = allSettlements[Random.Range(0, allSettlements.Count)];
+
+        if(!settlement.IsBuilt())
+        {
+            settlement.Build();
+        }
+
+        var hungryCitizens = settlement.Citizens;
+
+        Customer = hungryCitizens[Random.Range(0, hungryCitizens.Count)];
+
+        while (Customer.IsPlayer())
+        {
+            allSettlements.Remove(settlement);
+
+            settlement = allSettlements[Random.Range(0, allSettlements.Count)];
+
+            if (!settlement.IsBuilt())
+            {
+                settlement.Build();
+            }
+
+            hungryCitizens = settlement.Citizens;
+
+            Customer = hungryCitizens[Random.Range(0, hungryCitizens.Count)];
+        }
+
         Customer.IsCustomer = true;
     }
 }

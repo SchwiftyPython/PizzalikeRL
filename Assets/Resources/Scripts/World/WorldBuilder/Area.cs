@@ -646,6 +646,7 @@ public class Area
                 citizenToPlace.CurrentCell = ParentCell;
 
                 PresentEntities.Add(citizenToPlace);
+                Settlement.Citizens.Add(citizenToPlace);
             }
         }
     }
