@@ -114,13 +114,11 @@ public class Generator : MonoBehaviour
         WorldData.Instance.SaveGameId = Math.Abs(DateTime.Now.GetHashCode()).ToString();
 
         WorldData.Instance.PopulateToppingsDictionaries();
-        
+
         Initialize();
         Generate();
 
         WorldData.Instance.Map = _cells;
-
-        
 
         GameManager.Instance.WorldMapGenComplete = true;
         SceneManager.LoadScene("Area");

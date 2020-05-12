@@ -81,7 +81,12 @@ public class Settlement
         _population = sdo.Population;
         _history = sdo.History;
 
-        //todo get citizens from sdo
+        Citizens = new List<Entity>();
+
+        foreach (var id in sdo.CitizenIds)
+        {
+            Citizens.Add(WorldData.Instance.Entities[id]);
+        }
 
         _areas = new Dictionary<Area, SettlementSection>();
 

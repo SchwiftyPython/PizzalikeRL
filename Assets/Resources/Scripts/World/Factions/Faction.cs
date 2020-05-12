@@ -57,7 +57,6 @@ public class Faction
         FactionReputation = sdo.FactionReputation;
         Citizens = new List<Entity>();
         EntitiesWithFluff = new List<Entity>();
-        Leader = WorldData.Instance.Entities[sdo.LeaderId];
         Name = sdo.Name;
         Population = sdo.Population;
 
@@ -82,6 +81,15 @@ public class Faction
 
             var entity = WorldData.Instance.Entities[id];
             EntitiesWithFluff.Add(entity);
+        }
+
+        if (WorldData.Instance.Entities.ContainsKey(sdo.LeaderId))
+        {
+            Leader = WorldData.Instance.Entities[sdo.LeaderId];
+        }
+        else
+        {
+            Debug.Log($"Leader with id {sdo.LeaderId} not found!");
         }
     }
 
@@ -136,6 +144,11 @@ public class Faction
         Leader = chosenOne;
 
         EntitiesWithFluff.Add(Leader);
+
+        if (!WorldData.Instance.Entities.ContainsKey(Leader.Id))
+        {
+            WorldData.Instance.Entities.Add(Leader.Id, Leader);
+        }
     }
 
     private void PickPopulationType()

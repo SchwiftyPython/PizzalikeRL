@@ -328,7 +328,23 @@ public class SaveGameData : MonoBehaviour
 
         foreach (var item in items)
         {
-            var sdo = ItemSdo.ConvertToItemSdo(item.Value);
+            ItemSdo sdo;
+
+            switch (item.Value.ItemCategory.ToLower())
+            {
+                case "armor":
+                    sdo = ArmorSdo.ConvertToArmorSdo((Armor) item.Value);
+                    break;
+                case "weapon":
+                    sdo = WeaponSdo.ConvertToWeaponSdo((Weapon) item.Value);
+                    break;
+                case "consumable":
+                    throw new NotImplementedException();
+                default:
+                    sdo = ItemSdo.ConvertToItemSdo(item.Value);
+                    break;
+            }
+
             sdos.Add(sdo.Id, sdo);
         }
 

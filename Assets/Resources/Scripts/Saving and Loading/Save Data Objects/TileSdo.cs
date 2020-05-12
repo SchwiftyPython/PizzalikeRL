@@ -48,7 +48,7 @@ public class TileSdo
 
     public static TileSdo ConvertToTileSdo(Tile tile)
     {
-        var sdo =  new TileSdo
+        var sdo = new TileSdo
         {
             Visibility = tile.Visibility,
             PresentEntityId = tile.GetPresentEntity() != null
@@ -64,6 +64,11 @@ public class TileSdo
             Revealed = tile.Revealed,
             LotSdo = LotSdo.ConvertToLotSdo(tile.Lot)
         };
+
+        if (tile.GetPresentEntity() != null && !WorldData.Instance.Entities.ContainsKey(tile.GetPresentEntity().Id))
+        {
+            WorldData.Instance.Entities.Add(tile.GetPresentEntity().Id, tile.GetPresentEntity());
+        }
 
         foreach (var item in tile.PresentItems)
         {
@@ -98,7 +103,7 @@ public class TileSdo
         tile.SetPrefabTileTexture(WorldData.Instance.GetTileTextureByNameRarityAndBiome(sdo.PrefabName, biomeType));
         tile.Visibility = sdo.Visibility;
 
-        if (sdo.PresentEntityId != Guid.Empty)
+        if (sdo.PresentEntityId != Guid.Empty && WorldData.Instance.Entities.ContainsKey(sdo.PresentEntityId))
         {
             tile.SetPresentEntity(WorldData.Instance.Entities[sdo.PresentEntityId]);
             tile.GetPresentEntity().CurrentTile = tile;

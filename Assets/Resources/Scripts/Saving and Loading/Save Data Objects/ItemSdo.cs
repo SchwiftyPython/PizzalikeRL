@@ -28,6 +28,7 @@ public class ItemSdo
         };
     }
 
+    //todo need to check if weapon, armor etc
     public static Item ConvertToItem(ItemSdo sdo)
     {
         var item = new Item

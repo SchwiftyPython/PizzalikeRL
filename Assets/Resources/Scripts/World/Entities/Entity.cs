@@ -78,7 +78,7 @@ public class Entity : ISubscriber
     private bool _isHostile;
     private bool _isWild;
 
-    private Reputation _entityReputation;
+    public Reputation EntityReputation { get; set; }
 
     private EventMediator _eventMediator;
 
@@ -166,7 +166,7 @@ public class Entity : ISubscriber
         {
             _currentPosition = new Vector2(value.y, value.x);
 
-            if (!IsPlayer())
+            if (!IsPlayer() && CurrentTile != null)
             {
                 if (!CurrentTile.Revealed || CurrentTile.Visibility == Visibilities.Invisible)
                 {
@@ -187,7 +187,7 @@ public class Entity : ISubscriber
         Id = id;
         _isPlayer = isPlayer;
         Inventory = new Dictionary<Guid, Item>();
-        Equipped = new Dictionary<EquipmentSlot, Item>();
+        PopulateEquipped();
 
         Prefab = Resources.Load(prefabPath) as GameObject;
 
@@ -271,13 +271,13 @@ public class Entity : ISubscriber
 
         if (WorldData.Instance.EntityGroupRelationships.ContainsKey(EntityType))
         {
-            _entityReputation = WorldData.Instance.EntityGroupRelationships[EntityType];
+            EntityReputation = WorldData.Instance.EntityGroupRelationships[EntityType];
         }
         else
         {
-            _entityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
+            EntityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
 
-            WorldData.Instance.EntityGroupRelationships.Add(EntityType, _entityReputation);
+            WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
         }
 
         PrefabPath = template.SpritePath;
@@ -358,13 +358,13 @@ public class Entity : ISubscriber
 
         if (WorldData.Instance.EntityGroupRelationships.ContainsKey(EntityType))
         {
-            _entityReputation = WorldData.Instance.EntityGroupRelationships[EntityType];
+            EntityReputation = WorldData.Instance.EntityGroupRelationships[EntityType];
         }
         else
         {
-            _entityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
+            EntityReputation = new Reputation(EntityGroupType.EntityType, EntityType);
 
-            WorldData.Instance.EntityGroupRelationships.Add(EntityType, _entityReputation);
+            WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
         }
 
         BuildBody(template);
@@ -1346,9 +1346,9 @@ public class Entity : ISubscriber
             return Attitude.Hostile;
         }
 
-        return Attitude.Neutral;
-    }
+        return Attitude.Neutral; }
 
+    
     private ReputationState GetReputationStateForTarget(Entity target)
     {
         var factionReputationValue = 0;
@@ -1357,11 +1357,11 @@ public class Entity : ISubscriber
             factionReputationValue = Faction.FactionReputation.GetReputationValueForGroup(target.Faction.Name);
         }
 
-        var entityTypeReputationValue = _entityReputation.GetReputationValueForGroup(target.EntityType);
+        var entityTypeReputationValue = EntityReputation.GetReputationValueForGroup(target.EntityType);
 
         var reputationValueTotal = factionReputationValue + entityTypeReputationValue;
 
-        return _entityReputation.GetReputationStateForValue(reputationValueTotal);
+        return EntityReputation.GetReputationStateForValue(reputationValueTotal);
     }
 
     private bool MeleeRollHit(Entity target)

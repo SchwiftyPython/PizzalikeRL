@@ -307,6 +307,13 @@ public class Cell
         }
     }
 
+    public Area GetAreaById(string areaId)
+    { 
+        var splitId = areaId.Split(' ');
+
+        return Areas[int.Parse(splitId[0]), int.Parse(splitId[1])];
+    }
+
     private void PickBaseLayer()
     {
         switch (biomeType)

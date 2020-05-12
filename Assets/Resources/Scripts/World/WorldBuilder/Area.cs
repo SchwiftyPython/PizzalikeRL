@@ -151,6 +151,13 @@ public class Area
         return AreaTiles[(int) position.x, (int) position.y];
     }
 
+    public Tile GetTileById(string tileId)
+    {
+        var splitId = tileId.Split(' ');
+
+        return AreaTiles[int.Parse(splitId[0]), int.Parse(splitId[1])];
+    }
+
     private void PrepareSettlement()
     {
         if (SettlementSection == null)
