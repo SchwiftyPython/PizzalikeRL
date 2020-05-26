@@ -16,6 +16,6 @@ public class SettlementSectionSdo
         }
 
         LotSdos = LotSdo.ConvertToLotSdos(section.Lots);
-        BuildingSdos = BuildingSdo.ConvertToBuildingSdos(section.Buildings);
+        //BuildingSdos = BuildingSdo.ConvertToBuildingSdos(section.Buildings); //lotsdo has assigned building already
     }
 }

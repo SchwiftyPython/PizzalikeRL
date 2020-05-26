@@ -49,7 +49,8 @@ public class EntitySdo
 
     public EntityFluff Fluff { get; set; }
 
-    public Stack<Goal> Goals;
+    //todo may store this to kick off ai on load. May not need to store anything at all as it's not like the player knows what the ai is thinking.
+    public string ParentGoalName; 
 
     public string CurrentCellId;
 
@@ -70,6 +71,8 @@ public class EntitySdo
     public  List<Guid> ChildrenIds;
 
     public Reputation Reputation;
+
+    public List<string> AbilityNames;
  
     public static SaveGameData.SaveData.SerializableEntitiesDictionary ConvertToEntitySdos(List<Entity> entities)
     {
@@ -115,7 +118,6 @@ public class EntitySdo
         sdo.EntityType = entity.EntityType;
         sdo.Classification = entity.Classification;
         sdo.Fluff = entity.Fluff;
-        sdo.Goals = entity.Goals;
         sdo.CurrentCellId = entity.CurrentCell?.Id;
         sdo.CurrentAreaId = entity.CurrentArea?.Id;
         sdo.CurrentTileId = entity.CurrentTile?.Id;
@@ -126,6 +128,7 @@ public class EntitySdo
         sdo.BirthFatherId = entity.BirthFather?.Id ?? Guid.Empty;
         sdo.ChildrenIds = new List<Guid>();
         sdo.Reputation = entity.EntityReputation;
+        sdo.AbilityNames = new List<string>();
 
         foreach (var itemId in entity.Inventory.Keys)
         {
@@ -142,6 +145,14 @@ public class EntitySdo
             foreach (var child in entity.Children)
             {
                 sdo.ChildrenIds.Add(child.Id);
+            }
+        }
+
+        if (entity.Abilities != null && entity.Abilities.Count > 0)
+        {
+            foreach (var abilityName in entity.Abilities.Keys)
+            {
+                sdo.AbilityNames.Add(abilityName);
             }
         }
 
@@ -173,11 +184,11 @@ public class EntitySdo
             entity.EntityType = entitySdo.Value.EntityType;
             entity.Classification = entitySdo.Value.Classification;
             entity.Fluff = entitySdo.Value.Fluff;
-            entity.Goals = entitySdo.Value.Goals;
             entity.Mobile = entitySdo.Value.Mobile;
             entity.ToppingDropped = ToppingSdo.ConvertToTopping(entitySdo.Value.ToppingDropped);
             entity.ToppingCounts = entitySdo.Value.ToppingCounts;
             entity.EntityReputation = entitySdo.Value.Reputation;
+            entity.Abilities = new Entity.AbilityDictionary();
 
             if (string.IsNullOrEmpty(entitySdo.Value.CurrentCellId))
             {
@@ -223,6 +234,19 @@ public class EntitySdo
                    entity.Equipped.Add(equipped.Key, item);
                 }
             }
+
+            if (entitySdo.Value.AbilityNames != null && entitySdo.Value.AbilityNames.Count > 0)
+            {
+                foreach (var abilityName in entitySdo.Value.AbilityNames)
+                {
+                    var template = AbilityStore.GetAbilityByName(abilityName);
+
+                    var ability = AbilityStore.CreateAbility(template, entity);
+
+                    entity.Abilities.Add(abilityName, ability);
+                }
+            }
+
             entities.Add(entity.Id, entity);
         }
 

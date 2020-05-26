@@ -6,6 +6,8 @@ public class Building
     private const int MaxTriesToPlaceObject = 3;
     private const char FloorTileKey = 'a';
 
+    //todo we should be using Tile type and replacing the tiles in area when placing buildings
+
     public readonly GameObject[,] FloorTiles;
     public readonly GameObject[,] WallTiles;
     public readonly GameObject[,] Props;
@@ -53,6 +55,11 @@ public class Building
 
     public Building(BuildingSdo sdo)
     {
+        if (sdo == null)
+        {
+            return;
+        }
+
         Width = sdo.Width;
         Height = sdo.Height;
         

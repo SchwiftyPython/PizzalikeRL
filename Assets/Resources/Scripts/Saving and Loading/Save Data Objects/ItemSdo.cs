@@ -38,8 +38,9 @@ public class ItemSdo
             ItemType = sdo.ItemType,
             ItemCategory = sdo.ItemCategory,
             Id = sdo.Id,
-            ItemDice = sdo.ItemDice
-        };
+            ItemDice = sdo.ItemDice,
+            WorldPrefab = ItemStore.Instance.GetWorldPrefabForItemByType(sdo.ItemType)
+    };
         return item;
     }
 }

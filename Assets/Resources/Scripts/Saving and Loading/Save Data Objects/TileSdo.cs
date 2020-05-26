@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class TileSdo
 
     public Guid PresentEntityId;
 
-    //public Prop PresentProp;
+    public PropSdo PresentPropSdo; 
 
     public List<Guid> PresentItemIds;
 
@@ -75,6 +76,11 @@ public class TileSdo
             sdo.PresentItemIds.Add(item.Id);
         }
 
+        if (tile.PresentProp != null)
+        {
+            sdo.PresentPropSdo = ConvertPropForSaving(tile.PresentProp);
+        }
+
         return sdo;
     }
 
@@ -122,6 +128,64 @@ public class TileSdo
         tile.GridPosition = sdo.GridPosition;
         tile.Revealed = sdo.Revealed;
 
+        if (sdo.PresentPropSdo != null)
+        {
+            tile.PresentProp = ConvertPropForPlaying(sdo.PresentPropSdo);
+        }
+
         return tile;
+    }
+
+    private static PropSdo ConvertPropForSaving(Prop prop)
+    {
+        var propType = prop.GetType();
+
+        PropSdo sdo = null;
+
+        if (propType == typeof(CheeseTree))
+        {
+            sdo = new CheeseTreeSdo();
+        }
+        else if (propType == typeof(Chest))
+        {
+            sdo = new ChestSdo((Chest) prop);
+        }
+        else if (propType == typeof(Field))
+        {
+            sdo = new FieldSdo((Field) prop);
+        }
+        else if (propType == typeof(Grave))
+        {
+            sdo = new GraveSdo((Grave) prop);
+        }
+
+        return sdo;
+    }
+
+    private static Prop ConvertPropForPlaying(PropSdo sdo)
+    {
+        var sdoType = sdo.GetType();
+
+        if (sdoType == typeof(CheeseTreeSdo))
+        {
+            return new CheeseTree();
+        }
+
+        if (sdoType == typeof(ChestSdo))
+        {
+            return new Chest((ChestSdo) sdo);
+        }
+
+        if (sdoType == typeof(FieldSdo))
+        {
+            return new Field((FieldSdo) sdo);
+        }
+
+        if (sdoType == typeof(GraveSdo))
+        {
+            return new Grave((GraveSdo) sdo);
+        }
+
+        return null;
     }
 }

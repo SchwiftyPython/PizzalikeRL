@@ -15,6 +15,8 @@ public class BuildingSdo
 
     public char[] Blueprint;
 
+    public List<string> propPrefabNames;
+
     public static List<BuildingSdo> ConvertToBuildingSdos(List<Building> buildings)
     {
         return buildings?.Select(ConvertToBuildingSdo).ToList();

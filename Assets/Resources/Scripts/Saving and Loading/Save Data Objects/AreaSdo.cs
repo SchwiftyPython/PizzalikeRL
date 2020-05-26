@@ -119,6 +119,7 @@ public class AreaSdo
             area.PresentFactions = new List<Faction>();
             area.TurnOrder = new Queue<Entity>();
             area.ParentCell = WorldData.Instance.MapDictionary[sdo.ParentCellId];
+            area.SettlementSection = new SettlementSection(sdo.SettlementSectionSdo);
 
             if (sdo.PresentEntityIds.Count > 0)
             {

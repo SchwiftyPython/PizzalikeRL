@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BuildingPrefabStore : MonoBehaviour
 {
@@ -339,5 +341,28 @@ public class BuildingPrefabStore : MonoBehaviour
     public static GameObject GetChestPrefab()
     {
         return _containers.ElementAt(Random.Range(0, _containers.Count)).Value;
+    }
+
+    public static GameObject GetPrefabByName(string name)
+    {
+        foreach (var prefab in _allFurniture)
+        {
+            if (prefab.Key.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                return prefab.Value;
+            }
+        }
+
+        foreach (var prefab in _containers)
+        {
+            if (prefab.Key.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                return prefab.Value;
+            }
+        }
+
+        Debug.Log($@"Prefab not found by name: {name}");
+
+        return null;
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Prop
 {
-    public GameObject Prefab { get; }
+    public GameObject Prefab { get; set; }
 
     public GameObject Texture;
 
@@ -17,10 +17,7 @@ public class Prop
 	    IsContainer = isContainer;
 	}
 
-    protected Prop()
-    {
-        throw new System.NotImplementedException();
-    }
+    protected Prop() { }
 
     public bool TriggeredByEvent(string eventName)
     {

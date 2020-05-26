@@ -314,7 +314,30 @@ public class SaveGameData : MonoBehaviour
 
     private static Dictionary<Guid, Item> ConvertItemsForPlaying(SaveData.SerializableItemDictionary itemSdos)
     {
-        return itemSdos?.Select(sdo => ItemSdo.ConvertToItem(sdo.Value)).ToDictionary(item => item.Id);
+        var items = new Dictionary<Guid, Item>();
+        foreach (var sdo in itemSdos)
+        {
+            Item item;
+
+            switch (sdo.Value.ItemCategory.ToLower())
+            {
+                case "armor":
+                    item = ArmorSdo.ConvertToArmor((ArmorSdo) sdo.Value);
+                    break;
+                case "weapon":
+                    item = WeaponSdo.ConvertToWeapon((WeaponSdo) sdo.Value);
+                    break;
+                case "consumable":
+                    throw new NotImplementedException();
+                default:
+                    item = ItemSdo.ConvertToItem(sdo.Value);
+                    break;
+            }
+
+            items.Add(item.Id, item);
+        }
+
+        return items;
     }
 
     private static SaveData.SerializableItemDictionary ConvertItemsForSaving(Dictionary<Guid, Item> items)
@@ -328,24 +351,30 @@ public class SaveGameData : MonoBehaviour
 
         foreach (var item in items)
         {
-            ItemSdo sdo;
-
-            switch (item.Value.ItemCategory.ToLower())
+            try
             {
-                case "armor":
-                    sdo = ArmorSdo.ConvertToArmorSdo((Armor) item.Value);
-                    break;
-                case "weapon":
-                    sdo = WeaponSdo.ConvertToWeaponSdo((Weapon) item.Value);
-                    break;
-                case "consumable":
-                    throw new NotImplementedException();
-                default:
-                    sdo = ItemSdo.ConvertToItemSdo(item.Value);
-                    break;
-            }
+                ItemSdo sdo;
+                switch (item.Value.ItemCategory.ToLower())
+                {
+                    case "armor":
+                        sdo = ArmorSdo.ConvertToArmorSdo((Armor) item.Value);
+                        break;
+                    case "weapon":
+                        sdo = WeaponSdo.ConvertToWeaponSdo((Weapon) item.Value);
+                        break;
+                    case "consumable":
+                        throw new NotImplementedException();
+                    default:
+                        sdo = ItemSdo.ConvertToItemSdo(item.Value);
+                        break;
+                }
 
-            sdos.Add(sdo.Id, sdo);
+                sdos.Add(sdo.Id, sdo);
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"Error converting {item.Value.ItemName}: {e.Message}");
+            }
         }
 
         return sdos;

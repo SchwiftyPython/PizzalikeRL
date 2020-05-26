@@ -51,6 +51,11 @@ public class LotSdo
 
     public static List<Lot> ConvertToLots(List<LotSdo> sdos)
     {
+        if (sdos == null || sdos.Count < 1)
+        {
+            return null;
+        }
+
         return sdos.Select(ConvertToLot).ToList();
     }
 

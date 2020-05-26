@@ -12,7 +12,12 @@ public class SettlementSection
 
     public SettlementSection(SettlementSectionSdo sdo)
     {
+        if (sdo == null)
+        {
+            return;
+        }
+
         Lots = LotSdo.ConvertToLots(sdo.LotSdos);
-        Buildings = BuildingSdo.ConvertToBuildings(sdo.BuildingSdos);
+        //Buildings = BuildingSdo.ConvertToBuildings(sdo.BuildingSdos); //lotsdo has assigned building already
     }
 }

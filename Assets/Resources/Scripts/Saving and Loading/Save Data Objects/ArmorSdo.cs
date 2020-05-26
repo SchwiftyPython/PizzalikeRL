@@ -21,4 +21,19 @@ public class ArmorSdo : ItemSdo
             ItemDice = armor.ItemDice
         };
     }
+
+    public static Armor ConvertToArmor(ArmorSdo sdo)
+    {
+        var armor = new Armor();
+        armor.Type = sdo.Type;
+        armor.Defense = sdo.Defense;
+        armor.Rarity = sdo.Rarity;
+        armor.EquipmentSlotType = sdo.EquipmentSlotType;
+        armor.ItemType = sdo.ItemType;
+        armor.ItemCategory = sdo.ItemCategory;
+        armor.Id = sdo.Id;
+        armor.ItemDice = sdo.ItemDice;
+
+        return armor;
+    }
 }

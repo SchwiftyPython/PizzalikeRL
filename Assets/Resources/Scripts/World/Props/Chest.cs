@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[Serializable]
 public class Chest : Prop
 {
     private const int ItemCap = 5;
@@ -14,6 +13,17 @@ public class Chest : Prop
     {
         _contents = new Dictionary<Guid, Item>();
         FillWithRandomItems();
+    }
+
+    public Chest(ChestSdo sdo) : base(BuildingPrefabStore.GetChestPrefab(), true)
+    {
+        _contents = new Dictionary<Guid, Item>();
+
+        foreach (var itemId in sdo.ContentIds)
+        {
+            var item = WorldData.Instance.Items[itemId];
+            _contents.Add(item.Id, item);
+        }
     }
 
     public void AddItem(Item item)

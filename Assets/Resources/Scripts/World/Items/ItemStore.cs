@@ -66,6 +66,8 @@ public enum ItemPrefabKeys
     Spear,
     [Description("Submachine Gun")]
     Submachinegun,
+    // [Description("Turret Barrel")] //todo need to implement
+    // TurretBarrel,
     [Description("Warhammer")]
     Warhammer
 }
@@ -394,6 +396,8 @@ public class ItemStore : MonoBehaviour
         var index = 0;
         foreach (ItemPrefabKeys prefabKey in Enum.GetValues(typeof(ItemPrefabKeys)))
         {
+            
+
             _itemPrefabsWorldView[prefabKey] = WorldData.Instance.ItemPrefabsWorldView[index];
             index++;
         }

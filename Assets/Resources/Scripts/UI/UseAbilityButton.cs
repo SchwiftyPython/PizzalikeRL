@@ -66,7 +66,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 
         foreach (var equippedItem in GameManager.Instance.Player.Equipped.Values)
         {
-            if (equippedItem != null && equippedItem.Properties.Contains(_ability.RequiresProperty))
+            if (equippedItem?.Properties != null && equippedItem.Properties.Contains(_ability.RequiresProperty))
             {
                 EnableButton();
                 break;

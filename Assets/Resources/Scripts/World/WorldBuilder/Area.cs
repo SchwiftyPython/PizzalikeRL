@@ -290,10 +290,13 @@ public class Area
                         }
                         else if (currentKey == SettlementPrefabStore.TurretKey)
                         {
+                            continue;
+
                             var template = EntityTemplateLoader.GetEntityTemplate("turret");
 
                             var turret = new Entity(template, Settlement.Faction);
 
+                            //todo need to implement
                             var turretBarrel = new Weapon(ItemTemplateLoader.GetItemTemplate("TurretBarrel"),
                                 GlobalHelper.GetRandomEnumValue<ItemRarity>());
                             
@@ -343,10 +346,13 @@ public class Area
                 }
                 else if (propType == SettlementPrefabStore.SettlementPropType.Security)
                 {
+                    continue;
+
                     var template = EntityTemplateLoader.GetEntityTemplate("turret");
 
                     var turret = new Entity(template, Settlement.Faction);
 
+                    //todo need to implement
                     var turretBarrel = new Weapon(ItemTemplateLoader.GetItemTemplate("TurretBarrel"),
                         GlobalHelper.GetRandomEnumValue<ItemRarity>());
 
