@@ -324,18 +324,18 @@ public class BuildingPrefabStore : MonoBehaviour
         return _allFurniture.ElementAt(Random.Range(0, _allFurniture.Count)).Value;
     }
 
-    public static GameObject GetRandomBasicFurniturePrefab()
+    public static KeyValuePair<string, GameObject> GetRandomBasicFurniturePrefab()
     {
         var prefabKey = BasicRoomFurnitureKeys[Random.Range(0, BasicRoomFurnitureKeys.Count)];
 
-        return _allFurniture[prefabKey];
+        return new KeyValuePair<string, GameObject>(prefabKey, _allFurniture[prefabKey]);
     }
 
     public static Chest GetChest()
     {
         var prefab = GetChestPrefab();
 
-        return new Chest(prefab);
+        return new Chest("0", prefab);
     }
 
     public static GameObject GetChestPrefab()
@@ -359,6 +359,11 @@ public class BuildingPrefabStore : MonoBehaviour
             {
                 return prefab.Value;
             }
+        }
+
+        if (name.Equals("pizza oven", StringComparison.OrdinalIgnoreCase))
+        {
+            return WorldData.Instance.PizzaOven;
         }
 
         Debug.Log($@"Prefab not found by name: {name}");

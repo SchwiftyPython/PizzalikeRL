@@ -158,6 +158,10 @@ public class TileSdo
         {
             sdo = new GraveSdo((Grave) prop);
         }
+        else if (propType == typeof(Furniture))
+        {
+            sdo = new FurnitureSdo((Furniture) prop);
+        }
 
         return sdo;
     }
@@ -184,6 +188,11 @@ public class TileSdo
         if (sdoType == typeof(GraveSdo))
         {
             return new Grave((GraveSdo) sdo);
+        }
+
+        if (sdoType == typeof(FurnitureSdo))
+        {
+            return new Furniture((FurnitureSdo) sdo);
         }
 
         return null;

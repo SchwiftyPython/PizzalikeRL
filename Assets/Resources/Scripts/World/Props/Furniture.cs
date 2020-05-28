@@ -1,18 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Furniture : MonoBehaviour
+public class Furniture : Prop
 {
-    // Start is called before the first frame update
-    void Start()
+    public Furniture(string prefabKey, GameObject prefab)
     {
-        
+        PrefabKey = prefabKey;
+        Prefab = prefab;
     }
 
-    // Update is called once per frame
-    void Update()
+    public Furniture(FurnitureSdo sdo)
     {
-        
+        PrefabKey = sdo.PrefabKey;
+        Prefab = BuildingPrefabStore.GetPrefabByName(PrefabKey);
     }
 }

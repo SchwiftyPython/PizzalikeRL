@@ -5,14 +5,17 @@ public class Prop
 {
     public GameObject Prefab { get; set; }
 
+    public string PrefabKey;
+
     public GameObject Texture;
 
     public bool IsContainer;
 
     public List<string> EventsTriggeredBy;
 
-    public Prop(GameObject prefab, bool isContainer = false)
-	{
+    public Prop(string prefabKey, GameObject prefab, bool isContainer = false)
+    {
+        PrefabKey = prefabKey;
 	    Prefab = prefab;
 	    IsContainer = isContainer;
 	}

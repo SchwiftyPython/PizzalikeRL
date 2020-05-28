@@ -1,18 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-public class FurnitureSdo : MonoBehaviour
+[Serializable]
+public class FurnitureSdo : PropSdo
 {
-    // Start is called before the first frame update
-    void Start()
+    public FurnitureSdo(Furniture furniture)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        PrefabKey = furniture.PrefabKey;
     }
 }

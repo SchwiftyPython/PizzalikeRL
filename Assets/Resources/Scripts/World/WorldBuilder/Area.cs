@@ -282,11 +282,11 @@ public class Area
                         if (currentKey == SettlementPrefabStore.FieldKey)
                         {
                             //todo pick field type
-                            currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                            currentTile.PresentProp = new Field(FieldType.Wheat, currentKey.ToString(), prefab);
                         }
                         else if (currentKey == SettlementPrefabStore.GraveyardKey)
                         {
-                            currentTile.PresentProp = new Grave(prefab);
+                            currentTile.PresentProp = new Grave(currentKey.ToString(), prefab);
                         }
                         else if (currentKey == SettlementPrefabStore.TurretKey)
                         {
@@ -306,7 +306,7 @@ public class Area
                         }
                         else
                         {
-                            currentTile.PresentProp = new Prop(prefab);
+                            currentTile.PresentProp = new Prop(currentKey.ToString(), prefab);
                         }
 
                         currentAreaColumn++;
@@ -342,7 +342,9 @@ public class Area
 
                 if (propType == SettlementPrefabStore.SettlementPropType.Field)
                 {
-                    currentTile.PresentProp = new Field(FieldType.Wheat, prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new Field(FieldType.Wheat, index.ToString(), prefabs[index]);
                 }
                 else if (propType == SettlementPrefabStore.SettlementPropType.Security)
                 {
@@ -364,7 +366,9 @@ public class Area
                 }
                 else
                 {
-                    currentTile.PresentProp = new Prop(prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new Prop(index.ToString(), prefabs[index]);
                 }
             }
 
@@ -445,15 +449,15 @@ public class Area
                         if (currentKey == FieldKey)
                         {
                             //todo pick field type
-                            currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                            currentTile.PresentProp = new Field(FieldType.Wheat, currentKey.ToString(), prefab);
                         }
                         else if (currentKey == GraveyardKey)
                         {
-                            currentTile.PresentProp = new Grave(prefab);
+                            currentTile.PresentProp = new Grave(currentKey.ToString(), prefab);
                         }
                         else
                         {
-                            currentTile.PresentProp = new Prop(prefab);
+                            currentTile.PresentProp = new Prop(currentKey.ToString(), prefab);
                         }
 
                         currentAreaColumn++;
@@ -488,15 +492,21 @@ public class Area
 
                 if (propType == MiscPropType.Field)
                 {
-                    currentTile.PresentProp = new Field(FieldType.Wheat, prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new Field(FieldType.Wheat, index.ToString(), prefabs[index]);
                 }
                 else if (propType == MiscPropType.Cheese)
                 {
-                    currentTile.PresentProp = new CheeseTree(prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new CheeseTree(index.ToString(), prefabs[index]);
                 }
                 else
                 {
-                    currentTile.PresentProp = new Prop(prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new Prop(index.ToString(), prefabs[index]);
                 }
             }
 

@@ -18,7 +18,7 @@ public class Grave : Prop
     public Guid Id;
     public Inscription inscription;
 
-    public Grave(GameObject prefab, string name, string dateOfDeath, string dateOfBirth, string causeOfDeath) : base(prefab)
+    public Grave(string prefabKey, GameObject prefab, string name, string dateOfDeath, string dateOfBirth, string causeOfDeath) : base(prefabKey, prefab)
     {
         Id = Guid.NewGuid();
 
@@ -32,7 +32,7 @@ public class Grave : Prop
         WorldData.Instance.Graves.Add(Id, this);
     }
 
-    public Grave(GameObject prefab) : base(prefab)
+    public Grave(string prefabKey, GameObject prefab) : base(prefabKey, prefab)
     {
         Id = Guid.NewGuid();
 

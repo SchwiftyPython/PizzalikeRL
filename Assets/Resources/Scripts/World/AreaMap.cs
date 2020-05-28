@@ -137,9 +137,18 @@ public class AreaMap : MonoBehaviour
                 if (tile.PresentProp != null)
                 {
                     prefab = tile.PresentProp.Prefab;
-                    instance = Instantiate(prefab, new Vector2(currentColumn, currentRow), Quaternion.identity);
-                    tile.PresentProp.Texture = instance;
-                    instance.transform.SetParent(tile.TextureInstance.transform);
+
+                    if (prefab != null)
+                    {
+                        instance = Instantiate(prefab, new Vector2(currentColumn, currentRow), Quaternion.identity);
+                        tile.PresentProp.Texture = instance;
+                        instance.transform.SetParent(tile.TextureInstance.transform);
+                    }
+                    else
+                    {
+                        //should be able to recover from this
+                        Debug.Log($@"Prop {tile.PresentProp} does not have a prefab!");
+                    }
                 }
 
                 tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(currentColumn, currentRow, -4), Quaternion.identity);
@@ -348,16 +357,19 @@ public class AreaMap : MonoBehaviour
 
                         if (building.Props[currentRow, currentColumn] != null)
                         {
-                            if (building.Props[currentRow, currentColumn].name.Contains("chest"))
-                            {
-                                _currentArea.AreaTiles[areaX, areaY].PresentProp =
-                                    new Chest(building.Props[currentRow, currentColumn]);
-                            }
-                            else
-                            {
-                                _currentArea.AreaTiles[areaX, areaY].PresentProp =
-                                    new Prop(building.Props[currentRow, currentColumn]);
-                            }
+                            _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                                building.Props[currentRow, currentColumn];
+
+                            // if (building.Props[currentRow, currentColumn].name.Contains("chest"))
+                            // {
+                            //     _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                            //         new Chest(building.Props[currentRow, currentColumn]);
+                            // }
+                            // else
+                            // {
+                            //     _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                            //         new Prop(building.Props[currentRow, currentColumn]);
+                            // }
 
                             instance = Instantiate(_currentArea.AreaTiles[areaX, areaY].PresentProp.Prefab,
                                 new Vector2(areaY, areaX), Quaternion.identity);

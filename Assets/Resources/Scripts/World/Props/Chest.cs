@@ -9,13 +9,13 @@ public class Chest : Prop
 
     private IDictionary<Guid, Item> _contents; 
 
-    public Chest(GameObject prefab) : base(prefab, true)
+    public Chest(string prefabKey, GameObject prefab) : base(prefabKey, prefab, true)
     {
         _contents = new Dictionary<Guid, Item>();
         FillWithRandomItems();
     }
 
-    public Chest(ChestSdo sdo) : base(BuildingPrefabStore.GetChestPrefab(), true)
+    public Chest(ChestSdo sdo) : base("0", BuildingPrefabStore.GetChestPrefab(), true)
     {
         _contents = new Dictionary<Guid, Item>();
 
