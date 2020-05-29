@@ -325,7 +325,6 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\GraveSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\ItemSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\LotSdo.cs" />
-    <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\NewBehaviourScript.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\PizzaOrderSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\PropSdo.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\Save Data Objects\RiverSdo.cs" />

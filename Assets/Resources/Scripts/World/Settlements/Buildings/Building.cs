@@ -21,6 +21,8 @@ public class Building
     public int FloorTypeIndex;
     private List<GameObject> _floorTilePrefabs;
 
+    public char[,] AddedDoorLocations;
+
     public readonly int Width;
     public readonly int Height;
 
@@ -36,6 +38,7 @@ public class Building
         FloorTiles = new GameObject[Height, Width];
         WallTiles = new GameObject[Height, Width];
         Props = new Prop[Height, Width];
+        AddedDoorLocations = new char[Height, Width];
 
         PickTilePrefabs();
 
@@ -63,9 +66,9 @@ public class Building
             return;
         }
 
-        Width = sdo.Width;
         Height = sdo.Height;
-        
+        Width = sdo.Width;
+
         FloorTiles = new GameObject[Height, Width];
         WallTiles = new GameObject[Height, Width];
         WallTypeIndex = sdo.WallTypeIndex;
@@ -78,6 +81,8 @@ public class Building
 
         Props = BuildingSdo.ConvertPropsForPlaying(Height, Width, sdo.PropSdos);
 
+        AddedDoorLocations = BuildingSdo.ConvertBlueprintForLoading(Height, Width, sdo.AddedDoorLocations);
+
         //todo need room sdo -- maybe
 
         Build();
@@ -85,6 +90,8 @@ public class Building
 
     private void Build()
     {
+        //int doorCount = 0;
+
         for (var currentRow = 0; currentRow < Height; currentRow++)
         {
             for (var currentColumn = 0; currentColumn < Width; currentColumn++)
@@ -96,6 +103,11 @@ public class Building
                     var tile = GetRandomFloorTilePrefab();
 
                     FloorTiles[currentRow, currentColumn] = tile;
+
+                    if (AddedDoorLocations[currentRow, currentColumn] == '8' || AddedDoorLocations[currentRow, currentColumn] == '9')
+                    {
+                        tileCode = AddedDoorLocations[currentRow, currentColumn];
+                    }
 
                     var tileType = BuildingPrefabStore.WallTileKeys[tileCode];
                     tile = _wallTilePrefabs[tileType];
@@ -146,6 +158,7 @@ public class Building
         var targetRow = 0;
         var targetColumn = 0;
         GameObject doorPrefab = null;
+        var prefabKey = '\0';
 
         var wallPlaced = false;
         while (!wallPlaced)
@@ -164,6 +177,7 @@ public class Building
                     }
 
                     doorPrefab = _wallTilePrefabs["wall_horizontal_door_closed"];
+                    prefabKey = '8';
 
                     wallPlaced = true;
                     break;
@@ -177,6 +191,8 @@ public class Building
                     }
 
                     doorPrefab = _wallTilePrefabs["wall_horizontal_door_closed"];
+                    prefabKey = '8';
+
                     wallPlaced = true;
                     break;
                 case "east":
@@ -189,6 +205,8 @@ public class Building
                     }
 
                     doorPrefab = _wallTilePrefabs["wall_vertical_door_closed"];
+                    prefabKey = '9';
+
                     wallPlaced = true;
                     break;
                 case "west":
@@ -201,12 +219,15 @@ public class Building
                     }
 
                     doorPrefab = _wallTilePrefabs["wall_vertical_door_closed"];
+                    prefabKey = '9';
+
                     wallPlaced = true;
                     break;
             }
         }
 
         WallTiles[targetRow, targetColumn] = doorPrefab;
+        AddedDoorLocations[targetRow, targetColumn] = prefabKey;
     }
 
     private void Furnish(bool isStartingBuilding = false)

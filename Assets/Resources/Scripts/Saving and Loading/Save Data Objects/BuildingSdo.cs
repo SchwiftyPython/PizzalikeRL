@@ -15,6 +15,8 @@ public class BuildingSdo
 
     public char[] Blueprint;
 
+    public char[] AddedDoorLocations;
+
     public PropSdo[] PropSdos;
 
     public static List<BuildingSdo> ConvertToBuildingSdos(List<Building> buildings)
@@ -36,6 +38,7 @@ public class BuildingSdo
         sdo.Height = building.Height;
         sdo.Blueprint = ConvertBlueprintForSaving(building.Blueprint);
         sdo.PropSdos = ConvertPropsForSaving(building.Props);
+        sdo.AddedDoorLocations = ConvertBlueprintForSaving(building.AddedDoorLocations);
         return sdo;
     }
 
@@ -49,7 +52,7 @@ public class BuildingSdo
         return new Building(sdo);
     }
 
-    public static char[] ConvertBlueprintForSaving(char[,] blueprint) 
+    public static char[] ConvertBlueprintForSaving(char[,] blueprint)
     {
         return GlobalHelper.Convert2dArrayTo1dArray(blueprint);
     }

@@ -160,7 +160,7 @@ public class Area
 
     private void PrepareSettlement()
     {
-        if (SettlementSection == null)
+        if (SettlementSection == null || Settlement == null)
         {
             return;
         }
