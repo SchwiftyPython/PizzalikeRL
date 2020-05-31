@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     private List<GameObject> _activeWindows;
 
+    public List<string> AllMessages;
+
     public const string WorldMapSceneName = "WorldMap";
     public const string AreaMapSceneName = "Area";
 

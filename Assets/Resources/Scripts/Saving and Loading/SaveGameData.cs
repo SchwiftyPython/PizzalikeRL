@@ -103,7 +103,7 @@ public class SaveGameData : MonoBehaviour
                 CurrentTileId = GameManager.Instance.CurrentTile.Id,
                 CurrentState = GameManager.Instance.CurrentState,
                 CurrentSceneName = GameManager.Instance.CurrentScene.name,
-                //Messages = GameManager.Instance.Messages,
+                Messages = Messenger.Instance.GetAllMessages(),
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders),
                 EntitySdos = EntitySdo.ConvertToEntitySdos(WorldData.Instance.Entities.Values.ToList()),
                 FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
@@ -167,13 +167,13 @@ public class SaveGameData : MonoBehaviour
 
         GameManager.Instance.CurrentTile = GameManager.Instance.Player.CurrentTile;
 
-        //GameManager.Instance.Messages = saveData.Messages;
-
         GameManager.Instance.ActiveOrders = ConvertActiveOrdersForPlaying(saveData.ActiveOrders);
 
         GameManager.Instance.CurrentState = saveData.CurrentSceneName == GameManager.AreaMapSceneName
             ? GameManager.GameState.EnterArea
             : saveData.CurrentState;
+
+        Messenger.Instance.LoadMessages(saveData.Messages);
     }
 
     private void LoadSavedGamesFileInfo()

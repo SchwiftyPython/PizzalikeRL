@@ -109,6 +109,8 @@ public class AreaMap : MonoBehaviour
         var v = new Vinteger(_player.CurrentTile.X, _player.CurrentTile.Y);
         Fov.Refresh(v);
 
+        Messenger.Instance.LoadOnScreenMessages();
+
         AreaReady = true;
     }
    
