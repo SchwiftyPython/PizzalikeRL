@@ -59,6 +59,12 @@ public class Faction
         EntitiesWithFluff = new List<Entity>();
         Name = sdo.Name;
         Population = sdo.Population;
+        Leader = EntitySdo.ConvertToEntity(sdo.Leader);
+
+        if (Leader == null)
+        {
+            Debug.Log($@"Leader missing for faction {Name}");
+        }
 
         foreach (var id in sdo.CitizenIds)
         {
@@ -83,13 +89,14 @@ public class Faction
             EntitiesWithFluff.Add(entity);
         }
 
-        if (WorldData.Instance.Entities.ContainsKey(sdo.LeaderId))
+        if (Leader != null && !WorldData.Instance.Entities.ContainsKey(Leader.Id))
         {
-            Leader = WorldData.Instance.Entities[sdo.LeaderId];
+            WorldData.Instance.Entities[Leader.Id] = Leader;
         }
-        else
+
+        if (!EntitiesWithFluff.Contains(Leader))
         {
-            Debug.Log($"Leader with id {sdo.LeaderId} not found!");
+            EntitiesWithFluff.Add(Leader);
         }
     }
 
@@ -248,7 +255,7 @@ public class Faction
             WorldData.Instance.Entities.Add(citizen.Id, citizen);
         }
 
-        Debug.Log($"Number of Citizens: {Citizens.Count}");
+        //Debug.Log($"Number of Citizens: {Citizens.Count}");
 
         RemainingCitizensToPlace = new List<Entity>(Citizens);
     }

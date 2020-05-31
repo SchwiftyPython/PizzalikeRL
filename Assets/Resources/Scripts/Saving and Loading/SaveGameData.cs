@@ -105,8 +105,8 @@ public class SaveGameData : MonoBehaviour
                 CurrentSceneName = GameManager.Instance.CurrentScene.name,
                 //Messages = GameManager.Instance.Messages,
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders),
-                FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
                 EntitySdos = EntitySdo.ConvertToEntitySdos(WorldData.Instance.Entities.Values.ToList()),
+                FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
                 Items = ConvertItemsForSaving(WorldData.Instance.Items),
                 PlayerStartingPlaceCellId = WorldData.Instance.PlayerStartingPlace.Id
             };
@@ -330,6 +330,7 @@ public class SaveGameData : MonoBehaviour
                 case "consumable":
                     throw new NotImplementedException();
                 default:
+                    Debug.Log($@"Item Category {sdo.Value.ItemCategory.ToLower()} not found. Converting to Item.");
                     item = ItemSdo.ConvertToItem(sdo.Value);
                     break;
             }
@@ -365,6 +366,7 @@ public class SaveGameData : MonoBehaviour
                     case "consumable":
                         throw new NotImplementedException();
                     default:
+                        Debug.Log($@"Item Category {item.Value.ItemCategory.ToLower()} not found. Converting to ItemSdo.");
                         sdo = ItemSdo.ConvertToItemSdo(item.Value);
                         break;
                 }

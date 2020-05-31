@@ -11,6 +11,8 @@ public class ItemSdo
 
     public string ItemCategory;
 
+    public string ItemName;
+
     public Guid Id;
 
     public Dice ItemDice;
@@ -24,11 +26,11 @@ public class ItemSdo
             ItemType = item.ItemType,
             ItemCategory = item.ItemCategory,
             Id = item.Id,
-            ItemDice = item.ItemDice
+            ItemDice = item.ItemDice,
+            ItemName = item.ItemName
         };
     }
 
-    //todo need to check if weapon, armor etc
     public static Item ConvertToItem(ItemSdo sdo)
     {
         var item = new Item
@@ -39,7 +41,8 @@ public class ItemSdo
             ItemCategory = sdo.ItemCategory,
             Id = sdo.Id,
             ItemDice = sdo.ItemDice,
-            WorldPrefab = ItemStore.Instance.GetWorldPrefabForItemByType(sdo.ItemType)
+            WorldPrefab = ItemStore.Instance.GetWorldPrefabForItemByType(sdo.ItemType),
+            ItemName = sdo.ItemName
     };
         return item;
     }

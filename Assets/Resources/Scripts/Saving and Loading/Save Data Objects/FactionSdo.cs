@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 [Serializable]
 public class FactionSdo 
@@ -15,7 +16,7 @@ public class FactionSdo
 
     public List<Guid> CitizenIds;
 
-    public Guid LeaderId;
+    public EntitySdo Leader;
 
     public List<Guid> EntitiesWithFluffIds;
 
@@ -32,7 +33,7 @@ public class FactionSdo
             FactionReputation = faction.FactionReputation,
             CitizenIds = new List<Guid>(),
             EntitiesWithFluffIds = new List<Guid>(),
-            LeaderId = faction.Leader.Id,
+            Leader = EntitySdo.ConvertToEntitySdo(faction.Leader),
             Name = faction.Name,
             Population = faction.Population
         };

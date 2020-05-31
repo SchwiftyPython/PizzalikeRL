@@ -19,6 +19,7 @@ public class WeaponSdo : ItemSdo
             EquipmentSlotType = weapon.EquipmentSlotType,
             ItemType = weapon.ItemType,
             ItemCategory = weapon.ItemCategory,
+            ItemName = weapon.ItemName,
             Id = weapon.Id,
             ItemDice = weapon.ItemDice,
             AOEType = weapon.AOEType
@@ -36,6 +37,7 @@ public class WeaponSdo : ItemSdo
         weapon.ItemCategory = sdo.ItemCategory;
         weapon.Id = sdo.Id;
         weapon.ItemDice = sdo.ItemDice;
+        weapon.ItemName = sdo.ItemName;
 
         if (sdo.AOEType != null)
         {

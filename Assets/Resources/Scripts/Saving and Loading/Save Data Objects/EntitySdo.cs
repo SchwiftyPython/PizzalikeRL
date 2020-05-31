@@ -166,8 +166,8 @@ public class EntitySdo
 
         foreach (var entitySdo in entitySdos)
         {
-            Entity entity;
-            entity = new Entity(entitySdo.Key, entitySdo.Value.PrefabPath, entitySdo.Value.IsPlayer);
+            /*Entity entity;
+            entity = new Entity(entitySdo.Value.Id, entitySdo.Value.PrefabPath, entitySdo.Value.IsPlayer);
             entity.PrefabPath = entitySdo.Value.PrefabPath;
             entity.TotalBodyPartCoverage = entitySdo.Value.TotalBodyPartCoverage;
             entity.Level = entitySdo.Value.Level;
@@ -245,7 +245,9 @@ public class EntitySdo
 
                     entity.Abilities.Add(abilityName, ability);
                 }
-            }
+            }*/
+
+            var entity = ConvertToEntity(entitySdo.Value);
 
             entities.Add(entity.Id, entity);
         }
@@ -273,5 +275,91 @@ public class EntitySdo
             }
         }
         return entities;
+    }
+
+    public static Entity ConvertToEntity(EntitySdo entitySdo)
+    {
+        Entity entity;
+        entity = new Entity(entitySdo.Id, entitySdo.PrefabPath, entitySdo.IsPlayer);
+        entity.PrefabPath = entitySdo.PrefabPath;
+        entity.TotalBodyPartCoverage = entitySdo.TotalBodyPartCoverage;
+        entity.Level = entitySdo.Level;
+        entity.Xp = entitySdo.Xp;
+        entity.Strength = entitySdo.Strength;
+        entity.Agility = entitySdo.Agility;
+        entity.Constitution = entitySdo.Constitution;
+        entity.Intelligence = entitySdo.Intelligence;
+        entity.MaxHp = entitySdo.MaxHp;
+        entity.CurrentHp = entitySdo.CurrentHp;
+        entity.Speed = entitySdo.Speed;
+        entity.Defense = entitySdo.Defense;
+        entity.Body = entitySdo.Body;
+        entity.EntityType = entitySdo.EntityType;
+        entity.Classification = entitySdo.Classification;
+        entity.Fluff = entitySdo.Fluff;
+        entity.Mobile = entitySdo.Mobile;
+        entity.ToppingDropped = ToppingSdo.ConvertToTopping(entitySdo.ToppingDropped);
+        entity.ToppingCounts = entitySdo.ToppingCounts;
+        entity.EntityReputation = entitySdo.Reputation;
+        entity.Abilities = new Entity.AbilityDictionary();
+
+        if (string.IsNullOrEmpty(entitySdo.CurrentCellId))
+        {
+            entity.CurrentCell = null;
+            entity.CurrentArea = null;
+            entity.CurrentTile = null;
+        }
+        else
+        {
+            entity.CurrentCell = WorldData.Instance.MapDictionary[entitySdo.CurrentCellId];
+            entity.CurrentArea = entity.CurrentCell.GetAreaById(entitySdo.CurrentAreaId);
+            entity.CurrentTile = entity.CurrentArea?.GetTileById(entitySdo.CurrentTileId);
+        }
+
+        entity.CurrentPosition = entitySdo.CurrentPosition;
+
+        foreach (var itemId in entitySdo.InventoryItemIds)
+        {
+            if (itemId == Guid.Empty)
+            {
+                continue;
+            }
+
+            var item = WorldData.Instance.Items[itemId];
+            entity.Inventory.Add(item.Id, item);
+        }
+
+        foreach (var equipped in entitySdo.EquippedIds)
+        {
+            if (equipped.Value == Guid.Empty)
+            {
+                continue;
+            }
+
+            var item = WorldData.Instance.Items[equipped.Value];
+
+            if (entity.Equipped.ContainsKey(equipped.Key))
+            {
+                entity.Equipped[equipped.Key] = item;
+            }
+            else
+            {
+                entity.Equipped.Add(equipped.Key, item);
+            }
+        }
+
+        if (entitySdo.AbilityNames != null && entitySdo.AbilityNames.Count > 0)
+        {
+            foreach (var abilityName in entitySdo.AbilityNames)
+            {
+                var template = AbilityStore.GetAbilityByName(abilityName);
+
+                var ability = AbilityStore.CreateAbility(template, entity);
+
+                entity.Abilities.Add(abilityName, ability);
+            }
+        }
+
+        return entity;
     }
 }

@@ -6,8 +6,6 @@ public class SettlementSectionSdo
 {
     public List<LotSdo> LotSdos;
 
-    public List<BuildingSdo> BuildingSdos;
-
     public SettlementSectionSdo(SettlementSection section)
     {
         if (section == null)
@@ -16,6 +14,5 @@ public class SettlementSectionSdo
         }
 
         LotSdos = LotSdo.ConvertToLotSdos(section.Lots);
-        //BuildingSdos = BuildingSdo.ConvertToBuildingSdos(section.Buildings); //lotsdo has assigned building already
     }
 }

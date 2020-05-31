@@ -81,7 +81,8 @@ public class AreaSdo
         tempSdo.Y = area.Y;
         tempSdo.ParentCellId = area.ParentCell.Id;
         tempSdo.SettlementSdo = area.Settlement?.GetSettlementSdo();
-        tempSdo.SettlementSectionSdo = new SettlementSectionSdo(area.SettlementSection);
+        tempSdo.SettlementSectionSdo =
+            area.SettlementSection != null ? new SettlementSectionSdo(area.SettlementSection) : null;
 
         if (area.PresentEntities != null)
         {
@@ -112,13 +113,14 @@ public class AreaSdo
             area.X = sdo.X;
             area.Y = sdo.Y;
             area.PresentEntities = new List<Entity>();
+            area.BiomeType = sdo.BiomeType;
             area.AreaTiles = sdo.AreaTiles != null
                 ? TileSdo.ConvertToAreaTiles(sdo.AreaTiles, area.Height, area.Width, area.BiomeType)
                 : null;
-            area.BiomeType = sdo.BiomeType;
             area.PresentFactions = new List<Faction>();
             area.TurnOrder = new Queue<Entity>();
             area.ParentCell = WorldData.Instance.MapDictionary[sdo.ParentCellId];
+            area.Settlement = new Settlement(sdo.SettlementSdo);
             area.SettlementSection = new SettlementSection(sdo.SettlementSectionSdo);
 
             if (sdo.PresentEntityIds.Count > 0)

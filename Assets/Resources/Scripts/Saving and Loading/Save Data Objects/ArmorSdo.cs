@@ -18,7 +18,8 @@ public class ArmorSdo : ItemSdo
             ItemType = armor.ItemType,
             ItemCategory = armor.ItemCategory,
             Id = armor.Id,
-            ItemDice = armor.ItemDice
+            ItemDice = armor.ItemDice,
+            ItemName = armor.ItemName
         };
     }
 
@@ -33,6 +34,7 @@ public class ArmorSdo : ItemSdo
         armor.ItemCategory = sdo.ItemCategory;
         armor.Id = sdo.Id;
         armor.ItemDice = sdo.ItemDice;
+        armor.ItemName = sdo.ItemName;
 
         return armor;
     }

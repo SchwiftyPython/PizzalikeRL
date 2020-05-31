@@ -74,7 +74,11 @@ public class Settlement
             return;
         }
 
-        Faction = WorldData.Instance.Factions[sdo.FactionName];
+        if (!string.IsNullOrEmpty(sdo.FactionName))
+        {
+            Faction = WorldData.Instance.Factions[sdo.FactionName];
+        }
+
         Size = sdo.Size;
         Name = sdo.Name;
         _cell = WorldData.Instance.MapDictionary[sdo.CellId];
