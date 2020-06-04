@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 
 [Serializable]
 public class EntitySdo
@@ -73,7 +74,7 @@ public class EntitySdo
     public Reputation Reputation;
 
     public List<string> AbilityNames;
- 
+
     public static SaveGameData.SaveData.SerializableEntitiesDictionary ConvertToEntitySdos(List<Entity> entities)
     {
         var sdos = new SaveGameData.SaveData.SerializableEntitiesDictionary();
@@ -235,7 +236,8 @@ public class EntitySdo
             entity.CurrentTile = entity.CurrentArea?.GetTileById(entitySdo.CurrentTileId);
         }
 
-        entity.CurrentPosition = entitySdo.CurrentPosition;
+        entity.CurrentPosition = new Vector3(entitySdo.CurrentPosition.Y, entitySdo.CurrentPosition.X,
+            entitySdo.CurrentPosition.Z);
 
         foreach (var itemId in entitySdo.InventoryItemIds)
         {

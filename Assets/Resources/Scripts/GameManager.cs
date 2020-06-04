@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
+[Serializable]
 public enum CameraPosition
 {
     Left,
@@ -21,7 +22,7 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     private const int PizzaOrderInterval = 500;
 
-    private CameraPosition _currentCameraPosition;
+    public CameraPosition CurrentCameraPosition { get; set; }
 
     private readonly IList<string> _subscribedEvents = new List<string>
     {
@@ -104,7 +105,7 @@ public class GameManager : MonoBehaviour, ISubscriber
 
         ActiveOrders = new Dictionary<string, PizzaOrder>();
 
-        _currentCameraPosition = CameraPosition.Right;
+        CurrentCameraPosition = CameraPosition.Right;
 
         _activeWindows = new List<GameObject>();
 
@@ -152,20 +153,21 @@ public class GameManager : MonoBehaviour, ISubscriber
                 AreaMap.Instance.EnterArea();
                 if (AreaMap.Instance.AreaReady)
                 {
-                    CurrentState = GameState.Playerturn;
+                    if (!IsWorldMapSceneActive() && (PlayerInvisible() || PlayerNearCameraEdge()))
+                    {
+                        MoveCameraToPlayer();
+                    }
 
                     //todo find better spot to order first pizza
                     if (Instance.ActiveOrders.Count < 1)
                     {
                         OrderPizza();
                     }
+
+                    CurrentState = GameState.Playerturn;
                 }
                 break;
             case GameState.Playerturn:
-                if (!IsWorldMapSceneActive() && (PlayerInvisible() || PlayerNearCameraEdge()))
-                {
-                    MoveCameraToPlayer();
-                }
                 if (InputController.Instance.ActionTaken)
                 {
                     EventMediator.Instance.Broadcast(GlobalHelper.EndTurnEventName, this);
@@ -202,6 +204,10 @@ public class GameManager : MonoBehaviour, ISubscriber
                 }
                 else
                 {
+                    if (PlayerInvisible() || PlayerNearCameraEdge())
+                    {
+                        MoveCameraToPlayer();
+                    }
                     CheckForDeadEntities();
                     CurrentState = WhoseTurn();
                 }
@@ -339,7 +345,7 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     private bool PlayerNearCameraEdge()
     {
-        switch (_currentCameraPosition)
+        switch (CurrentCameraPosition)
         {
             case CameraPosition.Left:
                 if (Player.CurrentPosition.x > _playerPositionRangesForCameraPosition[CameraPosition.Left][1])
@@ -368,32 +374,57 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     private void MoveCameraToPlayer()
     {
-        switch (_currentCameraPosition)
+        const int maxLoop = 3;
+        var counter = 0;
+
+        while (true)
         {
-            case CameraPosition.Left:
-                if (Player.CurrentPosition.x >= _playerPositionRangesForCameraPosition[CameraPosition.Left][1])
-                {
-                    ChangeCameraPosition(CameraPosition.Center);
-                }
+            counter++;
+
+            switch (CurrentCameraPosition)
+            {
+                case CameraPosition.Left:
+                    if (Player.CurrentPosition.x >= _playerPositionRangesForCameraPosition[CameraPosition.Left][1])
+                    {
+                        ChangeCameraPosition(CameraPosition.Center);
+                    }
+
+                    break;
+                case CameraPosition.Center:
+                    if (Player.CurrentPosition.x <= _playerPositionRangesForCameraPosition[CameraPosition.Center][0])
+                    {
+                        ChangeCameraPosition(CameraPosition.Left);
+                    }
+
+                    if (Player.CurrentPosition.x >= _playerPositionRangesForCameraPosition[CameraPosition.Center][1])
+                    {
+                        ChangeCameraPosition(CameraPosition.Right);
+                    }
+
+                    break;
+                case CameraPosition.Right:
+                    if (Player.CurrentPosition.x <= _playerPositionRangesForCameraPosition[CameraPosition.Right][0])
+                    {
+                        ChangeCameraPosition(CameraPosition.Center);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (counter > maxLoop)
+            {
                 break;
-            case CameraPosition.Center:
-                if (Player.CurrentPosition.x <= _playerPositionRangesForCameraPosition[CameraPosition.Center][0])
-                {
-                    ChangeCameraPosition(CameraPosition.Left);
-                }
-                if(Player.CurrentPosition.x >= _playerPositionRangesForCameraPosition[CameraPosition.Center][1])
-                {
-                    ChangeCameraPosition(CameraPosition.Right);
-                }
-                break;
-            case CameraPosition.Right:
-                if (Player.CurrentPosition.x <= _playerPositionRangesForCameraPosition[CameraPosition.Right][0])
-                {
-                    ChangeCameraPosition(CameraPosition.Center);
-                }
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            }
+
+            if (PlayerInvisible())
+            {
+                CurrentCameraPosition = GlobalHelper.NextEnum(CurrentCameraPosition);
+                continue;
+            }
+
+            break;
         }
     }
 
@@ -403,15 +434,15 @@ public class GameManager : MonoBehaviour, ISubscriber
         {
             case CameraPosition.Left:
                 Camera.main.transform.localPosition = new Vector3(LeftCameraX, CameraY, -10);
-                _currentCameraPosition = CameraPosition.Left;
+                CurrentCameraPosition = CameraPosition.Left;
                 break;
             case CameraPosition.Center:
                 Camera.main.transform.localPosition = new Vector3(CenterCameraX, CameraY, -10);
-                _currentCameraPosition = CameraPosition.Center;
+                CurrentCameraPosition = CameraPosition.Center;
                 break;
             case CameraPosition.Right:
                 Camera.main.transform.localPosition = new Vector3(RightCameraX, CameraY, -10);
-                _currentCameraPosition = CameraPosition.Right;
+                CurrentCameraPosition = CameraPosition.Right;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(newPosition), newPosition, null);

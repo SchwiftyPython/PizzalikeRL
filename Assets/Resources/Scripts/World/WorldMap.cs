@@ -30,6 +30,14 @@ public class WorldMap : MonoBehaviour
         PlacePlayer();
     }
 
+    private void Update()
+    {
+        if (GameManager.Instance.Player == null || _playerSprite == null)
+        {
+            InstantiatePlayerSprite();
+        }
+    }
+
     private void DrawMap()
     {
         _worldMapHolder = transform;
@@ -62,7 +70,30 @@ public class WorldMap : MonoBehaviour
     {
         _playerSprite = GameManager.Instance.Player.GetSprite();
 
-        GameManager.Instance.Player.CurrentPosition =
-            new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
+        if (_playerSprite == null)
+        {
+            InstantiatePlayerSprite();
+        }
+        else
+        {
+            GameManager.Instance.Player.CurrentPosition =
+                new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
+        }
+    }
+
+    public void InstantiatePlayerSprite()
+    {
+        var existingPlayerSprite = GameObject.FindWithTag("Player");
+
+        if (existingPlayerSprite != null)
+        {
+            Destroy(existingPlayerSprite);
+        }
+
+        //todo player cell seems to be set on starting cell when loaded on world map
+
+        _playerSprite = Instantiate(GameManager.Instance.Player.GetSpritePrefab(), GameManager.Instance.Player.CurrentPosition, Quaternion.identity);
+        _playerSprite.transform.SetParent(GameManager.Instance.transform);
+        _playerSprite.tag = "Player";
     }
 }

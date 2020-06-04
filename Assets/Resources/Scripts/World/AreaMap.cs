@@ -635,39 +635,62 @@ public class AreaMap : MonoBehaviour
                 continue;
             }
 
-            var placed = false;
-            var row = Random.Range(0, _currentArea.Height);
-            var column = Random.Range(0, _currentArea.Width);
-            while (!placed)
+            //if this doesn't work set a boolean for are first entered
+            if (e.CurrentPosition != Vector3.zero)
             {
-                if (!_currentArea.AreaTiles[row, column].GetBlocksMovement())
-                {
-                    var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector2(column, row), Quaternion.identity);
+                var npcSprite = Instantiate(e.GetSpritePrefab(), e.CurrentPosition, Quaternion.identity);
 
-                    npcSprite.AddComponent<EnemyController>();
-                    npcSprite.AddComponent<Seeker>();
-                    npcSprite.AddComponent<EntityInfo>();
+                npcSprite.AddComponent<EnemyController>();
+                npcSprite.AddComponent<Seeker>();
+                npcSprite.AddComponent<EntityInfo>();
 
-                    npcSprite.GetComponent<EnemyController>().Self = e;
+                npcSprite.GetComponent<EnemyController>().Self = e;
 
-                    npcSprite.transform.SetParent(NpcSpriteHolder.transform);
+                npcSprite.transform.SetParent(NpcSpriteHolder.transform);
 
-                    e.SetSprite(npcSprite);
-
-                    e.CurrentTile = _currentArea.AreaTiles[row, column];
-                    e.CurrentTile.SetPresentEntity(e);
-                    e.CurrentTile.SetBlocksMovement(true);
-                    e.CurrentPosition = new Vector3(row, column, 0f);
-
-                    _currentArea.TurnOrder.Enqueue(e);
-                    placed = true;
-                }
-                row = Random.Range(0, _currentArea.Height);
-                column = Random.Range(0, _currentArea.Width);
+                e.SetSprite(npcSprite);
             }
-            e.CurrentArea = _currentArea;
-            e.CurrentCell = _currentArea.ParentCell;
+            else
+            {
+                PlaceNpcRandomly(e);
+            }
         }
+    }
+
+    private void PlaceNpcRandomly(Entity e)
+    {
+        var placed = false;
+        var row = Random.Range(0, _currentArea.Height);
+        var column = Random.Range(0, _currentArea.Width);
+        while (!placed)
+        {
+            if (!_currentArea.AreaTiles[row, column].GetBlocksMovement())
+            {
+                var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector2(column, row), Quaternion.identity);
+
+                npcSprite.AddComponent<EnemyController>();
+                npcSprite.AddComponent<Seeker>();
+                npcSprite.AddComponent<EntityInfo>();
+
+                npcSprite.GetComponent<EnemyController>().Self = e;
+
+                npcSprite.transform.SetParent(NpcSpriteHolder.transform);
+
+                e.SetSprite(npcSprite);
+
+                e.CurrentTile = _currentArea.AreaTiles[row, column];
+                e.CurrentTile.SetPresentEntity(e);
+                e.CurrentTile.SetBlocksMovement(true);
+                e.CurrentPosition = new Vector3(row, column, 0f);
+
+                _currentArea.TurnOrder.Enqueue(e);
+                placed = true;
+            }
+            row = Random.Range(0, _currentArea.Height);
+            column = Random.Range(0, _currentArea.Width);
+        }
+        e.CurrentArea = _currentArea;
+        e.CurrentCell = _currentArea.ParentCell;
     }
 
     private void RemoveAllNpcs()
