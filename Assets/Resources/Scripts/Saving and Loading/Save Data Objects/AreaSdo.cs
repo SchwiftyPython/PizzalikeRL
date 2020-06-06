@@ -121,7 +121,7 @@ public class AreaSdo
             area.TurnOrder = new Queue<Entity>();
             area.ParentCell = WorldData.Instance.MapDictionary[sdo.ParentCellId];
             area.Settlement = new Settlement(sdo.SettlementSdo);
-            area.SettlementSection = new SettlementSection(sdo.SettlementSectionSdo);
+            area.SettlementSection = sdo.SettlementSectionSdo != null ? new SettlementSection(sdo.SettlementSectionSdo) : null;
 
             if (sdo.PresentEntityIds.Count > 0)
             {

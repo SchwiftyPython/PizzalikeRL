@@ -610,11 +610,15 @@ public class AreaMap : MonoBehaviour
             _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
             
         }
-        _currentArea?.PresentEntities.Add(_player);
-        _player.CurrentArea = _currentArea;
 
         if (_currentArea != null)
         {
+            if (!_currentArea.PresentEntities.Contains(_player))
+            {
+                _currentArea.PresentEntities.Add(_player);
+            }
+
+            _player.CurrentArea = _currentArea;
             _player.CurrentCell = _currentArea.ParentCell;
             _currentArea.AreaTiles[_player.CurrentTile.X, _player.CurrentTile.Y]
                 .Visibility = Visibilities.Visible;

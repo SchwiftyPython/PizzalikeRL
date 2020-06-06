@@ -116,17 +116,11 @@ public class Settlement
         sdo.CitizenIds = new List<Guid>();
         sdo.Size = Size;
         sdo.AreaIds = new List<string>();
-        //sdo.SectionSdos = new List<SettlementSectionSdo>(); //we do this in areasdo and it's easier to keep track of
 
         foreach (var area in _areas.Keys)
         {
             sdo.AreaIds.Add(area.Id);
         }
-
-        // foreach (var section in _areas.Values)
-        // {
-        //     sdo.SectionSdos.Add(new SettlementSectionSdo(section)); //we do this in areasdo and it's easier to keep track of
-        // }
 
         if (Citizens != null)
         {

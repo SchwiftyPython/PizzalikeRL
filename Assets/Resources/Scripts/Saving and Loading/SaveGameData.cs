@@ -49,9 +49,6 @@ public class SaveGameData : MonoBehaviour
         public SerializableOrdersDictionary ActiveOrders;
 
         public string PlayerStartingPlaceCellId;
-
-        public CameraPosition CurrentCameraPosition;
-        public SerializableVector3 CameraVector;
     }
 
     [Serializable]
@@ -111,13 +108,8 @@ public class SaveGameData : MonoBehaviour
                 EntitySdos = EntitySdo.ConvertToEntitySdos(WorldData.Instance.Entities.Values.ToList()),
                 FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
                 Items = ConvertItemsForSaving(WorldData.Instance.Items),
-                PlayerStartingPlaceCellId = WorldData.Instance.PlayerStartingPlace.Id,
-                CurrentCameraPosition = GameManager.Instance.CurrentCameraPosition,
-                CameraVector = new SerializableVector3(Camera.main.transform.localPosition.x, Camera.main.transform.localPosition.y, Camera.main.transform.localPosition.z)
+                PlayerStartingPlaceCellId = WorldData.Instance.PlayerStartingPlace.Id
             };
-
-            Debug.Log($@"Camera enum before save: {data.CurrentCameraPosition}");
-            Debug.Log($@"Camera position before save: {data.CameraVector.X}, {data.CameraVector.Y}, {data.CameraVector.Z}");
 
             var saveGameFileNames =
                 new SaveGameFileNames {FileNames = new SaveGameFileNames.SerializableFileNamesDictionary()};
@@ -169,11 +161,11 @@ public class SaveGameData : MonoBehaviour
 
         GameManager.Instance.Player = WorldData.Instance.Entities[saveData.PlayerId];
 
-        GameManager.Instance.CurrentCell = GameManager.Instance.Player.CurrentCell;
+        GameManager.Instance.CurrentCell = WorldData.Instance.MapDictionary[saveData.CurrentCellId];
 
-        GameManager.Instance.CurrentArea = GameManager.Instance.Player.CurrentArea;
+        GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.GetAreaById(saveData.CurrentAreaId);
 
-        GameManager.Instance.CurrentTile = GameManager.Instance.Player.CurrentTile;
+        GameManager.Instance.CurrentTile =  GameManager.Instance.CurrentArea.GetTileById(saveData.CurrentTileId);
 
         GameManager.Instance.ActiveOrders = ConvertActiveOrdersForPlaying(saveData.ActiveOrders);
 
@@ -182,14 +174,6 @@ public class SaveGameData : MonoBehaviour
             : saveData.CurrentState;
 
         Messenger.Instance.LoadMessages(saveData.Messages);
-
-        // GameManager.Instance.CurrentCameraPosition = saveData.CurrentCameraPosition;
-        //
-        // Debug.Log($@"Camera enum after load: {GameManager.Instance.CurrentCameraPosition}");
-        //
-        // Camera.main.transform.localPosition = new Vector3(saveData.CameraVector.X, saveData.CameraVector.Y, saveData.CameraVector.Z);
-        //
-        // Debug.Log($@"Camera position after load: {saveData.CameraVector.X}, {saveData.CameraVector.Y}, {saveData.CameraVector.Z}");
     }
 
     private void LoadSavedGamesFileInfo()

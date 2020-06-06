@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Pathfinding;
+using UnityEngine;
 
 public class WorldMap : MonoBehaviour
 {
@@ -90,10 +91,14 @@ public class WorldMap : MonoBehaviour
             Destroy(existingPlayerSprite);
         }
 
-        //todo player cell seems to be set on starting cell when loaded on world map
+        GameManager.Instance.Player.CurrentCell = GameManager.Instance.CurrentCell;
+        GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
 
         _playerSprite = Instantiate(GameManager.Instance.Player.GetSpritePrefab(), GameManager.Instance.Player.CurrentPosition, Quaternion.identity);
         _playerSprite.transform.SetParent(GameManager.Instance.transform);
         _playerSprite.tag = "Player";
+        GameManager.Instance.Player.SetSprite(_playerSprite);
+        GameManager.Instance.Player.GetSprite().AddComponent<Seeker>();
+        GameManager.Instance.Player.GetSprite().AddComponent<AstarAI>();
     }
 }

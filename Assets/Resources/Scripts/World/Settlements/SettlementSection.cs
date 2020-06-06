@@ -4,8 +4,6 @@ public class SettlementSection
 {
     public List<Lot> Lots;
 
-    public List<Building> Buildings;
-
     public SettlementSection()
     {
     }
@@ -18,6 +16,5 @@ public class SettlementSection
         }
 
         Lots = LotSdo.ConvertToLots(sdo.LotSdos);
-        //Buildings = BuildingSdo.ConvertToBuildings(sdo.BuildingSdos); //lotsdo has assigned building already
     }
 }

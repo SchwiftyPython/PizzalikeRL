@@ -101,10 +101,12 @@ public class TileSdo
     public static Tile ConvertToAreaTile(TileSdo sdo, BiomeType biomeType)
     {
         var tile = new Tile();
-        var id = sdo.Id.Split(' ');
+        tile.Id = sdo.Id;
 
-        tile.X = Convert.ToInt32(id[0]);
-        tile.Y = Convert.ToInt32(id[1]);
+        var indices = sdo.Id.Split(' ');
+
+        tile.X = Convert.ToInt32(indices[0]);
+        tile.Y = Convert.ToInt32(indices[1]);
         tile.PrefabName = sdo.PrefabName;
         tile.SetPrefabTileTexture(WorldData.Instance.GetTileTextureByNameRarityAndBiome(sdo.PrefabName, biomeType));
         tile.Visibility = sdo.Visibility;
