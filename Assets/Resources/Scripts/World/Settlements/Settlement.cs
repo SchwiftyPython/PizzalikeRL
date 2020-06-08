@@ -36,6 +36,7 @@ public class Settlement
 
         Name = SettlementPrefabStore.GenerateName();
 
+        //todo just add 'New' or '2' or something to the name when it exists
         while (WorldData.Instance.Settlements.ContainsKey(Name))
         {
             Name = SettlementPrefabStore.GenerateName();

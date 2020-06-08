@@ -100,6 +100,14 @@ public class AreaSdo
             }
         }
 
+        if (area.PresentFactions != null)
+        {
+            foreach (var faction in area.PresentFactions)
+            {
+                tempSdo.PresentFactionNames.Add(faction.Name);
+            }
+        }
+
         return tempSdo;
     }
 
@@ -138,6 +146,15 @@ public class AreaSdo
                     area.TurnOrder.Enqueue(WorldData.Instance.Entities[id]);
                 }
             }
+
+            if (sdo.PresentFactionNames.Count > 0)
+            {
+                foreach (var name in sdo.PresentFactionNames)
+                {
+                    area.PresentFactions.Add(WorldData.Instance.Factions[name]);
+                }
+            }
+
             areas[area.X, area.Y] = area;
         }
         return areas;
