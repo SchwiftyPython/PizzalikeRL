@@ -21,7 +21,9 @@ public class WorldData : MonoBehaviour
     public Dictionary<Toppings, GameObject> UiViewToppingsDictionary { get; set; }
     public Cell PlayerStartingPlace;
 
-    public Dictionary<Guid, Grave> Graves;
+    public Dictionary<Guid, Grave> Graves { get; set; }
+
+    public Dictionary<string, Settlement> Settlements { get; set; }
 
     public string Seed
     {
@@ -155,6 +157,12 @@ public class WorldData : MonoBehaviour
         Items = new Dictionary<Guid, Item>();
         Rivers = new Dictionary<int, River>();
         Graves = new Dictionary<Guid, Grave>();
+        Settlements = new Dictionary<string, Settlement>();
+    }
+
+    private void Start()
+    {
+        PopulateToppingsDictionaries();
     }
 
     public void PopulateToppingsDictionaries()
@@ -224,93 +232,230 @@ public class WorldData : MonoBehaviour
     {
         var biomeTiles = new Dictionary<string, GameObject>();
 
-        foreach (var tile in AreaDesertTilesCommon)
+        switch (biomeType)
         {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaDesertTilesUnCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaDesertTilesRare)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in DesertAsphaltRoadTiles)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
+            case BiomeType.Desert:
+            {
+                foreach (var tile in AreaDesertTilesCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
 
-        foreach (var tile in AreaGrassLandTilesCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaGrassLandTilesUnCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaGrassLandTilesRare)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in GrassDirtPathTiles)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
+                    biomeTiles.Add(tile.name, tile);
+                }
 
-        foreach (var tile in AreaIceTilesCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaIceTilesUnCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaIceTilesRare)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in IceAsphaltRoadTiles)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
+                foreach (var tile in AreaDesertTilesUnCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
 
-        foreach (var tile in AreaSwampTilesCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaSwampTilesUnCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaSwampTilesRare)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in SwampDirtPathTiles)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
+                    biomeTiles.Add(tile.name, tile);
+                }
 
-        foreach (var tile in AreaWastelandTilesCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaWastelandTilesUnCommon)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in AreaWastelandTilesRare)
-        {
-            biomeTiles.Add(tile.name, tile);
-        }
-        foreach (var tile in WastelandDirtPathTiles)
-        {
-            biomeTiles.Add(tile.name, tile);
+                foreach (var tile in AreaDesertTilesRare)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in DesertAsphaltRoadTiles)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                break;
+            }
+            case BiomeType.Grassland:
+            case BiomeType.Woodland:
+            {
+                foreach (var tile in AreaGrassLandTilesCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in AreaGrassLandTilesUnCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in AreaGrassLandTilesRare)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in GrassDirtPathTiles)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                break;
+            }
+            case BiomeType.Ice:
+            {
+                foreach (var tile in AreaIceTilesCommon)
+                {
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in AreaIceTilesUnCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in AreaIceTilesRare)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in IceAsphaltRoadTiles)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                break;
+            }
+            case BiomeType.Swamp:
+            {
+                foreach (var tile in AreaSwampTilesCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in AreaSwampTilesUnCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in AreaSwampTilesRare)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in SwampDirtPathTiles)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                break;
+            }
+            case BiomeType.Wasteland:
+            {
+                foreach (var tile in AreaWastelandTilesCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in AreaWastelandTilesUnCommon)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in AreaWastelandTilesRare)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                foreach (var tile in WastelandDirtPathTiles)
+                {
+                    if (biomeTiles.ContainsKey(tile.name))
+                    {
+                        continue;
+                    }
+
+                    biomeTiles.Add(tile.name, tile);
+                }
+
+                break;
+            }
         }
 
         if (!biomeTiles.ContainsKey(prefabName))
         {
+            Debug.Log($@"Could not find tile prefab by name {prefabName} for biome type {biomeType}");
+
             return biomeTiles.Values.ToArray()[Random.Range(0, biomeTiles.Count)];
         }
 

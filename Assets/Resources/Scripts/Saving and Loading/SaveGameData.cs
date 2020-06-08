@@ -85,6 +85,7 @@ public class SaveGameData : MonoBehaviour
         LoadSavedGamesFileInfo();
     }
 
+    //todo make save game file right after world gen
     public void Save()
     {
         Debug.Log("Saving...");
@@ -102,10 +103,10 @@ public class SaveGameData : MonoBehaviour
                 CurrentTileId = GameManager.Instance.CurrentTile.Id,
                 CurrentState = GameManager.Instance.CurrentState,
                 CurrentSceneName = GameManager.Instance.CurrentScene.name,
-                //Messages = GameManager.Instance.Messages,
+                Messages = Messenger.Instance.GetAllMessages(),
                 ActiveOrders = ConvertActiveOrdersForSaving(GameManager.Instance.ActiveOrders),
-                FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
                 EntitySdos = EntitySdo.ConvertToEntitySdos(WorldData.Instance.Entities.Values.ToList()),
+                FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
                 Items = ConvertItemsForSaving(WorldData.Instance.Items),
                 PlayerStartingPlaceCellId = WorldData.Instance.PlayerStartingPlace.Id
             };
@@ -160,19 +161,19 @@ public class SaveGameData : MonoBehaviour
 
         GameManager.Instance.Player = WorldData.Instance.Entities[saveData.PlayerId];
 
-        GameManager.Instance.CurrentCell = GameManager.Instance.Player.CurrentCell;
+        GameManager.Instance.CurrentCell = WorldData.Instance.MapDictionary[saveData.CurrentCellId];
 
-        GameManager.Instance.CurrentArea = GameManager.Instance.Player.CurrentArea;
+        GameManager.Instance.CurrentArea = GameManager.Instance.CurrentCell.GetAreaById(saveData.CurrentAreaId);
 
-        GameManager.Instance.CurrentTile = GameManager.Instance.Player.CurrentTile;
-
-        //GameManager.Instance.Messages = saveData.Messages;
+        GameManager.Instance.CurrentTile =  GameManager.Instance.CurrentArea.GetTileById(saveData.CurrentTileId);
 
         GameManager.Instance.ActiveOrders = ConvertActiveOrdersForPlaying(saveData.ActiveOrders);
 
         GameManager.Instance.CurrentState = saveData.CurrentSceneName == GameManager.AreaMapSceneName
             ? GameManager.GameState.EnterArea
             : saveData.CurrentState;
+
+        Messenger.Instance.LoadMessages(saveData.Messages);
     }
 
     private void LoadSavedGamesFileInfo()
@@ -313,7 +314,31 @@ public class SaveGameData : MonoBehaviour
 
     private static Dictionary<Guid, Item> ConvertItemsForPlaying(SaveData.SerializableItemDictionary itemSdos)
     {
-        return itemSdos?.Select(sdo => ItemSdo.ConvertToItem(sdo.Value)).ToDictionary(item => item.Id);
+        var items = new Dictionary<Guid, Item>();
+        foreach (var sdo in itemSdos)
+        {
+            Item item;
+
+            switch (sdo.Value.ItemCategory.ToLower())
+            {
+                case "armor":
+                    item = ArmorSdo.ConvertToArmor((ArmorSdo) sdo.Value);
+                    break;
+                case "weapon":
+                    item = WeaponSdo.ConvertToWeapon((WeaponSdo) sdo.Value);
+                    break;
+                case "consumable":
+                    throw new NotImplementedException();
+                default:
+                    Debug.Log($@"Item Category {sdo.Value.ItemCategory.ToLower()} not found. Converting to Item.");
+                    item = ItemSdo.ConvertToItem(sdo.Value);
+                    break;
+            }
+
+            items.Add(item.Id, item);
+        }
+
+        return items;
     }
 
     private static SaveData.SerializableItemDictionary ConvertItemsForSaving(Dictionary<Guid, Item> items)
@@ -327,8 +352,31 @@ public class SaveGameData : MonoBehaviour
 
         foreach (var item in items)
         {
-            var sdo = ItemSdo.ConvertToItemSdo(item.Value);
-            sdos.Add(sdo.Id, sdo);
+            try
+            {
+                ItemSdo sdo;
+                switch (item.Value.ItemCategory.ToLower())
+                {
+                    case "armor":
+                        sdo = ArmorSdo.ConvertToArmorSdo((Armor) item.Value);
+                        break;
+                    case "weapon":
+                        sdo = WeaponSdo.ConvertToWeaponSdo((Weapon) item.Value);
+                        break;
+                    case "consumable":
+                        throw new NotImplementedException();
+                    default:
+                        Debug.Log($@"Item Category {item.Value.ItemCategory.ToLower()} not found. Converting to ItemSdo.");
+                        sdo = ItemSdo.ConvertToItemSdo(item.Value);
+                        break;
+                }
+
+                sdos.Add(sdo.Id, sdo);
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"Error converting {item.Value.ItemName}: {e.Message}");
+            }
         }
 
         return sdos;

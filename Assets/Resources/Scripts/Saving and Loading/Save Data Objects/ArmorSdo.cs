@@ -18,7 +18,24 @@ public class ArmorSdo : ItemSdo
             ItemType = armor.ItemType,
             ItemCategory = armor.ItemCategory,
             Id = armor.Id,
-            ItemDice = armor.ItemDice
+            ItemDice = armor.ItemDice,
+            ItemName = armor.ItemName
         };
+    }
+
+    public static Armor ConvertToArmor(ArmorSdo sdo)
+    {
+        var armor = new Armor();
+        armor.Type = sdo.Type;
+        armor.Defense = sdo.Defense;
+        armor.Rarity = sdo.Rarity;
+        armor.EquipmentSlotType = sdo.EquipmentSlotType;
+        armor.ItemType = sdo.ItemType;
+        armor.ItemCategory = sdo.ItemCategory;
+        armor.Id = sdo.Id;
+        armor.ItemDice = sdo.ItemDice;
+        armor.ItemName = sdo.ItemName;
+
+        return armor;
     }
 }

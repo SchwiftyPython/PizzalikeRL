@@ -1,38 +1,38 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class Grave : Prop
 {
+    [Serializable]
     public struct Inscription
     {
-        public string deceasedName;
-        public string dateOfBirth;
-        public string dateOfDeath;
-        public string causeOfDeath;
-        public string epitaph;
+        public string DeceasedName;
+        public string DateOfBirth;
+        public string DateOfDeath;
+        public string CauseOfDeath;
+        public string Epitaph;
     }
 
     public Guid Id;
     public Inscription inscription;
 
-    public Grave(GameObject prefab, string name, string dateOfDeath, string dateOfBirth, string causeOfDeath) : base(prefab)
+    public Grave(string prefabKey, GameObject prefab, string name, string dateOfDeath, string dateOfBirth, string causeOfDeath) : base(prefabKey, prefab)
     {
         Id = Guid.NewGuid();
 
-        inscription.deceasedName = name;
-        inscription.dateOfBirth = dateOfBirth;
-        inscription.dateOfDeath = dateOfDeath;
-        inscription.causeOfDeath = causeOfDeath;
+        inscription.DeceasedName = name;
+        inscription.DateOfBirth = dateOfBirth;
+        inscription.DateOfDeath = dateOfDeath;
+        inscription.CauseOfDeath = causeOfDeath;
 
         //todo epitaph
 
         WorldData.Instance.Graves.Add(Id, this);
     }
 
-    public Grave(GameObject prefab) : base(prefab)
+    public Grave(string prefabKey, GameObject prefab) : base(prefabKey, prefab)
     {
         Id = Guid.NewGuid();
 
@@ -43,9 +43,25 @@ public class Grave : Prop
         WorldData.Instance.Graves.Add(Id, this);
     }
 
+    public Grave(GraveSdo sdo)
+    {
+        Id = sdo.Id;
+        inscription = sdo.Inscription;
+
+        var tiles = WorldData.Instance.GraveyardProps;
+
+        Prefab = tiles[Random.Range(0, tiles.Length)];
+        IsContainer = false;
+
+        if (!WorldData.Instance.Graves.ContainsKey(Id))
+        {
+            WorldData.Instance.Graves.Add(Id, this);
+        }
+    }
+
     private void GenerateInscription()
     {
-        inscription.deceasedName = NameStore.Instance.GenerateFullName();
+        inscription.DeceasedName = NameStore.Instance.GenerateFullName();
         //        inscription.dateOfBirth =
         //        inscription.dateOfDeath = 
         //        inscription.causeOfDeath = 

@@ -14,6 +14,8 @@ public class Armor : Item
     public string Type;
     public int Defense;
 
+    public Armor() { }
+
     public Armor(ItemTemplate template, ItemRarity rarity) : base(template, rarity)
     {
         Type = template.Type;

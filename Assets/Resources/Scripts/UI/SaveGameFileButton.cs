@@ -1,11 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using TMPro;
+using UnityEngine;
 
 public class SaveGameFileButton : MonoBehaviour
 {
     public void Pressed()
     {
-        var saveGameId = transform.GetComponentsInChildren<Text>(true)[1].text;
+        var saveGameId = transform.GetComponentsInChildren<TextMeshProUGUI>(true)[1].text;
 
         LoadWindowPopup.SaveGameSelected(saveGameId);
     }

@@ -151,9 +151,16 @@ public class Area
         return AreaTiles[(int) position.x, (int) position.y];
     }
 
+    public Tile GetTileById(string tileId)
+    {
+        var splitId = tileId.Split(' ');
+
+        return AreaTiles[int.Parse(splitId[0]), int.Parse(splitId[1])];
+    }
+
     private void PrepareSettlement()
     {
-        if (SettlementSection == null)
+        if (SettlementSection == null || Settlement == null)
         {
             return;
         }
@@ -275,18 +282,21 @@ public class Area
                         if (currentKey == SettlementPrefabStore.FieldKey)
                         {
                             //todo pick field type
-                            currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                            currentTile.PresentProp = new Field(FieldType.Wheat, currentKey.ToString(), prefab);
                         }
                         else if (currentKey == SettlementPrefabStore.GraveyardKey)
                         {
-                            currentTile.PresentProp = new Grave(prefab);
+                            currentTile.PresentProp = new Grave(currentKey.ToString(), prefab);
                         }
                         else if (currentKey == SettlementPrefabStore.TurretKey)
                         {
+                            continue;
+
                             var template = EntityTemplateLoader.GetEntityTemplate("turret");
 
                             var turret = new Entity(template, Settlement.Faction);
 
+                            //todo need to implement
                             var turretBarrel = new Weapon(ItemTemplateLoader.GetItemTemplate("TurretBarrel"),
                                 GlobalHelper.GetRandomEnumValue<ItemRarity>());
                             
@@ -296,7 +306,7 @@ public class Area
                         }
                         else
                         {
-                            currentTile.PresentProp = new Prop(prefab);
+                            currentTile.PresentProp = new Prop(currentKey.ToString(), prefab);
                         }
 
                         currentAreaColumn++;
@@ -332,14 +342,19 @@ public class Area
 
                 if (propType == SettlementPrefabStore.SettlementPropType.Field)
                 {
-                    currentTile.PresentProp = new Field(FieldType.Wheat, prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new Field(FieldType.Wheat, index.ToString(), prefabs[index]);
                 }
                 else if (propType == SettlementPrefabStore.SettlementPropType.Security)
                 {
+                    continue;
+
                     var template = EntityTemplateLoader.GetEntityTemplate("turret");
 
                     var turret = new Entity(template, Settlement.Faction);
 
+                    //todo need to implement
                     var turretBarrel = new Weapon(ItemTemplateLoader.GetItemTemplate("TurretBarrel"),
                         GlobalHelper.GetRandomEnumValue<ItemRarity>());
 
@@ -351,7 +366,9 @@ public class Area
                 }
                 else
                 {
-                    currentTile.PresentProp = new Prop(prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new Prop(index.ToString(), prefabs[index]);
                 }
             }
 
@@ -432,15 +449,15 @@ public class Area
                         if (currentKey == FieldKey)
                         {
                             //todo pick field type
-                            currentTile.PresentProp = new Field(FieldType.Wheat, prefab);
+                            currentTile.PresentProp = new Field(FieldType.Wheat, currentKey.ToString(), prefab);
                         }
                         else if (currentKey == GraveyardKey)
                         {
-                            currentTile.PresentProp = new Grave(prefab);
+                            currentTile.PresentProp = new Grave(currentKey.ToString(), prefab);
                         }
                         else
                         {
-                            currentTile.PresentProp = new Prop(prefab);
+                            currentTile.PresentProp = new Prop(currentKey.ToString(), prefab);
                         }
 
                         currentAreaColumn++;
@@ -475,15 +492,21 @@ public class Area
 
                 if (propType == MiscPropType.Field)
                 {
-                    currentTile.PresentProp = new Field(FieldType.Wheat, prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new Field(FieldType.Wheat, index.ToString(), prefabs[index]);
                 }
                 else if (propType == MiscPropType.Cheese)
                 {
-                    currentTile.PresentProp = new CheeseTree(prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new CheeseTree(index.ToString(), prefabs[index]);
                 }
                 else
                 {
-                    currentTile.PresentProp = new Prop(prefabs[Random.Range(0, prefabs.Count)]);
+                    var index = Random.Range(0, prefabs.Count);
+
+                    currentTile.PresentProp = new Prop(index.ToString(), prefabs[index]);
                 }
             }
 
@@ -646,6 +669,7 @@ public class Area
                 citizenToPlace.CurrentCell = ParentCell;
 
                 PresentEntities.Add(citizenToPlace);
+                Settlement.Citizens.Add(citizenToPlace);
             }
         }
     }

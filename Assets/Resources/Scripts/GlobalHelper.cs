@@ -136,4 +136,65 @@ public class GlobalHelper : MonoBehaviour
 
         return new Dice(numDice, numSides);
     }
+
+    public static T[] Convert2dArrayTo1dArray<T>(T[,] array2d)
+    {
+        var height = array2d.GetLength(0);
+        var width = array2d.GetLength(1);
+
+        var index = 0;
+        var single = new T[height * width];
+        for (var row = 0; row < height; row++)
+        {
+            for (var column = 0; column < width; column++)
+            {
+                single[index] = array2d[row, column];
+                index++;
+            }
+        }
+        return single;
+    }
+
+    public static T[,] Convert1dArrayTo2dArray<T>(int height, int width, T[] array1d)
+    {
+        var index = 0;
+        var multi = new T[height, width];
+        for (var row = 0; row < height; row++)
+        {
+            for (var column = 0; column < width; column++)
+            {
+                multi[row, column] = array1d[index];
+                index++;
+            }
+        }
+        return multi;
+    }
+
+    public static T[,] Convert1dArrayTo2dArraySquare<T>(T[] array1d)
+    {
+        var index = 0;
+        var sqrt = (int)Math.Sqrt(array1d.Length);
+        var multi = new T[sqrt, sqrt];
+        for (var row = 0; row < sqrt; row++)
+        {
+            for (var column = 0; column < sqrt; column++)
+            {
+                multi[row, column] = array1d[index];
+                index++;
+            }
+        }
+        return multi;
+    }
+
+    public static T NextEnum<T>(T src) where T : struct
+    {
+        if (!typeof(T).IsEnum)
+        {
+            throw new ArgumentException($"Argument {typeof(T).FullName} is not an Enum");
+        }
+
+        var arr = (T[])Enum.GetValues(src.GetType());
+        var j = Array.IndexOf(arr, src) + 1;
+        return arr.Length == j ? arr[0] : arr[j];
+    }
 }

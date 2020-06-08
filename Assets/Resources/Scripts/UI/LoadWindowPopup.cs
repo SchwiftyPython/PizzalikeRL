@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -82,7 +83,7 @@ public class LoadWindowPopup : MonoBehaviour
 
             saveGameButton.transform.SetParent(SaveGameButtonParent);
 
-            var textFields = saveGameButton.GetComponentsInChildren<Text>(true);
+            var textFields = saveGameButton.GetComponentsInChildren<TextMeshProUGUI>(true);
 
             textFields[0].text = _saveGameFileInfo[saveGameId];
             textFields[1].text = saveGameId;

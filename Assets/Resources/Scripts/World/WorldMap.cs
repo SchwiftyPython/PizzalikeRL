@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Pathfinding;
+using UnityEngine;
 
 public class WorldMap : MonoBehaviour
 {
@@ -28,6 +29,14 @@ public class WorldMap : MonoBehaviour
         
         DrawMap();
         PlacePlayer();
+    }
+
+    private void Update()
+    {
+        if (GameManager.Instance.Player == null || _playerSprite == null)
+        {
+            InstantiatePlayerSprite();
+        }
     }
 
     private void DrawMap()
@@ -62,7 +71,34 @@ public class WorldMap : MonoBehaviour
     {
         _playerSprite = GameManager.Instance.Player.GetSprite();
 
-        GameManager.Instance.Player.CurrentPosition =
-            new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
+        if (_playerSprite == null)
+        {
+            InstantiatePlayerSprite();
+        }
+        else
+        {
+            GameManager.Instance.Player.CurrentPosition =
+                new Vector3(GameManager.Instance.CurrentCell.X, GameManager.Instance.CurrentCell.Y);
+        }
+    }
+
+    public void InstantiatePlayerSprite()
+    {
+        var existingPlayerSprite = GameObject.FindWithTag("Player");
+
+        if (existingPlayerSprite != null)
+        {
+            Destroy(existingPlayerSprite);
+        }
+
+        GameManager.Instance.Player.CurrentCell = GameManager.Instance.CurrentCell;
+        GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentCell.Areas[1, 1];
+
+        _playerSprite = Instantiate(GameManager.Instance.Player.GetSpritePrefab(), GameManager.Instance.Player.CurrentPosition, Quaternion.identity);
+        _playerSprite.transform.SetParent(GameManager.Instance.transform);
+        _playerSprite.tag = "Player";
+        GameManager.Instance.Player.SetSprite(_playerSprite);
+        GameManager.Instance.Player.GetSprite().AddComponent<Seeker>();
+        GameManager.Instance.Player.GetSprite().AddComponent<AstarAI>();
     }
 }

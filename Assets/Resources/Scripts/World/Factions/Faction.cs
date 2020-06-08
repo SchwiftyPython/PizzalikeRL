@@ -57,9 +57,14 @@ public class Faction
         FactionReputation = sdo.FactionReputation;
         Citizens = new List<Entity>();
         EntitiesWithFluff = new List<Entity>();
-        Leader = WorldData.Instance.Entities[sdo.LeaderId];
         Name = sdo.Name;
         Population = sdo.Population;
+        Leader = EntitySdo.ConvertToEntity(sdo.Leader);
+
+        if (Leader == null)
+        {
+            Debug.Log($@"Leader missing for faction {Name}");
+        }
 
         foreach (var id in sdo.CitizenIds)
         {
@@ -82,6 +87,16 @@ public class Faction
 
             var entity = WorldData.Instance.Entities[id];
             EntitiesWithFluff.Add(entity);
+        }
+
+        if (Leader != null && !WorldData.Instance.Entities.ContainsKey(Leader.Id))
+        {
+            WorldData.Instance.Entities[Leader.Id] = Leader;
+        }
+
+        if (!EntitiesWithFluff.Contains(Leader))
+        {
+            EntitiesWithFluff.Add(Leader);
         }
     }
 
@@ -136,6 +151,11 @@ public class Faction
         Leader = chosenOne;
 
         EntitiesWithFluff.Add(Leader);
+
+        if (!WorldData.Instance.Entities.ContainsKey(Leader.Id))
+        {
+            WorldData.Instance.Entities.Add(Leader.Id, Leader);
+        }
     }
 
     private void PickPopulationType()
@@ -235,7 +255,7 @@ public class Faction
             WorldData.Instance.Entities.Add(citizen.Id, citizen);
         }
 
-        Debug.Log($"Number of Citizens: {Citizens.Count}");
+        //Debug.Log($"Number of Citizens: {Citizens.Count}");
 
         RemainingCitizensToPlace = new List<Entity>(Citizens);
     }

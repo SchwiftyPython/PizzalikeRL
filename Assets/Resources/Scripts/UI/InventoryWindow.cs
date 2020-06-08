@@ -109,6 +109,8 @@ public class InventoryWindow : MonoBehaviour, ISubscriber
         {
             string sectionName;
 
+            var weapon = item as Weapon;
+
             if (item.ItemCategory.Equals("weapon", StringComparison.OrdinalIgnoreCase))
             {
                 if (item.ItemType.IndexOf("grenade", StringComparison.OrdinalIgnoreCase) >= 0)

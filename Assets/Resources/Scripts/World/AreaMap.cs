@@ -109,6 +109,8 @@ public class AreaMap : MonoBehaviour
         var v = new Vinteger(_player.CurrentTile.X, _player.CurrentTile.Y);
         Fov.Refresh(v);
 
+        Messenger.Instance.LoadOnScreenMessages();
+
         AreaReady = true;
     }
    
@@ -137,9 +139,18 @@ public class AreaMap : MonoBehaviour
                 if (tile.PresentProp != null)
                 {
                     prefab = tile.PresentProp.Prefab;
-                    instance = Instantiate(prefab, new Vector2(currentColumn, currentRow), Quaternion.identity);
-                    tile.PresentProp.Texture = instance;
-                    instance.transform.SetParent(tile.TextureInstance.transform);
+
+                    if (prefab != null)
+                    {
+                        instance = Instantiate(prefab, new Vector2(currentColumn, currentRow), Quaternion.identity);
+                        tile.PresentProp.Texture = instance;
+                        instance.transform.SetParent(tile.TextureInstance.transform);
+                    }
+                    else
+                    {
+                        //should be able to recover from this
+                        Debug.Log($@"Prop {tile.PresentProp} does not have a prefab!");
+                    }
                 }
 
                 tile.FovTile = Instantiate(Fov.FovCenterPrefab, new Vector3(currentColumn, currentRow, -4), Quaternion.identity);
@@ -348,16 +359,19 @@ public class AreaMap : MonoBehaviour
 
                         if (building.Props[currentRow, currentColumn] != null)
                         {
-                            if (building.Props[currentRow, currentColumn].name.Contains("chest"))
-                            {
-                                _currentArea.AreaTiles[areaX, areaY].PresentProp =
-                                    new Chest(building.Props[currentRow, currentColumn]);
-                            }
-                            else
-                            {
-                                _currentArea.AreaTiles[areaX, areaY].PresentProp =
-                                    new Prop(building.Props[currentRow, currentColumn]);
-                            }
+                            _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                                building.Props[currentRow, currentColumn];
+
+                            // if (building.Props[currentRow, currentColumn].name.Contains("chest"))
+                            // {
+                            //     _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                            //         new Chest(building.Props[currentRow, currentColumn]);
+                            // }
+                            // else
+                            // {
+                            //     _currentArea.AreaTiles[areaX, areaY].PresentProp =
+                            //         new Prop(building.Props[currentRow, currentColumn]);
+                            // }
 
                             instance = Instantiate(_currentArea.AreaTiles[areaX, areaY].PresentProp.Prefab,
                                 new Vector2(areaY, areaX), Quaternion.identity);
@@ -596,11 +610,15 @@ public class AreaMap : MonoBehaviour
             _playerSprite.transform.position = GameManager.Instance.Player.CurrentPosition;
             
         }
-        _currentArea?.PresentEntities.Add(_player);
-        _player.CurrentArea = _currentArea;
 
         if (_currentArea != null)
         {
+            if (!_currentArea.PresentEntities.Contains(_player))
+            {
+                _currentArea.PresentEntities.Add(_player);
+            }
+
+            _player.CurrentArea = _currentArea;
             _player.CurrentCell = _currentArea.ParentCell;
             _currentArea.AreaTiles[_player.CurrentTile.X, _player.CurrentTile.Y]
                 .Visibility = Visibilities.Visible;
@@ -621,39 +639,62 @@ public class AreaMap : MonoBehaviour
                 continue;
             }
 
-            var placed = false;
-            var row = Random.Range(0, _currentArea.Height);
-            var column = Random.Range(0, _currentArea.Width);
-            while (!placed)
+            //if this doesn't work set a boolean for are first entered
+            if (e.CurrentPosition != Vector3.zero)
             {
-                if (!_currentArea.AreaTiles[row, column].GetBlocksMovement())
-                {
-                    var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector2(column, row), Quaternion.identity);
+                var npcSprite = Instantiate(e.GetSpritePrefab(), e.CurrentPosition, Quaternion.identity);
 
-                    npcSprite.AddComponent<EnemyController>();
-                    npcSprite.AddComponent<Seeker>();
-                    npcSprite.AddComponent<EntityInfo>();
+                npcSprite.AddComponent<EnemyController>();
+                npcSprite.AddComponent<Seeker>();
+                npcSprite.AddComponent<EntityInfo>();
 
-                    npcSprite.GetComponent<EnemyController>().Self = e;
+                npcSprite.GetComponent<EnemyController>().Self = e;
 
-                    npcSprite.transform.SetParent(NpcSpriteHolder.transform);
+                npcSprite.transform.SetParent(NpcSpriteHolder.transform);
 
-                    e.SetSprite(npcSprite);
-
-                    e.CurrentTile = _currentArea.AreaTiles[row, column];
-                    e.CurrentTile.SetPresentEntity(e);
-                    e.CurrentTile.SetBlocksMovement(true);
-                    e.CurrentPosition = new Vector3(row, column, 0f);
-
-                    _currentArea.TurnOrder.Enqueue(e);
-                    placed = true;
-                }
-                row = Random.Range(0, _currentArea.Height);
-                column = Random.Range(0, _currentArea.Width);
+                e.SetSprite(npcSprite);
             }
-            e.CurrentArea = _currentArea;
-            e.CurrentCell = _currentArea.ParentCell;
+            else
+            {
+                PlaceNpcRandomly(e);
+            }
         }
+    }
+
+    private void PlaceNpcRandomly(Entity e)
+    {
+        var placed = false;
+        var row = Random.Range(0, _currentArea.Height);
+        var column = Random.Range(0, _currentArea.Width);
+        while (!placed)
+        {
+            if (!_currentArea.AreaTiles[row, column].GetBlocksMovement())
+            {
+                var npcSprite = Instantiate(e.GetSpritePrefab(), new Vector2(column, row), Quaternion.identity);
+
+                npcSprite.AddComponent<EnemyController>();
+                npcSprite.AddComponent<Seeker>();
+                npcSprite.AddComponent<EntityInfo>();
+
+                npcSprite.GetComponent<EnemyController>().Self = e;
+
+                npcSprite.transform.SetParent(NpcSpriteHolder.transform);
+
+                e.SetSprite(npcSprite);
+
+                e.CurrentTile = _currentArea.AreaTiles[row, column];
+                e.CurrentTile.SetPresentEntity(e);
+                e.CurrentTile.SetBlocksMovement(true);
+                e.CurrentPosition = new Vector3(row, column, 0f);
+
+                _currentArea.TurnOrder.Enqueue(e);
+                placed = true;
+            }
+            row = Random.Range(0, _currentArea.Height);
+            column = Random.Range(0, _currentArea.Width);
+        }
+        e.CurrentArea = _currentArea;
+        e.CurrentCell = _currentArea.ParentCell;
     }
 
     private void RemoveAllNpcs()

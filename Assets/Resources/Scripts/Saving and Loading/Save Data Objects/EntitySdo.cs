@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
 [Serializable]
 public class EntitySdo
@@ -48,7 +50,8 @@ public class EntitySdo
 
     public EntityFluff Fluff { get; set; }
 
-    public Stack<Goal> Goals;
+    //todo may store this to kick off ai on load. May not need to store anything at all as it's not like the player knows what the ai is thinking.
+    public string ParentGoalName; 
 
     public string CurrentCellId;
 
@@ -67,7 +70,11 @@ public class EntitySdo
     public Guid BirthFatherId;
 
     public  List<Guid> ChildrenIds;
- 
+
+    public Reputation Reputation;
+
+    public List<string> AbilityNames;
+
     public static SaveGameData.SaveData.SerializableEntitiesDictionary ConvertToEntitySdos(List<Entity> entities)
     {
         var sdos = new SaveGameData.SaveData.SerializableEntitiesDictionary();
@@ -88,41 +95,41 @@ public class EntitySdo
 
     public static EntitySdo ConvertToEntitySdo(Entity entity)
     {
-        var sdo =  new EntitySdo
-        {
-            Id = entity.Id,
-            IsPlayer = entity.IsPlayer(),
-            PrefabPath = entity.PrefabPath,
-            FactionName = entity.Faction?.Name,
-            TotalBodyPartCoverage = entity.TotalBodyPartCoverage,
-            CurrentPosition = entity.CurrentPosition,
-            Level = entity.Level,
-            Xp = entity.Xp,
-            Strength = entity.Strength,
-            Agility = entity.Agility,
-            Constitution = entity.Constitution,
-            Intelligence = entity.Intelligence,
-            MaxHp = entity.MaxHp,
-            CurrentHp = entity.CurrentHp,
-            Speed = entity.Speed,
-            Defense = entity.Defense,
-            InventoryItemIds = new List<Guid>(),
-            EquippedIds = new Dictionary<Entity.EquipmentSlot, Guid>(),
-            Body = entity.Body,
-            EntityType = entity.EntityType,
-            Classification = entity.Classification,
-            Fluff = entity.Fluff,
-            Goals = entity.Goals,
-            CurrentCellId = entity.CurrentCell?.Id,
-            CurrentAreaId = entity.CurrentArea?.Id,
-            CurrentTileId = entity.CurrentTile?.Id,
-            Mobile = entity.Mobile,
-            ToppingDropped = ToppingSdo.ConvertToToppingSdo(entity.ToppingDropped),
-            ToppingCounts = entity.ToppingCounts,
-            BirthMotherId = entity.BirthMother.Id,
-            BirthFatherId = entity.BirthFather.Id,
-            ChildrenIds = new List<Guid>()
-        };
+        EntitySdo sdo;
+        sdo = new EntitySdo();
+        sdo.Id = entity.Id;
+        sdo.IsPlayer = entity.IsPlayer();
+        sdo.PrefabPath = entity.PrefabPath;
+        sdo.FactionName = entity.Faction?.Name;
+        sdo.TotalBodyPartCoverage = entity.TotalBodyPartCoverage;
+        sdo.CurrentPosition = entity.CurrentPosition;
+        sdo.Level = entity.Level;
+        sdo.Xp = entity.Xp;
+        sdo.Strength = entity.Strength;
+        sdo.Agility = entity.Agility;
+        sdo.Constitution = entity.Constitution;
+        sdo.Intelligence = entity.Intelligence;
+        sdo.MaxHp = entity.MaxHp;
+        sdo.CurrentHp = entity.CurrentHp;
+        sdo.Speed = entity.Speed;
+        sdo.Defense = entity.Defense;
+        sdo.InventoryItemIds = new List<Guid>();
+        sdo.EquippedIds = new Dictionary<Entity.EquipmentSlot, Guid>();
+        sdo.Body = entity.Body;
+        sdo.EntityType = entity.EntityType;
+        sdo.Classification = entity.Classification;
+        sdo.Fluff = entity.Fluff;
+        sdo.CurrentCellId = entity.CurrentCell?.Id;
+        sdo.CurrentAreaId = entity.CurrentArea?.Id;
+        sdo.CurrentTileId = entity.CurrentTile?.Id;
+        sdo.Mobile = entity.Mobile;
+        sdo.ToppingDropped = ToppingSdo.ConvertToToppingSdo(entity.ToppingDropped);
+        sdo.ToppingCounts = entity.ToppingCounts;
+        sdo.BirthMotherId = entity.BirthMother?.Id ?? Guid.Empty;
+        sdo.BirthFatherId = entity.BirthFather?.Id ?? Guid.Empty;
+        sdo.ChildrenIds = new List<Guid>();
+        sdo.Reputation = entity.EntityReputation;
+        sdo.AbilityNames = new List<string>();
 
         foreach (var itemId in entity.Inventory.Keys)
         {
@@ -131,12 +138,23 @@ public class EntitySdo
 
         foreach (var slot in entity.Equipped.Keys)
         {
-           sdo.EquippedIds.Add(new KeyValuePair<Entity.EquipmentSlot, Guid>(slot, entity.Equipped[slot].Id));
+           sdo.EquippedIds.Add(new KeyValuePair<Entity.EquipmentSlot, Guid>(slot, entity.Equipped[slot]?.Id ?? Guid.Empty));
         }
 
-        foreach (var child in entity.Children)
+        if (entity.Children != null && entity.Children.Count > 0)
         {
-            sdo.ChildrenIds.Add(child.Id);
+            foreach (var child in entity.Children)
+            {
+                sdo.ChildrenIds.Add(child.Id);
+            }
+        }
+
+        if (entity.Abilities != null && entity.Abilities.Count > 0)
+        {
+            foreach (var abilityName in entity.Abilities.Keys)
+            {
+                sdo.AbilityNames.Add(abilityName);
+            }
         }
 
         return sdo;
@@ -149,56 +167,8 @@ public class EntitySdo
 
         foreach (var entitySdo in entitySdos)
         {
-            var entity = new Entity(entitySdo.Key, entitySdo.Value.PrefabPath, entitySdo.Value.IsPlayer)
-            {
-                PrefabPath = entitySdo.Value.PrefabPath,
-                TotalBodyPartCoverage = entitySdo.Value.TotalBodyPartCoverage,
-                CurrentPosition = entitySdo.Value.CurrentPosition,
-                Level = entitySdo.Value.Level,
-                Xp = entitySdo.Value.Xp,
-                Strength = entitySdo.Value.Strength,
-                Agility = entitySdo.Value.Agility,
-                Constitution = entitySdo.Value.Constitution,
-                Intelligence = entitySdo.Value.Intelligence,
-                MaxHp = entitySdo.Value.MaxHp,
-                CurrentHp = entitySdo.Value.CurrentHp,
-                Speed = entitySdo.Value.Speed,
-                Defense = entitySdo.Value.Defense,
-                Body = entitySdo.Value.Body,
-                EntityType = entitySdo.Value.EntityType,
-                Classification = entitySdo.Value.Classification,
-                Fluff = entitySdo.Value.Fluff,
-                Goals = entitySdo.Value.Goals,
-                Mobile = entitySdo.Value.Mobile,
-                CurrentCell = WorldData.Instance.MapDictionary[entitySdo.Value.CurrentCellId],
-                ToppingDropped = ToppingSdo.ConvertToTopping(entitySdo.Value.ToppingDropped),
-                ToppingCounts = entitySdo.Value.ToppingCounts
-            };
-            
-            foreach (var itemId in entitySdo.Value.InventoryItemIds)
-            {
-                var item = WorldData.Instance.Items[itemId];
-                entity.Inventory.Add(item.Id, item);
-            }
+            var entity = ConvertToEntity(entitySdo.Value);
 
-            foreach (var equipped in entitySdo.Value.EquippedIds)
-            {
-                if (equipped.Value == Guid.Empty)
-                {
-                    continue;
-                }
-
-                var item = entity.Inventory[equipped.Value];
-
-                if (entity.Equipped.ContainsKey(equipped.Key))
-                {
-                    entity.Equipped[equipped.Key] = item;
-                }
-                else
-                {
-                   entity.Equipped.Add(equipped.Key, item);
-                }
-            }
             entities.Add(entity.Id, entity);
         }
 
@@ -225,5 +195,92 @@ public class EntitySdo
             }
         }
         return entities;
+    }
+
+    public static Entity ConvertToEntity(EntitySdo entitySdo)
+    {
+        Entity entity;
+        entity = new Entity(entitySdo.Id, entitySdo.PrefabPath, entitySdo.IsPlayer);
+        entity.PrefabPath = entitySdo.PrefabPath;
+        entity.TotalBodyPartCoverage = entitySdo.TotalBodyPartCoverage;
+        entity.Level = entitySdo.Level;
+        entity.Xp = entitySdo.Xp;
+        entity.Strength = entitySdo.Strength;
+        entity.Agility = entitySdo.Agility;
+        entity.Constitution = entitySdo.Constitution;
+        entity.Intelligence = entitySdo.Intelligence;
+        entity.MaxHp = entitySdo.MaxHp;
+        entity.CurrentHp = entitySdo.CurrentHp;
+        entity.Speed = entitySdo.Speed;
+        entity.Defense = entitySdo.Defense;
+        entity.Body = entitySdo.Body;
+        entity.EntityType = entitySdo.EntityType;
+        entity.Classification = entitySdo.Classification;
+        entity.Fluff = entitySdo.Fluff;
+        entity.Mobile = entitySdo.Mobile;
+        entity.ToppingDropped = ToppingSdo.ConvertToTopping(entitySdo.ToppingDropped);
+        entity.ToppingCounts = entitySdo.ToppingCounts;
+        entity.EntityReputation = entitySdo.Reputation;
+        entity.Abilities = new Entity.AbilityDictionary();
+
+        if (string.IsNullOrEmpty(entitySdo.CurrentCellId))
+        {
+            entity.CurrentCell = null;
+            entity.CurrentArea = null;
+            entity.CurrentTile = null;
+        }
+        else
+        {
+            entity.CurrentCell = WorldData.Instance.MapDictionary[entitySdo.CurrentCellId];
+            entity.CurrentArea = entity.CurrentCell.GetAreaById(entitySdo.CurrentAreaId);
+            entity.CurrentTile = entity.CurrentArea?.GetTileById(entitySdo.CurrentTileId);
+        }
+
+        entity.CurrentPosition = new Vector3(entitySdo.CurrentPosition.Y, entitySdo.CurrentPosition.X,
+            entitySdo.CurrentPosition.Z);
+
+        foreach (var itemId in entitySdo.InventoryItemIds)
+        {
+            if (itemId == Guid.Empty)
+            {
+                continue;
+            }
+
+            var item = WorldData.Instance.Items[itemId];
+            entity.Inventory.Add(item.Id, item);
+        }
+
+        foreach (var equipped in entitySdo.EquippedIds)
+        {
+            if (equipped.Value == Guid.Empty)
+            {
+                continue;
+            }
+
+            var item = WorldData.Instance.Items[equipped.Value];
+
+            if (entity.Equipped.ContainsKey(equipped.Key))
+            {
+                entity.Equipped[equipped.Key] = item;
+            }
+            else
+            {
+                entity.Equipped.Add(equipped.Key, item);
+            }
+        }
+
+        if (entitySdo.AbilityNames != null && entitySdo.AbilityNames.Count > 0)
+        {
+            foreach (var abilityName in entitySdo.AbilityNames)
+            {
+                var template = AbilityStore.GetAbilityByName(abilityName);
+
+                var ability = AbilityStore.CreateAbility(template, entity);
+
+                entity.Abilities.Add(abilityName, ability);
+            }
+        }
+
+        return entity;
     }
 }

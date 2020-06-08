@@ -16,13 +16,11 @@ public class SettlementSdo
 
     public List<Guid> CitizenIds;
 
-    public List<BuildingSdo> BuildingSdos;
-
     public string Name;
 
     public SettlementSize Size;
 
-    public List<LotSdo> LotSdos;
+    public List<SettlementSectionSdo> SectionSdos;
 
     public string FactionName;
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class TileSdo
 
     public Guid PresentEntityId;
 
-    //public Prop PresentProp;
+    public PropSdo PresentPropSdo; 
 
     public List<Guid> PresentItemIds;
 
@@ -48,7 +49,7 @@ public class TileSdo
 
     public static TileSdo ConvertToTileSdo(Tile tile)
     {
-        var sdo =  new TileSdo
+        var sdo = new TileSdo
         {
             Visibility = tile.Visibility,
             PresentEntityId = tile.GetPresentEntity() != null
@@ -65,9 +66,19 @@ public class TileSdo
             LotSdo = LotSdo.ConvertToLotSdo(tile.Lot)
         };
 
+        if (tile.GetPresentEntity() != null && !WorldData.Instance.Entities.ContainsKey(tile.GetPresentEntity().Id))
+        {
+            WorldData.Instance.Entities.Add(tile.GetPresentEntity().Id, tile.GetPresentEntity());
+        }
+
         foreach (var item in tile.PresentItems)
         {
             sdo.PresentItemIds.Add(item.Id);
+        }
+
+        if (tile.PresentProp != null)
+        {
+            sdo.PresentPropSdo = ConvertPropForSaving(tile.PresentProp);
         }
 
         return sdo;
@@ -90,15 +101,17 @@ public class TileSdo
     public static Tile ConvertToAreaTile(TileSdo sdo, BiomeType biomeType)
     {
         var tile = new Tile();
-        var id = sdo.Id.Split(' ');
+        tile.Id = sdo.Id;
 
-        tile.X = Convert.ToInt32(id[0]);
-        tile.Y = Convert.ToInt32(id[1]);
+        var indices = sdo.Id.Split(' ');
+
+        tile.X = Convert.ToInt32(indices[0]);
+        tile.Y = Convert.ToInt32(indices[1]);
         tile.PrefabName = sdo.PrefabName;
         tile.SetPrefabTileTexture(WorldData.Instance.GetTileTextureByNameRarityAndBiome(sdo.PrefabName, biomeType));
         tile.Visibility = sdo.Visibility;
 
-        if (sdo.PresentEntityId != Guid.Empty)
+        if (sdo.PresentEntityId != Guid.Empty && WorldData.Instance.Entities.ContainsKey(sdo.PresentEntityId))
         {
             tile.SetPresentEntity(WorldData.Instance.Entities[sdo.PresentEntityId]);
             tile.GetPresentEntity().CurrentTile = tile;
@@ -117,6 +130,73 @@ public class TileSdo
         tile.GridPosition = sdo.GridPosition;
         tile.Revealed = sdo.Revealed;
 
+        if (sdo.PresentPropSdo != null)
+        {
+            tile.PresentProp = ConvertPropForPlaying(sdo.PresentPropSdo);
+        }
+
         return tile;
+    }
+
+    private static PropSdo ConvertPropForSaving(Prop prop)
+    {
+        var propType = prop.GetType();
+
+        PropSdo sdo = null;
+
+        if (propType == typeof(CheeseTree))
+        {
+            sdo = new CheeseTreeSdo();
+        }
+        else if (propType == typeof(Chest))
+        {
+            sdo = new ChestSdo((Chest) prop);
+        }
+        else if (propType == typeof(Field))
+        {
+            sdo = new FieldSdo((Field) prop);
+        }
+        else if (propType == typeof(Grave))
+        {
+            sdo = new GraveSdo((Grave) prop);
+        }
+        else if (propType == typeof(Furniture))
+        {
+            sdo = new FurnitureSdo((Furniture) prop);
+        }
+
+        return sdo;
+    }
+
+    private static Prop ConvertPropForPlaying(PropSdo sdo)
+    {
+        var sdoType = sdo.GetType();
+
+        if (sdoType == typeof(CheeseTreeSdo))
+        {
+            return new CheeseTree();
+        }
+
+        if (sdoType == typeof(ChestSdo))
+        {
+            return new Chest((ChestSdo) sdo);
+        }
+
+        if (sdoType == typeof(FieldSdo))
+        {
+            return new Field((FieldSdo) sdo);
+        }
+
+        if (sdoType == typeof(GraveSdo))
+        {
+            return new Grave((GraveSdo) sdo);
+        }
+
+        if (sdoType == typeof(FurnitureSdo))
+        {
+            return new Furniture((FurnitureSdo) sdo);
+        }
+
+        return null;
     }
 }

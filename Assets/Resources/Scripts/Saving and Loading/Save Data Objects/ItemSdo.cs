@@ -11,6 +11,8 @@ public class ItemSdo
 
     public string ItemCategory;
 
+    public string ItemName;
+
     public Guid Id;
 
     public Dice ItemDice;
@@ -24,7 +26,8 @@ public class ItemSdo
             ItemType = item.ItemType,
             ItemCategory = item.ItemCategory,
             Id = item.Id,
-            ItemDice = item.ItemDice
+            ItemDice = item.ItemDice,
+            ItemName = item.ItemName
         };
     }
 
@@ -37,8 +40,10 @@ public class ItemSdo
             ItemType = sdo.ItemType,
             ItemCategory = sdo.ItemCategory,
             Id = sdo.Id,
-            ItemDice = sdo.ItemDice
-        };
+            ItemDice = sdo.ItemDice,
+            WorldPrefab = ItemStore.Instance.GetWorldPrefabForItemByType(sdo.ItemType),
+            ItemName = sdo.ItemName
+    };
         return item;
     }
 }

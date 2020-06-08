@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BuildingPrefabStore : MonoBehaviour
 {
@@ -322,22 +324,50 @@ public class BuildingPrefabStore : MonoBehaviour
         return _allFurniture.ElementAt(Random.Range(0, _allFurniture.Count)).Value;
     }
 
-    public static GameObject GetRandomBasicFurniturePrefab()
+    public static KeyValuePair<string, GameObject> GetRandomBasicFurniturePrefab()
     {
         var prefabKey = BasicRoomFurnitureKeys[Random.Range(0, BasicRoomFurnitureKeys.Count)];
 
-        return _allFurniture[prefabKey];
+        return new KeyValuePair<string, GameObject>(prefabKey, _allFurniture[prefabKey]);
     }
 
     public static Chest GetChest()
     {
         var prefab = GetChestPrefab();
 
-        return new Chest(prefab);
+        return new Chest("0", prefab);
     }
 
     public static GameObject GetChestPrefab()
     {
         return _containers.ElementAt(Random.Range(0, _containers.Count)).Value;
+    }
+
+    public static GameObject GetPrefabByName(string name)
+    {
+        foreach (var prefab in _allFurniture)
+        {
+            if (prefab.Key.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                return prefab.Value;
+            }
+        }
+
+        foreach (var prefab in _containers)
+        {
+            if (prefab.Key.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                return prefab.Value;
+            }
+        }
+
+        if (name.Equals("pizza oven", StringComparison.OrdinalIgnoreCase))
+        {
+            return WorldData.Instance.PizzaOven;
+        }
+
+        Debug.Log($@"Prefab not found by name: {name}");
+
+        return null;
     }
 }

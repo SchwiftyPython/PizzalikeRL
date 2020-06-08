@@ -15,6 +15,9 @@ public class Weapon : Item
     public int Range;
     public bool IsRanged;
     public IAreaOfEffect AOE;
+    public AoeType? AOEType;
+
+    public Weapon() { }
 
     public Weapon(ItemTemplate template, ItemRarity rarity) : base(template, rarity)
     {
@@ -25,8 +28,12 @@ public class Weapon : Item
 
         //todo determine aoe by properties
         //Example gas property = cloud aoe
-        AOE = AOEStore.GetAOEByType(AoeType.Blast);
-        
+        if (template.Properties != null && template.Properties.Contains("aoe"))
+        {
+            AOE = AOEStore.GetAOEByType(AoeType.Blast);
+            AOEType = AoeType.Blast;
+        }
+
         IsRanged = Range > 1;
     }
 

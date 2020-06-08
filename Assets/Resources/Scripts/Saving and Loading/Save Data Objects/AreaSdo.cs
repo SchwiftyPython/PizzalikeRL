@@ -68,21 +68,21 @@ public class AreaSdo
 
     public static AreaSdo ConvertAreaForSaving(Area area)
     {
-        var tempSdo = new AreaSdo
-        {
-            PresentEntityIds = new List<Guid>(),
-            AreaTiles = area.AreaBuilt()
-                ? TileSdo.ConvertAreaTilesForSaving(area.AreaTiles)
-                : null,
-            BiomeType = area.BiomeType,
-            PresentFactionNames = new List<string>(),
-            TurnOrderIds = new Queue<Guid>(),
-            X = area.X,
-            Y = area.Y,
-            ParentCellId = area.ParentCell.Id,
-            SettlementSdo = area.Settlement.GetSettlementSdo(),
-            SettlementSectionSdo = new SettlementSectionSdo(area.SettlementSection)
-        };
+        AreaSdo tempSdo;
+        tempSdo = new AreaSdo();
+        tempSdo.PresentEntityIds = new List<Guid>();
+        tempSdo.AreaTiles = area.AreaBuilt()
+            ? TileSdo.ConvertAreaTilesForSaving(area.AreaTiles)
+            : null;
+        tempSdo.BiomeType = area.BiomeType;
+        tempSdo.PresentFactionNames = new List<string>();
+        tempSdo.TurnOrderIds = new Queue<Guid>();
+        tempSdo.X = area.X;
+        tempSdo.Y = area.Y;
+        tempSdo.ParentCellId = area.ParentCell.Id;
+        tempSdo.SettlementSdo = area.Settlement?.GetSettlementSdo();
+        tempSdo.SettlementSectionSdo =
+            area.SettlementSection != null ? new SettlementSectionSdo(area.SettlementSection) : null;
 
         if (area.PresentEntities != null)
         {
@@ -100,6 +100,14 @@ public class AreaSdo
             }
         }
 
+        if (area.PresentFactions != null)
+        {
+            foreach (var faction in area.PresentFactions)
+            {
+                tempSdo.PresentFactionNames.Add(faction.Name);
+            }
+        }
+
         return tempSdo;
     }
 
@@ -113,13 +121,15 @@ public class AreaSdo
             area.X = sdo.X;
             area.Y = sdo.Y;
             area.PresentEntities = new List<Entity>();
+            area.BiomeType = sdo.BiomeType;
             area.AreaTiles = sdo.AreaTiles != null
                 ? TileSdo.ConvertToAreaTiles(sdo.AreaTiles, area.Height, area.Width, area.BiomeType)
                 : null;
-            area.BiomeType = sdo.BiomeType;
             area.PresentFactions = new List<Faction>();
             area.TurnOrder = new Queue<Entity>();
             area.ParentCell = WorldData.Instance.MapDictionary[sdo.ParentCellId];
+            area.Settlement = new Settlement(sdo.SettlementSdo);
+            area.SettlementSection = sdo.SettlementSectionSdo != null ? new SettlementSection(sdo.SettlementSectionSdo) : null;
 
             if (sdo.PresentEntityIds.Count > 0)
             {
@@ -136,6 +146,15 @@ public class AreaSdo
                     area.TurnOrder.Enqueue(WorldData.Instance.Entities[id]);
                 }
             }
+
+            if (sdo.PresentFactionNames.Count > 0)
+            {
+                foreach (var name in sdo.PresentFactionNames)
+                {
+                    area.PresentFactions.Add(WorldData.Instance.Factions[name]);
+                }
+            }
+
             areas[area.X, area.Y] = area;
         }
         return areas;
