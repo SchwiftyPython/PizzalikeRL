@@ -64,9 +64,9 @@ public class Tile
 
     public List<Item> PresentItems
     {
-        get { return _presentItems; }
+        get => _presentItems;
 
-        set { _presentItems = value; }
+        set => _presentItems = value;
     }
 
     public Rarities Rarity
@@ -154,6 +154,24 @@ public class Tile
     public bool IsWall()
     {
         return PresentWallTile != null;
+    }
+
+    public void AddItemToTile()
+    {
+
+    }
+
+    public void RemoveItemFromTile(Item item)
+    {
+        if (PresentItems != null && PresentItems.Count > 0 && PresentItems.Contains(item))
+        {
+            PresentItems.Remove(item);
+        }
+
+        if (PresentProp != null && PresentProp.IsContainer)
+        {
+            ((Chest)PresentProp).RemoveItem(item);
+        }
     }
 
     private void SetTileVisibility(Visibilities visibility)

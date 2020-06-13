@@ -9,7 +9,9 @@ public class DroppedItemButton : MonoBehaviour
     //</Summary>
     public void Pressed()
     {
-        Guid.TryParse(transform.GetComponentsInChildren<TextMeshProUGUI>(true)[2].text, out var itemId);
+        OpenItemActionMenu();
+
+        /*Guid.TryParse(transform.GetComponentsInChildren<TextMeshProUGUI>(true)[2].text, out var itemId);
 
         var player = GameManager.Instance.Player;
         var selectedTile = player.CurrentTile;
@@ -29,6 +31,15 @@ public class DroppedItemButton : MonoBehaviour
             Destroy(item.WorldSprite);
         }
         
-        EventMediator.Instance.Broadcast("GetItem", this, selectedTile);
+        EventMediator.Instance.Broadcast("GetItem", this, selectedTile);*/
+    }
+
+    private void OpenItemActionMenu()
+    {
+        Guid.TryParse(transform.GetComponentsInChildren<TextMeshProUGUI>(true)[2].text, out var itemId);
+
+        var item = WorldData.Instance.Items[itemId];
+
+        EventMediator.Instance.Broadcast(GlobalHelper.DroppedItemSelectedEventName, this, item);
     }
 }
