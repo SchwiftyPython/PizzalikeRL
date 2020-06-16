@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -36,6 +39,7 @@ public class GlobalHelper : MonoBehaviour
     public const string DroppedItemPopupEventName = "DroppedItemPopup";
     public const string GetItemEventName = "GetItem";
     public const string TakeAllEventName = "TakeAll";
+    public const string EquipmentSlotSelectedEventName = "EquipmentSlotSelected";
 
     #endregion EventNames
 
@@ -119,6 +123,18 @@ public class GlobalHelper : MonoBehaviour
         var values = Enum.GetValues(typeof(T));
 
         return (T)values.GetValue(Random.Range(0, values.Length));
+    }
+
+    public static string GetEnumDescription(Enum value)
+    {
+        return
+            value
+                .GetType()
+                .GetMember(value.ToString())
+                .FirstOrDefault()
+                ?.GetCustomAttribute<DescriptionAttribute>()
+                ?.Description
+            ?? value.ToString();
     }
 
     public static Vector2 GetVectorForDirection(GoalDirection direction)

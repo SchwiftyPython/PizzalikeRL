@@ -1,9 +1,14 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemActionWindow : MonoBehaviour, ISubscriber
 {
+    private readonly Color _equipmentSlotPanelSolid = new Color(107, 107, 107, 255);
+    private readonly Color _equipmentSlotPanelInvisible = new Color(107, 107, 107, 0);
+
     private Item _selectedItem;
 
     private List<GameObject> _allButtons;
@@ -17,9 +22,12 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
     }
 
     public GameObject GetButton;
-    public GameObject EquipButton; //todo for items that can be equipped in multiple spots (R or L hand for example), make an equip button for each slot?
+    public GameObject EquipButton; 
     public GameObject LookButton;
     public GameObject ReadButton;
+
+    public GameObject EquipmentSlotPanel;
+    public GameObject EquipmentSlotPrefab;
 
     private void Start()
     {
@@ -47,6 +55,7 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
         };
 
         gameObject.SetActive(false);
+        EquipmentSlotPanel.SetActive(false);
     }
 
     private void Update()
@@ -62,6 +71,7 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
 
     public void Hide()
     {
+        EquipmentSlotPanel.SetActive(false);
         gameObject.SetActive(false);
         GameManager.Instance.RemoveActiveWindow(gameObject);
     }
@@ -80,10 +90,32 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
 
     public void OnEquipButtonClicked()
     {
-        var player = GameManager.Instance.Player;
+        PopulateEquipmentSlotPanel();
+        EquipmentSlotPanel.SetActive(true);
+    }
 
-        player.EquipItem(_selectedItem, _selectedItem.EquipmentSlotType);
-        Hide();
+    private void PopulateEquipmentSlotPanel()
+    {
+        GlobalHelper.DestroyAllChildren(EquipmentSlotPanel);
+
+        foreach (var slot in _selectedItem.EquipmentSlots)
+        {
+            var equipmentSlotButton = Instantiate(EquipmentSlotPrefab, new Vector3(0, 0), Quaternion.identity);
+            equipmentSlotButton.transform.SetParent(EquipmentSlotPanel.transform);
+
+            var script = equipmentSlotButton.GetComponent<EquipmentSlotButton>();
+
+            script.EquipmentSlot = slot;
+            script.ItemToEquip = _selectedItem;
+
+            equipmentSlotButton.GetComponentInChildren<TextMeshProUGUI>().text = GlobalHelper.GetEnumDescription(slot);
+        }
+
+        EquipmentSlotPanel.GetComponentInChildren<Image>().color = _selectedItem.EquipmentSlots.Count > 1
+            ? _equipmentSlotPanelSolid
+            : _equipmentSlotPanelInvisible;
+
+        EventMediator.Instance.SubscribeToEvent(GlobalHelper.EquipmentSlotSelectedEventName, this);
     }
 
     private void OnItemSelected(Item item, PopupContext context)
@@ -99,6 +131,7 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
         LoadButtons(context == PopupContext.DroppedItem ? _droppedItemButtons : _menuItemButtons);
 
         gameObject.SetActive(true);
+        EquipmentSlotPanel.SetActive(false);
         GameManager.Instance.AddActiveWindow(gameObject);
     }
 
@@ -112,14 +145,13 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
 
     private void OnDestroy()
     {
-        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.DroppedItemSelectedEventName, this);
-        EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.ItemSelectedEventName, this);
+        EventMediator.Instance.UnsubscribeFromAllEvents(this);
         GameManager.Instance.RemoveActiveWindow(gameObject);
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
-        if (eventName.Equals(GlobalHelper.DroppedItemSelectedEventName))
+        if (eventName.Equals(GlobalHelper.DroppedItemSelectedEventName, StringComparison.OrdinalIgnoreCase))
         {
             if (!(parameter is Item item))
             {
@@ -129,7 +161,7 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
             OnItemSelected(item, PopupContext.DroppedItem);
         }
 
-        if (eventName.Equals(GlobalHelper.ItemSelectedEventName))
+        if (eventName.Equals(GlobalHelper.ItemSelectedEventName, StringComparison.OrdinalIgnoreCase))
         {
             if (!(parameter is Item item))
             {
@@ -137,6 +169,12 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
             }
 
             OnItemSelected(item, PopupContext.MenuItem);
+        }
+
+        if (eventName.Equals(GlobalHelper.EquipmentSlotSelectedEventName, StringComparison.OrdinalIgnoreCase))
+        {
+            EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EquipmentSlotSelectedEventName, this);
+            Hide();
         }
     }
 }

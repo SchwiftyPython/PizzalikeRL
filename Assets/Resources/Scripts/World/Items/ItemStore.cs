@@ -77,6 +77,18 @@ public class ItemStore : MonoBehaviour
     private Dictionary<ItemPrefabKeys, GameObject> _itemPrefabsWorldView;
     private List<string> _baseItemTemplateTypes;
 
+    // many of these are 1:1 now, but that can change
+    private readonly Dictionary<EquipmentSlotType, List<Entity.EquipmentSlot>> _slotDictionary = new Dictionary<EquipmentSlotType, List<Entity.EquipmentSlot>>
+    {
+        {EquipmentSlotType.Head, new List<Entity.EquipmentSlot> {Entity.EquipmentSlot.Head}},
+        {EquipmentSlotType.Body, new List<Entity.EquipmentSlot> {Entity.EquipmentSlot.Body}},
+        {EquipmentSlotType.Hand, new List<Entity.EquipmentSlot> {Entity.EquipmentSlot.LeftHandOne, Entity.EquipmentSlot.RightHandOne}},
+        {EquipmentSlotType.Missile, new List<Entity.EquipmentSlot> {Entity.EquipmentSlot.MissileWeaponOne}},
+        {EquipmentSlotType.Thrown, new List<Entity.EquipmentSlot> {Entity.EquipmentSlot.Thrown}},
+        {EquipmentSlotType.Special, new List<Entity.EquipmentSlot> {Entity.EquipmentSlot.Special}},
+        {EquipmentSlotType.Consumable, new List<Entity.EquipmentSlot> {Entity.EquipmentSlot.Consumable}},
+    };
+
     public static ItemStore Instance;
 
     private void Awake()
@@ -201,7 +213,9 @@ public class ItemStore : MonoBehaviour
         {
             var currentTemplate = ItemTemplateLoader.GetItemTemplate(templateType);
 
-            if (currentTemplate.EquipmentSlotType == slot)
+            var validSlots = GetEquipmentSlotsForSlotType(currentTemplate.EquipmentSlotType);
+
+            if (validSlots.Contains(slot))
             {
                 templatesForSlot.Add(currentTemplate);
             }
@@ -231,7 +245,6 @@ public class ItemStore : MonoBehaviour
         }
 
         return GetItemFromTemplate(itemTemplate, rarity);
-
     }
 
     public Weapon GetRandomRangedWeapon(ItemRarity rarityCap = ItemRarity.Common)
@@ -243,7 +256,8 @@ public class ItemStore : MonoBehaviour
             var currentTemplate = ItemTemplateLoader.GetItemTemplate(templateType);
 
             if (currentTemplate.Category == "weapon" &&
-                currentTemplate.EquipmentSlotType == Entity.EquipmentSlot.MissileWeaponOne)
+                currentTemplate.EquipmentSlotType == EquipmentSlotType.Missile ||
+                currentTemplate.EquipmentSlotType == EquipmentSlotType.Thrown)
             {
                 rangedTemplates.Add(currentTemplate);
             }
@@ -256,7 +270,7 @@ public class ItemStore : MonoBehaviour
             return new Weapon(weaponTemplate, rarityCap);
         }
 
-        const int maxTries = 6;
+        const int maxTries = 3;
 
         var rarity = GlobalHelper.GetRandomEnumValue<ItemRarity>();
 
@@ -279,7 +293,7 @@ public class ItemStore : MonoBehaviour
             var currentTemplate = ItemTemplateLoader.GetItemTemplate(templateType);
 
             if (currentTemplate.Category == "weapon" &&
-                currentTemplate.EquipmentSlotType == Entity.EquipmentSlot.Thrown)
+                currentTemplate.EquipmentSlotType == EquipmentSlotType.Thrown)
             {
                 thrownTemplates.Add(currentTemplate);
             }
@@ -323,6 +337,17 @@ public class ItemStore : MonoBehaviour
         Enum.TryParse(itemType, true, out ItemPrefabKeys prefabKey);
 
         return prefabKey.ToString();
+    }
+
+    public List<Entity.EquipmentSlot> GetEquipmentSlotsForSlotType(EquipmentSlotType slotType)
+    {
+        if (!_slotDictionary.ContainsKey(slotType))
+        {
+            Debug.Log($@"Invalid Equipment Slot Type: {slotType}");
+            return null;
+        }
+
+        return _slotDictionary[slotType];
     }
 
     private Item CreateItemOfType(string itemType, ItemRarity rarity = ItemRarity.Common)

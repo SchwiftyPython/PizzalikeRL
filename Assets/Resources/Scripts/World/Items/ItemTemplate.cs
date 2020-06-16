@@ -11,7 +11,7 @@ public class ItemTemplate
     public string Category;
 
     [XmlElement("EquipmentSlotType")]
-    public Entity.EquipmentSlot EquipmentSlotType;
+    public EquipmentSlotType EquipmentSlotType;
 
     [XmlElement("MultiSlot")]
     public bool MultiSlot;

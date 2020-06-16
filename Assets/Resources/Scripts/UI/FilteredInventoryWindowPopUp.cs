@@ -132,7 +132,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 
         foreach (var item in _playerInventory.Values)
         {
-            if (item.EquipmentSlotType != EquipmentSlotFilter)
+            if (!item.EquipmentSlots.Contains(EquipmentSlotFilter))
             {
                 continue;
             }

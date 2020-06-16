@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class ItemSdo
 {
     public ItemRarity Rarity;
 
-    public Entity.EquipmentSlot EquipmentSlotType;
+    public EquipmentSlotType EquipmentSlotType;
+
+    public List<Entity.EquipmentSlot> EquipmentSlots;
 
     public string ItemType;
 
@@ -23,6 +26,7 @@ public class ItemSdo
         {
             Rarity = item.Rarity,
             EquipmentSlotType = item.EquipmentSlotType,
+            EquipmentSlots = item.EquipmentSlots,
             ItemType = item.ItemType,
             ItemCategory = item.ItemCategory,
             Id = item.Id,
@@ -37,6 +41,7 @@ public class ItemSdo
         {
             Rarity = sdo.Rarity,
             EquipmentSlotType = sdo.EquipmentSlotType,
+            EquipmentSlots = sdo.EquipmentSlots,
             ItemType = sdo.ItemType,
             ItemCategory = sdo.ItemCategory,
             Id = sdo.Id,

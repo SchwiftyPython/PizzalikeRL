@@ -76,7 +76,7 @@
 	
 	<ItemTemplate type = "ShortSword">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>	
 <Properties>
@@ -86,7 +86,7 @@
 	
 	<ItemTemplate type = "GreatBow">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>20</Range>	
 <Properties>
@@ -95,7 +95,7 @@
 	
 	<ItemTemplate type = "AssaultRifle">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>31</Range>	
 <Properties>
@@ -104,7 +104,7 @@
 	
 	<ItemTemplate type = "BattleAxe">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>	
 <Properties>
@@ -113,7 +113,7 @@
 	
 	<ItemTemplate type = "BoltActionRifle">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>31</Range>	
 <Properties>
@@ -122,7 +122,7 @@
 	
 	<ItemTemplate type = "Club">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>
         <Properties>
@@ -132,7 +132,7 @@
 	
 	<ItemTemplate type = "FoldingChair">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>
         <Properties>
@@ -152,7 +152,7 @@
 	
 	<ItemTemplate type = "GreatSword">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>	
 <Properties>
@@ -172,7 +172,7 @@
 	
 	<ItemTemplate type = "HandAxe">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>	
 <Properties>
@@ -181,7 +181,7 @@
 	
 	<ItemTemplate type = "Knife">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>	
 <Properties>
@@ -191,7 +191,7 @@
 	
 	<ItemTemplate type = "LaserRifle">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>23</Range>
 <Properties>
@@ -200,7 +200,7 @@
 	
 	<ItemTemplate type = "RocketLauncher">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>32</Range>	
 <Properties>
@@ -210,7 +210,7 @@
 	
 	<ItemTemplate type = "LightMachineGun">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>32</Range>	
 <Properties>
@@ -219,7 +219,7 @@
 	
 	<ItemTemplate type = "Revolver">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
 		<Range>9</Range>	
 <Properties>
@@ -228,7 +228,7 @@
 	
 	<ItemTemplate type = "SemiAutoHandgun">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
 		<Range>9</Range>	
 <Properties>
@@ -237,7 +237,7 @@
 	
 	<ItemTemplate type = "Shotgun">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>12</Range>	
 <Properties>
@@ -246,7 +246,7 @@
 	
 	<ItemTemplate type = "SniperRifle">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>36</Range>	
 <Properties>
@@ -255,7 +255,7 @@
 	
 	<ItemTemplate type = "Spear">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>false</MultiSlot>
 		<Range>1</Range>	
 <Properties>
@@ -265,7 +265,7 @@
 	
 	<ItemTemplate type = "Submachinegun">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>MissileWeaponOne</EquipmentSlotType>
+		<EquipmentSlotType>Missile</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>12</Range>
 <Properties>
@@ -274,7 +274,7 @@
 	
 	<ItemTemplate type = "Warhammer">
 	    <Category>weapon</Category>
-		<EquipmentSlotType>RightHandOne</EquipmentSlotType>
+		<EquipmentSlotType>Hand</EquipmentSlotType>
 		<MultiSlot>true</MultiSlot>
 		<Range>1</Range>	
         <Properties>
