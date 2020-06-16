@@ -2,6 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EquipmentSlotType
+{
+    Head,
+    Body,
+    Hand,
+    Missile,
+    Thrown,
+    Special,
+    Consumable
+}
+
 public class Item
 {
     public GameObject WorldPrefab;
@@ -12,7 +23,8 @@ public class Item
 
     public ItemRarity Rarity;
 
-    public Entity.EquipmentSlot EquipmentSlotType;
+    public EquipmentSlotType EquipmentSlotType;
+    public List<Entity.EquipmentSlot> EquipmentSlots;
     public string ItemType;
     public string ItemCategory;
     public bool MultiSlot;
@@ -32,13 +44,14 @@ public class Item
         ItemType = template.Type;
         ItemCategory = template.Category;
         EquipmentSlotType = template.EquipmentSlotType;
+        EquipmentSlots = ItemStore.Instance.GetEquipmentSlotsForSlotType(EquipmentSlotType);
         Rarity = rarity;
         Properties = template.Properties;
         Id = Guid.NewGuid();
 
         ItemName = GlobalHelper.SplitStringByCapitalLetters(template.Type);
 
-        //May end up getting prefab based on item characteristics and/or modifying appearance at runtime.
+        //may end up getting prefab based on item characteristics and/or modifying appearance at runtime.
         WorldPrefab = ItemStore.Instance.GetWorldPrefabForItemByType(ItemType);
 
         //todo send new item event

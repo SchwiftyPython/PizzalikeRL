@@ -7,15 +7,11 @@ using UnityEngine.UI;
 
 public class DroppedItemPopup : MonoBehaviour, ISubscriber
 {
-    private const string DroppedItemPopupEventName = "DroppedItemPopup";
-    private const string GetItemEventName = "GetItem";
-    private const string TakeAllEventName = "TakeAll";
-
     private readonly IList<string> _subscribedEvents = new List<string>
     {
-        DroppedItemPopupEventName,
-        GetItemEventName,
-        TakeAllEventName
+        GlobalHelper.DroppedItemPopupEventName,
+        GlobalHelper.GetItemEventName,
+        GlobalHelper.TakeAllEventName
     };
 
     private bool _processingInput;
@@ -29,6 +25,8 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
     public GameObject CloseButton;
     public GameObject DroppedItemButtonPrefab;
     public GameObject TakeAllButton;
+
+    public Tile TargetTile;
 
     private void Start()
     {
@@ -88,7 +86,7 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
     public void Refresh()
     {
         DestroyOldItemButtons();
-        DisplayDroppedItems();
+        DisplayItemsInTargetTile(TargetTile);
     }
 
     public void DisplayDroppedItems()
@@ -142,19 +140,21 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
             return;
         }
 
+        TargetTile = target;
+
         Buttons = new Dictionary<char, GameObject>();
         _items = new List<Item>();
 
-        var container = (Chest)target.PresentProp;
+        var container = (Chest)TargetTile.PresentProp;
 
         if (container != null)
         {
             _items.AddRange(container.GetContents());
         }
 
-        if (target.PresentItems != null)
+        if (TargetTile.PresentItems != null)
         {
-            _items.AddRange(target.PresentItems);
+            _items.AddRange(TargetTile.PresentItems);
         }
 
         var itemParent = transform;
@@ -219,7 +219,7 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
-        if (eventName.Equals(DroppedItemPopupEventName))
+        if (eventName.Equals(GlobalHelper.DroppedItemPopupEventName))
         {
             if (parameter == null || !(parameter is Tile tile))
             {
@@ -229,14 +229,24 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
 
             DisplayItemsInTargetTile(tile);
         }
-        else if (eventName.Equals(GetItemEventName))
+        else if (eventName.Equals(GlobalHelper.GetItemEventName)) 
         {
-            if (!gameObject.activeSelf || parameter == null || !(parameter is Tile tile))
+            if (!gameObject.activeSelf || parameter == null || !(parameter is Item item))
             {
                 return;
             }
 
-            if (tile.PresentItems.Count <= 0)
+            TargetTile.RemoveItemFromTile(item);
+
+            _items.Remove(item);
+
+            GameManager.Instance.Player.Inventory.Add(item.Id, item);
+
+            var message = $"Picked up {item.ItemType}"; //todo change to item name
+
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
+
+            if (_items.Count <= 0) 
             {
                 Hide();
             }
@@ -245,7 +255,7 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
                 Refresh();
             }
         }
-        else if (eventName.Equals(TakeAllEventName))
+        else if (eventName.Equals(GlobalHelper.TakeAllEventName))
         {
             if (!gameObject.activeSelf)
             {
@@ -253,9 +263,7 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
             }
 
             var player = GameManager.Instance.Player;
-            var selectedTile = player.CurrentTile;
 
-            GameObject itemSprite = null;
             foreach (var itemButton in Buttons.Values)
             {
                 Guid.TryParse(itemButton.transform.GetComponentsInChildren<TextMeshProUGUI>(true)[2].text, out var itemId);
@@ -264,16 +272,18 @@ public class DroppedItemPopup : MonoBehaviour, ISubscriber
 
                 player.Inventory.Add(itemId, item);
 
-                selectedTile.PresentItems.Remove(item);
+                TargetTile.RemoveItemFromTile(item);
 
                 var message = $"Picked up {item.ItemType}"; //todo change to item name
 
                 EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, message);
 
-                itemSprite = item.WorldSprite;
+                var itemSprite = item.WorldSprite;
+
+                Destroy(itemSprite);
             }
 
-            Destroy(itemSprite);
+            //Destroy(itemSprite);
             Hide();
         }
     }

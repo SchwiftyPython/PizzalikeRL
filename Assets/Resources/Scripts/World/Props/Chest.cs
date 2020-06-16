@@ -38,6 +38,11 @@ public class Chest : Prop
 
     public void RemoveItem(Item item)
     {
+        if (!_contents.ContainsKey(item.Id))
+        {
+            return;
+        }
+
         _contents.Remove(item.Id);
     }
 

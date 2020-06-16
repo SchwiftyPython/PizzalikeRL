@@ -20,10 +20,6 @@ public class ItemButton : MonoBehaviour
         }
         else
         {
-            //todo bring up context menu to equip, look at, or drop item
-            //todo we can probably eliminate a look action if we load the description as part of the window and place action buttons 
-            //todo on bottom or side or show on hover
-
             Guid.TryParse(transform.GetComponentsInChildren<TextMeshProUGUI>(true)[2].text, out var itemToEquipId);
 
             var player = GameManager.Instance.Player;

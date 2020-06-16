@@ -132,7 +132,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
 
         foreach (var item in _playerInventory.Values)
         {
-            if (item.EquipmentSlotType != EquipmentSlotFilter)
+            if (!item.EquipmentSlots.Contains(EquipmentSlotFilter))
             {
                 continue;
             }
@@ -148,6 +148,7 @@ public class FilteredInventoryWindowPopUp : MonoBehaviour
         }
     }
 
+    //todo a number of these methods could be moved to global helper
     private void NextKeyMapLetter()
     {
         if (_keyMapLetter == 'z')

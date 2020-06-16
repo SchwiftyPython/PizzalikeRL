@@ -33,23 +33,23 @@ public class Entity : ISubscriber
     {
         Body,
         Head,
-        [Description("Right Arm One")]
+        [Description("Right Arm")]
         RightArmOne,
         [Description("Right Arm Two")]
         RightArmTwo,
-        [Description("Left Arm One")]
+        [Description("Left Arm")]
         LeftArmOne,
         [Description("Left Arm Two")]
         LeftArmTwo,
-        [Description("Right Hand One")]
+        [Description("Right Hand")]
         RightHandOne,
         [Description("Right Hand Two")]
         RightHandTwo,
-        [Description("Left Hand One")]
+        [Description("Left Hand")]
         LeftHandOne,
         [Description("Left Hand Two")]
         LeftHandTwo,
-        [Description("Missile Weapon One")]
+        [Description("Missile Weapon")]
         MissileWeaponOne,
         Hands,
         Feet,

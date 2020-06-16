@@ -352,6 +352,8 @@
     <Compile Include="Assets\Resources\Scripts\UI\DescendantButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\DroppedItemButton.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\DroppedItemPopup.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\EquipmentSlotButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\UI\EquipmentSlotWindowPopup.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\EquipmentWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\FilteredInventoryWindowPopUp.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\GameMenuWindow.cs" />
