@@ -21,13 +21,16 @@ public class DelivererSelectWindow : MonoBehaviour
     public GameObject DescendantPrefab;
     public GameObject DescendantButtonParent;
 
+    public GameObject AbilitySummaryPrefab;
+    public GameObject AbilitySummaryParent;
+
     public GameObject StrengthValueBox;
     public GameObject AgilityValueBox;
     public GameObject ConstitutionValueBox;
     public GameObject IntelligenceValueBox;
-    public GameObject HpValueBox;
-    public GameObject DefenseValueBox;
-    public GameObject SpeedValueBox;
+    // public GameObject HpValueBox;
+    // public GameObject DefenseValueBox;
+    // public GameObject SpeedValueBox;
 
     public GameObject StatsWindow;
     public GameObject SkillsWindow;
@@ -62,8 +65,8 @@ public class DelivererSelectWindow : MonoBehaviour
 
     private void Start()
     {
-        PopulateWindow();
-        DisplayDescendantDetails(_descendants.First().Key);
+        PopulateDescendants();
+        DisplayDescendantDetails(_descendants.Keys.First());
     }
 
     public void ShowInnerWindow(GameObject window, Button tab)
@@ -85,16 +88,60 @@ public class DelivererSelectWindow : MonoBehaviour
         window.SetActive(false);
     }
 
+    public void OnStatsTabSelected()
+    {
+        OnTabSelected(StatsTab.GetComponent<Button>());
+    }
+    public void OnAbilitiesTabSelected()
+    {
+        OnTabSelected(SkillsTab.GetComponent<Button>());
+    }
+
     public void OnTabSelected(Button tab)
     {
         switch (tab.name)
         {
-            case "Stats":
+            case "StatsTab":
                 ShowInnerWindow(StatsWindow, tab);
                 break;
-            case "Skills":
+            case "AbilitiesTab":
                 ShowInnerWindow(SkillsWindow, tab);
                 break;
+        }
+    }
+
+    public void PopulateDescendantStats()
+    {
+        if (_selectedDescendant == null)
+        {
+            return;
+        }
+
+        StrengthValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Strength.ToString();
+        AgilityValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Agility.ToString();
+        ConstitutionValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Constitution.ToString();
+        IntelligenceValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Intelligence.ToString();
+        // HpValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.MaxHp.ToString();
+        // DefenseValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Defense.ToString();
+        // SpeedValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Speed.ToString();
+    }
+
+    public void PopulateDescendantAbilities()
+    {
+        GlobalHelper.DestroyAllChildren(AbilitySummaryParent);
+
+        if (_selectedDescendant == null)
+        {
+            return;
+        }
+
+        foreach (var ability in _selectedDescendant.Abilities.Values)
+        {
+            var abilitySummary = Instantiate(AbilitySummaryPrefab, new Vector3(0, 0), Quaternion.identity);
+            abilitySummary.transform.SetParent(AbilitySummaryParent.transform);
+
+            var abilityTitle = abilitySummary.GetComponentInChildren<TextMeshProUGUI>();
+            abilityTitle.text = $"{GlobalHelper.Capitalize(ability.Name)}";
         }
     }
 
@@ -107,13 +154,8 @@ public class DelivererSelectWindow : MonoBehaviour
 
         _selectedDescendant = _descendants[id];
 
-        StrengthValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Strength.ToString();
-        AgilityValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Agility.ToString();
-        ConstitutionValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Constitution.ToString();
-        IntelligenceValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Intelligence.ToString();
-        HpValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.MaxHp.ToString();
-        DefenseValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Defense.ToString();
-        SpeedValueBox.GetComponent<TextMeshProUGUI>().text = _selectedDescendant.Speed.ToString();
+        PopulateDescendantStats();
+        PopulateDescendantAbilities();
     }
 
     public void OnContinueClick()
@@ -121,7 +163,7 @@ public class DelivererSelectWindow : MonoBehaviour
         GameManager.Instance.ContinueGame(_selectedDescendant);
     }
 
-    private void PopulateWindow()
+    private void PopulateDescendants()
     {
         _descendants = new Dictionary<Guid, Entity>();
 
@@ -130,6 +172,8 @@ public class DelivererSelectWindow : MonoBehaviour
         for (var i = 0; i < numDescendants; i++)
         {
             var descendant = new Entity(GameManager.Instance.Player, null, true);
+
+            descendant.GenerateStartingEquipment();
 
             _descendants.Add(descendant.Id, descendant);
 

@@ -40,6 +40,7 @@ public class GlobalHelper : MonoBehaviour
     public const string GetItemEventName = "GetItem";
     public const string TakeAllEventName = "TakeAll";
     public const string EquipmentSlotSelectedEventName = "EquipmentSlotSelected";
+    public const string KillPlayerEventName = "KillPlayer";
 
     #endregion EventNames
 

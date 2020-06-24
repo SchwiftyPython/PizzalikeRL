@@ -691,6 +691,7 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         }
     }
 
+    //todo might move this out of here and just have in entity
     private Entity.AbilityDictionary BuildAbilityDictionary()
     {
         var abilities = new Entity.AbilityDictionary();
