@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class AbilityStore : MonoBehaviour,ISubscriber
 {
@@ -159,6 +160,58 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
         Debug.Log($"{template.Name} failed to create!");
         return null;
+    }
+
+    public static Ability ChooseRandomFreeAbility(Entity entity)
+    {
+        var abilities = new List<AbilityTemplate>();
+
+        foreach (var bodyPart in entity.Body.Values)
+        {
+            var partAbilities = GetAbilitiesByBodyPart(bodyPart.Name);
+
+            if (partAbilities == null)
+            {
+                continue;
+            }
+
+            foreach (var ability in partAbilities)
+            {
+                if (ability.StartingAbility)
+                {
+                    continue;
+                }
+
+                abilities.Add(ability);
+            }
+        }
+
+        var backgroundAbilities = GetAbilitiesByBackground(entity.Fluff.BackgroundType);
+
+        foreach (var ability in backgroundAbilities.ToArray().Where(ability => ability.StartingAbility))
+        {
+            backgroundAbilities.Remove(ability);
+        }
+
+        abilities.AddRange(backgroundAbilities);
+
+        var damageTypeAbilities = GetAllDamageTypeAbilities();
+
+        foreach (var damageType in damageTypeAbilities)
+        {
+            var abilityList = new List<AbilityTemplate>(damageType.Value);
+
+            foreach (var ability in abilityList.ToArray().Where(ability => ability.StartingAbility))
+            {
+                abilityList.Remove(ability);
+            }
+
+            abilities.AddRange(abilityList);
+        }
+
+        var template = abilities[Random.Range(0, abilities.Count)];
+
+        return CreateAbility(template, entity);
     }
 
     public void OnNotify(string eventName, object broadcaster, object parameter = null)

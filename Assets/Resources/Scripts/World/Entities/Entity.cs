@@ -215,7 +215,7 @@ public class Entity : ISubscriber
         _currentEffects = new List<Effect>();
         _lastTurnMoved = 0;
     }
-    
+
     public Entity(Entity parent, Faction faction = null, bool isPlayer = false)
     {
         Id = Guid.NewGuid();
@@ -280,12 +280,23 @@ public class Entity : ISubscriber
             WorldData.Instance.EntityGroupRelationships.Add(EntityType, EntityReputation);
         }
 
+        var allBackgrounds = CharacterBackgroundLoader.GetCharacterBackgroundTypes().ToList();
+
+        var selectedBackground =
+            CharacterBackgroundLoader.GetCharacterBackground(allBackgrounds[Random.Range(0, allBackgrounds.Count)]);
+
+        CreateFluff(template, faction != null ? faction.Name : string.Empty);
+
+        Fluff.BackgroundType = selectedBackground;
+
         PrefabPath = template.SpritePath;
         Prefab = Resources.Load(template.SpritePath) as GameObject;
 
         BuildBody(template);
         CalculateTotalBodyPartCoverage();
         PopulateEquipped();
+
+        Abilities = BuildAbilityDictionary();
 
         CreateFluff(template);
         Fluff.Background = BackgroundGenerator.Instance.GenerateBackground();
@@ -1346,9 +1357,79 @@ public class Entity : ISubscriber
             return Attitude.Hostile;
         }
 
-        return Attitude.Neutral; }
+        return Attitude.Neutral;
+    }
 
-    
+    //todo maybe have some chance to inherit parent's compatible ability
+    private AbilityDictionary BuildAbilityDictionary()
+    {
+        var abilities = new AbilityDictionary();
+
+        //todo choose random free ability for now
+        var freeAbility = AbilityStore.ChooseRandomFreeAbility(this);
+
+        if (freeAbility != null)
+        {
+            abilities.Add(freeAbility.Name, freeAbility);
+        }
+
+        var startingBodyPartAbilities = new List<AbilityTemplate>();
+
+        foreach (var bodyPart in Body.Values)
+        {
+            var partAbilities = AbilityStore.GetAbilitiesByBodyPart(bodyPart.Name);
+
+            if (partAbilities == null)
+            {
+                continue;
+            }
+
+            foreach (var ability in partAbilities)
+            {
+                if (ability.StartingAbility) startingBodyPartAbilities.Add(ability);
+            }
+        }
+
+        foreach (var ability in startingBodyPartAbilities)
+        {
+            if (abilities.ContainsKey(ability.Name))
+            {
+                continue;
+            }
+
+            abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, this));
+        }
+
+        var startingBackgroundAbilities = AbilityStore.GetAbilitiesByBackground(Fluff.BackgroundType);
+
+        foreach (var ability in startingBackgroundAbilities)
+        {
+            if (abilities.ContainsKey(ability.Name) || !ability.StartingAbility)
+            {
+                continue;
+            }
+
+            abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, this));
+        }
+
+        var startingDamageTypeAbilities = AbilityStore.GetAllDamageTypeAbilities();
+
+        foreach (var damageType in startingDamageTypeAbilities.Keys)
+        {
+            foreach (var ability in startingDamageTypeAbilities[damageType])
+            {
+                if (abilities.ContainsKey(ability.Name) || !ability.StartingAbility)
+                {
+                    continue;
+                }
+
+                abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, this));
+            }
+        }
+
+        return abilities;
+    }
+
     private ReputationState GetReputationStateForTarget(Entity target)
     {
         var factionReputationValue = 0;
