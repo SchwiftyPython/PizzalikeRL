@@ -39,7 +39,7 @@ public class Faction
         Religions = new Dictionary<string, int>();
         EntitiesWithFluff = new List<Entity>();
 
-        Name = FactionTemplateLoader.GenerateFactionName();
+        Name = FactionTemplateLoader.Instance.GenerateFactionName();
         GeneratePopulation();
         CreateLeader();
 

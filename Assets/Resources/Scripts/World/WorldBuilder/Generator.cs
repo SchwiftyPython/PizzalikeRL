@@ -1037,7 +1037,7 @@ public class Generator : MonoBehaviour
             WorldData.Instance.Factions = new Dictionary<string, Faction>();
         }
 
-        FactionTemplateLoader.Initialize();
+        //FactionTemplateLoader.Initialize();
 
         var numFactions = Random.Range(4, 7);
 
