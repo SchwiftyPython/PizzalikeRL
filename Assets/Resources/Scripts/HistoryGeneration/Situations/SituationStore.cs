@@ -23,17 +23,10 @@ public class SituationStore
     private List<string> _endSituations;
 
     private const string ResourcesPath = "\\Assets\\Resources\\";
-    private const string StartSituationFile = "start_situations.csv";
-    private const string MiddleSituationFile = @"middle_situations.csv";
-    private const string EndSituationFile = @"end_situations.csv";
 
     public void Initialize()
     {
-        var basePath = Environment.CurrentDirectory;
-
-        var fullPath = Path.Combine(basePath, ResourcesPath.TrimStart('\\', '/'), StartSituationFile);
-
-        _startSituations = GetSituationsFromFile(fullPath);
+        _startSituations = GetSituationsFromFile(SituationLoader.Instance.StartSituationFile);
     }
 
     public List<string> GetSituationsOfType(string situationType)
@@ -73,7 +66,7 @@ public class SituationStore
     private static List<string> GetSituationsFromFile(string file)
     {
         var fullPath = Path.Combine(ResourcesPath, file);
-        var situatons = new List<string>();
+        var situations = new List<string>();
         try
         {
             using (var reader = new StreamReader(fullPath))
@@ -83,7 +76,7 @@ public class SituationStore
                 {
                     var processedLine = line.Split(',');
 
-                    situatons.Add(processedLine.FirstOrDefault()); 
+                    situations.Add(processedLine.FirstOrDefault()); 
                 }
             }
         }
@@ -91,7 +84,22 @@ public class SituationStore
         {
             Debug.Log("Error processing file: " + fullPath + " " + e.Message);
         }
-        return situatons;
+        return situations;
+    }
+
+    private static List<string> GetSituationsFromFile(TextAsset file)
+    {
+        var situations = new List<string>();
+        try
+        {
+            situations.AddRange(file.text.Split("\r\n"[0]).ToList());
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Error processing file: " + file.name + " " + e.Message);
+        }
+
+        return situations;
     }
 
     private static Faction PickFaction()

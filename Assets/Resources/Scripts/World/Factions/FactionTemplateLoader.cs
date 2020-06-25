@@ -7,14 +7,33 @@ using UnityEngine;
 public class FactionTemplateLoader : MonoBehaviour
 {
     public const string Path = "factions";
-    
+
     private static List<string> _factionTypes;
     private static FactionTemplateContainer _fc;
     private static List<string> _rawFactionNames;
 
     private static string _fullPath;
 
-    public static void Initialize()
+    public TextAsset FactionNames;
+
+    public static FactionTemplateLoader Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+
+        Initialize();
+    }
+
+    public void Initialize()
     {
         LoadRawFactionNamesFromFile();
 
@@ -58,13 +77,15 @@ public class FactionTemplateLoader : MonoBehaviour
         }
     }
 
-    public static string GenerateFactionName()
+    public string GenerateFactionName()
     {
         const string startSymbol = "#origin#";
 
         try
         {
-            var grammar = new TraceryNet.Grammar(new FileInfo(_fullPath));
+            //var grammar = new TraceryNet.Grammar(new FileInfo(_fullPath));
+
+            var grammar = new TraceryNet.Grammar(FactionNames.text);
 
             var factionName = grammar.Flatten(startSymbol);
 
@@ -82,16 +103,17 @@ public class FactionTemplateLoader : MonoBehaviour
         }
     }
 
+    //todo can we skip using file path?
     private static void LoadRawFactionNamesFromFile()
     {
-        const string storyPath = "\\Assets\\Resources\\Scripts\\World\\Factions";
-
-        const string file = "faction_name_tracery.json";
-
-        var basePath = Environment.CurrentDirectory;
-
-        _fullPath = System.IO.Path.Combine(basePath, storyPath.TrimStart('\\', '/'), file);
-
-        _fullPath = System.IO.Path.Combine(storyPath, _fullPath);
+        // const string storyPath = "\\Assets\\Resources\\Scripts\\World\\Factions";
+        //
+        // const string file = "faction_name_tracery.json";
+        //
+        // var basePath = Environment.CurrentDirectory;
+        //
+        // _fullPath = System.IO.Path.Combine(basePath, storyPath.TrimStart('\\', '/'), file);
+        //
+        // _fullPath = System.IO.Path.Combine(storyPath, _fullPath);
     }
 }

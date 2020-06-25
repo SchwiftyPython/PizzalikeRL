@@ -71,7 +71,7 @@ public class NameStore : MonoBehaviour
         LoadNamesFromFiles();
     }
 
-    private  void LoadNamesFromFiles()
+    private void LoadNamesFromFiles()
     {
         try
         {
