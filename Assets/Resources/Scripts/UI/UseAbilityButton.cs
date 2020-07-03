@@ -27,6 +27,11 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 
     public void AssignAbility(Ability ability, Sprite icon)
     {
+        if (ability == null)
+        {
+            return;
+        }
+
         if (_button == null)
         {
             _button = gameObject.GetComponent<Button>();
@@ -45,8 +50,6 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 
         ability.AssignAbilityToButton(_button);
 
-        //EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
-
         if (!string.IsNullOrEmpty(ability.RequiresProperty))
         {
             CheckEquippedItemsForRequiredProperty();
@@ -58,6 +61,8 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
         {
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.ItemEquippedEventName, this);
         }
+
+        InputController.Instance.UpdateAbilityBar(ability, gameObject);
     }
 
     public void CheckEquippedItemsForRequiredProperty()
@@ -93,6 +98,8 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
         SetIcon(DefaultSprite);
 
         EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
+
+        InputController.Instance.UpdateAbilityBar(null, gameObject);
     }
 
     public bool AbilityAssigned()
@@ -114,19 +121,19 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            Debug.Log("Left click");
+            //Debug.Log("Left click");
             OnLeftClick();
         }
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
-            Debug.Log("Right click");
+            //Debug.Log("Right click");
             OnRightClick();
         }
     }
 
     public void OnLeftClick()
     {
-        if (!_button.interactable)
+        if (!_button.interactable || GameManager.Instance.WorldMapSceneActive())
         {
             return;
         }

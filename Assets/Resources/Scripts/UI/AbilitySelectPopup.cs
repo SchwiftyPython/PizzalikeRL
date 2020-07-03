@@ -59,6 +59,9 @@ public class AbilitySelectPopup : MonoBehaviour, ISubscriber
 
         AbilityManager.AssignAbilityToButton(ability, _buttonParent);
 
+        //todo send event to update ability bar in input controller - lets see if passing the button itself to input controller will work
+        //find button in ability map and update it
+
         Hide();
     }
 

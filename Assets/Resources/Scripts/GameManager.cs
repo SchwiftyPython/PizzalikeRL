@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour, ISubscriber
                 AreaMap.Instance.EnterArea();
                 if (AreaMap.Instance.AreaReady)
                 {
-                    if (!IsWorldMapSceneActive() && (PlayerInvisible() || PlayerNearCameraEdge()))
+                    if (!WorldMapSceneActive() && (PlayerInvisible() || PlayerNearCameraEdge()))
                     {
                         MoveCameraToPlayer();
                     }
@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour, ISubscriber
                 }
                 break;
             case GameState.EndTurn:
-                if (IsWorldMapSceneActive())
+                if (WorldMapSceneActive())
                 {
                     InputController.Instance.ActionTaken = false;
                     CurrentState = GameState.Playerturn;
@@ -248,7 +248,7 @@ public class GameManager : MonoBehaviour, ISubscriber
         PlayerDeathRoutineComplete = true;
     }
 
-    public bool IsWorldMapSceneActive()
+    public bool WorldMapSceneActive()
     {
         return CurrentScene.name.Equals(WorldMapSceneName);
     }
@@ -290,7 +290,7 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     private GameState WhoseTurn()
     {
-        if (IsWorldMapSceneActive() || !CurrentArea.EntitiesPresent())
+        if (WorldMapSceneActive() || !CurrentArea.EntitiesPresent())
         {
             InputController.Instance.ActionTaken = false;
             return GameState.Playerturn;

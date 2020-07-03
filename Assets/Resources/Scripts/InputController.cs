@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Pathfinding;
@@ -9,7 +10,8 @@ using UnityEngine.UI;
 
 public class InputController : MonoBehaviour, ISubscriber
 {
-    private Dictionary<KeyCode, GameObject> _abilityMap;
+    private Dictionary<KeyCode, GameObject> _abilityButtonMap;
+    private Dictionary<KeyCode, Ability> _abilityMap; //todo we need to update this with an event when the ability bar changes
 
     private string _areaMapSceneName;
     private string _worldMapSceneName;
@@ -41,7 +43,6 @@ public class InputController : MonoBehaviour, ISubscriber
         }
         else if (Instance != this)
         {
-            // Destroy the current object, so there is just one 
             Destroy(gameObject);
         }
 
@@ -259,6 +260,12 @@ public class InputController : MonoBehaviour, ISubscriber
                 if (currentScene.Equals(_areaMapSceneName))
                 {
                     SceneManager.LoadScene(_worldMapSceneName);
+
+                    _abilityButtonMap = AbilityManager.Instance.GetAbilityMap();
+
+                    LoadAbilitiesIntoAbilityBar(); //todo temp solution. Need a method that loads them in their current config
+
+                    EventMediator.Instance.Broadcast(GlobalHelper.PlayerEnterWorldMapEventName, this);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.KeypadPlus))
@@ -270,6 +277,7 @@ public class InputController : MonoBehaviour, ISubscriber
                     GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                     SceneManager.LoadScene(_areaMapSceneName);
+                    EventMediator.Instance.Broadcast(GlobalHelper.PlayerEnterAreaEventName, this);
                 }
             }
         }
@@ -344,7 +352,7 @@ public class InputController : MonoBehaviour, ISubscriber
         }
     }
 
-    public void LoadStartingAbilitiesIntoAbilityBar()
+    public void LoadAbilitiesIntoAbilityBar()
     {
         var playerAbilities = GameManager.Instance.Player.Abilities;
 
@@ -353,15 +361,76 @@ public class InputController : MonoBehaviour, ISubscriber
             return;
         }
 
-        var mappingIndex = 0;
-
-        foreach (var ability in playerAbilities.Values)
+        if (_abilityMap == null)
         {
-            var mapping = _abilityMap.ElementAt(mappingIndex).Key;
+            _abilityMap = new Dictionary<KeyCode, Ability>();
 
-            AbilityManager.AssignAbilityToButton(ability, _abilityMap[mapping]);
+            foreach (var keyCode in _abilityButtonMap.Keys)
+            {
+                _abilityMap.Add(keyCode, null);
+            }
 
-            mappingIndex++;
+            var mappingIndex = 0;
+
+            foreach (var ability in playerAbilities.Values) //todo maybe player should be second option. We can search for the abilitybar
+            {
+                var mapping = _abilityButtonMap.ElementAt(mappingIndex).Key;
+
+                AbilityManager.AssignAbilityToButton(ability, _abilityButtonMap[mapping]);
+
+                _abilityMap[mapping] = ability;
+
+                mappingIndex++;
+            }
+        }
+        else
+        {
+            foreach (var ability in _abilityMap)
+            {
+                AbilityManager.AssignAbilityToButton(ability.Value, _abilityButtonMap[ability.Key]);
+            }
+        }
+    }
+
+    public void UpdateAbilityBar(Ability ability, GameObject buttonParent)
+    {
+        var keycode = GetKeyCodeForButton(buttonParent);
+
+        // ReSharper disable once RedundantCheckBeforeAssignment
+        if (_abilityMap[keycode] != ability)
+        {
+            _abilityMap[keycode] = ability;
+        }
+    }
+
+    private KeyCode GetKeyCodeForButton(GameObject buttonParent)
+    {
+        var buttonKey = buttonParent.name[buttonParent.name.Length - 1];
+
+        switch (buttonKey)
+        {
+            case '1':
+                return KeyCode.Alpha1;
+            case '2':
+                return KeyCode.Alpha2;
+            case '3':
+                return KeyCode.Alpha3;
+            case '4':
+                return KeyCode.Alpha4;
+            case '5':
+                return KeyCode.Alpha5;
+            case '6':
+                return KeyCode.Alpha6;
+            case '7':
+                return KeyCode.Alpha7;
+            case '8':
+                return KeyCode.Alpha8;
+            case '9':
+                return KeyCode.Alpha9;
+            case '0':
+                return KeyCode.Alpha0;
+            default:
+                throw new ArgumentException($@"No corresponding key code for: {buttonKey}");
         }
     }
 
@@ -383,18 +452,34 @@ public class InputController : MonoBehaviour, ISubscriber
         return results.Any();
     }
 
+    private void DisableAbilityButtons()
+    {
+        foreach (var abilityButton in _abilityButtonMap.Values)
+        {
+            abilityButton.GetComponent<UseAbilityButton>().DisableButton();
+        }
+    }
+
+    private void EnableAbilityButtons()
+    {
+        foreach (var abilityButton in _abilityButtonMap.Values)
+        {
+            abilityButton.GetComponent<UseAbilityButton>().EnableButton();
+        }
+    }
+
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         if (eventName.Equals(GlobalHelper.LoadAbilityBarEventName))
         {
-            _abilityMap = (Dictionary<KeyCode, GameObject>) parameter;
+            _abilityButtonMap = (Dictionary<KeyCode, GameObject>) parameter;
 
-            if (_abilityMap == null)
+            if (_abilityButtonMap == null)
             {
                 return;
             }
 
-            LoadStartingAbilitiesIntoAbilityBar();
+            LoadAbilitiesIntoAbilityBar();
         }
         else if (eventName.Equals(GlobalHelper.ActionTakenEventName))
         {
