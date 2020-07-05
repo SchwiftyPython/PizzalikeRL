@@ -11,7 +11,6 @@ using UnityEngine.UI;
 public class InputController : MonoBehaviour, ISubscriber
 {
     private Dictionary<KeyCode, GameObject> _abilityButtonMap;
-    private Dictionary<KeyCode, Ability> _abilityMap; //todo we need to update this with an event when the ability bar changes
 
     private string _areaMapSceneName;
     private string _worldMapSceneName;
@@ -22,6 +21,8 @@ public class InputController : MonoBehaviour, ISubscriber
 
     private Entity _player;
     private Seeker _seeker;
+
+    public Dictionary<KeyCode, Ability> AbilityMap { get; set; }
 
     public Path Path;
     public bool PathCalculated;
@@ -257,13 +258,14 @@ public class InputController : MonoBehaviour, ISubscriber
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
+                //todo need to make sure player is removed from area they left
                 if (currentScene.Equals(_areaMapSceneName))
                 {
                     SceneManager.LoadScene(_worldMapSceneName);
 
                     _abilityButtonMap = AbilityManager.Instance.GetAbilityMap();
 
-                    LoadAbilitiesIntoAbilityBar(); //todo temp solution. Need a method that loads them in their current config
+                    LoadAbilitiesIntoAbilityBar(); 
 
                     EventMediator.Instance.Broadcast(GlobalHelper.PlayerEnterWorldMapEventName, this);
                 }
@@ -277,6 +279,11 @@ public class InputController : MonoBehaviour, ISubscriber
                     GameManager.Instance.Player.CurrentArea = GameManager.Instance.CurrentArea;
                     GameManager.Instance.CurrentState = GameManager.GameState.EnterArea;
                     SceneManager.LoadScene(_areaMapSceneName);
+
+                    _abilityButtonMap = AbilityManager.Instance.GetAbilityMap();
+
+                    LoadAbilitiesIntoAbilityBar();
+
                     EventMediator.Instance.Broadcast(GlobalHelper.PlayerEnterAreaEventName, this);
                 }
             }
@@ -361,13 +368,13 @@ public class InputController : MonoBehaviour, ISubscriber
             return;
         }
 
-        if (_abilityMap == null)
+        if (AbilityMap == null)
         {
-            _abilityMap = new Dictionary<KeyCode, Ability>();
+            AbilityMap = new Dictionary<KeyCode, Ability>();
 
             foreach (var keyCode in _abilityButtonMap.Keys)
             {
-                _abilityMap.Add(keyCode, null);
+                AbilityMap.Add(keyCode, null);
             }
 
             var mappingIndex = 0;
@@ -378,14 +385,14 @@ public class InputController : MonoBehaviour, ISubscriber
 
                 AbilityManager.AssignAbilityToButton(ability, _abilityButtonMap[mapping]);
 
-                _abilityMap[mapping] = ability;
+                AbilityMap[mapping] = ability;
 
                 mappingIndex++;
             }
         }
         else
         {
-            foreach (var ability in _abilityMap)
+            foreach (var ability in AbilityMap)
             {
                 AbilityManager.AssignAbilityToButton(ability.Value, _abilityButtonMap[ability.Key]);
             }
@@ -397,9 +404,9 @@ public class InputController : MonoBehaviour, ISubscriber
         var keycode = GetKeyCodeForButton(buttonParent);
 
         // ReSharper disable once RedundantCheckBeforeAssignment
-        if (_abilityMap[keycode] != ability)
+        if (AbilityMap[keycode] != ability)
         {
-            _abilityMap[keycode] = ability;
+            AbilityMap[keycode] = ability;
         }
     }
 
