@@ -3,9 +3,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AbilityManager : MonoBehaviour, ISubscriber
+public class AbilityManager : MonoBehaviour
 {
     private static Dictionary<string, Sprite> _abilityIcons;
+
+    private Dictionary<KeyCode, GameObject> _abilityMap;
 
     public GameObject AbilityButton1;
     public GameObject AbilityButton2;
@@ -24,8 +26,19 @@ public class AbilityManager : MonoBehaviour, ISubscriber
     public Sprite DivineAidIcon;
     public Sprite SpinWebIcon;
 
+    public static AbilityManager Instance;
+
     private void Start()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
         _abilityIcons = new Dictionary<string, Sprite>
         {
             {"bash", BashIcon},
@@ -35,17 +48,23 @@ public class AbilityManager : MonoBehaviour, ISubscriber
             {"spin web", SpinWebIcon}
         };
 
-        PrepareAbilityMap();
-
-        EventMediator.Instance.SubscribeToEvent(GlobalHelper.AbilitySelectedEventName, this);
+        if (_abilityMap == null)
+        {
+            PrepareAbilityMap();
+        }
     }
 
     private static Sprite GetIconForAbility(Ability ability)
     {
+        if (ability == null)
+        {
+            return null;
+        }
+
         return !_abilityIcons.ContainsKey(ability.Name) ? null : _abilityIcons[ability.Name];
     }
 
-    public static void AssignAbilityToButton(Ability ability, GameObject buttonParent)
+    public static void AssignAbilityToButton(Ability ability, GameObject buttonParent) 
     {
         var buttonScript = buttonParent.GetComponent<Button>().GetComponent<UseAbilityButton>();
 
@@ -65,7 +84,7 @@ public class AbilityManager : MonoBehaviour, ISubscriber
 
     public void PrepareAbilityMap()
     {
-        var map = new Dictionary<KeyCode, GameObject>
+        _abilityMap = new Dictionary<KeyCode, GameObject>
         {
             { KeyCode.Alpha1, AbilityButton1 },
             { KeyCode.Alpha2, AbilityButton2 },
@@ -79,36 +98,17 @@ public class AbilityManager : MonoBehaviour, ISubscriber
             { KeyCode.Alpha0, AbilityButton0 }
         };
 
-        EventMediator.Instance.Broadcast(GlobalHelper.LoadAbilityBarEventName, this, map);
+        EventMediator.Instance.Broadcast(GlobalHelper.LoadAbilityBarEventName, this, _abilityMap);
+    }
+
+    public Dictionary<KeyCode, GameObject> GetAbilityMap()
+    {
+        return _abilityMap;
     }
 
     public static void InstantiateAbilityPrefab(Tile target, GameObject prefab)
     {
         target.AbilityTexture = Instantiate(prefab,
             new Vector2(target.Y, target.X), Quaternion.identity);
-    }
-
-    public void OnNotify(string eventName, object broadcaster, object parameter = null)
-    {
-        /*if (eventName.Equals(GlobalHelper.AbilitySelectedEventName))
-        {
-            var button = parameter as Button;
-
-            if (button == null)
-            {
-                return;
-            }
-
-            var abilityName = button.GetComponentInChildren<TextMeshProUGUI>().text.ToLower();
-
-            var selectedAbility = GameManager.Instance.Player.Abilities[abilityName];
-
-            if (selectedAbility == null)
-            {
-                return;
-            }
-
-            AssignAbilityToButton(selectedAbility, button);
-        }*/
     }
 }

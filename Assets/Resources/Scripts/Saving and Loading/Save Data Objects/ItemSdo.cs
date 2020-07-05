@@ -20,6 +20,8 @@ public class ItemSdo
 
     public Dice ItemDice;
 
+    public List<string> Properties;
+
     public static ItemSdo ConvertToItemSdo(Item item)
     {
         return new ItemSdo
@@ -31,7 +33,8 @@ public class ItemSdo
             ItemCategory = item.ItemCategory,
             Id = item.Id,
             ItemDice = item.ItemDice,
-            ItemName = item.ItemName
+            ItemName = item.ItemName,
+            Properties = item.Properties
         };
     }
 
@@ -47,7 +50,8 @@ public class ItemSdo
             Id = sdo.Id,
             ItemDice = sdo.ItemDice,
             WorldPrefab = ItemStore.Instance.GetWorldPrefabForItemByType(sdo.ItemType),
-            ItemName = sdo.ItemName
+            ItemName = sdo.ItemName,
+            Properties = sdo.Properties
     };
         return item;
     }

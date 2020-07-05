@@ -143,7 +143,7 @@ public class Attack : Goal
     private bool TryMovingToTarget()
     {
         //todo can pursue player outside of current area once MoveToGlobal goal is created
-        if (GameManager.Instance.IsWorldMapSceneActive() || Self.CurrentArea != _target.CurrentArea || !Self.Mobile ||
+        if (GameManager.Instance.WorldMapSceneActive() || Self.CurrentArea != _target.CurrentArea || !Self.Mobile ||
             Self.CalculateDistanceToTarget(_target) <= 1)
         {
             return false;

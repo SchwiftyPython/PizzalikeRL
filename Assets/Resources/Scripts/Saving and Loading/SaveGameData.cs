@@ -49,6 +49,11 @@ public class SaveGameData : MonoBehaviour
         public SerializableOrdersDictionary ActiveOrders;
 
         public string PlayerStartingPlaceCellId;
+
+        [Serializable]
+        public class SerializableAbilityMap : SerializableDictionary<KeyCode, string> { }
+
+        public SerializableAbilityMap AbilityMap;
     }
 
     [Serializable]
@@ -108,7 +113,8 @@ public class SaveGameData : MonoBehaviour
                 EntitySdos = EntitySdo.ConvertToEntitySdos(WorldData.Instance.Entities.Values.ToList()),
                 FactionSdos = FactionSdo.ConvertToFactionSdos(WorldData.Instance.Factions.Values.ToList()),
                 Items = ConvertItemsForSaving(WorldData.Instance.Items),
-                PlayerStartingPlaceCellId = WorldData.Instance.PlayerStartingPlace.Id
+                PlayerStartingPlaceCellId = WorldData.Instance.PlayerStartingPlace.Id,
+                AbilityMap = ConvertAbilityMapForSaving(InputController.Instance.AbilityMap)
             };
 
             var saveGameFileNames =
@@ -168,6 +174,8 @@ public class SaveGameData : MonoBehaviour
         GameManager.Instance.CurrentTile =  GameManager.Instance.CurrentArea.GetTileById(saveData.CurrentTileId);
 
         GameManager.Instance.ActiveOrders = ConvertActiveOrdersForPlaying(saveData.ActiveOrders);
+
+        InputController.Instance.AbilityMap = ConvertAbilityMapForPlaying(saveData.AbilityMap);
 
         GameManager.Instance.CurrentState = saveData.CurrentSceneName == GameManager.AreaMapSceneName
             ? GameManager.GameState.EnterArea
@@ -266,6 +274,39 @@ public class SaveGameData : MonoBehaviour
         }
 
         return convertedCells;
+    }
+
+    private static SaveData.SerializableAbilityMap ConvertAbilityMapForSaving(IDictionary<KeyCode, Ability> abilityMap)
+    {
+        var saveMap = new SaveData.SerializableAbilityMap();
+
+        foreach (var mapping in abilityMap)
+        {
+            saveMap.Add(mapping.Key, mapping.Value?.Name);
+        }
+
+        return saveMap;
+    }
+
+    private static Dictionary<KeyCode, Ability> ConvertAbilityMapForPlaying(SaveData.SerializableAbilityMap abilityMap)
+    {
+        var loadMap = new Dictionary<KeyCode, Ability>();
+
+        foreach (var mapping in abilityMap)
+        {
+            if (string.IsNullOrEmpty(mapping.Value))
+            {
+                loadMap.Add(mapping.Key, null);
+            }
+            else
+            {
+                var ability = GameManager.Instance.Player.Abilities[mapping.Value];
+
+                loadMap.Add(mapping.Key, ability);
+            }
+        }
+
+        return loadMap;
     }
 
     private static SaveData.SerializableOrdersDictionary ConvertActiveOrdersForSaving(

@@ -22,7 +22,8 @@ public class WeaponSdo : ItemSdo
             ItemName = weapon.ItemName,
             Id = weapon.Id,
             ItemDice = weapon.ItemDice,
-            AOEType = weapon.AOEType
+            AOEType = weapon.AOEType,
+            Properties = weapon.Properties
         };
     }
 
@@ -38,6 +39,7 @@ public class WeaponSdo : ItemSdo
         weapon.Id = sdo.Id;
         weapon.ItemDice = sdo.ItemDice;
         weapon.ItemName = sdo.ItemName;
+        weapon.Properties = sdo.Properties;
 
         if (sdo.AOEType != null)
         {

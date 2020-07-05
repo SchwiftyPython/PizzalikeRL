@@ -133,6 +133,11 @@ public class AbilityStore : MonoBehaviour,ISubscriber
     {
         //todo need dictionary
 
+        if (template == null)
+        {
+            return null;
+        }
+
         if (template.Effect.Contains("heal"))
         {
             return new Heal(template, owner);

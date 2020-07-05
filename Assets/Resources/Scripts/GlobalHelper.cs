@@ -41,6 +41,8 @@ public class GlobalHelper : MonoBehaviour
     public const string TakeAllEventName = "TakeAll";
     public const string EquipmentSlotSelectedEventName = "EquipmentSlotSelected";
     public const string KillPlayerEventName = "KillPlayer";
+    public const string PlayerEnterAreaEventName = "PlayerEnterArea";
+    public const string PlayerEnterWorldMapEventName = "PlayerEnterWorldMap";
 
     #endregion EventNames
 
@@ -136,6 +138,36 @@ public class GlobalHelper : MonoBehaviour
                 ?.GetCustomAttribute<DescriptionAttribute>()
                 ?.Description
             ?? value.ToString();
+    }
+
+    public static T GetEnumValueFromDescription<T>(string description)
+    {
+        var type = typeof(T);
+
+        if (!type.IsEnum)
+        {
+            throw new InvalidOperationException();
+        }
+
+        foreach (var field in type.GetFields())
+        {
+            if (Attribute.GetCustomAttribute(field,
+                typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+            {
+                if (attribute.Description == description)
+                {
+                    return (T)field.GetValue(null);
+                }
+            }
+            else
+            {
+                if (field.Name == description)
+                {
+                    return (T)field.GetValue(null);
+                }
+            }
+        }
+        throw new ArgumentException($@"Not found: {description}", nameof(description));
     }
 
     public static Vector2 GetVectorForDirection(GoalDirection direction)
