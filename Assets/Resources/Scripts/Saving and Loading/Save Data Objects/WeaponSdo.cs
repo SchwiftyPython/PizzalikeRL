@@ -17,6 +17,7 @@ public class WeaponSdo : ItemSdo
             Range = weapon.Range,
             Rarity = weapon.Rarity,
             EquipmentSlotType = weapon.EquipmentSlotType,
+            EquipmentSlots = weapon.EquipmentSlots,
             ItemType = weapon.ItemType,
             ItemCategory = weapon.ItemCategory,
             ItemName = weapon.ItemName,
@@ -34,6 +35,7 @@ public class WeaponSdo : ItemSdo
         weapon.Range = sdo.Range;
         weapon.Rarity = sdo.Rarity;
         weapon.EquipmentSlotType = sdo.EquipmentSlotType;
+        weapon.EquipmentSlots = sdo.EquipmentSlots;
         weapon.ItemType = sdo.ItemType;
         weapon.ItemCategory = sdo.ItemCategory;
         weapon.Id = sdo.Id;

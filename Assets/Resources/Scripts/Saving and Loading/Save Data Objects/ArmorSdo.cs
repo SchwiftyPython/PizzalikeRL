@@ -15,6 +15,7 @@ public class ArmorSdo : ItemSdo
             Defense = armor.Defense,
             Rarity = armor.Rarity,
             EquipmentSlotType = armor.EquipmentSlotType,
+            EquipmentSlots = armor.EquipmentSlots,
             ItemType = armor.ItemType,
             ItemCategory = armor.ItemCategory,
             Id = armor.Id,
@@ -31,6 +32,7 @@ public class ArmorSdo : ItemSdo
         armor.Defense = sdo.Defense;
         armor.Rarity = sdo.Rarity;
         armor.EquipmentSlotType = sdo.EquipmentSlotType;
+        armor.EquipmentSlots = sdo.EquipmentSlots;
         armor.ItemType = sdo.ItemType;
         armor.ItemCategory = sdo.ItemCategory;
         armor.Id = sdo.Id;
