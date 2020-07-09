@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Goal
 {
@@ -57,9 +59,28 @@ public class Goal
 
     public virtual void Push(EnemyController parent)
     {
-        ParentController = parent;
-        parent.Goals.Push(this);
-        Create();
+        
+        if (parent == null)
+        {
+            return;
+        }
+
+        if (parent.Goals == null)
+        {
+            parent.Goals = new Stack<Goal>();
+        }
+
+        try
+        {
+            ParentController = parent;
+            parent.Goals.Push(this);
+            Create();
+        }
+        catch (Exception e)
+        {
+            Debug.Log($@"Parent Object: {parent}, Parent Goals: {parent.Goals.Count}");
+            Debug.Log(e.InnerException);
+        }
     }
 
     public virtual void Failed()

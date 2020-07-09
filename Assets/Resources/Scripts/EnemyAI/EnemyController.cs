@@ -35,7 +35,7 @@ public class EnemyController : AstarAI
             //Debug.Log(Self + " is bored.");
             new Bored().Push(this);
             Goals.Peek().TakeAction();
-
+            
             //Find path
             if (Goals.Peek().GetType() == typeof(MoveToLocal))
             {
