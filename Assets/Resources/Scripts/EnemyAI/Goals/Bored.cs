@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Bored : Goal
 {
-    private readonly List<string> _goals = new List<string>
+    //todo we can tweak these weights to get different personalities
+    private readonly Dictionary<string, int> _goals = new Dictionary<string, int>
     {
-        "wander",
-        "wait",
-        "attack"
+        {"wander", 20},
+        {"wait", 110},
+        {"attack", 20}
     };
 
     public override bool Finished()
@@ -24,16 +26,37 @@ public class Bored : Goal
 
     private void IdleActivity()
     {
-        var index = Random.Range(0, _goals.Count);
-
-        var goalKey = _goals[index];
-
-        var goal = GoalStore.GetGoal(goalKey);
+        var goal = GetRandomGoal();
 
         if (goal == null)
         {
             FailToParent();
         }
         PushChildGoal(goal);
+    }
+
+    private Goal GetRandomGoal()
+    {
+        var selection = _goals.First().Key;
+
+        var totalWeight = _goals.Values.Sum();
+
+        var roll = Random.Range(0, totalWeight);
+
+        foreach (var goal in _goals.OrderByDescending(g => g.Value))
+        {
+            var weightedValue = goal.Value;
+
+            if (roll >= weightedValue)
+            {
+                roll -= weightedValue;
+            }
+            else
+            {
+                selection = goal.Key;
+                break;
+            }
+        }
+        return GoalStore.GetGoal(selection);
     }
 }

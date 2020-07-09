@@ -653,6 +653,8 @@ public class AreaMap : MonoBehaviour
                 npcSprite.transform.SetParent(NpcSpriteHolder.transform);
 
                 e.SetSprite(npcSprite);
+
+                _currentArea.TurnOrder.Enqueue(e);
             }
             else
             {
