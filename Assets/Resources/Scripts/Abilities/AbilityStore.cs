@@ -8,8 +8,11 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 {
     private static Dictionary<string, AbilityTemplate> _allAbilities;
     private static Dictionary<DamageType, List<AbilityTemplate>> _abilitiesByDamageType;
-    private static Dictionary<string, List<AbilityTemplate>> _abilitiesByBackground;
+    private static Dictionary<string, List<AbilityTemplate>> _abilitiesByBackgroundRequirement;
+    private static Dictionary<string, List<AbilityTemplate>> _backgroundStartingAbilities;    
     private static Dictionary<string, List<AbilityTemplate>> _abilitiesByBodyPart;
+
+    private static List<string> _religiousStartingAbilityNames;
 
     private void Start()
     {
@@ -23,7 +26,8 @@ public class AbilityStore : MonoBehaviour,ISubscriber
     private static void PopulateAbilityDictionaries()
     {
         PopulateAbilitiesByDamageType();
-        PopulateAbilitiesByBackground();
+        PopulateAbilitiesByRequiredBackground();
+        PopulateStartingAbilitiesForBackgrounds();
         PopulateAbilitiesByBodyPart();
     }
 
@@ -52,28 +56,52 @@ public class AbilityStore : MonoBehaviour,ISubscriber
         }
     }
 
-    private static void PopulateAbilitiesByBackground()
+    private static void PopulateAbilitiesByRequiredBackground()
     {
-        _abilitiesByBackground = new Dictionary<string, List<AbilityTemplate>>();
+        _abilitiesByBackgroundRequirement = new Dictionary<string, List<AbilityTemplate>>();
 
         var backgrounds = CharacterBackgroundLoader.GetCharacterBackgroundTypes();
 
         foreach (var background in backgrounds)
         {
-            if (_abilitiesByBackground.ContainsKey(background))
+            if (_abilitiesByBackgroundRequirement.ContainsKey(background))
             {
                 continue;
             }
 
-            _abilitiesByBackground.Add(background, new List<AbilityTemplate>());
+            _abilitiesByBackgroundRequirement.Add(background, new List<AbilityTemplate>());
             
             foreach (var ability in _allAbilities.Values.Where(ability =>
                 ability.RequiresBackground.Trim().Equals(background, StringComparison.OrdinalIgnoreCase)))
             {
-                _abilitiesByBackground[background].Add(ability);
+                _abilitiesByBackgroundRequirement[background].Add(ability);
             }
         }
 
+    }
+
+    private static void PopulateStartingAbilitiesForBackgrounds()
+    {
+        _backgroundStartingAbilities = new Dictionary<string, List<AbilityTemplate>>
+        {
+            {"religious", new List<AbilityTemplate>()}
+        };
+
+        //populate religious background
+        _religiousStartingAbilityNames = new List<string>
+        {
+            "divine aid",
+            "intimidate"
+        };
+
+        
+        foreach (var abilityTemplate in _allAbilities.Values)
+        {
+            if (_religiousStartingAbilityNames.Contains(abilityTemplate.Name.ToLower()))
+            {
+                _backgroundStartingAbilities["religious"].Add(abilityTemplate);
+            }
+        }
     }
 
     private static void PopulateAbilitiesByBodyPart()
@@ -99,9 +127,14 @@ public class AbilityStore : MonoBehaviour,ISubscriber
         }
     }
 
-    public static List<AbilityTemplate> GetAbilitiesByBackground(CharacterBackground background)
+    public static List<AbilityTemplate> GetAllAbilitiesWithRequiredBackground(CharacterBackground background)
     {
-        return new List<AbilityTemplate>(_abilitiesByBackground[background.Name]);
+        return new List<AbilityTemplate>(_abilitiesByBackgroundRequirement[background.Name]);
+    }
+
+    public static List<AbilityTemplate> GetStartingAbilitiesForBackground(CharacterBackground background)
+    {
+        return new List<AbilityTemplate>(_backgroundStartingAbilities[background.Name]);
     }
 
     public static List<AbilityTemplate> GetAbilitiesByDamageType(DamageType dt)
@@ -131,40 +164,28 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     public static Ability CreateAbility(AbilityTemplate template, Entity owner)
     {
-        //todo need dictionary
+        Dictionary<string, Func<AbilityTemplate, Entity, Ability>> abilities = new Dictionary<string, Func<AbilityTemplate, Entity, Ability>>
+        {
+            {"divine aid", (abilityTemplate, abilityOwner) => new Heal(abilityTemplate, abilityOwner)},
+            {"bash", (abilityTemplate, abilityOwner) => new Bash(abilityTemplate, abilityOwner)},
+            {"knockback", (abilityTemplate, abilityOwner) => new KnockBack(abilityTemplate, abilityOwner)},
+            {"stab", (abilityTemplate, abilityOwner) => new Stab(abilityTemplate, abilityOwner)},
+            {"spin web", (abilityTemplate, abilityOwner) => new SpinWeb(abilityTemplate, abilityOwner)},
+            {"intimidate", (abilityTemplate, abilityOwner) => new Intimidate(abilityTemplate, abilityOwner)}
+        };
 
         if (template == null)
         {
             return null;
         }
 
-        if (template.Effect.Contains("heal"))
+        if (!abilities.ContainsKey(template.Name.ToLower()))
         {
-            return new Heal(template, owner);
+            Debug.Log($"{template.Name} failed to create!");
+            return null;
         }
 
-        if (template.Name.Equals("bash", StringComparison.OrdinalIgnoreCase))
-        {
-            return new Bash(template, owner);
-        }
-
-        if (template.Name.Equals("knockback", StringComparison.OrdinalIgnoreCase))
-        {
-            return new KnockBack(template, owner);
-        }
-
-        if (template.Name.Equals("stab", StringComparison.OrdinalIgnoreCase))
-        {
-            return new Stab(template, owner);
-        }
-
-        if (template.Name.Equals("spin web", StringComparison.OrdinalIgnoreCase))
-        {
-            return new SpinWeb(template, owner);
-        }
-
-        Debug.Log($"{template.Name} failed to create!");
-        return null;
+        return abilities[template.Name.ToLower()].Invoke(template, owner);
     }
 
     public static Ability ChooseRandomFreeAbility(Entity entity)
@@ -191,7 +212,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
             }
         }
 
-        var backgroundAbilities = GetAbilitiesByBackground(entity.Fluff.BackgroundType);
+        var backgroundAbilities = GetAllAbilitiesWithRequiredBackground(entity.Fluff.BackgroundType);
 
         foreach (var ability in backgroundAbilities.ToArray().Where(ability => ability.StartingAbility))
         {

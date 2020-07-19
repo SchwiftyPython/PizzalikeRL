@@ -77,6 +77,7 @@ public class Entity : ISubscriber
     private bool _isDead;
     private bool _isHostile;
     private bool _isWild;
+    public bool CanAttack { get; set; } 
 
     public Reputation EntityReputation { get; set; }
 
@@ -191,6 +192,8 @@ public class Entity : ISubscriber
 
         Prefab = Resources.Load(prefabPath) as GameObject;
 
+        CanAttack = true;
+
         if (isPlayer)
         {
             ToppingCounts = new ToppingCountDictionary
@@ -227,6 +230,8 @@ public class Entity : ISubscriber
         Faction = faction;
 
         Inventory = new Dictionary<Guid, Item>();
+
+        CanAttack = true;
 
         if (_isPlayer)
         {
@@ -1400,7 +1405,7 @@ public class Entity : ISubscriber
             abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, this));
         }
 
-        var startingBackgroundAbilities = AbilityStore.GetAbilitiesByBackground(Fluff.BackgroundType);
+        var startingBackgroundAbilities = AbilityStore.GetAllAbilitiesWithRequiredBackground(Fluff.BackgroundType);
 
         foreach (var ability in startingBackgroundAbilities)
         {
@@ -1819,6 +1824,16 @@ public class Entity : ISubscriber
                 }
 
                 _currentEffects.Add(bleedEffect);
+                break;
+            case "fear":
+                var fearEffect = new Fear(duration, this);
+
+                if (duration < 0)
+                {
+                    return;
+                }
+
+                _currentEffects.Add(fearEffect);
                 break;
         }
     }

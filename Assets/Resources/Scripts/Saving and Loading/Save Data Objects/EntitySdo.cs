@@ -37,6 +37,8 @@ public class EntitySdo
     public int Speed { get;  set; }
 
     public int Defense { get;  set; }
+
+    public bool CanAttack { get; set; }
    
     public List<Guid> InventoryItemIds { get; set; }
 
@@ -130,6 +132,7 @@ public class EntitySdo
         sdo.ChildrenIds = new List<Guid>();
         sdo.Reputation = entity.EntityReputation;
         sdo.AbilityNames = new List<string>();
+        sdo.CanAttack = entity.CanAttack;
 
         foreach (var itemId in entity.Inventory.Keys)
         {
@@ -222,6 +225,7 @@ public class EntitySdo
         entity.ToppingCounts = entitySdo.ToppingCounts;
         entity.EntityReputation = entitySdo.Reputation;
         entity.Abilities = new Entity.AbilityDictionary();
+        entity.CanAttack = entitySdo.CanAttack;
 
         if (string.IsNullOrEmpty(entitySdo.CurrentCellId))
         {

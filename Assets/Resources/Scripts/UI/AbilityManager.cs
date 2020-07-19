@@ -25,6 +25,7 @@ public class AbilityManager : MonoBehaviour
     public Sprite StabIcon;
     public Sprite DivineAidIcon;
     public Sprite SpinWebIcon;
+    public Sprite IntimidateIcon;
 
     public static AbilityManager Instance;
 
@@ -45,7 +46,8 @@ public class AbilityManager : MonoBehaviour
             {"knockback", KnockBackIcon},
             {"stab", StabIcon},
             {"divine aid", DivineAidIcon},
-            {"spin web", SpinWebIcon}
+            {"spin web", SpinWebIcon},
+            {"intimidate", IntimidateIcon}
         };
 
         if (_abilityMap == null)

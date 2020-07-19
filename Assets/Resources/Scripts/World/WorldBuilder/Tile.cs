@@ -174,6 +174,64 @@ public class Tile
         }
     }
 
+    
+    public List<Tile> GetAdjacentTiles()
+    {
+        return new List<Tile>
+        {
+            Left,
+            Right,
+            Top,
+            Bottom,
+            Left.Top,
+            Top.Right,
+            Right.Bottom,
+            Bottom.Left
+        };
+    }
+
+    public GoalDirection? GetDirectionFromTile(Tile target)
+    {
+        if (X == target.X)
+        {
+            if (Y == target.Y)
+            {
+                return null;
+            }
+            if (Y < target.Y)
+            {
+                return GoalDirection.South;
+            }
+
+            return GoalDirection.North;
+        }
+
+        if (X < target.X)
+        {
+            if (Y == target.Y)
+            {
+                return GoalDirection.East;
+            }
+            if (Y < target.Y)
+            {
+                return GoalDirection.SouthEast;
+            }
+
+            return GoalDirection.NorthEast;
+        }
+
+        if (Y == target.Y)
+        {
+            return GoalDirection.West;
+        }
+        if (Y < target.Y)
+        {
+            return GoalDirection.SouthWest;
+        }
+
+        return GoalDirection.NorthWest;
+    }
+
     private void SetTileVisibility(Visibilities visibility)
     {
         var visibleColor = new Color(1, 1, 1, 0);

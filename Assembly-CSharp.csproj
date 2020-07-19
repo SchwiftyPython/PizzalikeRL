@@ -251,6 +251,7 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Bash.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Heal.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Intimidate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\KnockBack.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\SpinWeb.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Stab.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Assets\Resources\Scripts\Effects\Daze.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\DirectionStruct.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Effect.cs" />
+    <Compile Include="Assets\Resources\Scripts\Effects\Fear.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Healing.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Immobilize.cs" />
     <Compile Include="Assets\Resources\Scripts\Effects\Push.cs" />

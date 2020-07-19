@@ -64,6 +64,54 @@ public class GlobalHelper : MonoBehaviour
         Thrown
     }
 
+    public enum AttributeCheckWinner
+    {
+        Attacker,
+        Defender
+    }
+
+    public enum AttributeCheck
+    {
+        Strength,
+        Agility,
+        Constitution,
+        Intelligence
+    }
+
+    public static AttributeCheckWinner AttackerDefenderAttributeCheck(Entity attacker, Entity defender,
+        AttributeCheck attribute)
+    {
+        var intCheckDice = new Dice(1, 20);
+
+        var attackerTotal = DiceRoller.Instance.RollDice(intCheckDice);
+
+        var defenderTotal = DiceRoller.Instance.RollDice(intCheckDice);
+
+        switch (attribute)
+        {
+            case AttributeCheck.Strength:
+                attackerTotal = attacker.Strength + attackerTotal;
+                defenderTotal = defender.Strength + defenderTotal;
+                break;
+            case AttributeCheck.Agility:
+                attackerTotal = attacker.Agility + attackerTotal;
+                defenderTotal = defender.Agility + defenderTotal;
+                break;
+            case AttributeCheck.Constitution:
+                attackerTotal = attacker.Constitution + attackerTotal;
+                defenderTotal = defender.Constitution + defenderTotal;
+                break;
+            case AttributeCheck.Intelligence:
+                attackerTotal = attacker.Intelligence + attackerTotal;
+                defenderTotal = defender.Intelligence + defenderTotal;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(attribute), attribute, null);
+        }
+
+        return attackerTotal > defenderTotal ? AttributeCheckWinner.Attacker : AttributeCheckWinner.Defender;
+    }
+
     public static void DestroyAllChildren(GameObject parent)
     {
         for (var i = 0; i < parent.transform.childCount; i++)

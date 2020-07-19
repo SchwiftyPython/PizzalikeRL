@@ -77,6 +77,21 @@
 		<StartingAbility>true</StartingAbility>
 	</Ability>	
 	
+	<Ability name = "intimidate">	    
+	    <Attribute> intelligence </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Attempt to frighten all hostile creatures adjacent to you. On success, affected creatures will have Fear effect for 2d4 turns.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice>2d4</Dice>		
+	    <Cooldown> 9 </Cooldown>
+		<Target>adjacent</Target>
+		<Effect>fear</Effect>
+		<Range>1</Range>
+		<StartingAbility>true</StartingAbility>
+	</Ability>
+	
     </Abilities>
 </AbilitiesCollection>
 	

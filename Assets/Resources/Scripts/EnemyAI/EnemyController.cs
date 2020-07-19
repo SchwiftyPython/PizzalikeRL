@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class EnemyController : AstarAI
 {
@@ -67,6 +68,15 @@ public class EnemyController : AstarAI
 
     public void GetAngryAt(Entity target)
     {
+        if (target.Faction != null)
+        {
+            Self.EntityReputation.ChangeReputationValue(target.Faction.Name, int.MinValue);
+        }
+        else
+        {
+            Self.EntityReputation.ChangeReputationValue(target.EntityType, int.MinValue);
+        }
+
         Self.Goals = new Stack<Goal>();
 
         new Attack(target).Push(this);
@@ -85,7 +95,7 @@ public class EnemyController : AstarAI
 
         if (roll <= fleeChance)
         {
-            new Flee().Push(this);
+            new Flee(attacker).Push(this);
         }
         else
         {

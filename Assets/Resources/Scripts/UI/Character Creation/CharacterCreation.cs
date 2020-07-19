@@ -298,13 +298,11 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
     {
         _selectedBackground = background;
 
-        var description = background.Description;
-
         LoadStartingAbilitiesForBackground(background);
 
         if (BackgroundDescription.activeSelf)
         {
-            DisplayCharacterBackgroundDescription(description);
+            DisplayCharacterBackgroundDescription(background);
         }
         else
         {
@@ -497,9 +495,25 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         SelectSpeciesOption(EntityTemplateLoader.GetEntityTemplate(allSpecies.First()));
     }
 
-    public void DisplayCharacterBackgroundDescription(string description)
+    public void DisplayCharacterBackgroundDescription(CharacterBackground background)
     {
-        BackgroundDescription.GetComponent<TextMeshProUGUI>().text = description.Trim();
+        var descriptionWithAttributes = background.Description.Trim();
+
+        descriptionWithAttributes = string.Concat(descriptionWithAttributes,
+            $@"{Environment.NewLine}");
+
+        if (background.AttributeModifications != null && background.AttributeModifications.Count > 0)
+        {
+            foreach (var modification in background.AttributeModifications)
+            {
+                var sign = modification.Value > 0 ? "+" : string.Empty;
+
+                descriptionWithAttributes = string.Concat(descriptionWithAttributes,
+                    $@"{Environment.NewLine}{GlobalHelper.Capitalize(modification.Name.Trim())} {sign}{modification.Value}");
+            }
+        }
+
+        BackgroundDescription.GetComponent<TextMeshProUGUI>().text = descriptionWithAttributes;
 
         BackgroundDescription.SetActive(true);
 
@@ -508,9 +522,7 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
 
     public void DisplayCharacterBackgroundDescription()
     {
-        var description = _selectedBackground.Description;
-
-        DisplayCharacterBackgroundDescription(description);
+        DisplayCharacterBackgroundDescription(_selectedBackground);
     }
 
     public void AbilitySelected(string abilityName)
@@ -557,7 +569,7 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
     {
         GlobalHelper.DestroyAllChildren(BackgroundStartingAbilityParent);
 
-        var backgroundAbilities = AbilityStore.GetAbilitiesByBackground(background);
+        var backgroundAbilities = AbilityStore.GetStartingAbilitiesForBackground(background);
 
         foreach (var ability in backgroundAbilities)
         {
@@ -618,7 +630,7 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
             PopulateAbilityCategory("Species", bodyPartAbilities);
         }
 
-        var backgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
+        var backgroundAbilities = AbilityStore.GetAllAbilitiesWithRequiredBackground(_selectedBackground);
 
         foreach (var ability in backgroundAbilities.ToArray().Where(ability => ability.StartingAbility))
         {
@@ -720,7 +732,7 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
             abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, _player));
         }
 
-        var startingBackgroundAbilities = AbilityStore.GetAbilitiesByBackground(_selectedBackground);
+        var startingBackgroundAbilities = AbilityStore.GetStartingAbilitiesForBackground(_selectedBackground);
 
         foreach (var ability in startingBackgroundAbilities)
         {
@@ -815,7 +827,7 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         IntelligenceValueBox.GetComponent<TextMeshProUGUI>().text = _intelligence.ToString();
     }
 
-    private void PreparePlayerForPlay()
+    private void PreparePlayerForPlay()//todo need to apply background attribute mods
     {
         _player = new Entity(_playerTemplate, null, true);
 

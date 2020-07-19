@@ -25,16 +25,16 @@ public class Step : Goal
         var directionDictionary = GlobalHelper.GetVectorDictionary();
 
         var currentPosition = new Vector2(ParentController.Self.CurrentTile.X, ParentController.Self.CurrentTile.Y);
-        var targetposition = new Vector2(
+        var targetPosition = new Vector2(
             (int) (currentPosition.x + directionDictionary[StepDirection].x),
             (int) (currentPosition.y + directionDictionary[StepDirection].y));
 
-        if (!ParentController.Self.AreaMapCanMoveLocal(targetposition))
+        if (!ParentController.Self.AreaMapCanMoveLocal(targetPosition))
         {
             FailToParent();
             return;
         }
-        ParentController.Self.AreaMove(targetposition);
+        ParentController.Self.AreaMove(targetPosition);
         Pop();
     }
 }
