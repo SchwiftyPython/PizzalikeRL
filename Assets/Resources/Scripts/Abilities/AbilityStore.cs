@@ -13,6 +13,8 @@ public class AbilityStore : MonoBehaviour,ISubscriber
     private static Dictionary<string, List<AbilityTemplate>> _abilitiesByBodyPart;
 
     private static List<string> _religiousStartingAbilityNames;
+    private static List<string> _militaryStartingAbilityNames;
+    private static List<string> _streetRatStartingAbilityNames;
 
     private void Start()
     {
@@ -84,22 +86,42 @@ public class AbilityStore : MonoBehaviour,ISubscriber
     {
         _backgroundStartingAbilities = new Dictionary<string, List<AbilityTemplate>>
         {
-            {"religious", new List<AbilityTemplate>()}
+            {"religious", new List<AbilityTemplate>()},
+            {"military", new List<AbilityTemplate>()},
+            {"street rat", new List<AbilityTemplate>()}
         };
 
         //populate religious background
         _religiousStartingAbilityNames = new List<string>
         {
             "divine aid",
-            "intimidate"
+            "intimidate",
+            "meditate"
         };
 
-        
+        _militaryStartingAbilityNames = new List<string>
+        {
+            "dismember"
+        };
+
+        _streetRatStartingAbilityNames = new List<string>
+        {
+            "bandage wounds"
+        };
+
         foreach (var abilityTemplate in _allAbilities.Values)
         {
             if (_religiousStartingAbilityNames.Contains(abilityTemplate.Name.ToLower()))
             {
                 _backgroundStartingAbilities["religious"].Add(abilityTemplate);
+            }
+            if (_militaryStartingAbilityNames.Contains(abilityTemplate.Name.ToLower()))
+            {
+                _backgroundStartingAbilities["military"].Add(abilityTemplate);
+            }
+            if (_streetRatStartingAbilityNames.Contains(abilityTemplate.Name.ToLower()))
+            {
+                _backgroundStartingAbilities["street rat"].Add(abilityTemplate);
             }
         }
     }
@@ -171,7 +193,10 @@ public class AbilityStore : MonoBehaviour,ISubscriber
             {"knockback", (abilityTemplate, abilityOwner) => new KnockBack(abilityTemplate, abilityOwner)},
             {"stab", (abilityTemplate, abilityOwner) => new Stab(abilityTemplate, abilityOwner)},
             {"spin web", (abilityTemplate, abilityOwner) => new SpinWeb(abilityTemplate, abilityOwner)},
-            {"intimidate", (abilityTemplate, abilityOwner) => new Intimidate(abilityTemplate, abilityOwner)}
+            {"intimidate", (abilityTemplate, abilityOwner) => new Intimidate(abilityTemplate, abilityOwner)},
+            {"dismember", (abilityTemplate, abilityOwner) => new Dismember(abilityTemplate, abilityOwner)},
+            {"meditate", (abilityTemplate, abilityOwner) => new Meditate(abilityTemplate, abilityOwner)},
+            {"bandage wounds", (abilityTemplate, abilityOwner) => new BandageWounds(abilityTemplate, abilityOwner)}
         };
 
         if (template == null)
@@ -181,7 +206,7 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
         if (!abilities.ContainsKey(template.Name.ToLower()))
         {
-            Debug.Log($"{template.Name} failed to create!");
+            Debug.Log($"failed to create ability: {template.Name}!");
             return null;
         }
 

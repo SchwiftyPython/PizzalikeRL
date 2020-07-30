@@ -65,7 +65,7 @@ public class InputController : MonoBehaviour, ISubscriber
     {
         var currentScene = GameManager.Instance.CurrentScene.name;
 
-        if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn)
+        if (GameManager.Instance.CurrentState == GameManager.GameState.Playerturn && !GameManager.Instance.AnyActiveWindows())
         {
             if (_player == null || _player != GameManager.Instance.Player)
             {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,12 +19,19 @@ public class AbilityManager : MonoBehaviour
     public GameObject AbilityButton9;
     public GameObject AbilityButton0;
 
+    #region AbilityIcons
+
     public Sprite BashIcon;
     public Sprite KnockBackIcon;
     public Sprite StabIcon;
     public Sprite DivineAidIcon;
     public Sprite SpinWebIcon;
     public Sprite IntimidateIcon;
+    public Sprite DismemberIcon;
+    public Sprite MeditateIcon;
+    public Sprite BandageWoundsIcon;
+
+    #endregion
 
     public static AbilityManager Instance;
 
@@ -47,7 +53,10 @@ public class AbilityManager : MonoBehaviour
             {"stab", StabIcon},
             {"divine aid", DivineAidIcon},
             {"spin web", SpinWebIcon},
-            {"intimidate", IntimidateIcon}
+            {"intimidate", IntimidateIcon},
+            {"dismember", DismemberIcon},
+            {"meditate", MeditateIcon},
+            {"bandage wounds", BandageWoundsIcon}
         };
 
         if (_abilityMap == null)

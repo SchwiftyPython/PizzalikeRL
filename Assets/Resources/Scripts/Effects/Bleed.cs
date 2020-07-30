@@ -14,16 +14,30 @@ public class Bleed : Effect, ISubscriber
         remainingTurns = duration;
         _damagePerTurn = amount;
 
-        //todo message event target dazed
-        //todo check if player for different message
-        Debug.Log($"{entity.EntityType} is bleeding!");
+
+        if (entity.IsPlayer())
+        {
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this,
+                "You are bleeding!");
+        }
+        else
+        {
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this,
+                $"{entity.Name} is bleeding!");
+        }
 
         EventMediator.Instance.SubscribeToEvent(GlobalHelper.EndTurnEventName, this);
     }
 
+    public override void Remove()
+    {
+       EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
+       entity = null;
+    }
+
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
-        if (eventName == GlobalHelper.EndTurnEventName)
+        if (eventName == GlobalHelper.EndTurnEventName && parameter == entity)
         {
             if (remainingTurns > 0)
             {
@@ -33,8 +47,16 @@ public class Bleed : Effect, ISubscriber
             }
             else
             {
-                //todo message event target dazed
-                Debug.Log($"{entity.EntityType} is no longer bleeding!");
+                if (entity.IsPlayer())
+                {
+                    EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this,
+                        "You are no longer bleeding.");
+                }
+                else
+                {
+                    EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this,
+                        $"{entity.Name} is no longer bleeding.");
+                }
 
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
 

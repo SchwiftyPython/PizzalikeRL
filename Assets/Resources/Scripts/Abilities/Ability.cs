@@ -33,6 +33,8 @@ public class Ability : ISubscriber
     
     public bool StartingAbility;
 
+    public bool UsesConsumables;
+
     public int RemainingCooldownTurns;
 
     public Entity Owner;
@@ -55,6 +57,7 @@ public class Ability : ISubscriber
         StartingAbility = template.StartingAbility;
         RemainingCooldownTurns = 0;
         Owner = owner;
+        UsesConsumables = template.UsesConsumables;
 
         TargetType = (AbilityTarget) Enum.Parse(typeof(AbilityTarget), template.Target.Replace(" ", ""), true);
 
@@ -62,6 +65,11 @@ public class Ability : ISubscriber
         {
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemUnequippedEventName, this);
+        }
+
+        if (UsesConsumables)
+        {
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.ConsumableUsedEventName, this);
         }
     }
 
@@ -93,16 +101,33 @@ public class Ability : ISubscriber
 
     public void CheckEquippedItemsForRequiredProperty()
     {
-        Disable();
-
         foreach (var equippedItem in GameManager.Instance.Player.Equipped.Values)
         {
             if (equippedItem != null && equippedItem.Properties.Contains(RequiresProperty))
             {
                 Enable();
-                break;
+                return;
             }
         }
+        Disable();
+    }
+
+    public void CheckConsumablesForRequiredProperty()
+    {
+        if (!UsesConsumables)
+        {
+            return;
+        }
+
+        foreach (var item in GameManager.Instance.Player.Inventory.Values)
+        {
+            if (item.EquipmentSlotType == EquipmentSlotType.Consumable && item.Properties.Contains(RequiresProperty))
+            {
+                Enable();
+                return;
+            }
+        }
+        Disable();
     }
 
     public virtual void OnNotify(string eventName, object broadcaster, object parameter = null)
@@ -115,13 +140,29 @@ public class Ability : ISubscriber
             }
             else
             {
-                Enable();
+                if (!string.IsNullOrEmpty(RequiresProperty))
+                {
+                    CheckEquippedItemsForRequiredProperty();
+
+                    if (UsesConsumables)
+                    {
+                        CheckConsumablesForRequiredProperty();
+                    }
+                }
+                else
+                {
+                    Enable();
+                }
                 EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.EndTurnEventName, this);
             }
         }
         else if (eventName == GlobalHelper.ItemEquippedEventName || eventName == GlobalHelper.ItemUnequippedEventName)
         {
             CheckEquippedItemsForRequiredProperty();
+        }
+        else if (eventName == GlobalHelper.ConsumableUsedEventName)
+        {
+            CheckConsumablesForRequiredProperty();
         }
     }
 

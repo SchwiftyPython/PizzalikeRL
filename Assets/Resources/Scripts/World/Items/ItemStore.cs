@@ -69,7 +69,9 @@ public enum ItemPrefabKeys
     // [Description("Turret Barrel")] //todo need to implement
     // TurretBarrel,
     [Description("Warhammer")]
-    Warhammer
+    Warhammer,
+    [Description("Bandage")]
+    Bandage
 }
 
 public class ItemStore : MonoBehaviour
@@ -350,7 +352,7 @@ public class ItemStore : MonoBehaviour
         return _slotDictionary[slotType];
     }
 
-    private Item CreateItemOfType(string itemType, ItemRarity rarity = ItemRarity.Common)
+    public Item CreateItemOfType(string itemType, ItemRarity rarity = ItemRarity.Common)
     {
         var itemTemplate = ItemTemplateLoader.GetItemTemplate(itemType);
 
@@ -366,9 +368,7 @@ public class ItemStore : MonoBehaviour
             case "weapon":
                 return new Weapon(template, rarity);
             case "consumable":
-                return GetRandomItem();
-            //todo need sprite 
-            //return new Item(itemTemplate, rarity);
+                return new Item(template, rarity);
             default:
                 return new Item(template, rarity);
         }
@@ -421,8 +421,6 @@ public class ItemStore : MonoBehaviour
         var index = 0;
         foreach (ItemPrefabKeys prefabKey in Enum.GetValues(typeof(ItemPrefabKeys)))
         {
-            
-
             _itemPrefabsWorldView[prefabKey] = WorldData.Instance.ItemPrefabsWorldView[index];
             index++;
         }

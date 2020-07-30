@@ -40,4 +40,7 @@ public class AbilityTemplate
 
     [XmlElement("StartingAbility")]
     public bool StartingAbility;
+
+    [XmlElement("UsesConsumables")]
+    public bool UsesConsumables;
 }

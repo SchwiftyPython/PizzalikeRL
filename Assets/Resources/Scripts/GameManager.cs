@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour, ISubscriber
             case GameState.Playerturn:
                 if (InputController.Instance.ActionTaken)
                 {
-                    EventMediator.Instance.Broadcast(GlobalHelper.EndTurnEventName, this);
+                    //EventMediator.Instance.Broadcast(GlobalHelper.EndTurnEventName, this);
 
                     CurrentState = GameState.EndTurn;
                     TurnNumber++;
@@ -197,20 +197,36 @@ public class GameManager : MonoBehaviour, ISubscriber
                 }
                 break;
             case GameState.EndTurn:
+                EventMediator.Instance.Broadcast(GlobalHelper.EndTurnEventName, this, CurrentArea.TurnOrder.Peek());
+
                 if (WorldMapSceneActive())
                 {
+                    Player.EndOfTurnHealthRegenerate();
                     InputController.Instance.ActionTaken = false;
                     CurrentState = GameState.Playerturn;
                 }
                 else
                 {
+                    var currentEntity = CurrentArea.TurnOrder.Peek();
+
+                    //todo need to make a boolean to indicate if combat happened last turn or something
+                    if (currentEntity.MovedLastTurn(TurnNumber))
+                    {
+                        EventMediator.Instance.Broadcast(GlobalHelper.EntityMovedOrTookActionEventName, this,
+                            currentEntity);
+                    }
+
+                    currentEntity.EndOfTurnHealthRegenerate();
+
                     if (PlayerInvisible() || PlayerNearCameraEdge())
                     {
                         MoveCameraToPlayer();
                     }
+
                     CheckForDeadEntities();
                     CurrentState = WhoseTurn();
                 }
+
                 break;
             case GameState.PlayerDeath:
                 if (PlayerDeathRoutineComplete)

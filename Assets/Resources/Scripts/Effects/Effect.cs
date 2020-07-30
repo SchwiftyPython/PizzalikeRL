@@ -34,4 +34,6 @@ public class Effect
     }
 
     public virtual void Apply(Entity target) { }
+
+    public virtual void Remove() { }
 }

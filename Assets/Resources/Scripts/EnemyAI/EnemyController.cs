@@ -77,6 +77,15 @@ public class EnemyController : AstarAI
             Self.EntityReputation.ChangeReputationValue(target.EntityType, int.MinValue);
         }
 
+        if (Self.Faction != null)
+        {
+            target.EntityReputation.ChangeReputationValue(Self.Faction.Name, int.MinValue);
+        }
+        else
+        {
+            target.EntityReputation.ChangeReputationValue(Self.EntityType, int.MinValue);
+        }
+
         Self.Goals = new Stack<Goal>();
 
         new Attack(target).Push(this);

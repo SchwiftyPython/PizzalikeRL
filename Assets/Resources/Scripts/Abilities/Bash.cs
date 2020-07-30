@@ -17,10 +17,12 @@
     {
         if (eventName == GlobalHelper.AbilityTileSelectedEventName)
         {
-            if (!(parameter is Entity target))
+            if (!(parameter is DirectionStruct dStruct))
             {
                 return;
             }
+
+            var target = dStruct.target;
 
             RemainingCooldownTurns = Cooldown;
 

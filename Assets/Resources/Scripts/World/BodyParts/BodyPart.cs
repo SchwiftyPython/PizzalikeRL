@@ -11,6 +11,8 @@ public class BodyPart
     public bool CanEquipWeapon;
     public bool CanEquipArmor;
 
+    public bool IsDismembered;
+
     public string AttackVerb;
 
     public BodyPart ParentBodyPart;

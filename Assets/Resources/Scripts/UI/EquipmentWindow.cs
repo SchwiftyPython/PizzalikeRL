@@ -74,8 +74,12 @@ public class EquipmentWindow : MonoBehaviour, ISubscriber
                 continue;
             }
 
-            if (slot == Entity.EquipmentSlot.LeftArmTwo || slot == Entity.EquipmentSlot.LeftHandTwo ||
-                slot == Entity.EquipmentSlot.RightArmTwo || slot == Entity.EquipmentSlot.RightHandTwo)
+            if (!GameManager.Instance.Player.IsEquipmentSlotValid(slot))
+            {
+                continue;
+            }
+
+            if (slot == Entity.EquipmentSlot.LeftHandTwo || slot == Entity.EquipmentSlot.RightHandTwo)
             {
                 if (!GameManager.Instance.Player.IsMultiArmed)
                 {

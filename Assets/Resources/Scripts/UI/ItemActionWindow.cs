@@ -94,12 +94,18 @@ public class ItemActionWindow : MonoBehaviour, ISubscriber
         EquipmentSlotPanel.SetActive(true);
     }
 
+    //todo need to take two-handed property into consideration
     private void PopulateEquipmentSlotPanel()
     {
         GlobalHelper.DestroyAllChildren(EquipmentSlotPanel);
 
         foreach (var slot in _selectedItem.EquipmentSlots)
         {
+            if (!GameManager.Instance.Player.IsEquipmentSlotValid(slot))
+            {
+                continue;
+            }
+
             var equipmentSlotButton = Instantiate(EquipmentSlotPrefab, new Vector3(0, 0), Quaternion.identity);
             equipmentSlotButton.transform.SetParent(EquipmentSlotPanel.transform);
 

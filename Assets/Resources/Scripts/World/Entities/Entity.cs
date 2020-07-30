@@ -10,6 +10,8 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class Entity : ISubscriber
 {
+    public const float DefaultHealRate = .01f;
+
     public enum EntityClassification
     {
         Humanoid,
@@ -33,14 +35,7 @@ public class Entity : ISubscriber
     {
         Body,
         Head,
-        [Description("Right Arm")]
-        RightArmOne,
-        [Description("Right Arm Two")]
-        RightArmTwo,
-        [Description("Left Arm")]
-        LeftArmOne,
-        [Description("Left Arm Two")]
-        LeftArmTwo,
+        Arms,
         [Description("Right Hand")]
         RightHandOne,
         [Description("Right Hand Two")]
@@ -52,6 +47,7 @@ public class Entity : ISubscriber
         [Description("Missile Weapon")]
         MissileWeaponOne,
         Hands,
+        Legs,
         Feet,
         Special,
         Thrown,
@@ -96,6 +92,8 @@ public class Entity : ISubscriber
 
     public Faction Faction;
 
+    public float HealRate = DefaultHealRate;
+
     public int TotalBodyPartCoverage { get; set; }
 
     private Vector3 _currentPosition; //on screen position
@@ -119,7 +117,23 @@ public class Entity : ISubscriber
     //Stats dependent on base stat values
 
     public int MaxHp { get; set; }
-    public int CurrentHp { get; set; }
+
+    private int _currentHp;
+
+    public int CurrentHp
+    {
+        get => _currentHp;
+        set
+        {
+            if (value < _currentHp)
+            {
+                EventMediator.Instance.Broadcast(GlobalHelper.EntityTookDamageEventName, this);
+            }
+
+            _currentHp = value;
+        }
+    }
+
     public int Speed { get; set; }
     public int Defense { get; set; }
 
@@ -130,8 +144,25 @@ public class Entity : ISubscriber
 
     public BodyDictionary Body { get; set; }
 
+    public BodyDictionary DismemberedParts;
+
     public IDictionary<Guid, Item> Inventory { get; } //todo create method for adding items to inventory
     public IDictionary<EquipmentSlot, Item> Equipped;
+
+    //todo need to establish a relationship between body parts and equipment slots
+    private IDictionary<EquipmentSlot, List<Guid>> _equipmentSlotBodyPartJoin = new Dictionary<EquipmentSlot, List<Guid>>
+    {
+        {EquipmentSlot.Body, new List<Guid>()},
+        {EquipmentSlot.Head, new List<Guid>()},
+        {EquipmentSlot.Arms, new List<Guid>()},
+        {EquipmentSlot.RightHandOne, new List<Guid>()},
+        {EquipmentSlot.LeftHandOne, new List<Guid>()},
+        {EquipmentSlot.MissileWeaponOne, new List<Guid>()},
+        {EquipmentSlot.Hands, new List<Guid>()},
+        {EquipmentSlot.Feet, new List<Guid>()},
+        {EquipmentSlot.Special, new List<Guid>()},
+        {EquipmentSlot.Thrown, new List<Guid>()}
+    };   
 
     [Serializable]
     public class AbilityDictionary : SerializableDictionary<string, Ability> { }
@@ -148,6 +179,24 @@ public class Entity : ISubscriber
     public string EntityType { get; set; }
     public EntityClassification Classification { get; set; }
     public EntityFluff Fluff { get; set; }
+
+    public string Name
+    {
+        get
+        {
+            if (IsPlayer())
+            {
+                return "you";
+            }
+
+            if (Fluff == null || string.IsNullOrEmpty(Fluff.Name))
+            {
+                return EntityType;
+            }
+
+            return Fluff.Name;
+        }
+    }
 
     public Stack<Goal> Goals;
 
@@ -300,6 +349,7 @@ public class Entity : ISubscriber
         BuildBody(template);
         CalculateTotalBodyPartCoverage();
         PopulateEquipped();
+        PopulateEquipmentSlotBodyPartJoin();
 
         Abilities = BuildAbilityDictionary();
 
@@ -386,6 +436,7 @@ public class Entity : ISubscriber
         BuildBody(template);
         CalculateTotalBodyPartCoverage();
         PopulateEquipped();
+        PopulateEquipmentSlotBodyPartJoin();
 
         if (!string.IsNullOrEmpty(template.Topping))
         {
@@ -426,12 +477,52 @@ public class Entity : ISubscriber
             $"Current HP: {CurrentHp}\nStrength: {Strength}\nAgility: {Agility}\nConstitution: {Constitution}\nSpeed: {Speed}\nDefense: {Defense}";
     }
 
+    public bool IsEquipmentSlotValid(EquipmentSlot slot)
+    {
+        if (!_equipmentSlotBodyPartJoin.ContainsKey(slot))
+        {
+            return false;
+        }
+
+        var partIdsForSlot = _equipmentSlotBodyPartJoin[slot];
+
+        if (partIdsForSlot.Count <= 0)
+        {
+            return false;
+        }
+
+        var dismemberedCount = 0;
+        foreach (var id in partIdsForSlot)
+        {
+            var part = Body[id];
+
+            if (part.IsDismembered)
+            {
+                dismemberedCount++;
+            }
+        }
+
+        if (dismemberedCount >= partIdsForSlot.Count)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public void EquipItem(Item item, EquipmentSlot slot)
     {
-        //todo equipment that occupies more then one slot
-        //todo two slot boolean in item.xml
+        //todo equipment that occupies more then one slot - two-handed property
+        //equip to left and right hand slots
+
+        //todo check if equipment slot parts are dismembered -- this should be done in equipment slot popup and equipment screen too
 
         if (item == null)
+        {
+            return;
+        }
+
+        if (!IsEquipmentSlotValid(slot))
         {
             return;
         }
@@ -470,6 +561,19 @@ public class Entity : ISubscriber
 
         EventMediator.Instance.Broadcast(GlobalHelper.ItemUnequippedEventName, this);
         InventoryWindow.Instance.InventoryChanged = true;
+    }
+
+    public void UseConsumableWithProperty(string propertyName)
+    {
+        foreach (var item in Inventory.Values.ToArray())
+        {
+            if (item.Properties.Contains(propertyName))
+            {
+                Inventory.Remove(item.Id);
+                EventMediator.Instance.Broadcast(GlobalHelper.ConsumableUsedEventName, this);
+                return;
+            }
+        }
     }
 
     private void PopulateEquipped()
@@ -650,6 +754,98 @@ public class Entity : ISubscriber
         }
     }
 
+    private void PopulateEquipmentSlotBodyPartJoin()
+    {
+        var slotsWithMultipleChoicesForBodyParts = new List<EquipmentSlot>
+        {
+            EquipmentSlot.RightHandOne,
+            EquipmentSlot.LeftHandOne
+        };
+
+        foreach (var equipmentSlot in _equipmentSlotBodyPartJoin.Keys)
+        {
+            var bodyPartsForSlot = new List<BodyPart>();
+
+            switch (equipmentSlot)
+            {
+                case EquipmentSlot.Body:
+                    bodyPartsForSlot = GetBodyPartsByType("torso");
+                    break;
+                case EquipmentSlot.Head:
+                    bodyPartsForSlot = GetBodyPartsByType("head");
+                    break;
+                case EquipmentSlot.Arms:
+                    bodyPartsForSlot = GetBodyPartsByType("arm");
+                    break;
+                case EquipmentSlot.RightHandOne:
+                    if (_equipmentSlotBodyPartJoin[EquipmentSlot.RightHandOne].Count > 0)
+                    {
+                        break;
+                    }
+
+                    bodyPartsForSlot = GetBodyPartsByType("hand");
+
+                    if (bodyPartsForSlot.Count <= 0)
+                    {
+                        break;
+                    }
+
+                    _equipmentSlotBodyPartJoin[EquipmentSlot.RightHandOne].Add(bodyPartsForSlot.First().Id);
+                    _equipmentSlotBodyPartJoin[EquipmentSlot.LeftHandOne].Add(bodyPartsForSlot.Last().Id);
+
+                    break;
+                case EquipmentSlot.LeftHandOne:
+                    if (_equipmentSlotBodyPartJoin[EquipmentSlot.LeftHandOne].Count > 0)
+                    {
+                        break;
+                    }
+
+                    bodyPartsForSlot = GetBodyPartsByType("hand");
+
+                    if (bodyPartsForSlot.Count <= 0)
+                    {
+                        break;
+                    }
+
+                    _equipmentSlotBodyPartJoin[EquipmentSlot.LeftHandOne].Add(bodyPartsForSlot.First().Id);
+                    _equipmentSlotBodyPartJoin[EquipmentSlot.RightHandOne].Add(bodyPartsForSlot.Last().Id);
+                    break;
+                case EquipmentSlot.Feet:
+                    bodyPartsForSlot = GetBodyPartsByType("foot");
+                    break;
+                case EquipmentSlot.Special:
+                    bodyPartsForSlot = GetBodyPartsByType("special");
+                    break;
+                case EquipmentSlot.MissileWeaponOne:
+                case EquipmentSlot.Hands:
+                case EquipmentSlot.Thrown:
+                    bodyPartsForSlot = GetBodyPartsByType("hand");
+                    break;
+                case EquipmentSlot.RightHandTwo:
+                case EquipmentSlot.LeftHandTwo:
+                case EquipmentSlot.Consumable:
+                    continue;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (bodyPartsForSlot.Count <= 0)
+            {
+                continue;
+            }
+
+            if (slotsWithMultipleChoicesForBodyParts.Contains(equipmentSlot))
+            {
+                continue;
+            }
+
+            foreach (var bodyPart in bodyPartsForSlot)
+            {
+                _equipmentSlotBodyPartJoin[equipmentSlot].Add(bodyPart.Id);
+            }
+        }
+    }
+
     public List<BodyPart> GetBodyPartsByType(string type)
     {
         var parts = new List<BodyPart>();
@@ -663,6 +859,52 @@ public class Entity : ISubscriber
         }
 
         return parts;
+    }
+
+    public void RemoveBodyPart(BodyPart part)
+    {
+        if (part == null || !Body.ContainsKey(part.Id))
+        {
+            return;
+        }
+
+        foreach (var slot in _equipmentSlotBodyPartJoin)
+        {
+            if (Equipped[slot.Key] == null)
+            {
+                continue;
+            }
+
+            if (slot.Value.Contains(part.Id))
+            {
+                if (slot.Value.Count == 1)
+                {
+                    UnequipItem(slot.Key);
+                }
+                else
+                {
+                    var equippedItem = Equipped[slot.Key];
+
+                    if (equippedItem.Properties.Contains("two-handed"))
+                    {
+                        UnequipItem(slot.Key);
+                    }
+                }
+
+                if (part.ChildrenBodyParts != null && part.ChildrenBodyParts.Count > 0)
+                {
+                    foreach (var child in part.ChildrenBodyParts)
+                    {
+                        RemoveBodyPart(child);
+                    }
+                }
+
+                part.IsDismembered = true;
+                part.CanEquipArmor = false;
+                part.CanEquipWeapon = false;
+            }
+        }
+        
     }
 
     private void AddBodyPart(BodyPart part)
@@ -1110,6 +1352,18 @@ public class Entity : ISubscriber
         return CurrentHp <= 0;
     }
 
+    public void EndOfTurnHealthRegenerate()
+    {
+        var amountToHeal = (int) (HealRate * MaxHp);
+
+        CurrentHp += amountToHeal;
+
+        if (CurrentHp > MaxHp)
+        {
+            CurrentHp = MaxHp;
+        }
+    }
+
     public void OnNotify(string eventName, object broadcaster, object parameter = null)
     {
         if (_eventMediator == null)
@@ -1225,6 +1479,37 @@ public class Entity : ISubscriber
         while (!partHit && triesToHit < Body.Values.Count)
         {
             part = bodyPartsDeck.Draw();
+
+            var roll = DiceRoller.Instance.RollDice(dice);
+
+            var chanceToHit = part.Coverage / (float)TotalBodyPartCoverage * 100;
+
+            partHit = roll <= chanceToHit;
+
+            triesToHit++;
+        }
+
+        return part;
+    }
+
+    public BodyPart BodyPartHitLimbsOnly()
+    {
+        var bodyPartsDeck = new BodyPartDeck(Body.Values.ToList());
+
+        var dice = new Dice(1, 100);
+
+        BodyPart part = null;
+        var partHit = false;
+        var triesToHit = 0;
+        while (!partHit && triesToHit < Body.Values.Count)
+        {
+            part = bodyPartsDeck.Draw();
+
+            if (part.Type.Equals("head", StringComparison.OrdinalIgnoreCase) ||
+                part.Type.Equals("torso", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
 
             var roll = DiceRoller.Instance.RollDice(dice);
 
@@ -1493,7 +1778,8 @@ public class Entity : ISubscriber
         return meleeWeapons;
     }
 
-    private void ApplyMeleeDamage(Entity target)
+    //todo overload that returns the bodypart hit?
+    public void ApplyMeleeDamage(Entity target)
     {
         var unarmedDamageDice = new Dice(1, 4);
 
@@ -1523,6 +1809,40 @@ public class Entity : ISubscriber
         ApplyDamage(target, damageRoll);
 
         EventMediator.Instance.Broadcast("MeleeHit", this);
+    }
+
+    public BodyPart ApplyMeleeDamageReturnBodyPartHit(Entity target, bool limbsOnly = false)
+    {
+        var unarmedDamageDice = new Dice(1, 4);
+
+        var equippedMeleeWeapons = GetEquippedMeleeWeapons();
+
+        var damageDice = new List<Dice>();
+        if (equippedMeleeWeapons != null && equippedMeleeWeapons.Count > 0)
+        {
+            foreach (var weapon in equippedMeleeWeapons)
+            {
+                damageDice.Add(weapon.ItemDice);
+            }
+        }
+        else
+        {
+            damageDice.Add(unarmedDamageDice);
+        }
+
+        var damageRoll = 0;
+
+        foreach (var dice in damageDice)
+        {
+            var roll = DiceRoller.Instance.RollDice(dice);
+            damageRoll += roll;
+        }
+
+        var hitPart = ApplyDamage(target, damageRoll, limbsOnly);
+
+        EventMediator.Instance.Broadcast("MeleeHit", this);
+
+        return hitPart;
     }
 
     private bool RangedHit(Entity target, Weapon equippedRangedWeapon)
@@ -1617,12 +1937,20 @@ public class Entity : ISubscriber
         ApplyDamage(target, damageRoll);
     }
 
-    public void ApplyDamage(Entity target, int damage)
+    public BodyPart ApplyDamage(Entity target, int damage, bool limbsOnly = false)
     {
-        var hitBodyPart = target.BodyPartHit();
+        BodyPart hitBodyPart;
+        if (limbsOnly)
+        {
+            hitBodyPart = target.BodyPartHitLimbsOnly();
+        }
+        else
+        {
+            hitBodyPart = target.BodyPartHit();
+        }
 
         target.CurrentHp -= damage;
-        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damage < 1 ? 0 : hitBodyPart.CurrentHp - damage;
+        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damage < 1 ? 0 : hitBodyPart.CurrentHp - damage; //todo remove bodypart when <= 0
 
         var message = string.Empty;
 
@@ -1639,6 +1967,8 @@ public class Entity : ISubscriber
         {
             EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
         }
+
+        return hitBodyPart;
     }
 
     public void ApplyRecurringDamage(int damage)
@@ -1843,5 +2173,17 @@ public class Entity : ISubscriber
         _currentEffects.Add(effect);
 
         effect.Apply(this);
+    }
+
+    public void RemoveEffect(Type effectType)
+    {
+        foreach (var effect in _currentEffects.ToArray())
+        {
+            if (effect.GetType() == effectType)
+            {
+                effect.Remove();
+                _currentEffects.Remove(effect);
+            }
+        }
     }
 }

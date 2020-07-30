@@ -52,7 +52,14 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 
         if (!string.IsNullOrEmpty(ability.RequiresProperty))
         {
+            //DisableButton();
+
             CheckEquippedItemsForRequiredProperty();
+
+            if (!_button.interactable && ability.UsesConsumables)
+            {
+                CheckConsumablesForRequiredProperty();
+            }
 
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemEquippedEventName, this);
             EventMediator.Instance.SubscribeToEvent(GlobalHelper.ItemUnequippedEventName, this);
@@ -62,21 +69,43 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
             EventMediator.Instance.UnsubscribeFromEvent(GlobalHelper.ItemEquippedEventName, this);
         }
 
+        if (ability.UsesConsumables)
+        {
+            EventMediator.Instance.SubscribeToEvent(GlobalHelper.ConsumableUsedEventName, this);
+        }
+
         InputController.Instance.UpdateAbilityBar(ability, gameObject);
     }
 
     public void CheckEquippedItemsForRequiredProperty()
     {
-        DisableButton();
-
         foreach (var equippedItem in GameManager.Instance.Player.Equipped.Values)
         {
             if (equippedItem?.Properties != null && equippedItem.Properties.Contains(_ability.RequiresProperty))
             {
                 EnableButton();
-                break;
+                return;
             }
         }
+        DisableButton();
+    }
+
+    public void CheckConsumablesForRequiredProperty()
+    {
+        if (!_ability.UsesConsumables)
+        {
+            return;
+        }
+
+        foreach (var item in GameManager.Instance.Player.Inventory.Values)
+        {
+            if (item.EquipmentSlotType == EquipmentSlotType.Consumable && item.Properties.Contains(_ability.RequiresProperty))
+            {
+                EnableButton();
+                return;
+            }
+        }
+        DisableButton();
     }
 
     public void EnableButton()
@@ -157,7 +186,19 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
             }
             else
             {
-                EnableButton();
+                if (!string.IsNullOrEmpty(_ability.RequiresProperty))
+                {
+                    CheckEquippedItemsForRequiredProperty();
+
+                    if (_ability.UsesConsumables)
+                    {
+                        CheckConsumablesForRequiredProperty();
+                    }
+                }
+                else
+                {
+                    EnableButton();
+                }
             }
         }
         else if (eventName == GlobalHelper.ItemEquippedEventName || eventName == GlobalHelper.ItemUnequippedEventName)
@@ -168,6 +209,10 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
             }
 
             CheckEquippedItemsForRequiredProperty();
+        }
+        else if (eventName == GlobalHelper.ConsumableUsedEventName)
+        {
+            CheckConsumablesForRequiredProperty();
         }
     }
 }

@@ -249,10 +249,13 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityStore.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTarget.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTemplate.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\BandageWounds.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Bash.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Dismember.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Heal.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Intimidate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\KnockBack.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Meditate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\SpinWeb.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Stab.cs" />
     <Compile Include="Assets\Resources\Scripts\Area of Effect\AOEStore.cs" />

@@ -658,6 +658,8 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
                 abilityList.Remove(ability);
             }
 
+            //todo filter out abilities that have a required attribute minimum or are species/background dependent
+
             if (abilityList.Count < 1)
             {
                 continue;
@@ -736,7 +738,7 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
 
         foreach (var ability in startingBackgroundAbilities)
         {
-            if (abilities.ContainsKey(ability.Name) || !ability.StartingAbility)
+            if (abilities.ContainsKey(ability.Name))
             {
                 continue;
             }
