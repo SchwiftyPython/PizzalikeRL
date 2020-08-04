@@ -170,6 +170,11 @@ public class Entity : ISubscriber
     public AbilityDictionary Abilities;
 
     [Serializable]
+    public class SkillsDictionary : SerializableDictionary<string, Skill> { }
+
+    public SkillsDictionary Skills;
+
+    [Serializable]
     public class ToppingCountDictionary : SerializableDictionary<Toppings, int> { }
 
     public ToppingCountDictionary ToppingCounts = new ToppingCountDictionary();
@@ -2185,5 +2190,35 @@ public class Entity : ISubscriber
                 _currentEffects.Remove(effect);
             }
         }
+    }
+
+    public void AddSkill(Skill skill)
+    {
+        if (Skills == null)
+        {
+            Skills = new SkillsDictionary();
+        }
+
+        if (Skills.ContainsKey(skill.Name))
+        {
+            return;
+        }
+
+        Skills.Add(skill.Name, skill);
+    }
+
+    public void RemoveSkill(Skill skill)
+    {
+        Skills?.Remove(skill.Name);
+    }
+
+    public bool HasSkill(string skillName)
+    {
+        if (Skills.ContainsKey(skillName))
+        {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -561,6 +561,12 @@ public class AreaMap : MonoBehaviour
     {
         var roll = Random.Range(0f, 1f);
 
+        //todo this would be better checking for item drop roll mods
+        if (GameManager.Instance.Player.HasSkill("scavenger"))
+        {
+            roll -= .05f;
+        }
+
         return roll < _itemDropChances[rarity];
     }
 

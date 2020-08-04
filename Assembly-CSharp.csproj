@@ -342,6 +342,12 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SaveGameData.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableDictionary.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableVector3.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\Scavenger.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\Skill.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\SkillTemplate.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\SkillsContainer.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\SkillsLoader.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\SkillsStore.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilityButtonActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilityManager.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilitySelectButton.cs" />
@@ -528,6 +534,7 @@
     <None Include="Assets\Resources\Scripts\World\Settlements\settlement_prefabs.txt" />
     <None Include="Assets\Resources\Scripts\World\Entities\Names\mammal_last_names.txt" />
     <None Include="Assets\AstarPathfindingProject\ExampleScenes\Materials\DiffuseAlwaysVisible.shader" />
+    <None Include="Assets\Resources\Scripts\Skills\skills.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\Resources\Scripts\World\Entities\Names\cow_first_names.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />

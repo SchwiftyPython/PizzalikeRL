@@ -571,16 +571,38 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
 
         var backgroundAbilities = AbilityStore.GetStartingAbilitiesForBackground(background);
 
-        foreach (var ability in backgroundAbilities)
+        if (backgroundAbilities != null && backgroundAbilities.Count > 0)
         {
-            var instance = Instantiate(StartingAbilityPrefab, StartingAbilityPrefab.transform.position,
-                Quaternion.identity);
+            foreach (var ability in backgroundAbilities)
+            {
+                var instance = Instantiate(StartingAbilityPrefab, StartingAbilityPrefab.transform.position,
+                    Quaternion.identity);
 
-            instance.transform.SetParent(BackgroundStartingAbilityParent);
+                instance.transform.SetParent(BackgroundStartingAbilityParent);
 
-            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text = GlobalHelper.CapitalizeAllWords(ability.Name);
+                instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text =
+                    GlobalHelper.CapitalizeAllWords(ability.Name);
 
-            instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[1].text = ability.Description;
+                instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[1].text = ability.Description;
+            }
+        }
+
+        var backgroundSkills = SkillsStore.GetStartingSkillsForBackground(background);
+
+        if (backgroundSkills != null && backgroundSkills.Count > 0)
+        {
+            foreach (var skill in backgroundSkills)
+            {
+                var instance = Instantiate(StartingAbilityPrefab, StartingAbilityPrefab.transform.position,
+                    Quaternion.identity);
+
+                instance.transform.SetParent(BackgroundStartingAbilityParent);
+
+                instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[0].text =
+                    GlobalHelper.CapitalizeAllWords(skill.Name);
+
+                instance.transform.GetComponentsInChildren<TextMeshProUGUI>()[1].text = skill.Description;
+            }
         }
     }
 

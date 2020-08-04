@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<SkillsCollection>
+	<Skills>
+	
+	<Skill name = "scavenger">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Increased chance of item drops.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>
+	
+	</Skills>
+</SkillsCollection>
