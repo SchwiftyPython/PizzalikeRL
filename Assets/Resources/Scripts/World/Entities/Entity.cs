@@ -1354,7 +1354,7 @@ public class Entity : ISubscriber
 
     public bool IsDead()
     {
-        return CurrentHp <= 0;
+4        return CurrentHp <= 0;
     }
 
     public void EndOfTurnHealthRegenerate()

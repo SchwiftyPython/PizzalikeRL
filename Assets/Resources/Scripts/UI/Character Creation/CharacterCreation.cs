@@ -35,6 +35,8 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
     private List<Ability> _abilities;
     private AbilityTemplate _selectedFreeAbility;
 
+    private SkillTemplate _selectedFreeSkill;
+
     public GameObject SpeciesSelectPage;
     public GameObject StatPointAllocationPage;
     public GameObject ChooseBackgroundPage;
@@ -637,6 +639,7 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         }
     }
 
+    //todo need to include skills
     private void LoadAbilitiesForAbilitySelectScreen()
     {
         GlobalHelper.DestroyAllChildren(AbilityCategoryParent);
@@ -786,6 +789,51 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         return abilities;
     }
 
+    private Entity.SkillsDictionary BuildSkillsDictionary()
+    {
+        var skills = new Entity.SkillsDictionary();
+
+        var freeSkill = SkillsStore.CreateSkill(_selectedFreeSkill, _player);
+
+        if (freeSkill != null)
+        {
+            skills.Add(freeSkill.Name, freeSkill);
+        }
+
+        var startingBodyPartSkills =
+            (from partSkills in _playerTemplate.Parts.Select(SkillsStore.GetSkillsByBodyPart)
+                where partSkills != null
+                from skill in partSkills
+                where skill.StartingSkill
+                select skill).ToList();
+
+        foreach (var template in startingBodyPartSkills)
+        {
+            if (skills.ContainsKey(template.Name))
+            {
+                continue;
+            }
+
+            skills.Add(template.Name, SkillsStore.CreateSkill(template, _player));
+        }
+
+        var startingBackgroundSkills = SkillsStore.GetStartingSkillsForBackground(_selectedBackground);
+
+        foreach (var template in startingBackgroundSkills)
+        {
+            if (skills.ContainsKey(template.Name))
+            {
+                continue;
+            }
+
+            skills.Add(template.Name, SkillsStore.CreateSkill(template, _player));
+        }
+
+        //todo not sure if we need damage type skills but putting this here in case it's not obvious they aren't implemented
+
+        return skills;
+    }
+
     private void GenerateStartingEquipment()
     {
         _player.GenerateStartingEquipment();
@@ -865,6 +913,8 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
         _player.Fluff.Age = 16 + DiceRoller.Instance.RollDice(new Dice(2, 6));
 
         _player.Abilities = BuildAbilityDictionary();
+
+        _player.Skills = BuildSkillsDictionary();
 
         GenerateStartingEquipment();
 

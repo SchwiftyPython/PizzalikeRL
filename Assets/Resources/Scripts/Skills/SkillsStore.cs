@@ -18,7 +18,7 @@ public class SkillsStore : MonoBehaviour
 
         _allSkillTemplates = SkillsLoader.GetAllSkills();
 
-        PopulateAbilitiesByBodyPart();
+        PopulateSkillsByBodyPart();
         PopulateSkillsByRequiredBackground();
         PopulateStartingSkillsForBackgrounds();
     }
@@ -67,7 +67,7 @@ public class SkillsStore : MonoBehaviour
         }
     }
 
-    private static void PopulateAbilitiesByBodyPart()
+    private static void PopulateSkillsByBodyPart()
     {
         _skillsByBodyPart = new Dictionary<string, List<SkillTemplate>>();
 
@@ -120,7 +120,7 @@ public class SkillsStore : MonoBehaviour
         return _skillsByBodyPart.ContainsKey(partName) ? _skillsByBodyPart[partName] : null;
     }
 
-    public Skill CreateSkill(SkillTemplate template, Entity owner)
+    public static Skill CreateSkill(SkillTemplate template, Entity owner)
     {
         var skills = new Dictionary<string, Func<SkillTemplate, Entity, Skill>>
         {
