@@ -13,5 +13,38 @@
 		<StartingSkill>true</StartingSkill>		
 	</Skill>
 	
+	<Skill name = "cat-like reflexes">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Increased chance of dodging a ranged attack.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "steady hands">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 14 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Increased accuracy of ranged attacks.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "axe mastery">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>+1 to hit with axes.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>
+	
 	</Skills>
 </SkillsCollection>

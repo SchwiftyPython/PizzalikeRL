@@ -156,6 +156,11 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
     public static List<AbilityTemplate> GetStartingAbilitiesForBackground(CharacterBackground background)
     {
+        if (!_backgroundStartingAbilities.ContainsKey(background.Name))
+        {
+            return null;
+        }
+
         return new List<AbilityTemplate>(_backgroundStartingAbilities[background.Name]);
     }
 

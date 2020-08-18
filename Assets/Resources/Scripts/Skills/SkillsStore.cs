@@ -11,6 +11,8 @@ public class SkillsStore : MonoBehaviour
     private static Dictionary<string, List<SkillTemplate>> _skillsByBodyPart;
 
     private static List<string> _streetRatStartingSkillNames;
+    private static List<string> _arenaFighterStartingSkillNames;
+    private static List<string> _militaryStartingSkillNames;
 
     private void Start()
     {
@@ -50,7 +52,9 @@ public class SkillsStore : MonoBehaviour
     {
         _backgroundStartingSkills = new Dictionary<string, List<SkillTemplate>>
         {
-            {"street rat", new List<SkillTemplate>()}
+            {"street rat", new List<SkillTemplate>()},
+            {"arena fighter", new List<SkillTemplate>()},
+            {"military", new List<SkillTemplate>()}
         };
 
         _streetRatStartingSkillNames = new List<string>
@@ -58,11 +62,29 @@ public class SkillsStore : MonoBehaviour
             "scavenger"
         };
 
+        _arenaFighterStartingSkillNames = new List<string>
+        {
+            "cat-like reflexes"
+        };
+
+        _militaryStartingSkillNames = new List<string>
+        {
+            "axe mastery"
+        };
+
         foreach (var skillTemplate in _allSkillTemplates.Values)
         {
             if (_streetRatStartingSkillNames.Contains(skillTemplate.Name.ToLower()))
             {
                 _backgroundStartingSkills["street rat"].Add(skillTemplate);
+            }
+            if (_arenaFighterStartingSkillNames.Contains(skillTemplate.Name.ToLower()))
+            {
+                _backgroundStartingSkills["arena fighter"].Add(skillTemplate);
+            }
+            if (_militaryStartingSkillNames.Contains(skillTemplate.Name.ToLower()))
+            {
+                _backgroundStartingSkills["military"].Add(skillTemplate);
             }
         }
     }
@@ -124,7 +146,10 @@ public class SkillsStore : MonoBehaviour
     {
         var skills = new Dictionary<string, Func<SkillTemplate, Entity, Skill>>
         {
-            {"scavenger", (skillTemplate, skillOwner) => new Scavenger(skillTemplate, skillOwner)}
+            {"scavenger", (skillTemplate, skillOwner) => new Scavenger(skillTemplate, skillOwner)},
+            {"axe mastery", (skillTemplate, skillOwner) => new AxeMastery(skillTemplate, skillOwner)},
+            {"cat-like reflexes", (skillTemplate, skillOwner) => new CatlikeReflexes(skillTemplate, skillOwner)},
+            {"steady hands", (skillTemplate, skillOwner) => new SteadyHands(skillTemplate, skillOwner)}
         };
 
         if (template == null)

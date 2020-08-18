@@ -761,14 +761,17 @@ public class CharacterCreation : MonoBehaviour, ISubscriber
 
         var startingBackgroundAbilities = AbilityStore.GetStartingAbilitiesForBackground(_selectedBackground);
 
-        foreach (var ability in startingBackgroundAbilities)
+        if (startingBackgroundAbilities != null && startingBackgroundAbilities.Count > 0)
         {
-            if (abilities.ContainsKey(ability.Name))
+            foreach (var ability in startingBackgroundAbilities)
             {
-                continue;
-            }
+                if (abilities.ContainsKey(ability.Name))
+                {
+                    continue;
+                }
 
-            abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, _player));
+                abilities.Add(ability.Name, AbilityStore.CreateAbility(ability, _player));
+            }
         }
 
         var startingDamageTypeAbilities = AbilityStore.GetAllDamageTypeAbilities();

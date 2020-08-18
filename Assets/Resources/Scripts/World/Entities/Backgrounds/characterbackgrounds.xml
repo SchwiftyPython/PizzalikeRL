@@ -29,17 +29,7 @@
 				    <Value> 2 </Value>	
                 </Attribute>					
 			</Attributes>			
-		</Background>		
-		
-		<Background name = "bowyer">
-			<Description> You come from a long line of bow makers. </Description>
-            <Attributes>
-                <Attribute> 
-                     <Name> agility </Name>				
-				    <Value> 2 </Value>	
-                </Attribute>		
-			</Attributes>			
-		</Background>		
+		</Background>			
 		
 		<Background name = "knight">
 			<Description> An elite bodyguard in service to a powerful family. </Description>

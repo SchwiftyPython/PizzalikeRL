@@ -342,12 +342,15 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SaveGameData.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableDictionary.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableVector3.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\AxeMastery.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\CatlikeReflexes.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\Scavenger.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\Skill.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\SkillTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\SkillsContainer.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\SkillsLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\SkillsStore.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\SteadyHands.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilityButtonActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilityManager.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilitySelectButton.cs" />

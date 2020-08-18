@@ -1354,7 +1354,7 @@ public class Entity : ISubscriber
 
     public bool IsDead()
     {
-4        return CurrentHp <= 0;
+        return CurrentHp <= 0;
     }
 
     public void EndOfTurnHealthRegenerate()
@@ -1750,6 +1750,19 @@ public class Entity : ISubscriber
             return false;
         }
 
+        if (HasSkill("axe mastery"))  //not tested
+        {
+            var equippedMeleeWeapons = GetEquippedMeleeWeapons();
+
+            foreach (var weapon in equippedMeleeWeapons)
+            {
+                if (weapon.Type.ToLower().Contains("axe"))
+                {
+                    roll += 1;
+                }
+            }
+        }
+
         var chanceToHit = GetChanceToHitMeleeTarget(target);
 
         return roll <= chanceToHit;
@@ -1760,9 +1773,9 @@ public class Entity : ISubscriber
         var meleeSlots = new List<EquipmentSlot>
         {
             EquipmentSlot.LeftHandOne,
-            EquipmentSlot.LeftHandTwo,
+            //EquipmentSlot.LeftHandTwo,
             EquipmentSlot.RightHandOne,
-            EquipmentSlot.RightHandTwo
+            //EquipmentSlot.RightHandTwo
         };
 
         var meleeWeapons = new List<Weapon>();
@@ -1861,8 +1874,6 @@ public class Entity : ISubscriber
 
     private int CalculateChanceToHitRanged(Entity target, Weapon equippedRangedWeapon)
     {
-        //todo apply any bonuses from equipped weapons
-
         const int startingChanceToHit = 60;
 
         var chanceToHit = startingChanceToHit;
@@ -1897,6 +1908,18 @@ public class Entity : ISubscriber
         if (target.MovedLastTurn(currentTurn))
         {
             chanceToHit -= 8;
+        }
+
+        //todo apply any bonuses from equipped weapons
+
+        if (target.HasSkill("cat-like reflexes")) //not tested
+        {
+            chanceToHit -= 5;
+        }
+
+        if (HasSkill("steady hands"))  //not tested
+        {
+            chanceToHit += 3;
         }
 
         return chanceToHit;
