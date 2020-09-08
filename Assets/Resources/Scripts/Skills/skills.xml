@@ -46,5 +46,16 @@
 		<StartingSkill>true</StartingSkill>		
 	</Skill>
 	
+	<Skill name = "run and gun">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>No accuracy penalty when using a ranged weapon after moving the previous turn.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>	
+	
 	</Skills>
 </SkillsCollection>

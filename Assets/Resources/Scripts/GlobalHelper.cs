@@ -84,11 +84,11 @@ public class GlobalHelper : MonoBehaviour
     public static AttributeCheckWinner AttackerDefenderAttributeCheck(Entity attacker, Entity defender,
         AttributeCheck attribute)
     {
-        var intCheckDice = new Dice(1, 20);
+        var checkDice = new Dice(1, 20);
 
-        var attackerTotal = DiceRoller.Instance.RollDice(intCheckDice);
+        var attackerTotal = DiceRoller.Instance.RollDice(checkDice);
 
-        var defenderTotal = DiceRoller.Instance.RollDice(intCheckDice);
+        var defenderTotal = DiceRoller.Instance.RollDice(checkDice);
 
         switch (attribute)
         {

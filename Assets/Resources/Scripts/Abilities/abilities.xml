@@ -146,6 +146,22 @@
 		<UsesConsumables> false </UsesConsumables>
 	</Ability>
 	
+	<Ability name = "disarming shot">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Shoot an object from your target's hands.</Description>
+	    <RequiresProperty>missile</RequiresProperty>	    
+		<Dice>2d4</Dice>		
+	    <Cooldown> 9 </Cooldown>
+		<Target>direction</Target>
+		<Effect></Effect>
+		<Range></Range>
+		<StartingAbility>false</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
+	</Ability>	
+	
     </Abilities>
 </AbilitiesCollection>
 	

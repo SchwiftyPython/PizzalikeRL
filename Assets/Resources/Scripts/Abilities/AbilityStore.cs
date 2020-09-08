@@ -91,7 +91,6 @@ public class AbilityStore : MonoBehaviour,ISubscriber
             {"street rat", new List<AbilityTemplate>()}
         };
 
-        //populate religious background
         _religiousStartingAbilityNames = new List<string>
         {
             "divine aid",
@@ -201,7 +200,8 @@ public class AbilityStore : MonoBehaviour,ISubscriber
             {"intimidate", (abilityTemplate, abilityOwner) => new Intimidate(abilityTemplate, abilityOwner)},
             {"dismember", (abilityTemplate, abilityOwner) => new Dismember(abilityTemplate, abilityOwner)},
             {"meditate", (abilityTemplate, abilityOwner) => new Meditate(abilityTemplate, abilityOwner)},
-            {"bandage wounds", (abilityTemplate, abilityOwner) => new BandageWounds(abilityTemplate, abilityOwner)}
+            {"bandage wounds", (abilityTemplate, abilityOwner) => new BandageWounds(abilityTemplate, abilityOwner)},
+            {"disarming shot", (abilityTemplate, abilityOwner) => new DisarmingShot(abilityTemplate, abilityOwner)}
         };
 
         if (template == null)

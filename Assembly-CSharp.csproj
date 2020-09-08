@@ -251,6 +251,7 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\AbilityTemplate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\BandageWounds.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Bash.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\DisarmingShot.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Dismember.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Heal.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Intimidate.cs" />
@@ -344,6 +345,7 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableVector3.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\AxeMastery.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\CatlikeReflexes.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\RunAndGun.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\Scavenger.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\Skill.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\SkillTemplate.cs" />

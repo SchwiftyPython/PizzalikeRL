@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public enum Visibilities
@@ -156,9 +157,19 @@ public class Tile
         return PresentWallTile != null;
     }
 
-    public void AddItemToTile()
+    public void AddItemToTile(Item item)
     {
+        if (item == null)
+        {
+            return;
+        }
 
+        if (PresentItems == null)
+        {
+            PresentItems = new List<Item>();
+        }
+
+        PresentItems.Add(item);
     }
 
     public void RemoveItemFromTile(Item item)

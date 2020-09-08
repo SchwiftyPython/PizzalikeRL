@@ -149,7 +149,8 @@ public class SkillsStore : MonoBehaviour
             {"scavenger", (skillTemplate, skillOwner) => new Scavenger(skillTemplate, skillOwner)},
             {"axe mastery", (skillTemplate, skillOwner) => new AxeMastery(skillTemplate, skillOwner)},
             {"cat-like reflexes", (skillTemplate, skillOwner) => new CatlikeReflexes(skillTemplate, skillOwner)},
-            {"steady hands", (skillTemplate, skillOwner) => new SteadyHands(skillTemplate, skillOwner)}
+            {"steady hands", (skillTemplate, skillOwner) => new SteadyHands(skillTemplate, skillOwner)},
+            {"run and gun", (skillTemplate, skillOwner) => new RunAndGun(skillTemplate, skillOwner)}
         };
 
         if (template == null)

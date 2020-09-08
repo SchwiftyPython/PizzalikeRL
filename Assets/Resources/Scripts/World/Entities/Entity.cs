@@ -553,9 +553,9 @@ public class Entity : ISubscriber
         if (InventoryWindow.Instance != null) InventoryWindow.Instance.InventoryChanged = true;
     }
 
-    public void UnequipItem(EquipmentSlot slot)
+    public void UnEquipEquipmentSlot(EquipmentSlot slot)
     {
-        if (Equipped[slot] == null)
+        if (Equipped?[slot] == null)
         {
             return;
         }
@@ -566,6 +566,22 @@ public class Entity : ISubscriber
 
         EventMediator.Instance.Broadcast(GlobalHelper.ItemUnequippedEventName, this);
         InventoryWindow.Instance.InventoryChanged = true;
+    }
+
+    public void UnEquipItem(Item item)
+    {
+        if (Equipped == null)
+        {
+            return;
+        }
+
+        foreach (var equipmentSlot in Equipped.Keys)
+        {
+            if (Equipped[equipmentSlot].Id == item.Id)
+            {
+                Inventory.Add(Equipped[equipmentSlot].Id, Equipped[equipmentSlot]);
+            }
+        }
     }
 
     public void UseConsumableWithProperty(string propertyName)
@@ -884,7 +900,7 @@ public class Entity : ISubscriber
             {
                 if (slot.Value.Count == 1)
                 {
-                    UnequipItem(slot.Key);
+                    UnEquipEquipmentSlot(slot.Key);
                 }
                 else
                 {
@@ -892,7 +908,7 @@ public class Entity : ISubscriber
 
                     if (equippedItem.Properties.Contains("two-handed"))
                     {
-                        UnequipItem(slot.Key);
+                        UnEquipEquipmentSlot(slot.Key);
                     }
                 }
 
@@ -1901,7 +1917,10 @@ public class Entity : ISubscriber
         }
         else
         {
-            chanceToHit -= 10;
+            if (!HasSkill("run and gun")) //not tested
+            {
+                chanceToHit -= 10;
+            }
         }
 
         //- 8 if defender moved last turn

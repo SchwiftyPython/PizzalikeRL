@@ -90,6 +90,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>20</Range>	
 <Properties>
+<Property>missile</Property>
 <Property>two-handed</Property>
         </Properties>		
 	</ItemTemplate>
@@ -100,6 +101,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>31</Range>	
 <Properties>
+<Property>missile</Property>
 <Property>two-handed</Property>
         </Properties>		
 	</ItemTemplate>
@@ -121,6 +123,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>31</Range>	
 <Properties>
+<Property>missile</Property>
 <Property>two-handed</Property>
         </Properties>		
 	</ItemTemplate>
@@ -203,6 +206,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>23</Range>
 <Properties>
+<Property>missile</Property>
 <Property>two-handed</Property>
         </Properties>			
 	</ItemTemplate>
@@ -213,6 +217,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>32</Range>	
 <Properties>
+<Property>missile</Property>
 <Property>aoe</Property>
 <Property>two-handed</Property>
         </Properties>			
@@ -224,6 +229,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>32</Range>	
 <Properties>
+<Property>missile</Property>
 <Property>two-handed</Property>
         </Properties>			
 	</ItemTemplate>
@@ -234,6 +240,7 @@
 		<MultiSlot>false</MultiSlot>
 		<Range>9</Range>	
 <Properties>
+<Property>missile</Property>
         </Properties>			
 	</ItemTemplate>
 	
@@ -243,6 +250,7 @@
 		<MultiSlot>false</MultiSlot>
 		<Range>9</Range>	
 <Properties>
+<Property>missile</Property>
         </Properties>			
 	</ItemTemplate>
 	
@@ -252,6 +260,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>12</Range>	
 <Properties>
+<Property>missile</Property>
 <Property>two-handed</Property>
         </Properties>			
 	</ItemTemplate>
@@ -262,6 +271,7 @@
 		<MultiSlot>true</MultiSlot>
 		<Range>36</Range>	
 <Properties>
+<Property>missile</Property>
 <Property>two-handed</Property>
         </Properties>			
 	</ItemTemplate>
@@ -279,9 +289,10 @@
 	<ItemTemplate type = "Submachinegun">
 	    <Category>weapon</Category>
 		<EquipmentSlotType>Missile</EquipmentSlotType>
-		<MultiSlot>true</MultiSlot>
+		<MultiSlot>false</MultiSlot>
 		<Range>12</Range>
 <Properties>
+<Property>missile</Property>
         </Properties>			
 	</ItemTemplate>
 	
