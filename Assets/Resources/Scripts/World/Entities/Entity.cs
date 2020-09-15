@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -116,7 +117,23 @@ public class Entity : ISubscriber
 
     //Stats dependent on base stat values
 
-    public int MaxHp { get; set; }
+    private int _maxHp;
+
+    public int MaxHp
+    {
+        get
+        {
+            var modifier = 0;
+
+            if (HasSkill("toughness"))
+            {
+                modifier += Toughness.MaxHealthModifier;
+            }
+
+            return _maxHp + modifier;
+        }
+        set => _maxHp = value;
+    }
 
     private int _currentHp;
 
@@ -130,12 +147,39 @@ public class Entity : ISubscriber
                 EventMediator.Instance.Broadcast(GlobalHelper.EntityTookDamageEventName, this);
             }
 
+            if (value <= 0 && HasSkill("diehard"))
+            {
+                var roll = DiceRoller.Instance.RollD100();
+
+                if (roll <= Diehard.Chance)
+                {
+                    _currentHp = 1;
+                }
+            }
+
             _currentHp = value;
         }
     }
 
     public int Speed { get; set; }
-    public int Defense { get; set; }
+
+    private int _defense;
+
+    public int Defense
+    {
+        get
+        {
+            var modifier = 0;
+
+            if (HasSkill("hardened"))
+            {
+                modifier += Hardened.DefenseModifier;
+            }
+
+            return _defense + modifier;
+        }
+        set => _defense = value;
+    }
 
     private List<Effect> _currentEffects;
     
@@ -570,13 +614,18 @@ public class Entity : ISubscriber
 
     public void UnEquipItem(Item item)
     {
-        if (Equipped == null)
+        if (Equipped == null || item == null)
         {
             return;
         }
 
         foreach (var equipmentSlot in Equipped.Keys)
         {
+            if (Equipped[equipmentSlot] == null)
+            {
+                continue;
+            }
+
             if (Equipped[equipmentSlot].Id == item.Id)
             {
                 Inventory.Add(Equipped[equipmentSlot].Id, Equipped[equipmentSlot]);
@@ -1212,7 +1261,7 @@ public class Entity : ISubscriber
         return target.y >= cell.GetCellWidth() ? Direction.East : Direction.West;
     }
 
-    public void MeleeAttack(Entity target)
+    public void MeleeAttack(Entity target, bool extraAttack = false)
     {
         if (MeleeRollHit(target))
         {
@@ -1222,9 +1271,23 @@ public class Entity : ISubscriber
                 TargetReactToAttacker(target);
                 return;
             }
-            var message = $"{(target.Fluff != null ? target.Fluff.Name : target.EntityType)} died!";
 
-            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this, GlobalHelper.Capitalize(message));
+            var message = $"{target.Name} died!";
+
+            EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this,
+                GlobalHelper.Capitalize(message));
+        }
+        else if (!extraAttack && HasSkill("backswing"))
+        {
+            var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
+
+            if (roll <= Backswing.BackswingChance)
+            {
+                EventMediator.Instance.Broadcast(GlobalHelper.SendMessageToConsoleEventName, this,
+                    $"{Name} backswing{(IsPlayer() ? "" : "s")} with an extra attack!");
+
+                MeleeAttack(target, true);
+            }
         }
         else
         {
@@ -1997,7 +2060,8 @@ public class Entity : ISubscriber
         }
 
         target.CurrentHp -= damage;
-        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damage < 1 ? 0 : hitBodyPart.CurrentHp - damage; //todo remove bodypart when <= 0
+
+        hitBodyPart.CurrentHp = hitBodyPart.CurrentHp - damage < 1 ? 0 : hitBodyPart.CurrentHp - damage; //todo chance to remove bodypart when <= 0
 
         var message = string.Empty;
 
@@ -2256,6 +2320,11 @@ public class Entity : ISubscriber
 
     public bool HasSkill(string skillName)
     {
+        if (Skills == null)
+        {
+            return false;
+        }
+
         if (Skills.ContainsKey(skillName))
         {
             return true;

@@ -100,7 +100,8 @@ public class AbilityStore : MonoBehaviour,ISubscriber
 
         _militaryStartingAbilityNames = new List<string>
         {
-            "dismember"
+            "dismember",
+            "disarming shot"
         };
 
         _streetRatStartingAbilityNames = new List<string>

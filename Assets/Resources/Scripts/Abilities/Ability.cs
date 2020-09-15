@@ -134,6 +134,11 @@ public class Ability : ISubscriber
     {
         if (eventName == GlobalHelper.EndTurnEventName)
         {
+            if (!(parameter is Entity entity) || entity.Id != Owner.Id)
+            {
+                return;
+            }
+
             if (RemainingCooldownTurns > 0)
             {
                 RemainingCooldownTurns--;

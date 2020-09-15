@@ -116,7 +116,7 @@ public class UseAbilityButton : MonoBehaviour, ISubscriber, IPointerDownHandler
 
     public void DisableButton()
     {
-        _button.interactable = false;
+        _button.interactable = false; //todo bug button is destroyed when trying to access it after moving from world map to area map
     }
 
     public void RemoveAbility()

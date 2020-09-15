@@ -258,6 +258,7 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\KnockBack.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Meditate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\SpinWeb.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\SpraynPray.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Stab.cs" />
     <Compile Include="Assets\Resources\Scripts\Area of Effect\AOEStore.cs" />
     <Compile Include="Assets\Resources\Scripts\Area of Effect\AimLimit.cs" />
@@ -344,7 +345,10 @@
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableDictionary.cs" />
     <Compile Include="Assets\Resources\Scripts\Saving and Loading\SerializableVector3.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\AxeMastery.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\Backswing.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\CatlikeReflexes.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\Diehard.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\Hardened.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\RunAndGun.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\Scavenger.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\Skill.cs" />
@@ -353,6 +357,7 @@
     <Compile Include="Assets\Resources\Scripts\Skills\SkillsLoader.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\SkillsStore.cs" />
     <Compile Include="Assets\Resources\Scripts\Skills\SteadyHands.cs" />
+    <Compile Include="Assets\Resources\Scripts\Skills\Toughness.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilityButtonActionWindow.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilityManager.cs" />
     <Compile Include="Assets\Resources\Scripts\UI\AbilitySelectButton.cs" />

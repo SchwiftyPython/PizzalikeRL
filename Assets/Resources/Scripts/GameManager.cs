@@ -197,16 +197,17 @@ public class GameManager : MonoBehaviour, ISubscriber
                 }
                 break;
             case GameState.EndTurn:
-                EventMediator.Instance.Broadcast(GlobalHelper.EndTurnEventName, this, CurrentArea.TurnOrder.Peek());
-
                 if (WorldMapSceneActive())
                 {
+                    EventMediator.Instance.Broadcast(GlobalHelper.EndTurnEventName, this, Player);
                     Player.EndOfTurnHealthRegenerate();
                     InputController.Instance.ActionTaken = false;
                     CurrentState = GameState.Playerturn;
                 }
                 else
                 {
+                    EventMediator.Instance.Broadcast(GlobalHelper.EndTurnEventName, this, CurrentArea.TurnOrder.Peek());
+
                     var currentEntity = CurrentArea.TurnOrder.Peek();
 
                     //todo need to make a boolean to indicate if combat happened last turn or something

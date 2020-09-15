@@ -55,7 +55,205 @@
 	    <RequiresProperty></RequiresProperty>	    
 		<Dice></Dice>	   		
 		<StartingSkill>true</StartingSkill>		
-	</Skill>	
+	</Skill>
+
+    <Skill name = "backswing">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Whenever you miss a melee attack, you have a 20% chance of making an additional attack.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+
+    <Skill name = "hardened">	    
+	    <Attribute> constitution </Attribute>
+	    <AttributePrereq> 15 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Improves your defense by 1.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>    
+
+    <Skill name = "diehard">	    
+	    <Attribute> constitution </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>When your health falls below 0, there is a 25% chance it will remain at 1.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "toughness">	    
+	    <Attribute> constitution </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>+3 to your max health.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>    	
+	
+	<Skill name = "gladiator">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Everytime you are targeted with a melee attack, there is a 20% chance you will counterattack.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill> 
+	
+	<Skill name = "sadist">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Melee attacks deal additional damage to bleeding targets.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill> 
+	
+	<Skill name = "big baddie">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Immediately granted 2 attribute points.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "killer combo">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 14 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Killing an enemy grants you an extra turn taken immediately. Does not continue if you kill an enemy on your extra turn.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "killing spree">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 16 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Killing an enemy grants you an extra turn taken immediately. Continues if you kill an enemy on your extra turn.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "far out">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 13 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Increase the range of ranged attacks by 3.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "big brain time">	    
+	    <Attribute> intelligence </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Permanently increase intelligence by 3.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "parry good">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 14 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Evasion increased by 4 when dual-wielding.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "health nut">	    
+	    <Attribute> constitution </Attribute>
+	    <AttributePrereq> 14 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Increase max health by 4%.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "shot put">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 14 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Increase max range of thrown weapons by 4.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "stinky">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Lowers your reputation with everyone, but your evasion is increased by 3 in melee combat.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "adrenaline">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Deal extra damage when your health is below 40%.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "tip the scales">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>+2 to one attribute and -2 to another attribute.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
+	
+	<Skill name = "sturdy">	    
+	    <Attribute> constitution </Attribute>
+	    <AttributePrereq> 18 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Increase max health and evasion by 8%.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>false</StartingSkill>		
+	</Skill>
 	
 	</Skills>
 </SkillsCollection>

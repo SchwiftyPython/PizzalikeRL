@@ -135,7 +135,7 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description>Attack an adjacent enemy. Success will result in a lost limb picked at random and a bleed effect.</Description>
+	    <Description>Hack an adjacent enemy's limb off at random.</Description>
 	    <RequiresProperty>slash</RequiresProperty>	    
 		<Dice>2d4</Dice>		
 	    <Cooldown> 15 </Cooldown>
@@ -157,7 +157,23 @@
 	    <Cooldown> 9 </Cooldown>
 		<Target>direction</Target>
 		<Effect></Effect>
-		<Range></Range>
+		<Range>8</Range>
+		<StartingAbility>false</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
+	</Ability>	
+	
+	<Ability name = "spray n' pray">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Fire 15 times at 40% damage. Each shot fires at a lower accuracy than the last.</Description>
+	    <RequiresProperty>missile</RequiresProperty>	    
+		<Dice></Dice>		
+	    <Cooldown> 16 </Cooldown>
+		<Target>direction</Target>
+		<Effect></Effect>
+		<Range>-1</Range>
 		<StartingAbility>false</StartingAbility>
 		<UsesConsumables> false </UsesConsumables>
 	</Ability>	

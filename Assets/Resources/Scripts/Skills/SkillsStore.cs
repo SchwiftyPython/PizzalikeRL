@@ -150,7 +150,11 @@ public class SkillsStore : MonoBehaviour
             {"axe mastery", (skillTemplate, skillOwner) => new AxeMastery(skillTemplate, skillOwner)},
             {"cat-like reflexes", (skillTemplate, skillOwner) => new CatlikeReflexes(skillTemplate, skillOwner)},
             {"steady hands", (skillTemplate, skillOwner) => new SteadyHands(skillTemplate, skillOwner)},
-            {"run and gun", (skillTemplate, skillOwner) => new RunAndGun(skillTemplate, skillOwner)}
+            {"run and gun", (skillTemplate, skillOwner) => new RunAndGun(skillTemplate, skillOwner)},
+            {"backswing", (skillTemplate, skillOwner) => new Backswing(skillTemplate, skillOwner)},
+            {"diehard", (skillTemplate, skillOwner) => new Diehard(skillTemplate, skillOwner)},
+            {"toughness", (skillTemplate, skillOwner) => new Toughness(skillTemplate, skillOwner)},
+            {"hardened", (skillTemplate, skillOwner) => new Hardened(skillTemplate, skillOwner)}
         };
 
         if (template == null)

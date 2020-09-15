@@ -26,4 +26,14 @@ public class DiceRoller : MonoBehaviour
         }
         return sum;
     }
+
+    public int RollD100()
+    {
+        return Random.Range(1, 101);
+    }
+
+    public int RollD20()
+    {
+        return Random.Range(1, 21);
+    }
 }
