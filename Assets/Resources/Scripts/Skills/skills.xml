@@ -255,5 +255,16 @@
 		<StartingSkill>false</StartingSkill>		
 	</Skill>
 	
+	<Skill name = "into the fray">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Gain a 10% damage boost per adjacent creature.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>	   		
+		<StartingSkill>true</StartingSkill>		
+	</Skill>
+	
 	</Skills>
 </SkillsCollection>

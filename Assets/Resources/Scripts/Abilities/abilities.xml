@@ -176,6 +176,118 @@
 		<Range>-1</Range>
 		<StartingAbility>false</StartingAbility>
 		<UsesConsumables> false </UsesConsumables>
+	</Ability>
+
+    <Ability name = "flurry">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Make 3 melee attacks at 40% damage.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>		
+	    <Cooldown> 13 </Cooldown>
+		<Target>direction</Target>
+		<Effect></Effect>
+		<Range>1</Range>
+		<StartingAbility>true</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
+	</Ability>
+	
+	<Ability name = "onslaught">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 14 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Make 5 melee attacks at 45% damage.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>		
+	    <Cooldown> 17 </Cooldown>
+		<Target>direction</Target>
+		<Effect></Effect>
+		<Range>1</Range>
+		<StartingAbility>true</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
+	</Ability>
+
+    <Ability name = "earworm">	    
+	    <Attribute> intelligence </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Sing offkey to someone. Target will become enraged, run towards the nearest living thing, and kill it.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>		
+	    <Cooldown> 13 </Cooldown>
+		<Target>direction</Target>
+		<Effect></Effect>
+		<Range>10</Range>
+		<StartingAbility>false</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
+	</Ability>
+
+    <Ability name = "whirlwind">	    
+	    <Attribute> agility </Attribute>
+	    <AttributePrereq> 15 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Spin and hit all adjacent enemies for 100% damage.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>		
+	    <Cooldown> 11 </Cooldown>
+		<Target>adjacent</Target>
+		<Effect></Effect>
+		<Range>1</Range>
+		<StartingAbility>false</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
+	</Ability>
+
+    <Ability name = "crippling blow">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 15 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Cripple and deal 110% damage to a target.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>		
+	    <Cooldown> 14 </Cooldown>
+		<Target>direction</Target>
+		<Effect></Effect>
+		<Range>1</Range>
+		<StartingAbility>true</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
+	</Ability>
+
+    <Ability name = "ground pound">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 0 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Slam your weapon into the ground, knocking back enemies in front of you.</Description>
+	    <RequiresProperty>bludgeon</RequiresProperty>	    
+		<Dice></Dice>		
+	    <Cooldown> 15 </Cooldown>
+		<Target>direction</Target>
+		<Effect></Effect>
+		<Range>1</Range>
+		<StartingAbility>true</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
+	</Ability>
+
+    <Ability name = "bulldoze">	    
+	    <Attribute> strength </Attribute>
+	    <AttributePrereq> 16 </AttributePrereq>
+		<RequiresBodyPart></RequiresBodyPart>
+	    <RequiresBackground></RequiresBackground>
+	    <Description>Charge in a straight line for 5 tiles and damage all enemies in path for 80% damage.</Description>
+	    <RequiresProperty></RequiresProperty>	    
+		<Dice></Dice>		
+	    <Cooldown> 18 </Cooldown>
+		<Target>direction</Target>
+		<Effect></Effect>
+		<Range>5</Range>
+		<StartingAbility>true</StartingAbility>
+		<UsesConsumables> false </UsesConsumables>
 	</Ability>	
 	
     </Abilities>
