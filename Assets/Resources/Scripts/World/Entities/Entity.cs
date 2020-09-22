@@ -1261,11 +1261,11 @@ public class Entity : ISubscriber
         return target.y >= cell.GetCellWidth() ? Direction.East : Direction.West;
     }
 
-    public void MeleeAttack(Entity target, bool extraAttack = false)
+    public void MeleeAttack(Entity target, bool extraAttack = false, float damageModifier = 1)
     {
         if (MeleeRollHit(target))
         {
-            ApplyMeleeDamage(target);
+            ApplyMeleeDamage(target, damageModifier);
             if (!target.IsDead())
             {
                 TargetReactToAttacker(target);
@@ -1607,11 +1607,21 @@ public class Entity : ISubscriber
         return part;
     }
 
-    public void RangedAttack(Entity target, Weapon equippedRangedWeapon)
+    public void RangedMissileAttack(Entity target, int accuracyModifier = 0, float damageModifier = 1)
     {
-        //todo get weapon here so bonuses can be applied and you can just as a param to ranged hit and apply damage
+        var missileWeapon = GetEquippedMissileWeapon();
 
-        if (RangedHit(target, equippedRangedWeapon))
+        if (missileWeapon == null)
+        {
+            return;
+        }
+
+        RangedAttack(target, missileWeapon, accuracyModifier);
+    }
+
+    public void RangedAttack(Entity target, Weapon equippedRangedWeapon, int accuracyModifier = 0, float damageModifier = 1)
+    {
+        if (RangedHit(target, equippedRangedWeapon, accuracyModifier))
         {
             ApplyRangedDamage(target, equippedRangedWeapon);
 
@@ -1876,9 +1886,9 @@ public class Entity : ISubscriber
     }
 
     //todo overload that returns the bodypart hit?
-    public void ApplyMeleeDamage(Entity target)
+    public void ApplyMeleeDamage(Entity target, float damageModifier = 1)
     {
-        var unarmedDamageDice = new Dice(1, 4);
+        var unarmedDamageDice = new Dice(1, 4); //todo different dice for different strength?
 
         var equippedMeleeWeapons = GetEquippedMeleeWeapons();
 
@@ -1903,7 +1913,7 @@ public class Entity : ISubscriber
             damageRoll += roll;
         }
 
-        ApplyDamage(target, damageRoll);
+        ApplyDamage(target, damageRoll, false, damageModifier);
 
         EventMediator.Instance.Broadcast("MeleeHit", this);
     }
@@ -1942,16 +1952,16 @@ public class Entity : ISubscriber
         return hitPart;
     }
 
-    private bool RangedHit(Entity target, Weapon equippedRangedWeapon)
+    private bool RangedHit(Entity target, Weapon equippedRangedWeapon, int accuracyModifier = 0)
     {
         var roll = DiceRoller.Instance.RollDice(new Dice(1, 100));
 
-        var chanceToHit = CalculateChanceToHitRanged(target, equippedRangedWeapon);
+        var chanceToHit = CalculateChanceToHitRanged(target, equippedRangedWeapon, accuracyModifier);
 
         return roll <= chanceToHit;
     }
 
-    private int CalculateChanceToHitRanged(Entity target, Weapon equippedRangedWeapon)
+    private int CalculateChanceToHitRanged(Entity target, Weapon equippedRangedWeapon, int accuracyModifier = 0)
     {
         const int startingChanceToHit = 60;
 
@@ -2004,6 +2014,13 @@ public class Entity : ISubscriber
             chanceToHit += 3;
         }
 
+        chanceToHit += accuracyModifier;
+
+        if (chanceToHit < 1)
+        {
+            chanceToHit = 1;
+        }
+
         return chanceToHit;
     }
 
@@ -2038,7 +2055,7 @@ public class Entity : ISubscriber
         return (int) Math.Sqrt(a * a + b * b);
     }
 
-    private void ApplyRangedDamage(Entity target, Weapon equippedRangedWeapon)
+    private void ApplyRangedDamage(Entity target, Weapon equippedRangedWeapon, float DamageModifier = 1)
     {
         var damageDice = equippedRangedWeapon.ItemDice;
 
@@ -2047,7 +2064,7 @@ public class Entity : ISubscriber
         ApplyDamage(target, damageRoll);
     }
 
-    public BodyPart ApplyDamage(Entity target, int damage, bool limbsOnly = false)
+    public BodyPart ApplyDamage(Entity target, int damage, bool limbsOnly = false, float DamageModifier = 1)
     {
         BodyPart hitBodyPart;
         if (limbsOnly)
@@ -2058,6 +2075,8 @@ public class Entity : ISubscriber
         {
             hitBodyPart = target.BodyPartHit();
         }
+
+        damage = (int) (damage * DamageModifier);
 
         target.CurrentHp -= damage;
 

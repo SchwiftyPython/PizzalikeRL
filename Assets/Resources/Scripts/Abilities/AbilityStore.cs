@@ -202,7 +202,9 @@ public class AbilityStore : MonoBehaviour,ISubscriber
             {"dismember", (abilityTemplate, abilityOwner) => new Dismember(abilityTemplate, abilityOwner)},
             {"meditate", (abilityTemplate, abilityOwner) => new Meditate(abilityTemplate, abilityOwner)},
             {"bandage wounds", (abilityTemplate, abilityOwner) => new BandageWounds(abilityTemplate, abilityOwner)},
-            {"disarming shot", (abilityTemplate, abilityOwner) => new DisarmingShot(abilityTemplate, abilityOwner)}
+            {"disarming shot", (abilityTemplate, abilityOwner) => new DisarmingShot(abilityTemplate, abilityOwner)},
+            {"spray n' pray", (abilityTemplate, abilityOwner) => new SpraynPray(abilityTemplate, abilityOwner)},
+            {"flurry", (abilityTemplate, abilityOwner) => new Flurry(abilityTemplate, abilityOwner)}
         };
 
         if (template == null)

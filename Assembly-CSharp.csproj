@@ -253,6 +253,7 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\Bash.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\DisarmingShot.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Dismember.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Flurry.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Heal.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Intimidate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\KnockBack.cs" />

@@ -31,6 +31,8 @@ public class AbilityManager : MonoBehaviour
     public Sprite MeditateIcon;
     public Sprite BandageWoundsIcon;
     public Sprite DisarmingShotIcon;
+    public Sprite SpraynPrayIcon;
+    public Sprite FlurryIcon;
 
     #endregion
 
@@ -58,7 +60,9 @@ public class AbilityManager : MonoBehaviour
             {"dismember", DismemberIcon},
             {"meditate", MeditateIcon},
             {"bandage wounds", BandageWoundsIcon},
-            {"disarming shot", DisarmingShotIcon}
+            {"disarming shot", DisarmingShotIcon},
+            {"spray n' pray", SpraynPrayIcon},
+            {"flurry", FlurryIcon}
         };
 
         if (_abilityMap == null)
