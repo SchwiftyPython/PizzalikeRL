@@ -47,6 +47,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
+    <UnityProjectGeneratorVersion>4.9.1.0</UnityProjectGeneratorVersion>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2019.3.7f1</UnityVersion>
@@ -253,14 +254,17 @@
     <Compile Include="Assets\Resources\Scripts\Abilities\Bash.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\DisarmingShot.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Dismember.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Earworm.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Flurry.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Heal.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Intimidate.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\KnockBack.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Meditate.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Onslaught.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\SpinWeb.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\SpraynPray.cs" />
     <Compile Include="Assets\Resources\Scripts\Abilities\Stab.cs" />
+    <Compile Include="Assets\Resources\Scripts\Abilities\Whirlwind.cs" />
     <Compile Include="Assets\Resources\Scripts\Area of Effect\AOEStore.cs" />
     <Compile Include="Assets\Resources\Scripts\Area of Effect\AimLimit.cs" />
     <Compile Include="Assets\Resources\Scripts\Area of Effect\BlastAOE.cs" />

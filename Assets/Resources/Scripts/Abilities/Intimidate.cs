@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Intimidate : Ability
+﻿public class Intimidate : Ability
 {
     public Intimidate(AbilityTemplate template, Entity owner) : base(template, owner)
     {
@@ -26,7 +22,6 @@ public class Intimidate : Ability
 
                 if (winner == GlobalHelper.AttributeCheckWinner.Attacker)
                 {
-                    //todo apply fear effect to each
                     var fearDice = GlobalHelper.GetDiceFromString(Dice);
 
                     var duration = DiceRoller.Instance.RollDice(fearDice);

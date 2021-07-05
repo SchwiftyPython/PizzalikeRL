@@ -215,7 +215,7 @@
 	    <AttributePrereq> 0 </AttributePrereq>
 		<RequiresBodyPart></RequiresBodyPart>
 	    <RequiresBackground></RequiresBackground>
-	    <Description>Sing offkey to someone. Target will become enraged, run towards the nearest living thing, and kill it.</Description>
+	    <Description>Sing offkey to someone. Target will become enraged.</Description>
 	    <RequiresProperty></RequiresProperty>	    
 		<Dice></Dice>		
 	    <Cooldown> 13 </Cooldown>

@@ -2238,7 +2238,7 @@ public class Entity : ISubscriber
         }
     }
 
-    public void ApplyEffect(string effectName, int duration, int amount, GoalDirection direction = GoalDirection.North)
+    public void ApplyEffect(string effectName, int duration, int amount = 0, GoalDirection direction = GoalDirection.North)
     {
         //todo we should be able to have the effect handle the specifics and just add to current effects.
         //todo change to dictionary so it's not this ugly switch statement
@@ -2295,6 +2295,8 @@ public class Entity : ISubscriber
 
                 _currentEffects.Add(fearEffect);
                 break;
+            case "enrage":
+                throw new NotImplementedException();
         }
     }
 
